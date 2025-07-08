@@ -10,7 +10,7 @@ export default function KettlebellLogo({ className }: KettlebellLogoProps) {
     <img 
       src={bbLogo}
       alt="Body Butler Logo"
-      className={cn("w-12 h-12", className)}
+      className="w-60 h-72 ml-[0px] mr-[0px] pl-[0px] pr-[0px] pt-[-4px] pb-[-4px]"
       style={{ 
         background: 'transparent',
         objectFit: 'cover',
