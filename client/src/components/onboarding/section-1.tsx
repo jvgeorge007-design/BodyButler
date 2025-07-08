@@ -33,10 +33,12 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
 
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setHasAttemptedSubmit(true);
     
     // Validate required fields
     const requiredFields = [
@@ -322,7 +324,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
               className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
-                formData.name ? 'border-gray-300 focus:border-blue-500' : 'border-red-300 focus:border-red-500'
+                hasAttemptedSubmit && !formData.name ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'
               }`}
               required
             />
@@ -332,7 +334,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           <div className="space-y-2">
             <Label className="text-sm font-semibold text-gray-900">Biological Sex *</Label>
             <div className={`flex rounded-xl p-1 ${
-              formData.sex ? 'bg-gray-100' : 'bg-red-50 border border-red-300'
+              hasAttemptedSubmit && !formData.sex ? 'bg-red-50 border border-red-300' : 'bg-gray-100'
             }`}>
               <button
                 type="button"
@@ -370,7 +372,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
                 value={formData.height}
                 onChange={(e) => handleInputChange("height", e.target.value)}
                 className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
-                  formData.height ? 'border-gray-300 focus:border-blue-500' : 'border-red-300 focus:border-red-500'
+                  hasAttemptedSubmit && !formData.height ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'
                 }`}
                 required
               />
@@ -384,7 +386,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
                 value={formData.weight}
                 onChange={(e) => handleInputChange("weight", e.target.value)}
                 className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
-                  formData.weight ? 'border-gray-300 focus:border-blue-500' : 'border-red-300 focus:border-red-500'
+                  hasAttemptedSubmit && !formData.weight ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'
                 }`}
                 required
               />
@@ -399,7 +401,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
               value={formData.birthDate}
               onChange={(e) => handleInputChange("birthDate", e.target.value)}
               className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
-                formData.birthDate ? 'border-gray-300 focus:border-blue-500' : 'border-red-300 focus:border-red-500'
+                hasAttemptedSubmit && !formData.birthDate ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'
               }`}
               required
             />
