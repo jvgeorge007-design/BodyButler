@@ -122,11 +122,14 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       const newFormData = { ...currentFormData };
       let updated = false;
     
-      // Parse name - only if we don't already have one
+      // Parse name - update if we find a different/better name
       const nameMatch = cleanText.match(/i'm\s+([a-zA-Z]+)/);
-      if (nameMatch && !currentFormData.name) {
-        newFormData.name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
-        updated = true;
+      if (nameMatch) {
+        const newName = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
+        if (newName !== currentFormData.name && newName.length >= currentFormData.name.length) {
+          newFormData.name = newName;
+          updated = true;
+        }
       }
       
       // Parse gender - only if we don't already have one
@@ -161,11 +164,21 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
             updated = true;
           }
         } else if (numStr.length === 4) {
-          // 4-digit = birth year (like 1997) - only if we don't have birth date yet
-          if (!currentFormData.birthDate && num >= 1900 && num <= 2010) {
-            const date = new Date(num, 0, 1);
-            newFormData.birthDate = date.toISOString().split('T')[0];
-            updated = true;
+          // 4-digit = birth year (like 1997, 1198) - only if we don't have birth date yet
+          if (!currentFormData.birthDate) {
+            // Handle partial years like 1198 as 1998
+            let year = num;
+            if (num >= 1100 && num <= 1199) {
+              year = 1900 + (num - 1100); // 1198 → 1998
+            } else if (num >= 1200 && num <= 1299) {
+              year = 2000 + (num - 1200); // 1298 → 2098 (unlikely but handled)
+            }
+            
+            if (year >= 1900 && year <= 2010) {
+              const date = new Date(year, 0, 1);
+              newFormData.birthDate = date.toISOString().split('T')[0];
+              updated = true;
+            }
           }
         }
       }
