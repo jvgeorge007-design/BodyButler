@@ -51,15 +51,24 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       recognitionRef.current.interimResults = true;
       
       recognitionRef.current.onresult = (event) => {
+        let interimTranscript = '';
         let finalTranscript = '';
+        
         for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
           if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript;
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
           }
         }
-        if (finalTranscript) {
-          setTranscript(finalTranscript);
-          parseAndFillForm(finalTranscript);
+        
+        // Update transcript and parse in real-time
+        const currentTranscript = finalTranscript + interimTranscript;
+        setTranscript(currentTranscript);
+        
+        if (currentTranscript.trim()) {
+          parseAndFillForm(currentTranscript);
         }
       };
 
@@ -158,6 +167,14 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       recognitionRef.current?.start();
       setIsListening(true);
       setTranscript("");
+      
+      // Auto-stop after 15 seconds
+      setTimeout(() => {
+        if (recognitionRef.current && isListening) {
+          recognitionRef.current.stop();
+          setIsListening(false);
+        }
+      }, 15000);
     }
   };
 
@@ -170,40 +187,34 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
         </div>
 
         {/* Voice Input Section */}
-        <div className="bg-blue-50 rounded-xl p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Voice Input</span>
-            <Button
-              type="button"
-              onClick={toggleListening}
-              variant="outline"
-              size="sm"
-              className={`${isListening ? 'bg-red-100 border-red-300 text-red-700' : 'bg-blue-100 border-blue-300 text-blue-700'}`}
-            >
-              {isListening ? (
-                <>
-                  <MicOff className="w-4 h-4 mr-2" />
-                  Stop
-                </>
-              ) : (
-                <>
-                  <Mic className="w-4 h-4 mr-2" />
-                  Speak
-                </>
-              )}
-            </Button>
-          </div>
+        <div className="flex flex-col items-center space-y-3">
+          <Button
+            type="button"
+            onClick={toggleListening}
+            size="lg"
+            className={`w-16 h-16 rounded-full ${
+              isListening 
+                ? 'bg-red-500 hover:bg-red-600 animate-pulse' 
+                : 'bg-blue-500 hover:bg-blue-600'
+            } text-white shadow-lg transition-all`}
+          >
+            {isListening ? (
+              <MicOff className="w-6 h-6" />
+            ) : (
+              <Mic className="w-6 h-6" />
+            )}
+          </Button>
           
-          <div className="bg-white rounded-lg p-3 border border-blue-200">
-            <p className="text-xs text-gray-500 mb-2">Try saying:</p>
+          <div className="text-center space-y-1">
+            <p className="text-xs text-gray-500">Try saying:</p>
             <p className="text-sm text-gray-700 italic">
               "I'm Jerry, male, 5'7", 165 lbs, and born 1/1/1998."
             </p>
           </div>
           
           {transcript && (
-            <div className="bg-white rounded-lg p-3 border border-blue-200">
-              <p className="text-xs text-gray-500 mb-1">You said:</p>
+            <div className="bg-gray-50 rounded-lg p-3 border max-w-full">
+              <p className="text-xs text-gray-500 mb-1">Listening:</p>
               <p className="text-sm text-gray-700">{transcript}</p>
             </div>
           )}
@@ -226,21 +237,37 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
             />
           </div>
 
+          {/* Biological Sex Toggle */}
+          <div className="space-y-2">
+            <Label className="text-sm font-semibold text-gray-900">Biological Sex</Label>
+            <div className="flex bg-gray-100 rounded-xl p-1">
+              <button
+                type="button"
+                onClick={() => handleInputChange("sex", "male")}
+                className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all ${
+                  formData.sex === "male"
+                    ? "bg-blue-500 text-white shadow-sm"
+                    : "text-gray-600 hover:text-gray-800"
+                }`}
+              >
+                Male
+              </button>
+              <button
+                type="button"
+                onClick={() => handleInputChange("sex", "female")}
+                className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all ${
+                  formData.sex === "female"
+                    ? "bg-blue-500 text-white shadow-sm"
+                    : "text-gray-600 hover:text-gray-800"
+                }`}
+              >
+                Female
+              </button>
+            </div>
+          </div>
+
           {/* Basic Info Grid */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="sex" className="text-sm font-semibold text-gray-900">Sex</Label>
-              <Select value={formData.sex} onValueChange={(value) => handleInputChange("sex", value)}>
-                <SelectTrigger className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500">
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="male">Male</SelectItem>
-                  <SelectItem value="female">Female</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
             <div className="space-y-2">
               <Label htmlFor="height" className="text-sm font-semibold text-gray-900">Height</Label>
               <Input
@@ -253,9 +280,6 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
                 required
               />
             </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="weight" className="text-sm font-semibold text-gray-900">Weight</Label>
               <Input
@@ -268,17 +292,18 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
                 required
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="birthDate" className="text-sm font-semibold text-gray-900">Birth Date</Label>
-              <Input
-                id="birthDate"
-                type="date"
-                value={formData.birthDate}
-                onChange={(e) => handleInputChange("birthDate", e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                required
-              />
-            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="birthDate" className="text-sm font-semibold text-gray-900">Birth Date</Label>
+            <Input
+              id="birthDate"
+              type="date"
+              value={formData.birthDate}
+              onChange={(e) => handleInputChange("birthDate", e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              required
+            />
           </div>
 
           {/* Photo Upload */}
