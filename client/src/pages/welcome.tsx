@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import KettlebellLogo from "@/components/ui/kettlebell-logo";
 
 export default function Welcome() {
   const [, setLocation] = useLocation();
@@ -17,7 +18,8 @@ export default function Welcome() {
       <div className="w-full max-w-sm mx-auto text-center space-y-8">
         {/* Logo Section */}
         <div className="flex flex-col items-center space-y-6">
-
+          {/* Body Butler Logo */}
+          <KettlebellLogo className="w-20 h-20" />
           
           {/* Main Title */}
           <div className="space-y-3">
