@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import KettlebellLogo from "@/components/ui/kettlebell-logo";
 import { useLocation } from "wouter";
 
 export default function Welcome() {
@@ -18,8 +17,7 @@ export default function Welcome() {
       <div className="w-full max-w-sm mx-auto text-center space-y-8">
         {/* Logo Section */}
         <div className="flex flex-col items-center space-y-6">
-          {/* Kettlebell Logo */}
-          <KettlebellLogo className="w-12 h-12 text-gray-900" />
+
           
           {/* Main Title */}
           <div className="space-y-3">
