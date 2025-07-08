@@ -176,7 +176,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       }
       
       // Categorize numbers by digit count (skip if we already parsed a date)
-      if (!dateMatch) {
+      if (!naturalDateMatch && !updated) {
         for (const numStr of numbers) {
           const num = parseInt(numStr);
           
