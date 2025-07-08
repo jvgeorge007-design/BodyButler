@@ -113,79 +113,19 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
     
     console.log('Parsing:', text);
     
-    // Try to parse the full guided format first
-    const fullFormatMatch = cleanText.match(/i'm\s+([a-zA-Z]+)(?:\s+|,\s*)?(male|female)(?:\s+|,\s*)?(\d+)(?:'|')?(\d+)?(?:\s+|,\s*)?(\d+)?\s*(?:lbs?|pounds?)?(?:\s*(?:and\s*)?born\s*)?(?:(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})|(\d+))?/);
-    
-    if (fullFormatMatch && fullFormatMatch[1] && fullFormatMatch[2]) {
-      const newFormData = { ...formData };
-      
-      // Name
-      newFormData.name = fullFormatMatch[1].charAt(0).toUpperCase() + fullFormatMatch[1].slice(1);
-      
-      // Gender
-      newFormData.sex = fullFormatMatch[2];
-      
-      // Height
-      if (fullFormatMatch[3]) {
-        const feet = parseInt(fullFormatMatch[3]);
-        const inches = fullFormatMatch[4] ? parseInt(fullFormatMatch[4]) : 0;
-        if (feet >= 4 && feet <= 8 && inches <= 11) {
-          newFormData.height = `${feet}'${inches}"`;
-        }
-      }
-      
-      // Weight
-      if (fullFormatMatch[5]) {
-        const weight = parseInt(fullFormatMatch[5]);
-        if (weight >= 50 && weight <= 500) {
-          newFormData.weight = weight.toString();
-        }
-      }
-      
-      // Birth date
-      if (fullFormatMatch[6] && fullFormatMatch[7] && fullFormatMatch[8]) {
-        let month = parseInt(fullFormatMatch[6]);
-        let day = parseInt(fullFormatMatch[7]);
-        let year = parseInt(fullFormatMatch[8]);
-        
-        if (year < 100) {
-          year = year > 30 ? 1900 + year : 2000 + year;
-        }
-        
-        if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
-          const date = new Date(year, month - 1, day);
-          newFormData.birthDate = date.toISOString().split('T')[0];
-        }
-      } else if (fullFormatMatch[9]) {
-        // Handle compact date format like "1997"
-        const dateStr = fullFormatMatch[9];
-        if (dateStr.length === 4) {
-          const year = parseInt(dateStr);
-          if (year >= 1900 && year <= 2010) {
-            // Default to Jan 1 for just year
-            const date = new Date(year, 0, 1);
-            newFormData.birthDate = date.toISOString().split('T')[0];
-          }
-        }
-      }
-      
-      console.log('Parsed data:', newFormData);
-      setFormData(newFormData);
-      return;
-    }
-    
-    // Fallback: parse components individually for partial input
+    // Extract all numbers and categorize by digit count
+    const numbers = cleanText.match(/\d+/g) || [];
     const newFormData = { ...formData };
     let updated = false;
     
-    // Name
+    // Parse name
     const nameMatch = cleanText.match(/i'm\s+([a-zA-Z]+)/);
     if (nameMatch && nameMatch[1] !== formData.name.toLowerCase()) {
       newFormData.name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
       updated = true;
     }
     
-    // Gender
+    // Parse gender
     if (cleanText.includes('male') && !cleanText.includes('female') && formData.sex !== 'male') {
       newFormData.sex = 'male';
       updated = true;
@@ -194,11 +134,47 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       updated = true;
     }
     
-    // Height - handle "5 6" or "56" formats
-    const heightMatch = cleanText.match(/(?:^|\s)(\d+)(?:\s+|')(\d+)?(?:\s|$)/);
-    if (heightMatch) {
-      const feet = parseInt(heightMatch[1]);
-      const inches = heightMatch[2] ? parseInt(heightMatch[2]) : 0;
+    // Categorize numbers by digit count
+    for (const numStr of numbers) {
+      const num = parseInt(numStr);
+      
+      if (numStr.length === 2) {
+        // 2-digit = height (like 58 = 5'8")
+        if (num >= 48 && num <= 84) {
+          const feet = Math.floor(num / 10);
+          const inches = num % 10;
+          if (feet >= 4 && feet <= 8 && inches <= 11) {
+            const heightStr = `${feet}'${inches}"`;
+            if (heightStr !== formData.height) {
+              newFormData.height = heightStr;
+              updated = true;
+            }
+          }
+        }
+      } else if (numStr.length === 3) {
+        // 3-digit = weight (like 170, 190)
+        if (num >= 50 && num <= 500 && num.toString() !== formData.weight) {
+          newFormData.weight = num.toString();
+          updated = true;
+        }
+      } else if (numStr.length === 4) {
+        // 4-digit = birth year (like 1997)
+        if (num >= 1900 && num <= 2010) {
+          const date = new Date(num, 0, 1);
+          const dateStr = date.toISOString().split('T')[0];
+          if (dateStr !== formData.birthDate) {
+            newFormData.birthDate = dateStr;
+            updated = true;
+          }
+        }
+      }
+    }
+    
+    // Special case: handle space-separated height like "5 8"
+    const heightSpaceMatch = cleanText.match(/(?:^|\s)(\d)\s+(\d+)(?:\s|$)/);
+    if (heightSpaceMatch) {
+      const feet = parseInt(heightSpaceMatch[1]);
+      const inches = parseInt(heightSpaceMatch[2]);
       if (feet >= 4 && feet <= 8 && inches <= 11) {
         const heightStr = `${feet}'${inches}"`;
         if (heightStr !== formData.height) {
@@ -208,31 +184,8 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       }
     }
     
-    // Weight
-    const weightMatch = cleanText.match(/(\d+)(?:\s*(?:lbs?|pounds?))?/);
-    if (weightMatch) {
-      const weight = parseInt(weightMatch[1]);
-      if (weight >= 50 && weight <= 500 && weight.toString() !== formData.weight) {
-        newFormData.weight = weight.toString();
-        updated = true;
-      }
-    }
-    
-    // Birth date
-    const dateMatch = cleanText.match(/(?:born\s*)?(\d{4})/);
-    if (dateMatch) {
-      const year = parseInt(dateMatch[1]);
-      if (year >= 1900 && year <= 2010) {
-        const date = new Date(year, 0, 1);
-        const dateStr = date.toISOString().split('T')[0];
-        if (dateStr !== formData.birthDate) {
-          newFormData.birthDate = dateStr;
-          updated = true;
-        }
-      }
-    }
-    
     if (updated) {
+      console.log('Parsed data:', newFormData);
       setFormData(newFormData);
     }
   };
