@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 import { Upload, Mic, MicOff } from "lucide-react";
 
 // Web Speech API types
@@ -20,6 +21,7 @@ interface Section1Props {
 }
 
 export default function Section1({ data, onNext, isLoading }: Section1Props) {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: data.name || "",
     sex: data.sex || "",
@@ -35,6 +37,27 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
+    const requiredFields = [
+      { field: 'name', label: 'Name' },
+      { field: 'sex', label: 'Biological Sex' },
+      { field: 'height', label: 'Height' },
+      { field: 'weight', label: 'Weight' },
+      { field: 'birthDate', label: 'Birth Date' }
+    ];
+    
+    const emptyFields = requiredFields.filter(({ field }) => !formData[field as keyof typeof formData].trim());
+    
+    if (emptyFields.length > 0) {
+      toast({
+        title: "Missing Required Information",
+        description: `Please fill out: ${emptyFields.map(f => f.label).join(', ')}`,
+        variant: "destructive",
+      });
+      return;
+    }
+    
     onNext(formData);
   };
 
@@ -290,7 +313,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           {/* Name Input */}
           <div className="space-y-2">
             <Label htmlFor="name" className="text-sm font-semibold text-gray-900">
-              What's your name?
+              What's your name? *
             </Label>
             <Input
               id="name"
@@ -298,15 +321,19 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
               placeholder="Enter your first name"
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
+                formData.name ? 'border-gray-300 focus:border-blue-500' : 'border-red-300 focus:border-red-500'
+              }`}
               required
             />
           </div>
 
           {/* Biological Sex Toggle */}
           <div className="space-y-2">
-            <Label className="text-sm font-semibold text-gray-900">Biological Sex</Label>
-            <div className="flex bg-gray-100 rounded-xl p-1">
+            <Label className="text-sm font-semibold text-gray-900">Biological Sex *</Label>
+            <div className={`flex rounded-xl p-1 ${
+              formData.sex ? 'bg-gray-100' : 'bg-red-50 border border-red-300'
+            }`}>
               <button
                 type="button"
                 onClick={() => handleInputChange("sex", "male")}
@@ -335,39 +362,45 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           {/* Basic Info Grid */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="height" className="text-sm font-semibold text-gray-900">Height</Label>
+              <Label htmlFor="height" className="text-sm font-semibold text-gray-900">Height *</Label>
               <Input
                 id="height"
                 type="text"
                 placeholder="5'10&quot;"
                 value={formData.height}
                 onChange={(e) => handleInputChange("height", e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
+                  formData.height ? 'border-gray-300 focus:border-blue-500' : 'border-red-300 focus:border-red-500'
+                }`}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="weight" className="text-sm font-semibold text-gray-900">Weight</Label>
+              <Label htmlFor="weight" className="text-sm font-semibold text-gray-900">Weight *</Label>
               <Input
                 id="weight"
                 type="text"
                 placeholder="180 lbs"
                 value={formData.weight}
                 onChange={(e) => handleInputChange("weight", e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
+                  formData.weight ? 'border-gray-300 focus:border-blue-500' : 'border-red-300 focus:border-red-500'
+                }`}
                 required
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="birthDate" className="text-sm font-semibold text-gray-900">Birth Date</Label>
+            <Label htmlFor="birthDate" className="text-sm font-semibold text-gray-900">Birth Date *</Label>
             <Input
               id="birthDate"
               type="date"
               value={formData.birthDate}
               onChange={(e) => handleInputChange("birthDate", e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
+                formData.birthDate ? 'border-gray-300 focus:border-blue-500' : 'border-red-300 focus:border-red-500'
+              }`}
               required
             />
           </div>
