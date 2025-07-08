@@ -12,17 +12,27 @@ interface Section2Props {
 }
 
 const sleepOptions = [
-  { label: "6h", value: 6 },
-  { label: "7h", value: 7 },
-  { label: "8h", value: 8 },
-  { label: "9h+", value: 9 },
+  { label: "<4h", value: "less_than_4" },
+  { label: "4h", value: "4" },
+  { label: "5h", value: "5" },
+  { label: "6h", value: "6" },
+  { label: "7h", value: "7" },
+  { label: "8h", value: "8" },
+  { label: "9h", value: "9" },
+  { label: "9h+", value: "more_than_9" },
 ];
 
 const equipmentOptions = [
-  "Full gym access",
-  "Home equipment",
+  "Full commercial gym",
+  "Home gym setup",
+  "Dumbbells",
+  "Barbell and weights",
   "Resistance bands",
+  "Pull-up bar",
+  "Kettlebells",
+  "Cardio equipment (treadmill, bike, etc.)",
   "Bodyweight only",
+  "Outdoor space (park, trail)",
 ];
 
 export default function Section2({ data, onNext, isLoading }: Section2Props) {
@@ -87,13 +97,13 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
           {/* Sleep Hours */}
           <div className="space-y-2">
             <Label className="text-sm font-semibold text-gray-900">Average Sleep Hours</Label>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-4 gap-2">
               {sleepOptions.map((option) => (
                 <Button
                   key={option.value}
                   type="button"
                   variant={formData.sleepHours === option.value ? "default" : "outline"}
-                  className={`flex-1 py-3 px-4 rounded-xl transition-all ${
+                  className={`py-3 px-2 rounded-xl transition-all text-sm ${
                     formData.sleepHours === option.value
                       ? "bg-blue-500 text-white"
                       : "border border-gray-300 hover:border-blue-500 hover:bg-blue-50"
