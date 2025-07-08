@@ -101,7 +101,8 @@ Body Butler is a full-stack web application that provides personalized fitness a
 
 ```
 Changelog:
-- July 08, 2025. Initial setup
+- July 08, 2025. Initial setup with comprehensive onboarding flow and authentication
+- July 08, 2025. Updated kettlebell logo to match brand design with transparent background
 ```
 
 ## User Preferences
