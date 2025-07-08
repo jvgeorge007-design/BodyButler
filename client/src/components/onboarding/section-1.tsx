@@ -112,78 +112,84 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
     if (!cleanText) return;
     
     console.log('Parsing:', text);
-    console.log('Current formData before parsing:', formData);
     
-    // Extract all numbers and categorize by digit count
-    const numbers = cleanText.match(/\d+/g) || [];
-    const newFormData = { ...formData };
-    let updated = false;
+    // Use functional state update to get the latest formData
+    setFormData((currentFormData) => {
+      console.log('Current formData before parsing:', currentFormData);
+      
+      // Extract all numbers and categorize by digit count
+      const numbers = cleanText.match(/\d+/g) || [];
+      const newFormData = { ...currentFormData };
+      let updated = false;
     
-    // Parse name - only if we don't already have one
-    const nameMatch = cleanText.match(/i'm\s+([a-zA-Z]+)/);
-    if (nameMatch && !formData.name) {
-      newFormData.name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
-      updated = true;
-    }
-    
-    // Parse gender - only if we don't already have one
-    if (!formData.sex) {
-      if (cleanText.includes('male') && !cleanText.includes('female')) {
-        newFormData.sex = 'male';
-        updated = true;
-      } else if (cleanText.includes('female')) {
-        newFormData.sex = 'female';
+      // Parse name - only if we don't already have one
+      const nameMatch = cleanText.match(/i'm\s+([a-zA-Z]+)/);
+      if (nameMatch && !currentFormData.name) {
+        newFormData.name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
         updated = true;
       }
-    }
-    
-    // Categorize numbers by digit count
-    for (const numStr of numbers) {
-      const num = parseInt(numStr);
       
-      if (numStr.length === 2) {
-        // 2-digit = height (like 58 = 5'8") - only if we don't have height yet
-        if (!formData.height && num >= 48 && num <= 84) {
-          const feet = Math.floor(num / 10);
-          const inches = num % 10;
+      // Parse gender - only if we don't already have one
+      if (!currentFormData.sex) {
+        if (cleanText.includes('male') && !cleanText.includes('female')) {
+          newFormData.sex = 'male';
+          updated = true;
+        } else if (cleanText.includes('female')) {
+          newFormData.sex = 'female';
+          updated = true;
+        }
+      }
+    
+      // Categorize numbers by digit count
+      for (const numStr of numbers) {
+        const num = parseInt(numStr);
+        
+        if (numStr.length === 2) {
+          // 2-digit = height (like 58 = 5'8") - only if we don't have height yet
+          if (!currentFormData.height && num >= 48 && num <= 84) {
+            const feet = Math.floor(num / 10);
+            const inches = num % 10;
+            if (feet >= 4 && feet <= 8 && inches <= 11) {
+              newFormData.height = `${feet}'${inches}"`;
+              updated = true;
+            }
+          }
+        } else if (numStr.length === 3) {
+          // 3-digit = weight (like 170, 190) - only if we don't have weight yet
+          if (!currentFormData.weight && num >= 50 && num <= 500) {
+            newFormData.weight = num.toString();
+            updated = true;
+          }
+        } else if (numStr.length === 4) {
+          // 4-digit = birth year (like 1997) - only if we don't have birth date yet
+          if (!currentFormData.birthDate && num >= 1900 && num <= 2010) {
+            const date = new Date(num, 0, 1);
+            newFormData.birthDate = date.toISOString().split('T')[0];
+            updated = true;
+          }
+        }
+      }
+      
+      // Special case: handle space-separated height like "5 8" - only if we don't have height yet
+      if (!currentFormData.height) {
+        const heightSpaceMatch = cleanText.match(/(?:^|\s)(\d)\s+(\d+)(?:\s|$)/);
+        if (heightSpaceMatch) {
+          const feet = parseInt(heightSpaceMatch[1]);
+          const inches = parseInt(heightSpaceMatch[2]);
           if (feet >= 4 && feet <= 8 && inches <= 11) {
             newFormData.height = `${feet}'${inches}"`;
             updated = true;
           }
         }
-      } else if (numStr.length === 3) {
-        // 3-digit = weight (like 170, 190) - only if we don't have weight yet
-        if (!formData.weight && num >= 50 && num <= 500) {
-          newFormData.weight = num.toString();
-          updated = true;
-        }
-      } else if (numStr.length === 4) {
-        // 4-digit = birth year (like 1997) - only if we don't have birth date yet
-        if (!formData.birthDate && num >= 1900 && num <= 2010) {
-          const date = new Date(num, 0, 1);
-          newFormData.birthDate = date.toISOString().split('T')[0];
-          updated = true;
-        }
       }
-    }
-    
-    // Special case: handle space-separated height like "5 8" - only if we don't have height yet
-    if (!formData.height) {
-      const heightSpaceMatch = cleanText.match(/(?:^|\s)(\d)\s+(\d+)(?:\s|$)/);
-      if (heightSpaceMatch) {
-        const feet = parseInt(heightSpaceMatch[1]);
-        const inches = parseInt(heightSpaceMatch[2]);
-        if (feet >= 4 && feet <= 8 && inches <= 11) {
-          newFormData.height = `${feet}'${inches}"`;
-          updated = true;
-        }
+      
+      if (updated) {
+        console.log('Parsed data:', newFormData);
+        return newFormData;
       }
-    }
-    
-    if (updated) {
-      console.log('Parsed data:', newFormData);
-      setFormData(newFormData);
-    }
+      
+      return currentFormData;
+    });
   };
 
   const toggleListening = () => {
