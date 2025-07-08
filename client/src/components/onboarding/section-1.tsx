@@ -112,6 +112,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
     if (!cleanText) return;
     
     console.log('Parsing:', text);
+    console.log('Clean text for parsing:', cleanText);
     
     // Use functional state update to get the latest formData
     setFormData((currentFormData) => {
@@ -132,16 +133,19 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
         }
       }
       
-      // Parse gender - allow updates to correct mistakes
+      // Parse gender - handle common speech recognition errors
       if (cleanText.includes('female')) {
         if (currentFormData.sex !== 'female') {
           newFormData.sex = 'female';
           updated = true;
+          console.log('Updated sex to female');
         }
-      } else if (cleanText.includes('male') && !cleanText.includes('female')) {
+      } else if (cleanText.includes('male') || cleanText.includes('mail')) {
+        // Handle "mail" as common misrecognition of "male"
         if (currentFormData.sex !== 'male') {
           newFormData.sex = 'male';
           updated = true;
+          console.log('Updated sex to male');
         }
       }
     
