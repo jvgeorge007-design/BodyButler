@@ -19,15 +19,15 @@ export default function Welcome() {
         {/* Logo Section */}
         <div className="flex flex-col items-center space-y-6">
           {/* Body Butler Logo */}
-          <KettlebellLogo className="w-20 h-20" />
+          <KettlebellLogo className="w-40 h-40" />
           
           {/* Main Title */}
-          <div className="space-y-3">
-            <h1 className="text-3xl font-bold text-gray-900 leading-tight">
-              Welcome to<br/>Body Butler
+          <div className="space-y-4">
+            <h1 className="text-4xl font-black text-gray-900 leading-none tracking-tighter">
+              BODY BUTLER
             </h1>
             <p className="text-gray-600 text-lg font-medium">
-              Your personal guide to smarter<br/>workouts and nutrition.
+              Transformation tailored to you
             </p>
           </div>
         </div>
@@ -37,7 +37,7 @@ export default function Welcome() {
           {/* Get Started Button (Primary) */}
           <Button 
             onClick={handleGetStarted}
-            className="w-full gradient-button"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 rounded-xl transition-colors"
           >
             Get Started
           </Button>
@@ -46,7 +46,7 @@ export default function Welcome() {
           <Button 
             onClick={handleLogin}
             variant="outline"
-            className="w-full outline-button"
+            className="w-full border-2 border-blue-500 text-blue-500 hover:bg-blue-50 font-semibold py-4 rounded-xl transition-colors"
           >
             Log In
           </Button>
