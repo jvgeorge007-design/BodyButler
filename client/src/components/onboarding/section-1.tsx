@@ -166,8 +166,20 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
         } else if (numStr.length === 4) {
           // 4-digit = MMYY format (like 1198 = 11/01/1998, 2303 = 02/03/2003)
           if (!currentFormData.birthDate) {
-            const monthPart = Math.floor(num / 100); // First 2 digits
-            const yearPart = num % 100; // Last 2 digits
+            let monthPart = Math.floor(num / 100); // First 2 digits
+            let yearPart = num % 100; // Last 2 digits
+            
+            // Special handling for single digit months (like 1198 could be 1/1/98 or 11/98)
+            // If month > 12, try single digit month interpretation
+            if (monthPart > 12) {
+              const firstDigit = Math.floor(num / 1000);
+              const remainingDigits = num % 1000;
+              
+              if (firstDigit >= 1 && firstDigit <= 12) {
+                monthPart = firstDigit;
+                yearPart = remainingDigits % 100; // Last 2 digits of remaining
+              }
+            }
             
             // Convert 2-digit year to 4-digit year
             let fullYear;
@@ -177,17 +189,32 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
               fullYear = 1900 + yearPart; // 31-99 = 1931-1999
             }
             
-            // Handle month overflow (like 23 becomes 02 of next year)
-            let month = monthPart;
-            let year = fullYear;
-            if (monthPart > 12) {
-              month = monthPart - 12;
-              year = fullYear + 1;
+            // Validate month and year ranges
+            if (monthPart >= 1 && monthPart <= 12 && fullYear >= 1900 && fullYear <= 2030) {
+              const date = new Date(fullYear, monthPart - 1, 1);
+              newFormData.birthDate = date.toISOString().split('T')[0];
+              updated = true;
+            }
+          }
+        } else if (numStr.length === 5) {
+          // 5-digit = single digit month format (like 11198 = 1/11/98)
+          if (!currentFormData.birthDate) {
+            const firstDigit = Math.floor(num / 10000);
+            const remainingDigits = num % 10000;
+            const monthPart = Math.floor(remainingDigits / 100);
+            const yearPart = remainingDigits % 100;
+            
+            // Convert 2-digit year to 4-digit year
+            let fullYear;
+            if (yearPart >= 0 && yearPart <= 30) {
+              fullYear = 2000 + yearPart;
+            } else {
+              fullYear = 1900 + yearPart;
             }
             
-            // Validate month and year ranges
-            if (month >= 1 && month <= 12 && year >= 1900 && year <= 2030) {
-              const date = new Date(year, month - 1, 1);
+            // Validate ranges
+            if (firstDigit >= 1 && firstDigit <= 12 && monthPart >= 1 && monthPart <= 31 && fullYear >= 1900 && fullYear <= 2030) {
+              const date = new Date(fullYear, firstDigit - 1, monthPart);
               newFormData.birthDate = date.toISOString().split('T')[0];
               updated = true;
             }
