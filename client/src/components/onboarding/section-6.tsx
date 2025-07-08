@@ -1,0 +1,106 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Mic } from "lucide-react";
+
+interface Section6Props {
+  data: any;
+  onNext: (data: any) => void;
+  isLoading?: boolean;
+}
+
+const personalityTypes = [
+  { value: "motivator", label: "The Motivator", description: "I need encouragement and positive reinforcement" },
+  { value: "challenger", label: "The Challenger", description: "Push me hard, I thrive under pressure" },
+  { value: "scientist", label: "The Scientist", description: "Give me data, facts, and detailed explanations" },
+  { value: "buddy", label: "The Buddy", description: "Be friendly and supportive, like a workout partner" },
+];
+
+export default function Section6({ data, onNext, isLoading }: Section6Props) {
+  const [formData, setFormData] = useState({
+    coachingStyle: data.coachingStyle || "",
+    personalityType: data.personalityType || "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onNext(formData);
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  return (
+    <div className="min-h-screen px-6 py-8">
+      <div className="max-w-md mx-auto space-y-8">
+        <div className="text-center space-y-2">
+          <h2 className="text-2xl font-bold text-gray-900">Coaching Style</h2>
+          <p className="text-gray-600">How do you like to be coached?</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Coaching Style */}
+          <div className="space-y-2">
+            <Label htmlFor="coaching" className="text-sm font-semibold text-gray-900">
+              How do you like to be coached?
+            </Label>
+            <div className="relative">
+              <Textarea
+                id="coaching"
+                placeholder="e.g., 'Keep it fun', 'Be strict', 'Give me science', 'Be encouraging'..."
+                rows={3}
+                value={formData.coachingStyle}
+                onChange={(e) => handleInputChange("coachingStyle", e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute bottom-3 right-3 p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+              >
+                <Mic className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Personality Type */}
+          <div className="space-y-3">
+            <Label className="text-sm font-semibold text-gray-900">
+              What type of coaching personality fits you best?
+            </Label>
+            <RadioGroup
+              value={formData.personalityType}
+              onValueChange={(value) => handleInputChange("personalityType", value)}
+              className="space-y-3"
+            >
+              {personalityTypes.map((type) => (
+                <label
+                  key={type.value}
+                  className="flex items-start space-x-3 p-4 border border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer"
+                >
+                  <RadioGroupItem value={type.value} className="mt-1" />
+                  <div className="flex-1">
+                    <div className="font-semibold text-gray-900">{type.label}</div>
+                    <div className="text-sm text-gray-600">{type.description}</div>
+                  </div>
+                </label>
+              ))}
+            </RadioGroup>
+          </div>
+
+          <Button 
+            type="submit"
+            disabled={isLoading}
+            className="w-full gradient-button"
+          >
+            {isLoading ? "Completing Setup..." : "Complete Setup"}
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
+}
