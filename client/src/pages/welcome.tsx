@@ -22,7 +22,7 @@ export default function Welcome() {
           <KettlebellLogo className="w-60 h-72" />
           
           {/* Main Title */}
-          <div className="space-y-2 -mt-4">
+          <div className="space-y-2 -mt-18">
             <h1 className="text-4xl font-black text-gray-900 leading-none tracking-tighter">
               BODY BUTLER
             </h1>
