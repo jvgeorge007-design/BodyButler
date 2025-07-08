@@ -19,7 +19,7 @@ export default function Welcome() {
         {/* Logo Section */}
         <div className="flex flex-col items-center space-y-6">
           {/* Body Butler Logo */}
-          <KettlebellLogo className="w-80 h-96" />
+          <KettlebellLogo className="w-60 h-72" />
           
           {/* Main Title */}
           <div className="space-y-4">
