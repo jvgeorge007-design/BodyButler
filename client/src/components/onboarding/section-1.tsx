@@ -88,8 +88,8 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
     
     console.log('Parsing:', text);
     
-    // Parse the guided format: "I'm [NAME], [GENDER], [HEIGHT], [WEIGHT], and born [DATE]"
-    const guidedMatch = cleanText.match(/i'm\s+([a-zA-Z]+)(?:,\s*)?(male|female)(?:,\s*)?(?:(\d+)'?(\d*)"?|\s*(\d+)\s*(?:feet|foot)?\s*(\d+)?\s*(?:inches?)?)?(?:,\s*)?(\d+)?\s*(?:lbs?|pounds?)?(?:,?\s*(?:and\s*)?born\s*)?(?:(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4}))?/);
+    // Parse the guided format - more flexible for voice transcription
+    const guidedMatch = cleanText.match(/i'm\s+([a-zA-Z]+)(?:\s+|,\s*)?(male|female)(?:\s+|,\s*)?(?:(\d+)'?(\d*)"?|\s*(\d{2,3})\s*)?(?:\s+|,\s*)?(\d+)?\s*(?:lbs?|pounds?)?(?:\s*(?:and\s*)?born\s*)?(\d+)?/);
     
     if (guidedMatch) {
       const newFormData = { ...formData };
@@ -104,38 +104,70 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
         newFormData.sex = guidedMatch[2];
       }
       
-      // Height (various formats)
+      // Height - handle transcription formats like "510" = 5'10"
       if (guidedMatch[3]) {
         const feet = parseInt(guidedMatch[3]);
         const inches = guidedMatch[4] ? parseInt(guidedMatch[4]) : 0;
         newFormData.height = `${feet}'${inches}"`;
       } else if (guidedMatch[5]) {
-        const feet = parseInt(guidedMatch[5]);
-        const inches = guidedMatch[6] ? parseInt(guidedMatch[6]) : 0;
-        newFormData.height = `${feet}'${inches}"`;
+        const heightNum = parseInt(guidedMatch[5]);
+        // Handle formats like 510 = 5'10", 67 = 6'7", etc.
+        if (heightNum >= 100) {
+          const feet = Math.floor(heightNum / 100);
+          const inches = heightNum % 100;
+          if (feet >= 4 && feet <= 8 && inches <= 11) {
+            newFormData.height = `${feet}'${inches}"`;
+          }
+        } else if (heightNum >= 48 && heightNum <= 84) {
+          // Total inches format
+          const feet = Math.floor(heightNum / 12);
+          const inches = heightNum % 12;
+          newFormData.height = `${feet}'${inches}"`;
+        }
       }
       
       // Weight
-      if (guidedMatch[7]) {
-        const weight = parseInt(guidedMatch[7]);
+      if (guidedMatch[6]) {
+        const weight = parseInt(guidedMatch[6]);
         if (weight >= 50 && weight <= 500) {
           newFormData.weight = weight.toString();
         }
       }
       
-      // Birth date
-      if (guidedMatch[8] && guidedMatch[9] && guidedMatch[10]) {
-        let month = parseInt(guidedMatch[8]);
-        let day = parseInt(guidedMatch[9]);
-        let year = parseInt(guidedMatch[10]);
+      // Birth date - handle incomplete transcriptions like "1198" = "11/9/8"
+      if (guidedMatch[7]) {
+        const dateStr = guidedMatch[7];
+        let month, day, year;
         
-        if (year < 100) {
-          year = year > 30 ? 1900 + year : 2000 + year;
+        if (dateStr.length === 4) {
+          // Format like "1198" = "11/9/8" or "1/1/98"
+          if (dateStr.startsWith('1')) {
+            // Likely 1198 = 11/9/8
+            month = parseInt(dateStr.substring(0, 2));
+            day = parseInt(dateStr.substring(2, 3));
+            year = parseInt(dateStr.substring(3));
+          } else {
+            // Try other interpretations
+            month = parseInt(dateStr.substring(0, 1));
+            day = parseInt(dateStr.substring(1, 2));
+            year = parseInt(dateStr.substring(2));
+          }
+        } else if (dateStr.length >= 6) {
+          // Format like "111998" = "11/19/98"
+          month = parseInt(dateStr.substring(0, 2));
+          day = parseInt(dateStr.substring(2, 4));
+          year = parseInt(dateStr.substring(4));
         }
         
-        if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
-          const date = new Date(year, month - 1, day);
-          newFormData.birthDate = date.toISOString().split('T')[0];
+        if (month && day && year) {
+          if (year < 100) {
+            year = year > 30 ? 1900 + year : 2000 + year;
+          }
+          
+          if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+            const date = new Date(year, month - 1, day);
+            newFormData.birthDate = date.toISOString().split('T')[0];
+          }
         }
       }
       
