@@ -18,10 +18,8 @@ export default function Welcome() {
       <div className="w-full max-w-sm mx-auto text-center space-y-8">
         {/* Logo Section */}
         <div className="flex flex-col items-center space-y-6">
-          {/* Blue Kettlebell Logo */}
-          <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center shadow-lg">
-            <KettlebellLogo className="w-12 h-12 text-white" />
-          </div>
+          {/* Kettlebell Logo */}
+          <KettlebellLogo className="w-12 h-12 text-gray-900" />
           
           {/* Main Title */}
           <div className="space-y-3">
