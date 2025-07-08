@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { Mic } from "lucide-react";
 
 interface Section2Props {
@@ -12,34 +12,18 @@ interface Section2Props {
 }
 
 const sleepOptions = [
-  { label: "<4h", value: "less_than_4" },
-  { label: "4h", value: "4" },
-  { label: "5h", value: "5" },
+  { label: "<5h", value: "less_than_5" },
   { label: "6h", value: "6" },
   { label: "7h", value: "7" },
   { label: "8h", value: "8" },
-  { label: "9h", value: "9" },
-  { label: "9h+", value: "more_than_9" },
-];
-
-const equipmentOptions = [
-  "Full commercial gym",
-  "Home gym setup",
-  "Dumbbells",
-  "Barbell and weights",
-  "Resistance bands",
-  "Pull-up bar",
-  "Kettlebells",
-  "Cardio equipment (treadmill, bike, etc.)",
-  "Bodyweight only",
-  "Outdoor space (park, trail)",
+  { label: "8h+", value: "more_than_8" },
 ];
 
 export default function Section2({ data, onNext, isLoading }: Section2Props) {
   const [formData, setFormData] = useState({
     activityDescription: data.activityDescription || "",
     sleepHours: data.sleepHours || null,
-    equipmentAccess: data.equipmentAccess || [],
+    equipmentAccess: data.equipmentAccess || "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -49,15 +33,6 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleEquipmentChange = (equipment: string, checked: boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      equipmentAccess: checked
-        ? [...prev.equipmentAccess, equipment]
-        : prev.equipmentAccess.filter((item: string) => item !== equipment)
-    }));
   };
 
   return (
@@ -97,13 +72,13 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
           {/* Sleep Hours */}
           <div className="space-y-2">
             <Label className="text-sm font-semibold text-gray-900">Average Sleep Hours</Label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="flex gap-2">
               {sleepOptions.map((option) => (
                 <Button
                   key={option.value}
                   type="button"
                   variant={formData.sleepHours === option.value ? "default" : "outline"}
-                  className={`py-3 px-2 rounded-xl transition-all text-sm ${
+                  className={`flex-1 py-3 px-4 rounded-xl transition-all ${
                     formData.sleepHours === option.value
                       ? "bg-blue-500 text-white"
                       : "border border-gray-300 hover:border-blue-500 hover:bg-blue-50"
@@ -117,22 +92,26 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
           </div>
 
           {/* Equipment Access */}
-          <div className="space-y-3">
-            <Label className="text-sm font-semibold text-gray-900">Equipment Access</Label>
-            <div className="space-y-2">
-              {equipmentOptions.map((equipment) => (
-                <label
-                  key={equipment}
-                  className="flex items-center space-x-3 p-3 border border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer"
-                >
-                  <Checkbox
-                    checked={formData.equipmentAccess.includes(equipment)}
-                    onCheckedChange={(checked) => handleEquipmentChange(equipment, checked as boolean)}
-                    className="w-5 h-5"
-                  />
-                  <span className="text-gray-900">{equipment}</span>
-                </label>
-              ))}
+          <div className="space-y-2">
+            <Label htmlFor="equipment" className="text-sm font-semibold text-gray-900">
+              Equipment Access
+            </Label>
+            <div className="relative">
+              <Textarea
+                id="equipment"
+                placeholder="Examples: full gym access, home gym with only dumbbells, no weights, resistance bands, bodyweight only, pull-up bar, etc."
+                rows={3}
+                value={formData.equipmentAccess}
+                onChange={(e) => handleInputChange("equipmentAccess", e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none"
+              />
+              <Button
+                type="button"
+                size="sm"
+                className="absolute bottom-3 right-3 p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+              >
+                <Mic className="w-5 h-5" />
+              </Button>
             </div>
           </div>
 

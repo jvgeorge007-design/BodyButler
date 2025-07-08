@@ -45,7 +45,7 @@ export const userProfiles = pgTable("user_profiles", {
   birthDate: timestamp("birth_date"),
   activityDescription: text("activity_description"),
   sleepHours: varchar("sleep_hours"),
-  equipmentAccess: text("equipment_access").array(),
+  equipmentAccess: text("equipment_access"),
   dietPreferences: text("diet_preferences"),
   weeklyBudget: decimal("weekly_budget"),
   goals: text("goals"),

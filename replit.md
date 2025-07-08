@@ -106,8 +106,8 @@ Changelog:
 - July 08, 2025. Created dedicated login page with multiple authentication options (Email, Phone, Google, Apple)
 - July 08, 2025. Updated navigation flow: Get Started → Onboarding, Log In → Login Options
 - July 08, 2025. Enhanced voice parsing with zero-friction requirements: smart 3-digit height parsing (511=5'11"), improved name/gender parsing with exclusion lists, natural date parsing, and context-aware weight detection
-- July 08, 2025. Updated sleep scale to 8 options: less than 4, 4, 5, 6, 7, 8, 9, more than 9 hours with grid layout
-- July 08, 2025. Expanded equipment access with 10 comprehensive options including gym types, specific equipment, and bodyweight/outdoor options
+- July 08, 2025. Updated sleep scale to sliding 5-option scale: less than 5, 6, 7, 8, more than 8 hours
+- July 08, 2025. Changed equipment access to text input with voice support and helpful examples (full gym access, home gym with only dumbbells, no weights, resistance bands, etc.)
 ```
 
 ## User Preferences
