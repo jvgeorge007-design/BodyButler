@@ -83,19 +83,25 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
   }, []);
 
   const parseAndFillForm = (text: string) => {
-    const lowerText = text.toLowerCase();
+    const lowerText = text.toLowerCase().trim();
+    if (!lowerText) return;
+    
     const newFormData = { ...formData };
 
-    // Parse name - look for "I'm" or "my name is"
-    const nameMatch = lowerText.match(/(?:i'm|my name is|i am)\s+([a-zA-Z]+)/);
+    // Parse name - look for "I'm" or "my name is" - more flexible matching
+    const nameMatch = lowerText.match(/(?:i'm|my name is|i am|call me|this is)\s+([a-zA-Z]+)/i);
     if (nameMatch) {
       newFormData.name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
     }
 
-    // Parse sex/gender
+    // Parse sex/gender - more robust detection
     if (lowerText.includes('male') && !lowerText.includes('female')) {
       newFormData.sex = 'male';
     } else if (lowerText.includes('female')) {
+      newFormData.sex = 'female';
+    } else if (lowerText.includes('man') || lowerText.includes('guy')) {
+      newFormData.sex = 'male';
+    } else if (lowerText.includes('woman') || lowerText.includes('girl')) {
       newFormData.sex = 'female';
     }
 
@@ -181,17 +187,19 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       recognitionRef.current?.stop();
       setIsListening(false);
     } else {
-      recognitionRef.current?.start();
-      setIsListening(true);
-      setTranscript("");
-      
-      // Auto-stop after 15 seconds
-      setTimeout(() => {
-        if (recognitionRef.current && isListening) {
-          recognitionRef.current.stop();
-          setIsListening(false);
-        }
-      }, 15000);
+      if (recognitionRef.current) {
+        recognitionRef.current.start();
+        setIsListening(true);
+        setTranscript("");
+        
+        // Auto-stop after 15 seconds
+        setTimeout(() => {
+          if (recognitionRef.current && isListening) {
+            recognitionRef.current.stop();
+            setIsListening(false);
+          }
+        }, 15000);
+      }
     }
   };
 
@@ -222,9 +230,9 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
             )}
           </Button>
           
-          <div className="text-center">
-            <p className="text-xs text-gray-500">
-              "I'm Jerry, male, 5'7", 165 lbs, and born 1/1/1998."
+          <div className="bg-gray-50 rounded-lg px-4 py-2 border border-gray-200">
+            <p className="text-xs text-gray-500 text-center">
+              <span className="font-medium">Say:</span> "I'm Jerry, male, 5'7", 165 lbs, and born 1/1/1998."
             </p>
           </div>
         </div>
