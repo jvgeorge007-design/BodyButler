@@ -12,7 +12,9 @@ export default function KettlebellLogo({ className }: KettlebellLogoProps) {
       alt="Body Butler Logo"
       className={cn("w-12 h-12", className)}
       style={{ 
-        background: 'transparent'
+        background: 'transparent',
+        objectFit: 'cover',
+        objectPosition: 'center'
       }}
     />
   );
