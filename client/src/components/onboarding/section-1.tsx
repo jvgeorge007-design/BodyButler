@@ -87,22 +87,38 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
     if (!lowerText) return;
     
     const newFormData = { ...formData };
+    
+    console.log('Parsing text:', text); // Debug log
 
-    // Parse name - look for "I'm" or "my name is" - more flexible matching
-    const nameMatch = lowerText.match(/(?:i'm|my name is|i am|call me|this is)\s+([a-zA-Z]+)/i);
-    if (nameMatch) {
-      newFormData.name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
+    // Parse name - much more flexible matching
+    const namePatterns = [
+      /(?:i'm|my name is|i am|call me|this is)\s+([a-zA-Z]+)/i,
+      /^([a-zA-Z]+)[,\s]/,  // Name at start followed by comma or space
+      /\b([A-Z][a-z]+)\b/   // Capitalized word (likely a name)
+    ];
+    
+    for (const pattern of namePatterns) {
+      const nameMatch = lowerText.match(pattern);
+      if (nameMatch && nameMatch[1] && nameMatch[1].length > 1) {
+        newFormData.name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
+        console.log('Found name:', newFormData.name);
+        break;
+      }
     }
 
     // Parse sex/gender - more robust detection
     if (lowerText.includes('male') && !lowerText.includes('female')) {
       newFormData.sex = 'male';
+      console.log('Found sex: male');
     } else if (lowerText.includes('female')) {
       newFormData.sex = 'female';
-    } else if (lowerText.includes('man') || lowerText.includes('guy')) {
+      console.log('Found sex: female');
+    } else if (lowerText.includes('man') || lowerText.includes('guy') || lowerText.includes('boy')) {
       newFormData.sex = 'male';
-    } else if (lowerText.includes('woman') || lowerText.includes('girl')) {
+      console.log('Found sex: male (via man/guy/boy)');
+    } else if (lowerText.includes('woman') || lowerText.includes('girl') || lowerText.includes('lady')) {
       newFormData.sex = 'female';
+      console.log('Found sex: female (via woman/girl/lady)');
     }
 
     // Parse height - handle formats like "5'7", "5 feet 7", "57", "67"
@@ -148,37 +164,54 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
     }
 
     // Parse birth date - handle various formats
-    const birthMatch = lowerText.match(/(?:born|birth|birthday).*?(\d{1,2})[\/\-\s](\d{1,2})[\/\-\s](\d{2,4})/);
-    if (birthMatch) {
-      let month = parseInt(birthMatch[1]);
-      let day = parseInt(birthMatch[2]);
-      let year = parseInt(birthMatch[3]);
-      
-      // Convert 2-digit year to 4-digit
-      if (year < 100) {
-        year = year > 30 ? 1900 + year : 2000 + year;
+    const birthPatterns = [
+      // born 1/1/1998, birthday 1/1/98
+      /(?:born|birth|birthday).*?(\d{1,2})[\/\-\s](\d{1,2})[\/\-\s](\d{2,4})/,
+      // 1/1/1998, 01/01/98
+      /(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/,
+      // january 1 1998, jan 1 98
+      /(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\s+(\d{1,2})(?:,?\s*)(\d{2,4})/
+    ];
+    
+    for (const pattern of birthPatterns) {
+      const birthMatch = lowerText.match(pattern);
+      if (birthMatch) {
+        let month, day, year;
+        
+        if (pattern.source.includes('january')) {
+          // Month name format
+          const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+          const shortMonths = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+          
+          month = months.indexOf(birthMatch[1]) + 1;
+          if (month === 0) {
+            month = shortMonths.indexOf(birthMatch[1]) + 1;
+          }
+          day = parseInt(birthMatch[2]);
+          year = parseInt(birthMatch[3]);
+        } else {
+          // Numeric format
+          month = parseInt(birthMatch[1]);
+          day = parseInt(birthMatch[2]);
+          year = parseInt(birthMatch[3]);
+        }
+        
+        // Convert 2-digit year to 4-digit
+        if (year < 100) {
+          year = year > 30 ? 1900 + year : 2000 + year;
+        }
+        
+        // Validate date ranges
+        if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 1900 && year <= 2010) {
+          const date = new Date(year, month - 1, day);
+          newFormData.birthDate = date.toISOString().split('T')[0];
+          console.log('Found birth date:', newFormData.birthDate);
+          break;
+        }
       }
-      
-      const date = new Date(year, month - 1, day);
-      newFormData.birthDate = date.toISOString().split('T')[0];
     }
 
-    // Handle month names
-    const monthNameMatch = lowerText.match(/(january|february|march|april|may|june|july|august|september|october|november|december)\s+(\d{1,2})(?:,\s*|\s+)(\d{2,4})/);
-    if (monthNameMatch) {
-      const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-      const month = months.indexOf(monthNameMatch[1]) + 1;
-      const day = parseInt(monthNameMatch[2]);
-      let year = parseInt(monthNameMatch[3]);
-      
-      if (year < 100) {
-        year = year > 30 ? 1900 + year : 2000 + year;
-      }
-      
-      const date = new Date(year, month - 1, day);
-      newFormData.birthDate = date.toISOString().split('T')[0];
-    }
-
+    console.log('Updated form data:', newFormData);
     setFormData(newFormData);
   };
 
