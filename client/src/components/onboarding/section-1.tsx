@@ -113,84 +113,57 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
     
     console.log('Parsing:', text);
     
-    // Parse the guided format - more flexible for voice transcription
-    const guidedMatch = cleanText.match(/i'm\s+([a-zA-Z]+)(?:\s+|,\s*)?(male|female)(?:\s+|,\s*)?(?:(\d+)'?(\d*)"?|\s*(\d{2,3})\s*)?(?:\s+|,\s*)?(\d+)?\s*(?:lbs?|pounds?)?(?:\s*(?:and\s*)?born\s*)?(\d+)?/);
+    // Try to parse the full guided format first
+    const fullFormatMatch = cleanText.match(/i'm\s+([a-zA-Z]+)(?:\s+|,\s*)?(male|female)(?:\s+|,\s*)?(\d+)(?:'|')?(\d+)?(?:\s+|,\s*)?(\d+)?\s*(?:lbs?|pounds?)?(?:\s*(?:and\s*)?born\s*)?(?:(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})|(\d+))?/);
     
-    if (guidedMatch) {
+    if (fullFormatMatch && fullFormatMatch[1] && fullFormatMatch[2]) {
       const newFormData = { ...formData };
       
-      // Name (always first)
-      if (guidedMatch[1]) {
-        newFormData.name = guidedMatch[1].charAt(0).toUpperCase() + guidedMatch[1].slice(1);
-      }
+      // Name
+      newFormData.name = fullFormatMatch[1].charAt(0).toUpperCase() + fullFormatMatch[1].slice(1);
       
-      // Gender (always second)
-      if (guidedMatch[2]) {
-        newFormData.sex = guidedMatch[2];
-      }
+      // Gender
+      newFormData.sex = fullFormatMatch[2];
       
-      // Height - handle transcription formats like "510" = 5'10"
-      if (guidedMatch[3]) {
-        const feet = parseInt(guidedMatch[3]);
-        const inches = guidedMatch[4] ? parseInt(guidedMatch[4]) : 0;
-        newFormData.height = `${feet}'${inches}"`;
-      } else if (guidedMatch[5]) {
-        const heightNum = parseInt(guidedMatch[5]);
-        // Handle formats like 510 = 5'10", 67 = 6'7", etc.
-        if (heightNum >= 100) {
-          const feet = Math.floor(heightNum / 100);
-          const inches = heightNum % 100;
-          if (feet >= 4 && feet <= 8 && inches <= 11) {
-            newFormData.height = `${feet}'${inches}"`;
-          }
-        } else if (heightNum >= 48 && heightNum <= 84) {
-          // Total inches format
-          const feet = Math.floor(heightNum / 12);
-          const inches = heightNum % 12;
+      // Height
+      if (fullFormatMatch[3]) {
+        const feet = parseInt(fullFormatMatch[3]);
+        const inches = fullFormatMatch[4] ? parseInt(fullFormatMatch[4]) : 0;
+        if (feet >= 4 && feet <= 8 && inches <= 11) {
           newFormData.height = `${feet}'${inches}"`;
         }
       }
       
       // Weight
-      if (guidedMatch[6]) {
-        const weight = parseInt(guidedMatch[6]);
+      if (fullFormatMatch[5]) {
+        const weight = parseInt(fullFormatMatch[5]);
         if (weight >= 50 && weight <= 500) {
           newFormData.weight = weight.toString();
         }
       }
       
-      // Birth date - handle incomplete transcriptions like "1198" = "11/9/8"
-      if (guidedMatch[7]) {
-        const dateStr = guidedMatch[7];
-        let month, day, year;
+      // Birth date
+      if (fullFormatMatch[6] && fullFormatMatch[7] && fullFormatMatch[8]) {
+        let month = parseInt(fullFormatMatch[6]);
+        let day = parseInt(fullFormatMatch[7]);
+        let year = parseInt(fullFormatMatch[8]);
         
-        if (dateStr.length === 4) {
-          // Format like "1198" = "11/9/8" or "1/1/98"
-          if (dateStr.startsWith('1')) {
-            // Likely 1198 = 11/9/8
-            month = parseInt(dateStr.substring(0, 2));
-            day = parseInt(dateStr.substring(2, 3));
-            year = parseInt(dateStr.substring(3));
-          } else {
-            // Try other interpretations
-            month = parseInt(dateStr.substring(0, 1));
-            day = parseInt(dateStr.substring(1, 2));
-            year = parseInt(dateStr.substring(2));
-          }
-        } else if (dateStr.length >= 6) {
-          // Format like "111998" = "11/19/98"
-          month = parseInt(dateStr.substring(0, 2));
-          day = parseInt(dateStr.substring(2, 4));
-          year = parseInt(dateStr.substring(4));
+        if (year < 100) {
+          year = year > 30 ? 1900 + year : 2000 + year;
         }
         
-        if (month && day && year) {
-          if (year < 100) {
-            year = year > 30 ? 1900 + year : 2000 + year;
-          }
-          
-          if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
-            const date = new Date(year, month - 1, day);
+        if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+          const date = new Date(year, month - 1, day);
+          newFormData.birthDate = date.toISOString().split('T')[0];
+        }
+      } else if (fullFormatMatch[9]) {
+        // Handle compact date format like "1997"
+        const dateStr = fullFormatMatch[9];
+        if (dateStr.length === 4) {
+          const year = parseInt(dateStr);
+          if (year >= 1900 && year <= 2010) {
+            // Default to Jan 1 for just year
+            const date = new Date(year, 0, 1);
             newFormData.birthDate = date.toISOString().split('T')[0];
           }
         }
@@ -201,29 +174,37 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       return;
     }
     
-    // Fallback: parse individual components
+    // Fallback: parse components individually for partial input
     const newFormData = { ...formData };
+    let updated = false;
     
-    // Simple name extraction
+    // Name
     const nameMatch = cleanText.match(/i'm\s+([a-zA-Z]+)/);
-    if (nameMatch) {
+    if (nameMatch && nameMatch[1] !== formData.name.toLowerCase()) {
       newFormData.name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
+      updated = true;
     }
     
     // Gender
-    if (cleanText.includes('male') && !cleanText.includes('female')) {
+    if (cleanText.includes('male') && !cleanText.includes('female') && formData.sex !== 'male') {
       newFormData.sex = 'male';
-    } else if (cleanText.includes('female')) {
+      updated = true;
+    } else if (cleanText.includes('female') && formData.sex !== 'female') {
       newFormData.sex = 'female';
+      updated = true;
     }
     
-    // Height - simple formats
-    const heightMatch = cleanText.match(/(\d+)[''\s]*(\d+)?/);
+    // Height - handle "5 6" or "56" formats
+    const heightMatch = cleanText.match(/(?:^|\s)(\d+)(?:\s+|')(\d+)?(?:\s|$)/);
     if (heightMatch) {
       const feet = parseInt(heightMatch[1]);
       const inches = heightMatch[2] ? parseInt(heightMatch[2]) : 0;
-      if (feet <= 8 && inches <= 11) {
-        newFormData.height = `${feet}'${inches}"`;
+      if (feet >= 4 && feet <= 8 && inches <= 11) {
+        const heightStr = `${feet}'${inches}"`;
+        if (heightStr !== formData.height) {
+          newFormData.height = heightStr;
+          updated = true;
+        }
       }
     }
     
@@ -231,29 +212,29 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
     const weightMatch = cleanText.match(/(\d+)(?:\s*(?:lbs?|pounds?))?/);
     if (weightMatch) {
       const weight = parseInt(weightMatch[1]);
-      if (weight >= 50 && weight <= 500) {
+      if (weight >= 50 && weight <= 500 && weight.toString() !== formData.weight) {
         newFormData.weight = weight.toString();
+        updated = true;
       }
     }
     
-    // Date
-    const dateMatch = cleanText.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+    // Birth date
+    const dateMatch = cleanText.match(/(?:born\s*)?(\d{4})/);
     if (dateMatch) {
-      let month = parseInt(dateMatch[1]);
-      let day = parseInt(dateMatch[2]);
-      let year = parseInt(dateMatch[3]);
-      
-      if (year < 100) {
-        year = year > 30 ? 1900 + year : 2000 + year;
-      }
-      
-      if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
-        const date = new Date(year, month - 1, day);
-        newFormData.birthDate = date.toISOString().split('T')[0];
+      const year = parseInt(dateMatch[1]);
+      if (year >= 1900 && year <= 2010) {
+        const date = new Date(year, 0, 1);
+        const dateStr = date.toISOString().split('T')[0];
+        if (dateStr !== formData.birthDate) {
+          newFormData.birthDate = dateStr;
+          updated = true;
+        }
       }
     }
     
-    setFormData(newFormData);
+    if (updated) {
+      setFormData(newFormData);
+    }
   };
 
   const toggleListening = () => {
