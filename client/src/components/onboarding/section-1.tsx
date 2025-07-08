@@ -205,10 +205,21 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
               }
             }
           } else if (numStr.length === 3) {
-            // 3-digit = weight (like 170, 190) - only if we don't have weight yet
-            if (!currentFormData.weight && num >= 50 && num <= 500) {
+            // 3-digit could be height (511 = 5'11") or weight (170 lbs)
+            if (!currentFormData.height && num >= 410 && num <= 811) {
+              // Parse as height: 511 = 5'11"
+              const feet = Math.floor(num / 100);
+              const inches = num % 100;
+              if (feet >= 4 && feet <= 8 && inches <= 11) {
+                newFormData.height = `${feet}'${inches}"`;
+                updated = true;
+                console.log(`Updated height to ${feet}'${inches}" from ${num}`);
+              }
+            } else if (!currentFormData.weight && num >= 50 && num <= 500) {
+              // Parse as weight
               newFormData.weight = num.toString();
               updated = true;
+              console.log(`Updated weight to ${num}`);
             }
           } else if (numStr.length === 4) {
             // 4-digit = birth year only (like 1998)
