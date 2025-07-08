@@ -159,7 +159,7 @@ export default function Onboarding() {
             {/* Description */}
             <div className="space-y-4">
               <p className="text-gray-600 text-base font-medium leading-relaxed">
-                I'll ask a few quick questions about your body, lifestyle, and goals to create your personalized transformation plan.
+                To help create a transformation plan tailored to you, I'll ask you a few quick questions about your body, lifestyle and goals.
               </p>
             </div>
           </div>
