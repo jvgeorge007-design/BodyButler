@@ -279,7 +279,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           
           <div className="bg-gray-50 rounded-lg px-4 py-2 border border-gray-200">
             <p className="text-xs text-gray-500 text-center">
-              <span className="font-medium">Say something like:</span> "I'm Jerry, male, 5'7", 165 lbs, and born January 1st, 1998."
+              <span className="font-medium">Say something like:</span> "I'm Jerry, male, 5'7", 165 lbs, born January 1st, 1998."
             </p>
           </div>
         </div>
