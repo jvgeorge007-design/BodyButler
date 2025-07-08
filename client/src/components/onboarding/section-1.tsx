@@ -83,135 +83,119 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
   }, []);
 
   const parseAndFillForm = (text: string) => {
-    const lowerText = text.toLowerCase().trim();
-    if (!lowerText) return;
+    const cleanText = text.toLowerCase().trim();
+    if (!cleanText) return;
     
-    const newFormData = { ...formData };
+    console.log('Parsing:', text);
     
-    console.log('Parsing text:', text); // Debug log
-
-    // Parse name - much more flexible matching
-    const namePatterns = [
-      /(?:i'm|my name is|i am|call me|this is)\s+([a-zA-Z]+)/i,
-      /^([a-zA-Z]+)[,\s]/,  // Name at start followed by comma or space
-      /\b([A-Z][a-z]+)\b/   // Capitalized word (likely a name)
-    ];
+    // Parse the guided format: "I'm [NAME], [GENDER], [HEIGHT], [WEIGHT], and born [DATE]"
+    const guidedMatch = cleanText.match(/i'm\s+([a-zA-Z]+)(?:,\s*)?(male|female)(?:,\s*)?(?:(\d+)'?(\d*)"?|\s*(\d+)\s*(?:feet|foot)?\s*(\d+)?\s*(?:inches?)?)?(?:,\s*)?(\d+)?\s*(?:lbs?|pounds?)?(?:,?\s*(?:and\s*)?born\s*)?(?:(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4}))?/);
     
-    for (const pattern of namePatterns) {
-      const nameMatch = lowerText.match(pattern);
-      if (nameMatch && nameMatch[1] && nameMatch[1].length > 1) {
-        newFormData.name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
-        console.log('Found name:', newFormData.name);
-        break;
-      }
-    }
-
-    // Parse sex/gender - more robust detection
-    if (lowerText.includes('male') && !lowerText.includes('female')) {
-      newFormData.sex = 'male';
-      console.log('Found sex: male');
-    } else if (lowerText.includes('female')) {
-      newFormData.sex = 'female';
-      console.log('Found sex: female');
-    } else if (lowerText.includes('man') || lowerText.includes('guy') || lowerText.includes('boy')) {
-      newFormData.sex = 'male';
-      console.log('Found sex: male (via man/guy/boy)');
-    } else if (lowerText.includes('woman') || lowerText.includes('girl') || lowerText.includes('lady')) {
-      newFormData.sex = 'female';
-      console.log('Found sex: female (via woman/girl/lady)');
-    }
-
-    // Parse height - handle formats like "5'7", "5 feet 7", "57", "67"
-    const heightMatch = lowerText.match(/(\d+)(?:'|feet|\s+feet|\s+foot)?\s*(\d+)?(?:"|inches|\s+inches|\s+inch)?/);
-    if (heightMatch) {
-      const feet = parseInt(heightMatch[1]);
-      const inches = heightMatch[2] ? parseInt(heightMatch[2]) : 0;
+    if (guidedMatch) {
+      const newFormData = { ...formData };
       
-      // If single number like 57, 67, convert to feet'inches"
-      if (!heightMatch[2] && feet >= 48 && feet <= 84) {
-        const convertedFeet = Math.floor(feet / 12);
-        const convertedInches = feet % 12;
-        newFormData.height = `${convertedFeet}'${convertedInches}"`;
-      } else if (feet <= 8) {
+      // Name (always first)
+      if (guidedMatch[1]) {
+        newFormData.name = guidedMatch[1].charAt(0).toUpperCase() + guidedMatch[1].slice(1);
+      }
+      
+      // Gender (always second)
+      if (guidedMatch[2]) {
+        newFormData.sex = guidedMatch[2];
+      }
+      
+      // Height (various formats)
+      if (guidedMatch[3]) {
+        const feet = parseInt(guidedMatch[3]);
+        const inches = guidedMatch[4] ? parseInt(guidedMatch[4]) : 0;
+        newFormData.height = `${feet}'${inches}"`;
+      } else if (guidedMatch[5]) {
+        const feet = parseInt(guidedMatch[5]);
+        const inches = guidedMatch[6] ? parseInt(guidedMatch[6]) : 0;
         newFormData.height = `${feet}'${inches}"`;
       }
-    }
-
-    // Also handle formats like "five seven", "five foot seven"
-    const heightWordsMatch = lowerText.match(/(five|six|seven|eight)\s*(?:foot|feet)?\s*(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)?/);
-    if (heightWordsMatch) {
-      const feetWords = { five: 5, six: 6, seven: 7, eight: 8 };
-      const inchWords = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12 };
       
-      const feet = feetWords[heightWordsMatch[1] as keyof typeof feetWords];
-      const inches = heightWordsMatch[2] ? inchWords[heightWordsMatch[2] as keyof typeof inchWords] || 0 : 0;
-      
-      if (feet) {
-        newFormData.height = `${feet}'${inches}"`;
-      }
-    }
-
-    // Parse weight - look for numbers followed by "lbs", "pounds", or standalone numbers
-    const weightMatches = lowerText.match(/(\d+)(?:\s*(?:lbs|pounds|lb|\s+pounds?))?/g);
-    if (weightMatches) {
-      for (const match of weightMatches) {
-        const weightNum = parseInt(match);
-        if (weightNum >= 50 && weightNum <= 500) { // reasonable weight range
-          newFormData.weight = weightNum.toString();
-          break; // Use first valid weight found
+      // Weight
+      if (guidedMatch[7]) {
+        const weight = parseInt(guidedMatch[7]);
+        if (weight >= 50 && weight <= 500) {
+          newFormData.weight = weight.toString();
         }
       }
-    }
-
-    // Parse birth date - handle various formats
-    const birthPatterns = [
-      // born 1/1/1998, birthday 1/1/98
-      /(?:born|birth|birthday).*?(\d{1,2})[\/\-\s](\d{1,2})[\/\-\s](\d{2,4})/,
-      // 1/1/1998, 01/01/98
-      /(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/,
-      // january 1 1998, jan 1 98
-      /(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\s+(\d{1,2})(?:,?\s*)(\d{2,4})/
-    ];
-    
-    for (const pattern of birthPatterns) {
-      const birthMatch = lowerText.match(pattern);
-      if (birthMatch) {
-        let month, day, year;
+      
+      // Birth date
+      if (guidedMatch[8] && guidedMatch[9] && guidedMatch[10]) {
+        let month = parseInt(guidedMatch[8]);
+        let day = parseInt(guidedMatch[9]);
+        let year = parseInt(guidedMatch[10]);
         
-        if (pattern.source.includes('january')) {
-          // Month name format
-          const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-          const shortMonths = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-          
-          month = months.indexOf(birthMatch[1]) + 1;
-          if (month === 0) {
-            month = shortMonths.indexOf(birthMatch[1]) + 1;
-          }
-          day = parseInt(birthMatch[2]);
-          year = parseInt(birthMatch[3]);
-        } else {
-          // Numeric format
-          month = parseInt(birthMatch[1]);
-          day = parseInt(birthMatch[2]);
-          year = parseInt(birthMatch[3]);
-        }
-        
-        // Convert 2-digit year to 4-digit
         if (year < 100) {
           year = year > 30 ? 1900 + year : 2000 + year;
         }
         
-        // Validate date ranges
-        if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 1900 && year <= 2010) {
+        if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
           const date = new Date(year, month - 1, day);
           newFormData.birthDate = date.toISOString().split('T')[0];
-          console.log('Found birth date:', newFormData.birthDate);
-          break;
         }
       }
+      
+      console.log('Parsed data:', newFormData);
+      setFormData(newFormData);
+      return;
     }
-
-    console.log('Updated form data:', newFormData);
+    
+    // Fallback: parse individual components
+    const newFormData = { ...formData };
+    
+    // Simple name extraction
+    const nameMatch = cleanText.match(/i'm\s+([a-zA-Z]+)/);
+    if (nameMatch) {
+      newFormData.name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
+    }
+    
+    // Gender
+    if (cleanText.includes('male') && !cleanText.includes('female')) {
+      newFormData.sex = 'male';
+    } else if (cleanText.includes('female')) {
+      newFormData.sex = 'female';
+    }
+    
+    // Height - simple formats
+    const heightMatch = cleanText.match(/(\d+)[''\s]*(\d+)?/);
+    if (heightMatch) {
+      const feet = parseInt(heightMatch[1]);
+      const inches = heightMatch[2] ? parseInt(heightMatch[2]) : 0;
+      if (feet <= 8 && inches <= 11) {
+        newFormData.height = `${feet}'${inches}"`;
+      }
+    }
+    
+    // Weight
+    const weightMatch = cleanText.match(/(\d+)(?:\s*(?:lbs?|pounds?))?/);
+    if (weightMatch) {
+      const weight = parseInt(weightMatch[1]);
+      if (weight >= 50 && weight <= 500) {
+        newFormData.weight = weight.toString();
+      }
+    }
+    
+    // Date
+    const dateMatch = cleanText.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+    if (dateMatch) {
+      let month = parseInt(dateMatch[1]);
+      let day = parseInt(dateMatch[2]);
+      let year = parseInt(dateMatch[3]);
+      
+      if (year < 100) {
+        year = year > 30 ? 1900 + year : 2000 + year;
+      }
+      
+      if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+        const date = new Date(year, month - 1, day);
+        newFormData.birthDate = date.toISOString().split('T')[0];
+      }
+    }
+    
     setFormData(newFormData);
   };
 
