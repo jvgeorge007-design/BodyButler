@@ -132,13 +132,15 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
         }
       }
       
-      // Parse gender - only if we don't already have one
-      if (!currentFormData.sex) {
-        if (cleanText.includes('male') && !cleanText.includes('female')) {
-          newFormData.sex = 'male';
-          updated = true;
-        } else if (cleanText.includes('female')) {
+      // Parse gender - allow updates to correct mistakes
+      if (cleanText.includes('female')) {
+        if (currentFormData.sex !== 'female') {
           newFormData.sex = 'female';
+          updated = true;
+        }
+      } else if (cleanText.includes('male') && !cleanText.includes('female')) {
+        if (currentFormData.sex !== 'male') {
+          newFormData.sex = 'male';
           updated = true;
         }
       }
@@ -147,18 +149,26 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 
                          'july', 'august', 'september', 'october', 'november', 'december'];
       
-      // Pattern: "born january 1st 1998" or "birthday march 15th 1995"
+      // Pattern: "born january 1st 1998" or "birthday march 15th 1995"  
+      console.log('Checking for natural date in:', cleanText);
       const naturalDateMatch = cleanText.match(/(?:born|birthday)\s+(\w+)\s+(\d{1,2})(?:st|nd|rd|th)?\s+(\d{4})/);
-      if (naturalDateMatch && !currentFormData.birthDate) {
+      console.log('Natural date match result:', naturalDateMatch);
+      if (naturalDateMatch) {
         const monthName = naturalDateMatch[1].toLowerCase();
         const day = parseInt(naturalDateMatch[2]);
         const year = parseInt(naturalDateMatch[3]);
         
+        console.log('Natural date match:', monthName, day, year);
+        
         const monthIndex = monthNames.findIndex(name => name.startsWith(monthName.substring(0, 3)));
         if (monthIndex !== -1 && day >= 1 && day <= 31 && year >= 1900 && year <= 2030) {
           const date = new Date(year, monthIndex, day);
-          newFormData.birthDate = date.toISOString().split('T')[0];
-          updated = true;
+          const newDateStr = date.toISOString().split('T')[0];
+          if (newDateStr !== currentFormData.birthDate) {
+            newFormData.birthDate = newDateStr;
+            updated = true;
+            console.log('Updated birth date to:', newDateStr);
+          }
         }
       }
       
