@@ -124,20 +124,28 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       let updated = false;
     
       // Parse name - update if we find a different/better name
-      const nameMatch = cleanText.match(/(?:i'm|my name is)\s+([a-zA-Z]+)/);
+      const nameMatch = cleanText.match(/(?:i'm|my name is|i am)\s+([a-zA-Z]+)/);
       if (nameMatch) {
-        const newName = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
-        if (newName !== currentFormData.name && newName.length >= currentFormData.name.length) {
-          newFormData.name = newName;
-          updated = true;
-          console.log(`Updated name to: ${newName}`);
+        const excludedWords = ['male', 'mail', 'female', 'born', 'birthday', 'weight', 'height', 'pounds', 'lbs'];
+        const candidateName = nameMatch[1];
+        if (!excludedWords.includes(candidateName.toLowerCase())) {
+          const newName = candidateName.charAt(0).toUpperCase() + candidateName.slice(1);
+          if (newName !== currentFormData.name && newName.length >= currentFormData.name.length) {
+            newFormData.name = newName;
+            updated = true;
+            console.log(`Updated name to: ${newName}`);
+          }
         }
       } else if (!currentFormData.name && /^[a-zA-Z]+$/.test(cleanText)) {
         // If just a name is spoken and we don't have one yet
-        const name = cleanText.charAt(0).toUpperCase() + cleanText.slice(1);
-        newFormData.name = name;
-        updated = true;
-        console.log(`Updated name to: ${name}`);
+        // Exclude gender words and common misrecognitions
+        const excludedWords = ['male', 'mail', 'female', 'born', 'birthday', 'weight', 'height', 'pounds', 'lbs'];
+        if (!excludedWords.includes(cleanText.toLowerCase())) {
+          const name = cleanText.charAt(0).toUpperCase() + cleanText.slice(1);
+          newFormData.name = name;
+          updated = true;
+          console.log(`Updated name to: ${name}`);
+        }
       }
       
       // Parse gender - handle common speech recognition errors
