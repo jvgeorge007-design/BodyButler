@@ -17,9 +17,12 @@ export default function Welcome() {
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-8 bg-gradient-to-b from-gray-50 to-white">
       <div className="w-full max-w-sm mx-auto text-center space-y-8">
         {/* Logo Section */}
-        <div className="flex flex-col items-center relative">
-          {/* Main Title - Positioned above logo */}
-          <div className="space-y-2 mb-4 z-10">
+        <div className="flex flex-col items-center">
+          {/* Body Butler Logo */}
+          <KettlebellLogo className="w-60 h-72" />
+          
+          {/* Main Title */}
+          <div className="space-y-2 -mt-18">
             <h1 className="text-4xl font-black text-gray-900 leading-none tracking-tighter">
               BODY BUTLER
             </h1>
@@ -27,9 +30,6 @@ export default function Welcome() {
               Transformation tailored to you
             </p>
           </div>
-          
-          {/* Body Butler Logo */}
-          <KettlebellLogo className="w-60 h-72 -mt-8" />
         </div>
 
         {/* Action Buttons */}
