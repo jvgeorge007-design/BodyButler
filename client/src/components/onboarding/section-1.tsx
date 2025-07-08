@@ -124,13 +124,20 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       let updated = false;
     
       // Parse name - update if we find a different/better name
-      const nameMatch = cleanText.match(/i'm\s+([a-zA-Z]+)/);
+      const nameMatch = cleanText.match(/(?:i'm|my name is)\s+([a-zA-Z]+)/);
       if (nameMatch) {
         const newName = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
         if (newName !== currentFormData.name && newName.length >= currentFormData.name.length) {
           newFormData.name = newName;
           updated = true;
+          console.log(`Updated name to: ${newName}`);
         }
+      } else if (!currentFormData.name && /^[a-zA-Z]+$/.test(cleanText)) {
+        // If just a name is spoken and we don't have one yet
+        const name = cleanText.charAt(0).toUpperCase() + cleanText.slice(1);
+        newFormData.name = name;
+        updated = true;
+        console.log(`Updated name to: ${name}`);
       }
       
       // Parse gender - handle common speech recognition errors
@@ -206,8 +213,15 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
             }
           } else if (numStr.length === 3) {
             // 3-digit could be height (511 = 5'11") or weight (170 lbs)
-            if (!currentFormData.height && num >= 410 && num <= 811) {
-              // Parse as height: 511 = 5'11"
+            // Check if it's followed by weight indicators
+            if (cleanText.includes('pound') || cleanText.includes('lb') || cleanText.includes('weight')) {
+              if (!currentFormData.weight && num >= 50 && num <= 500) {
+                newFormData.weight = num.toString();
+                updated = true;
+                console.log(`Updated weight to ${num} lbs`);
+              }
+            } else if (num >= 410 && num <= 811) {
+              // Parse as height: 511 = 5'11" (prioritize if no height or override 2-digit)
               const feet = Math.floor(num / 100);
               const inches = num % 100;
               if (feet >= 4 && feet <= 8 && inches <= 11) {
@@ -216,7 +230,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
                 console.log(`Updated height to ${feet}'${inches}" from ${num}`);
               }
             } else if (!currentFormData.weight && num >= 50 && num <= 500) {
-              // Parse as weight
+              // Parse as weight if not height range
               newFormData.weight = num.toString();
               updated = true;
               console.log(`Updated weight to ${num}`);
