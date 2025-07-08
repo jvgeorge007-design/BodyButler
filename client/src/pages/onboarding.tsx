@@ -148,12 +148,9 @@ export default function Onboarding() {
             
             {/* Main Title */}
             <div className="space-y-2 -mt-4">
-              <h1 className="text-4xl font-black text-gray-900 leading-none tracking-tighter">
-                BODY BUTLER
+              <h1 className="text-2xl font-bold text-gray-900 leading-tight">
+                Hi, I'm BB — Your Body Butler
               </h1>
-              <p className="text-gray-600 text-lg font-medium">
-                Transformation tailored to you
-              </p>
             </div>
           </div>
 
