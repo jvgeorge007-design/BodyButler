@@ -100,7 +100,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
     }
 
     // Parse height - handle formats like "5'7", "5 feet 7", "57", "67"
-    const heightMatch = lowerText.match(/(\d+)(?:'|feet|\s+feet)?\s*(\d+)?(?:"|inches|\s+inches)?/);
+    const heightMatch = lowerText.match(/(\d+)(?:'|feet|\s+feet|\s+foot)?\s*(\d+)?(?:"|inches|\s+inches|\s+inch)?/);
     if (heightMatch) {
       const feet = parseInt(heightMatch[1]);
       const inches = heightMatch[2] ? parseInt(heightMatch[2]) : 0;
@@ -115,12 +115,29 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       }
     }
 
+    // Also handle formats like "five seven", "five foot seven"
+    const heightWordsMatch = lowerText.match(/(five|six|seven|eight)\s*(?:foot|feet)?\s*(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)?/);
+    if (heightWordsMatch) {
+      const feetWords = { five: 5, six: 6, seven: 7, eight: 8 };
+      const inchWords = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12 };
+      
+      const feet = feetWords[heightWordsMatch[1] as keyof typeof feetWords];
+      const inches = heightWordsMatch[2] ? inchWords[heightWordsMatch[2] as keyof typeof inchWords] || 0 : 0;
+      
+      if (feet) {
+        newFormData.height = `${feet}'${inches}"`;
+      }
+    }
+
     // Parse weight - look for numbers followed by "lbs", "pounds", or standalone numbers
-    const weightMatch = lowerText.match(/(\d+)(?:\s*(?:lbs|pounds|lb))?/);
-    if (weightMatch) {
-      const weight = parseInt(weightMatch[1]);
-      if (weight >= 50 && weight <= 500) { // reasonable weight range
-        newFormData.weight = weight.toString();
+    const weightMatches = lowerText.match(/(\d+)(?:\s*(?:lbs|pounds|lb|\s+pounds?))?/g);
+    if (weightMatches) {
+      for (const match of weightMatches) {
+        const weightNum = parseInt(match);
+        if (weightNum >= 50 && weightNum <= 500) { // reasonable weight range
+          newFormData.weight = weightNum.toString();
+          break; // Use first valid weight found
+        }
       }
     }
 
@@ -205,19 +222,11 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
             )}
           </Button>
           
-          <div className="text-center space-y-1">
-            <p className="text-xs text-gray-500">Try saying:</p>
-            <p className="text-sm text-gray-700 italic">
+          <div className="text-center">
+            <p className="text-xs text-gray-500">
               "I'm Jerry, male, 5'7", 165 lbs, and born 1/1/1998."
             </p>
           </div>
-          
-          {transcript && (
-            <div className="bg-gray-50 rounded-lg p-3 border max-w-full">
-              <p className="text-xs text-gray-500 mb-1">Listening:</p>
-              <p className="text-sm text-gray-700">{transcript}</p>
-            </div>
-          )}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
