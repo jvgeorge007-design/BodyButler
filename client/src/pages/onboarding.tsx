@@ -32,25 +32,15 @@ export default function Onboarding() {
     retry: false,
   });
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      toast({
-        title: "Unauthorized",
-        description: "You are logged out. Logging in again...",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        window.location.href = "/api/login";
-      }, 500);
-      return;
-    }
-  }, [isAuthenticated, isLoading, toast]);
+  // Allow access to onboarding for both authenticated and non-authenticated users
+  // Non-authenticated users can fill out the form, then sign up at the end
 
+  // Handle unauthorized errors only for authenticated users trying to load existing profiles
   useEffect(() => {
-    if (error && isUnauthorizedError(error as Error)) {
+    if (error && isUnauthorizedError(error as Error) && isAuthenticated) {
       toast({
-        title: "Unauthorized",
-        description: "You are logged out. Logging in again...",
+        title: "Session expired",
+        description: "Please log in again to continue...",
         variant: "destructive",
       });
       setTimeout(() => {
@@ -58,7 +48,7 @@ export default function Onboarding() {
       }, 500);
       return;
     }
-  }, [error, toast]);
+  }, [error, toast, isAuthenticated]);
 
   useEffect(() => {
     if (existingProfile) {
@@ -112,7 +102,19 @@ export default function Onboarding() {
     } else {
       // Final submission
       const finalData = { ...formData, ...sectionData, onboardingCompleted: true };
-      saveMutation.mutate(finalData);
+      
+      if (!isAuthenticated) {
+        // For non-authenticated users, store data locally and prompt to sign up
+        localStorage.setItem('onboardingData', JSON.stringify(finalData));
+        toast({
+          title: "Onboarding Complete!",
+          description: "Please sign up to save your personalized plan.",
+        });
+        setLocation("/login");
+      } else {
+        // For authenticated users, save to the backend
+        saveMutation.mutate(finalData);
+      }
     }
   };
 
