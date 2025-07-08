@@ -143,32 +143,45 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
         }
       }
     
-      // Categorize numbers by digit count
-      for (const numStr of numbers) {
-        const num = parseInt(numStr);
-        
-        if (numStr.length === 2) {
-          // 2-digit = height (like 58 = 5'8") - only if we don't have height yet
-          if (!currentFormData.height && num >= 48 && num <= 84) {
-            const feet = Math.floor(num / 10);
-            const inches = num % 10;
-            if (feet >= 4 && feet <= 8 && inches <= 11) {
-              newFormData.height = `${feet}'${inches}"`;
+      // Check for date patterns first (born/birthday followed by year)
+      const dateMatch = cleanText.match(/(?:born|birthday)\s+(\d{4})/);
+      if (dateMatch && !currentFormData.birthDate) {
+        const year = parseInt(dateMatch[1]);
+        if (year >= 1900 && year <= 2030) {
+          const date = new Date(year, 0, 1);
+          newFormData.birthDate = date.toISOString().split('T')[0];
+          updated = true;
+        }
+      }
+      
+      // Categorize numbers by digit count (skip if we already parsed a date)
+      if (!dateMatch) {
+        for (const numStr of numbers) {
+          const num = parseInt(numStr);
+          
+          if (numStr.length === 2) {
+            // 2-digit = height (like 58 = 5'8") - only if we don't have height yet
+            if (!currentFormData.height && num >= 48 && num <= 84) {
+              const feet = Math.floor(num / 10);
+              const inches = num % 10;
+              if (feet >= 4 && feet <= 8 && inches <= 11) {
+                newFormData.height = `${feet}'${inches}"`;
+                updated = true;
+              }
+            }
+          } else if (numStr.length === 3) {
+            // 3-digit = weight (like 170, 190) - only if we don't have weight yet
+            if (!currentFormData.weight && num >= 50 && num <= 500) {
+              newFormData.weight = num.toString();
               updated = true;
             }
-          }
-        } else if (numStr.length === 3) {
-          // 3-digit = weight (like 170, 190) - only if we don't have weight yet
-          if (!currentFormData.weight && num >= 50 && num <= 500) {
-            newFormData.weight = num.toString();
-            updated = true;
-          }
-        } else if (numStr.length === 4) {
-          // 4-digit = birth year only (like 1998)
-          if (!currentFormData.birthDate && num >= 1900 && num <= 2030) {
-            const date = new Date(num, 0, 1);
-            newFormData.birthDate = date.toISOString().split('T')[0];
-            updated = true;
+          } else if (numStr.length === 4) {
+            // 4-digit = birth year only (like 1998)
+            if (!currentFormData.birthDate && num >= 1900 && num <= 2030) {
+              const date = new Date(num, 0, 1);
+              newFormData.birthDate = date.toISOString().split('T')[0];
+              updated = true;
+            }
           }
         }
       }
@@ -337,6 +350,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
             <Input
               id="birthDate"
               type="date"
+              placeholder="Try: born January 1st, 1998"
               value={formData.birthDate}
               onChange={(e) => handleInputChange("birthDate", e.target.value)}
               className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
