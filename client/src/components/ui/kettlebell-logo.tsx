@@ -14,62 +14,40 @@ export default function KettlebellLogo({ className }: KettlebellLogoProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={cn("", className)}
     >
-      {/* Main kettlebell body */}
+      {/* Handle top part */}
       <path 
-        d="M12 16C12 11.5817 15.5817 8 20 8H28C32.4183 8 36 11.5817 36 16V32C36 36.4183 32.4183 40 28 40H20C15.5817 40 12 36.4183 12 32V16Z" 
+        d="M14 8C12.8954 8 12 8.89543 12 10V14C12 15.1046 12.8954 16 14 16H34C35.1046 16 36 15.1046 36 14V10C36 8.89543 35.1046 8 34 8H14Z" 
         fill="currentColor"
       />
       
-      {/* Handle opening */}
+      {/* Handle opening/cutout */}
       <ellipse 
         cx="24" 
-        cy="16" 
-        rx="6" 
-        ry="4" 
-        fill="transparent"
-        stroke="currentColor"
-        strokeWidth="2"
+        cy="12" 
+        rx="8" 
+        ry="3" 
+        fill="white"
       />
       
-      {/* Top handle part */}
+      {/* Main kettlebell body */}
       <path 
-        d="M18 12C16.3431 12 15 10.6569 15 9C15 7.34315 16.3431 6 18 6H30C31.6569 6 33 7.34315 33 9C33 10.6569 31.6569 12 30 12H18Z" 
+        d="M8 18C8 16.8954 8.89543 16 10 16H38C39.1046 16 40 16.8954 40 18V32C40 36.4183 36.4183 40 32 40H16C11.5817 40 8 36.4183 8 32V18Z" 
         fill="currentColor"
       />
       
-      {/* Handle sides */}
-      <rect 
-        x="15" 
-        y="9" 
-        width="3" 
-        height="8" 
-        rx="1.5" 
-        fill="currentColor"
-      />
-      <rect 
-        x="30" 
-        y="9" 
-        width="3" 
-        height="8" 
-        rx="1.5" 
+      {/* Base platform */}
+      <path 
+        d="M6 40C6 38.8954 6.89543 38 8 38H40C41.1046 38 42 38.8954 42 40V42C42 43.1046 41.1046 44 40 44H8C6.89543 44 6 43.1046 6 42V40Z" 
         fill="currentColor"
       />
       
-      {/* Base/platform */}
-      <rect 
-        x="8" 
-        y="38" 
-        width="32" 
-        height="4" 
+      {/* Highlight/shine effect */}
+      <ellipse 
+        cx="20" 
+        cy="24" 
         rx="2" 
-        fill="currentColor"
-      />
-      
-      {/* Highlight accent */}
-      <path 
-        d="M16 14C16 13.4477 16.4477 13 17 13H19C19.5523 13 20 13.4477 20 14V16C20 16.5523 19.5523 17 19 17H17C16.4477 17 16 16.5523 16 16V14Z" 
-        fill="#60A5FA"
-        opacity="0.8"
+        ry="4" 
+        fill="rgba(255,255,255,0.3)"
       />
     </svg>
   );
