@@ -10,7 +10,7 @@ export default function Welcome() {
   };
 
   const handleLogin = () => {
-    window.location.href = "/api/login";
+    setLocation("/login");
   };
 
   return (
