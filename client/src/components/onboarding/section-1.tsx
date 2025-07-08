@@ -164,18 +164,30 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
             updated = true;
           }
         } else if (numStr.length === 4) {
-          // 4-digit = birth year (like 1997, 1198) - only if we don't have birth date yet
+          // 4-digit = MMYY format (like 1198 = 11/01/1998, 2303 = 02/03/2003)
           if (!currentFormData.birthDate) {
-            // Handle partial years like 1198 as 1998
-            let year = num;
-            if (num >= 1100 && num <= 1199) {
-              year = 1900 + (num - 1100); // 1198 → 1998
-            } else if (num >= 1200 && num <= 1299) {
-              year = 2000 + (num - 1200); // 1298 → 2098 (unlikely but handled)
+            const monthPart = Math.floor(num / 100); // First 2 digits
+            const yearPart = num % 100; // Last 2 digits
+            
+            // Convert 2-digit year to 4-digit year
+            let fullYear;
+            if (yearPart >= 0 && yearPart <= 30) {
+              fullYear = 2000 + yearPart; // 00-30 = 2000-2030
+            } else {
+              fullYear = 1900 + yearPart; // 31-99 = 1931-1999
             }
             
-            if (year >= 1900 && year <= 2010) {
-              const date = new Date(year, 0, 1);
+            // Handle month overflow (like 23 becomes 02 of next year)
+            let month = monthPart;
+            let year = fullYear;
+            if (monthPart > 12) {
+              month = monthPart - 12;
+              year = fullYear + 1;
+            }
+            
+            // Validate month and year ranges
+            if (month >= 1 && month <= 12 && year >= 1900 && year <= 2030) {
+              const date = new Date(year, month - 1, 1);
               newFormData.birthDate = date.toISOString().split('T')[0];
               updated = true;
             }
