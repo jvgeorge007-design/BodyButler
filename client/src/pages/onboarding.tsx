@@ -139,43 +139,31 @@ export default function Onboarding() {
   // Introduction screen
   if (currentSection === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 py-8 bg-white">
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 py-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="w-full max-w-sm mx-auto text-center space-y-8">
-          {/* Logo (Smaller) */}
-          <div className="flex justify-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-md">
-              <KettlebellLogo className="w-8 h-8 text-white" />
+          {/* Logo Section - Same as welcome page */}
+          <div className="flex flex-col items-center">
+            {/* Body Butler Logo */}
+            <KettlebellLogo className="w-60 h-72" />
+            
+            {/* Main Title */}
+            <div className="space-y-2 -mt-4">
+              <h1 className="text-4xl font-black text-gray-900 leading-none tracking-tighter">
+                BODY BUTLER
+              </h1>
+              <p className="text-gray-600 text-lg font-medium">
+                Transformation tailored to you
+              </p>
             </div>
           </div>
 
           {/* Introduction Content */}
           <div className="space-y-6">
-            {/* Greeting */}
+            {/* Description */}
             <div className="space-y-4">
-              <h1 className="text-2xl font-bold text-gray-900 leading-tight">
-                Hi, I'm BB —<br/>Your Body Butler
-              </h1>
-              
-              {/* Description */}
-              <div className="space-y-4">
-                <p className="text-gray-600 text-base font-medium leading-relaxed">
-                  To create your personalized transformation plan,
-                </p>
-                <p className="text-gray-600 text-base font-medium leading-relaxed">
-                  I'll ask a few quick questions about your body, lifestyle, and goals.
-                </p>
-              </div>
-            </div>
-
-            {/* Progress Indicator */}
-            <div className="bg-gray-50 rounded-xl p-4 space-y-3">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600 font-medium">Quick Setup</span>
-                <span className="text-blue-500 font-semibold">6 steps</span>
-              </div>
-              <div className="w-full bg-gray-300 rounded-full h-2">
-                <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full w-0 transition-all duration-300"></div>
-              </div>
+              <p className="text-gray-600 text-base font-medium leading-relaxed">
+                I'll ask a few quick questions about your body, lifestyle, and goals to create your personalized transformation plan.
+              </p>
             </div>
           </div>
 
@@ -183,7 +171,7 @@ export default function Onboarding() {
           <div className="pt-4">
             <Button 
               onClick={handleBeginOnboarding}
-              className="w-full gradient-button"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 rounded-xl transition-colors"
             >
               Let's Begin
             </Button>
