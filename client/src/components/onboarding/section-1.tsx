@@ -143,14 +143,35 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
         }
       }
     
-      // Check for date patterns first (born/birthday followed by year)
-      const dateMatch = cleanText.match(/(?:born|birthday)\s+(\d{4})/);
-      if (dateMatch && !currentFormData.birthDate) {
-        const year = parseInt(dateMatch[1]);
-        if (year >= 1900 && year <= 2030) {
-          const date = new Date(year, 0, 1);
+      // Check for natural date patterns first (born/birthday followed by date)
+      const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 
+                         'july', 'august', 'september', 'october', 'november', 'december'];
+      
+      // Pattern: "born january 1st 1998" or "birthday march 15th 1995"
+      const naturalDateMatch = cleanText.match(/(?:born|birthday)\s+(\w+)\s+(\d{1,2})(?:st|nd|rd|th)?\s+(\d{4})/);
+      if (naturalDateMatch && !currentFormData.birthDate) {
+        const monthName = naturalDateMatch[1].toLowerCase();
+        const day = parseInt(naturalDateMatch[2]);
+        const year = parseInt(naturalDateMatch[3]);
+        
+        const monthIndex = monthNames.findIndex(name => name.startsWith(monthName.substring(0, 3)));
+        if (monthIndex !== -1 && day >= 1 && day <= 31 && year >= 1900 && year <= 2030) {
+          const date = new Date(year, monthIndex, day);
           newFormData.birthDate = date.toISOString().split('T')[0];
           updated = true;
+        }
+      }
+      
+      // Fallback: simple year pattern "born 1998"
+      if (!updated) {
+        const yearMatch = cleanText.match(/(?:born|birthday)\s+(\d{4})/);
+        if (yearMatch && !currentFormData.birthDate) {
+          const year = parseInt(yearMatch[1]);
+          if (year >= 1900 && year <= 2030) {
+            const date = new Date(year, 0, 1);
+            newFormData.birthDate = date.toISOString().split('T')[0];
+            updated = true;
+          }
         }
       }
       
@@ -258,7 +279,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           
           <div className="bg-gray-50 rounded-lg px-4 py-2 border border-gray-200">
             <p className="text-xs text-gray-500 text-center">
-              <span className="font-medium">Say something like:</span> "I'm Jerry, male, 5'7", 165 lbs, and born 1/1/1998."
+              <span className="font-medium">Say something like:</span> "I'm Jerry, male, 5'7", 165 lbs, and born January 1st, 1998."
             </p>
           </div>
         </div>
