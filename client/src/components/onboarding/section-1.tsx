@@ -118,20 +118,22 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
     const newFormData = { ...formData };
     let updated = false;
     
-    // Parse name
+    // Parse name - only if we don't already have one
     const nameMatch = cleanText.match(/i'm\s+([a-zA-Z]+)/);
-    if (nameMatch && nameMatch[1] !== formData.name.toLowerCase()) {
+    if (nameMatch && !formData.name) {
       newFormData.name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
       updated = true;
     }
     
-    // Parse gender
-    if (cleanText.includes('male') && !cleanText.includes('female') && formData.sex !== 'male') {
-      newFormData.sex = 'male';
-      updated = true;
-    } else if (cleanText.includes('female') && formData.sex !== 'female') {
-      newFormData.sex = 'female';
-      updated = true;
+    // Parse gender - only if we don't already have one
+    if (!formData.sex) {
+      if (cleanText.includes('male') && !cleanText.includes('female')) {
+        newFormData.sex = 'male';
+        updated = true;
+      } else if (cleanText.includes('female')) {
+        newFormData.sex = 'female';
+        updated = true;
+      }
     }
     
     // Categorize numbers by digit count
@@ -139,46 +141,39 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       const num = parseInt(numStr);
       
       if (numStr.length === 2) {
-        // 2-digit = height (like 58 = 5'8")
-        if (num >= 48 && num <= 84) {
+        // 2-digit = height (like 58 = 5'8") - only if we don't have height yet
+        if (!formData.height && num >= 48 && num <= 84) {
           const feet = Math.floor(num / 10);
           const inches = num % 10;
           if (feet >= 4 && feet <= 8 && inches <= 11) {
-            const heightStr = `${feet}'${inches}"`;
-            if (heightStr !== formData.height) {
-              newFormData.height = heightStr;
-              updated = true;
-            }
+            newFormData.height = `${feet}'${inches}"`;
+            updated = true;
           }
         }
       } else if (numStr.length === 3) {
-        // 3-digit = weight (like 170, 190)
-        if (num >= 50 && num <= 500 && num.toString() !== formData.weight) {
+        // 3-digit = weight (like 170, 190) - only if we don't have weight yet
+        if (!formData.weight && num >= 50 && num <= 500) {
           newFormData.weight = num.toString();
           updated = true;
         }
       } else if (numStr.length === 4) {
-        // 4-digit = birth year (like 1997)
-        if (num >= 1900 && num <= 2010) {
+        // 4-digit = birth year (like 1997) - only if we don't have birth date yet
+        if (!formData.birthDate && num >= 1900 && num <= 2010) {
           const date = new Date(num, 0, 1);
-          const dateStr = date.toISOString().split('T')[0];
-          if (dateStr !== formData.birthDate) {
-            newFormData.birthDate = dateStr;
-            updated = true;
-          }
+          newFormData.birthDate = date.toISOString().split('T')[0];
+          updated = true;
         }
       }
     }
     
-    // Special case: handle space-separated height like "5 8"
-    const heightSpaceMatch = cleanText.match(/(?:^|\s)(\d)\s+(\d+)(?:\s|$)/);
-    if (heightSpaceMatch) {
-      const feet = parseInt(heightSpaceMatch[1]);
-      const inches = parseInt(heightSpaceMatch[2]);
-      if (feet >= 4 && feet <= 8 && inches <= 11) {
-        const heightStr = `${feet}'${inches}"`;
-        if (heightStr !== formData.height) {
-          newFormData.height = heightStr;
+    // Special case: handle space-separated height like "5 8" - only if we don't have height yet
+    if (!formData.height) {
+      const heightSpaceMatch = cleanText.match(/(?:^|\s)(\d)\s+(\d+)(?:\s|$)/);
+      if (heightSpaceMatch) {
+        const feet = parseInt(heightSpaceMatch[1]);
+        const inches = parseInt(heightSpaceMatch[2]);
+        if (feet >= 4 && feet <= 8 && inches <= 11) {
+          newFormData.height = `${feet}'${inches}"`;
           updated = true;
         }
       }
