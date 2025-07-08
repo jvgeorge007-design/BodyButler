@@ -112,6 +112,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
     if (!cleanText) return;
     
     console.log('Parsing:', text);
+    console.log('Current formData before parsing:', formData);
     
     // Extract all numbers and categorize by digit count
     const numbers = cleanText.match(/\d+/g) || [];
