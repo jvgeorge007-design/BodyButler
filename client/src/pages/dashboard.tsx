@@ -158,9 +158,33 @@ export default function Dashboard() {
     );
   }
 
-  const needsOnboarding = !profile || !profile.onboardingCompleted || !personalizedPlan;
+  const needsOnboarding = !profile || !profile.onboardingCompleted;
+  const needsPlanGeneration = profile && profile.onboardingCompleted && !personalizedPlan;
 
-  if (needsOnboarding) {
+  // Auto-generate plan if user has completed onboarding but no plan
+  useEffect(() => {
+    if (needsPlanGeneration && !planLoading) {
+      console.log('Auto-generating missing personalized plan...');
+      apiRequest("POST", "/api/complete-onboarding")
+        .then(() => {
+          queryClient.invalidateQueries({ queryKey: ["/api/personalized-plan"] });
+          toast({
+            title: "Plan Generated!",
+            description: "Your personalized workout plan is ready!",
+          });
+        })
+        .catch((error) => {
+          console.error("Error auto-generating plan:", error);
+          toast({
+            title: "Plan Generation Failed",
+            description: "Please try refreshing the page.",
+            variant: "destructive",
+          });
+        });
+    }
+  }, [needsPlanGeneration, planLoading, queryClient, toast]);
+
+  if (needsOnboarding || needsPlanGeneration) {
     return (
       <div className="min-h-screen bg-gray-50 px-6 py-8">
         <div className="max-w-md mx-auto space-y-6">
@@ -187,11 +211,20 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-center text-gray-600">
-                Complete your onboarding to get your personalized fitness and nutrition plan.
+                {needsPlanGeneration 
+                  ? "Generating your personalized plan..." 
+                  : "Complete your onboarding to get your personalized fitness and nutrition plan."
+                }
               </p>
-              <Button onClick={handleCompleteOnboarding} className="w-full">
-                Complete Onboarding
-              </Button>
+              {needsPlanGeneration ? (
+                <div className="flex justify-center">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+                </div>
+              ) : (
+                <Button onClick={handleCompleteOnboarding} className="w-full">
+                  Complete Onboarding
+                </Button>
+              )}
             </CardContent>
           </Card>
         </div>
