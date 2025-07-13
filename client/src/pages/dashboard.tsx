@@ -1,19 +1,21 @@
 import { useAuth } from "@/hooks/useAuth";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import KettlebellLogo from "@/components/ui/kettlebell-logo";
 import { useLocation } from "wouter";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Calendar, Dumbbell, Utensils, Target, TrendingUp, LogOut } from "lucide-react";
 
 export default function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const [processingOnboarding, setProcessingOnboarding] = useState(false);
 
   const { data: profile, isLoading: profileLoading, error: profileError } = useQuery({
     queryKey: ["/api/profile"],
@@ -25,6 +27,36 @@ export default function Dashboard() {
     queryKey: ["/api/personalized-plan"],
     enabled: isAuthenticated && !isLoading,
     retry: false,
+  });
+
+  // Mutation to create profile from saved onboarding data
+  const createProfileMutation = useMutation({
+    mutationFn: async (onboardingData: any) => {
+      return await apiRequest("/api/auth/complete-onboarding", {
+        method: "POST",
+        body: JSON.stringify(onboardingData),
+      });
+    },
+    onSuccess: () => {
+      // Clear localStorage and refresh queries
+      localStorage.removeItem('onboardingData');
+      queryClient.invalidateQueries({ queryKey: ["/api/profile"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/personalized-plan"] });
+      setProcessingOnboarding(false);
+      toast({
+        title: "Welcome to Body Butler!",
+        description: "Your personalized plan has been generated!",
+      });
+    },
+    onError: (error) => {
+      console.error("Error creating profile:", error);
+      setProcessingOnboarding(false);
+      toast({
+        title: "Setup Error",
+        description: "There was an issue setting up your profile. Please try onboarding again.",
+        variant: "destructive",
+      });
+    },
   });
 
   useEffect(() => {
@@ -56,6 +88,27 @@ export default function Dashboard() {
     }
   }, [profileError, planError, toast]);
 
+  // Check for saved onboarding data and process it after authentication
+  useEffect(() => {
+    if (isAuthenticated && !isLoading && !processingOnboarding && !createProfileMutation.isPending) {
+      // Check if user has no profile but has saved onboarding data
+      if (profileError && !profile && !profileLoading) {
+        const savedOnboardingData = localStorage.getItem('onboardingData');
+        if (savedOnboardingData) {
+          try {
+            const onboardingData = JSON.parse(savedOnboardingData);
+            console.log('Found saved onboarding data, creating profile...', onboardingData);
+            setProcessingOnboarding(true);
+            createProfileMutation.mutate(onboardingData);
+          } catch (error) {
+            console.error('Error parsing saved onboarding data:', error);
+            localStorage.removeItem('onboardingData');
+          }
+        }
+      }
+    }
+  }, [isAuthenticated, isLoading, profile, profileError, profileLoading, processingOnboarding, createProfileMutation]);
+
   const handleLogout = () => {
     window.location.href = "/api/logout";
   };
@@ -72,10 +125,20 @@ export default function Dashboard() {
     setLocation("/onboarding");
   };
 
-  if (isLoading || profileLoading || planLoading) {
+  if (isLoading || profileLoading || planLoading || processingOnboarding || createProfileMutation.isPending) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+          {processingOnboarding || createProfileMutation.isPending ? (
+            <div className="space-y-2">
+              <p className="text-lg font-medium">Setting up your profile...</p>
+              <p className="text-sm text-gray-600">Generating your personalized plan with AI</p>
+            </div>
+          ) : (
+            <p className="text-gray-600">Loading...</p>
+          )}
+        </div>
       </div>
     );
   }
