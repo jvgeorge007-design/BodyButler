@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, Mic, MicOff } from "lucide-react";
+import { Upload } from "lucide-react";
 
 // Web Speech API types
 declare global {
@@ -302,33 +302,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       <div className="max-w-md mx-auto space-y-8">
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold text-gray-900">The Basics</h2>
-          <p className="text-gray-600">Fill out the forms below or tell me more about yourself</p>
-        </div>
-
-        {/* Voice Input Section */}
-        <div className="flex flex-col items-center space-y-3">
-          <Button
-            type="button"
-            onClick={toggleListening}
-            size="lg"
-            className={`w-16 h-16 rounded-full ${
-              isListening 
-                ? 'bg-red-500 hover:bg-red-600 animate-pulse' 
-                : 'bg-blue-500 hover:bg-blue-600'
-            } text-white shadow-lg transition-all`}
-          >
-            {isListening ? (
-              <MicOff className="w-6 h-6" />
-            ) : (
-              <Mic className="w-6 h-6" />
-            )}
-          </Button>
-          
-          <div className="bg-gray-50 rounded-lg px-4 py-2 border border-gray-200">
-            <p className="text-xs text-gray-500 text-center">
-              <span className="font-medium">Say something like:</span> "I'm Jerry, male, 5'7", 165 lbs, born January 1st, 1998."
-            </p>
-          </div>
+          <p className="text-gray-600">Please fill out your basic information</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
