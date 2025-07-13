@@ -6,46 +6,62 @@ const openai = new OpenAI({
 
 export async function generatePersonalizedPlan(onboardingData: any): Promise<any> {
   try {
-    const prompt = `You are a world-class fitness and nutrition coach designing a fully personalized fitness transformation plan. You use scientifically backed knowledge to build out the most optimal workout and diets to help user reach goal.
+    const prompt = `You are a world-class fitness and nutrition coach designing a fully personalized fitness transformation plan. Use scientifically backed knowledge to create the most optimal workout and diet plan tailored specifically to help this user reach their goals.
 
-Use the following user profile to tailor your response:
+CRITICAL REQUIREMENTS:
+1. Generate EXACTLY ${onboardingData.workoutDaysPerWeek || 6} workout days as specified by the user
+2. Tailor exercises specifically to their stated goals and available equipment
+3. Consider their dietary restrictions, budget, and preferences carefully
+4. Create realistic meal plans that fit their lifestyle and schedule
+5. Ensure macro calculations support their specific body composition goals
 
+USER PROFILE:
 Name: ${onboardingData.name || 'User'}
 Sex: ${onboardingData.sex || 'Not specified'}
 Height: ${onboardingData.height || 'Not specified'}
 Weight: ${onboardingData.weight || 'Not specified'}
 Birth Date: ${onboardingData.birthDate || 'Not specified'}
-Activity Level: ${onboardingData.activityDescription || 'Not specified'}
-Average Sleep per Night: ${onboardingData.sleepHours || 'Not specified'} hours
-Equipment Access: ${onboardingData.equipmentAccess || 'Not specified'}
-Diet Preferences: ${onboardingData.dietPreferences || 'Not specified'}
-Weekly Grocery Budget: $${onboardingData.weeklyBudget || 'Not specified'}
-Fitness Goals: ${onboardingData.goals || 'Not specified'}
-Timeline to Goal: ${onboardingData.timeline || 'Not specified'}
-Workout Days per Week: ${onboardingData.workoutDaysPerWeek || 'Not specified'}
-Injuries or Chronic Conditions: ${onboardingData.injuries || 'None mentioned'}
-Past Workout/Diet Experience: ${onboardingData.pastExperience || 'Not specified'}
-Preferred Coaching Style: ${onboardingData.coachingStyle || 'Not specified'}
-Personality Type: ${onboardingData.personalityType || 'Not specified'}
+Current Activity: ${onboardingData.activityDescription || 'Not specified'}
+Sleep: ${onboardingData.sleepHours || 'Not specified'} hours per night
+Available Equipment: ${onboardingData.equipmentAccess || 'Not specified'}
+Dietary Needs: ${onboardingData.dietPreferences || 'Not specified'}
+Weekly Food Budget: $${onboardingData.weeklyBudget || 'Not specified'}
+Primary Goals: ${onboardingData.goals || 'Not specified'}
+Timeline: ${onboardingData.timeline || 'Not specified'}
+Workout Frequency: ${onboardingData.workoutDaysPerWeek || 'Not specified'} days per week
+Injuries/Limitations: ${onboardingData.injuries || 'None mentioned'}
+Experience Level: ${onboardingData.pastExperience || 'Not specified'}
+Coaching Preference: ${onboardingData.coachingStyle || 'Not specified'}
+Personality: ${onboardingData.personalityType || 'Not specified'}
 
----
+INSTRUCTIONS:
+- Design a complete weekly workout split with the exact number of days requested
+- Focus exercises on the specific muscle groups mentioned in their goals
+- Use only equipment they have access to
+- Calculate macros based on their body weight, goals, and activity level
+- Create meals that avoid their dietary restrictions and fit their budget
+- Consider their timeline for goal achievement in exercise selection and intensity
 
-Return the following 3 sections in a single valid JSON object with this exact structure:
+Return a single valid JSON object with this exact structure:
 
 \`\`\`json
 {
   "workoutPlan": {
     "week": 1,
+    "split": "Push/Pull/Legs or Upper/Lower based on user frequency",
     "days": [
       {
-        "day": "Monday",
-        "focus": "Upper Body Push",
+        "day": "Monday", 
+        "focus": "Target the specific goals mentioned",
         "exercises": [
-          { "name": "Incline Dumbbell Press", "sets": 3, "reps": 10 },
-          { "name": "Overhead Press", "sets": 3, "reps": 8 }
-        ]
+          { "name": "Exercise name", "sets": 3, "reps": "8-12", "weight": "bodyweight or specify", "notes": "Form cues or modifications" },
+          { "name": "Second exercise", "sets": 3, "reps": "10-15", "weight": "moderate", "notes": "Focus on specific muscle activation" }
+        ],
+        "cardio": "Optional cardio if mentioned in their routine"
       }
-    ]
+    ],
+    "progression": "How to increase difficulty week by week",
+    "notes": "Specific guidance for their goals and equipment"
   },
   "macroTargets": {
     "dailyCalories": 2100,
@@ -54,41 +70,45 @@ Return the following 3 sections in a single valid JSON object with this exact st
     "fat_g": 90
   },
   "mealPlan": {
+    "approach": "Brief explanation of nutritional strategy for their goals",
     "sampleDay": "Monday",
     "meals": [
       {
         "meal": "Breakfast",
-        "items": ["4 egg whites", "1 slice whole grain toast", "1 tbsp almond butter"]
+        "time": "Suggested timing based on their schedule",
+        "items": ["Specific portions that fit dietary restrictions", "Consider budget constraints"],
+        "macros": { "calories": 400, "protein": 25, "carbs": 30, "fat": 15 }
+      },
+      {
+        "meal": "Pre/Post Workout", 
+        "time": "If they have a regular workout time",
+        "items": ["Fuel for their specific workout type"],
+        "macros": { "calories": 200, "protein": 15, "carbs": 25, "fat": 5 }
       },
       {
         "meal": "Lunch",
-        "items": ["Grilled chicken breast", "1 cup broccoli", "½ cup quinoa"]
+        "items": ["Filling options that fit work schedule"],
+        "macros": { "calories": 500, "protein": 35, "carbs": 40, "fat": 20 }
       },
       {
-        "meal": "Dinner",
-        "items": ["Salmon filet", "1 cup asparagus", "½ sweet potato"]
+        "meal": "Dinner", 
+        "items": ["Recovery-focused evening meal"],
+        "macros": { "calories": 600, "protein": 40, "carbs": 45, "fat": 25 }
       },
       {
         "meal": "Snacks",
-        "items": ["Greek yogurt", "handful of almonds"]
+        "items": ["Healthy options within budget"],
+        "macros": { "calories": 300, "protein": 15, "carbs": 20, "fat": 15 }
       }
     ],
-    "weeklyGroceryList": [
-      "12 eggs",
-      "2 chicken breasts",
-      "2 salmon filets",
-      "1 bag frozen broccoli",
-      "quinoa",
-      "1 sweet potato",
-      "1 loaf whole grain bread",
-      "almond butter",
-      "asparagus",
-      "Greek yogurt",
-      "almonds"
-    ]
+    "weeklyGroceryList": ["Items that fit their budget and dietary restrictions"],
+    "mealPrepTips": "Specific advice for their lifestyle and schedule",
+    "budgetOptimization": "How to maximize nutrition within their specified budget"
   }
 }
 \`\`\`
+
+IMPORTANT REMINDER: You MUST include ALL ${onboardingData.workoutDaysPerWeek || 6} workout days in the "days" array. Do not stop at just 1-2 days. Generate the complete weekly split they requested. Each day should have 4-6 exercises that target their specific goals using their available equipment.
 `;
 
     const completion = await openai.chat.completions.create({
