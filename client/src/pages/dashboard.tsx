@@ -140,24 +140,7 @@ export default function Dashboard() {
     setLocation("/onboarding");
   };
 
-  if (isLoading || profileLoading || planLoading || processingOnboarding || createProfileMutation.isPending) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
-          {processingOnboarding || createProfileMutation.isPending ? (
-            <div className="space-y-2">
-              <p className="text-lg font-medium">Setting up your profile...</p>
-              <p className="text-sm text-gray-600">Generating your personalized plan with AI</p>
-            </div>
-          ) : (
-            <p className="text-gray-600">Loading...</p>
-          )}
-        </div>
-      </div>
-    );
-  }
-
+  // Calculate state variables
   const needsOnboarding = !profile || !profile.onboardingCompleted;
   const needsPlanGeneration = profile && profile.onboardingCompleted && !personalizedPlan;
 
@@ -183,6 +166,24 @@ export default function Dashboard() {
         });
     }
   }, [needsPlanGeneration, planLoading, queryClient, toast]);
+
+  if (isLoading || profileLoading || planLoading || processingOnboarding || createProfileMutation.isPending) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+          {processingOnboarding || createProfileMutation.isPending ? (
+            <div className="space-y-2">
+              <p className="text-lg font-medium">Setting up your profile...</p>
+              <p className="text-sm text-gray-600">Generating your personalized plan with AI</p>
+            </div>
+          ) : (
+            <p className="text-gray-600">Loading...</p>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (needsOnboarding || needsPlanGeneration) {
     return (
