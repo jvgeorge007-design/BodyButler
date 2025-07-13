@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import KettlebellLogo from "@/components/ui/kettlebell-logo";
@@ -7,6 +7,7 @@ import { useLocation } from "wouter";
 import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Home() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -17,6 +18,28 @@ export default function Home() {
     queryKey: ["/api/profile"],
     enabled: isAuthenticated && !isLoading,
     retry: false,
+  });
+
+  // Mutation to complete onboarding with saved data
+  const completeOnboardingMutation = useMutation({
+    mutationFn: async (onboardingData: any) => {
+      await apiRequest("POST", "/api/auth/complete-onboarding", { onboardingData });
+    },
+    onSuccess: () => {
+      localStorage.removeItem('onboardingData');
+      toast({
+        title: "Welcome to Body Butler!",
+        description: "Your personalized plan is being generated...",
+      });
+    },
+    onError: (error) => {
+      console.error("Error completing onboarding:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save your profile. Please try again.",
+        variant: "destructive",
+      });
+    },
   });
 
   useEffect(() => {
@@ -46,6 +69,22 @@ export default function Home() {
       return;
     }
   }, [error, toast]);
+
+  // Check for saved onboarding data after login
+  useEffect(() => {
+    if (isAuthenticated && !profileLoading) {
+      const savedData = localStorage.getItem('onboardingData');
+      if (savedData) {
+        try {
+          const onboardingData = JSON.parse(savedData);
+          completeOnboardingMutation.mutate(onboardingData);
+        } catch (error) {
+          console.error("Error parsing saved onboarding data:", error);
+          localStorage.removeItem('onboardingData');
+        }
+      }
+    }
+  }, [isAuthenticated, profileLoading]);
 
   const handleCompleteOnboarding = () => {
     setLocation("/onboarding");

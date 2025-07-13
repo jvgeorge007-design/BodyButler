@@ -100,20 +100,21 @@ export default function Onboarding() {
     if (currentSection < TOTAL_SECTIONS) {
       setCurrentSection(currentSection + 1);
     } else {
-      // Final submission
-      const finalData = { ...formData, ...sectionData, onboardingCompleted: true };
+      // Final submission - onboarding complete
+      const finalData = { ...formData, ...sectionData };
       
       if (!isAuthenticated) {
-        // For non-authenticated users, store data locally and prompt to sign up
+        // Store data locally and redirect to account creation
         localStorage.setItem('onboardingData', JSON.stringify(finalData));
         toast({
-          title: "Onboarding Complete!",
-          description: "Please sign up to save your personalized plan.",
+          title: "Great! Let's create your account",
+          description: "Choose how you'd like to sign up to save your personalized plan.",
         });
         setLocation("/login");
       } else {
-        // For authenticated users, save to the backend
-        saveMutation.mutate(finalData);
+        // For authenticated users, save to backend and send to ChatGPT
+        const finalDataWithCompletion = { ...finalData, onboardingCompleted: true };
+        saveMutation.mutate(finalDataWithCompletion);
       }
     }
   };

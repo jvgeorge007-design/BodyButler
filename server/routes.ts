@@ -21,6 +21,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Process saved onboarding data after login
+  app.post('/api/auth/complete-onboarding', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { onboardingData } = req.body;
+      
+      // Save onboarding data to profile
+      const existingProfile = await storage.getUserProfile(userId);
+      if (existingProfile) {
+        const mergedData = { ...existingProfile.onboardingData, ...onboardingData };
+        await storage.updateUserProfile(userId, mergedData);
+      } else {
+        const profileData = {
+          userId,
+          onboardingData,
+          onboardingCompleted: true,
+        };
+        await storage.createUserProfile(profileData);
+      }
+
+      // TODO: Send to ChatGPT for personalized plan generation
+      // This will generate a personalized fitness and nutrition plan
+      // based on the user's onboarding responses
+      console.log('Onboarding data saved for user:', userId);
+      console.log('Data:', onboardingData);
+      
+      // Placeholder for ChatGPT integration:
+      // const personalizedPlan = await generatePersonalizedPlan(onboardingData);
+      // await storage.savePersonalizedPlan(userId, personalizedPlan);
+      
+      res.json({ success: true, message: "Onboarding completed successfully" });
+    } catch (error) {
+      console.error("Error completing onboarding:", error);
+      res.status(500).json({ message: "Failed to complete onboarding" });
+    }
+  });
+
   // User profile routes
   app.get('/api/profile', isAuthenticated, async (req: any, res) => {
     try {
