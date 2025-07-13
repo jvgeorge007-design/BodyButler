@@ -8,8 +8,18 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
+// Clean and validate the DATABASE_URL
+const databaseUrl = process.env.DATABASE_URL.trim();
+console.log('Connecting to database with URL format:', databaseUrl.substring(0, 20) + '...');
+
 export const pool = new Pool({ 
-  connectionString: process.env.DATABASE_URL,
+  connectionString: databaseUrl,
   ssl: { rejectUnauthorized: false }
 });
+
+// Test the connection
+pool.on('error', (err) => {
+  console.error('Database pool error:', err);
+});
+
 export const db = drizzle(pool, { schema });
