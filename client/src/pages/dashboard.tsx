@@ -310,22 +310,32 @@ export default function Dashboard() {
               </div>
             </div>
             
-            <Button onClick={handleMealLog} variant="outline" className="w-full">
-              Log Meal
-            </Button>
+            <div className="grid grid-cols-2 gap-3">
+              <Button onClick={handleMealLog} variant="outline">
+                Log Meal
+              </Button>
+              <Button onClick={() => setLocation("/workout-calendar")} variant="outline">
+                View Calendar
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-3">
           <Button onClick={handleWorkoutLog} variant="outline" className="h-20 flex flex-col space-y-2">
-            <Dumbbell className="w-6 h-6" />
-            <span className="text-sm">Log Workout</span>
+            <Dumbbell className="w-5 h-5" />
+            <span className="text-xs">Log Workout</span>
           </Button>
           
           <Button onClick={handleMealLog} variant="outline" className="h-20 flex flex-col space-y-2">
-            <Utensils className="w-6 h-6" />
-            <span className="text-sm">Log Meal</span>
+            <Utensils className="w-5 h-5" />
+            <span className="text-xs">Log Meal</span>
+          </Button>
+
+          <Button onClick={() => setLocation("/workout-calendar")} variant="outline" className="h-20 flex flex-col space-y-2">
+            <Calendar className="w-5 h-5" />
+            <span className="text-xs">Calendar</span>
           </Button>
         </div>
       </div>
