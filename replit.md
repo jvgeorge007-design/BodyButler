@@ -22,8 +22,8 @@ Body Butler is a full-stack web application that provides personalized fitness a
 - **Session Management**: Express sessions with PostgreSQL storage
 
 ### Database Design
-- **Primary Database**: PostgreSQL via Neon serverless
-- **Connection**: @neondatabase/serverless with connection pooling
+- **Primary Database**: PostgreSQL via Supabase
+- **Connection**: Standard pg driver with SSL support
 - **Schema Management**: Drizzle Kit for migrations and schema management
 
 ## Key Components
@@ -61,7 +61,7 @@ Body Butler is a full-stack web application that provides personalized fitness a
 ## External Dependencies
 
 ### Core Dependencies
-- **@neondatabase/serverless**: PostgreSQL serverless connection
+- **pg**: PostgreSQL client for Supabase connection
 - **@tanstack/react-query**: Server state management
 - **drizzle-orm**: Type-safe database operations
 - **express**: Web server framework
@@ -83,13 +83,13 @@ Body Butler is a full-stack web application that provides personalized fitness a
 ### Development Environment
 - **Dev Server**: Vite development server with HMR
 - **Backend**: tsx for TypeScript execution
-- **Database**: Neon PostgreSQL with development connection string
+- **Database**: Supabase PostgreSQL with development connection string
 
 ### Production Build
 - **Frontend**: Vite production build to `dist/public`
 - **Backend**: ESBuild bundling to `dist/index.js`
 - **Static Assets**: Served via Express static middleware
-- **Database**: Neon PostgreSQL with production connection string
+- **Database**: Supabase PostgreSQL with production connection string
 
 ### Environment Configuration
 - **DATABASE_URL**: PostgreSQL connection string
@@ -114,6 +114,7 @@ Changelog:
 - July 08, 2025. Updated screen 5/6: Changed subtext to "Help us customize your plan"
 - July 08, 2025. Updated screen 2/6: Fixed microphone button styling to match other forms (added variant="ghost")
 - July 08, 2025. Reordered screen 6/6: Moved "Anything else you'd like to add?" section below the coaching personality questionnaire
+- July 08, 2025. Migrated from Neon to Supabase PostgreSQL for enhanced features (real-time, storage, edge functions)
 ```
 
 ## User Preferences
