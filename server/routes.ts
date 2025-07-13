@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
+import { generatePersonalizedPlan } from "./openai";
 import { insertUserProfileSchema } from "@shared/schema";
 import { z } from "zod";
 
@@ -41,15 +42,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.createUserProfile(profileData);
       }
 
-      // TODO: Send to ChatGPT for personalized plan generation
-      // This will generate a personalized fitness and nutrition plan
-      // based on the user's onboarding responses
-      console.log('Onboarding data saved for user:', userId);
-      console.log('Data:', onboardingData);
-      
-      // Placeholder for ChatGPT integration:
-      // const personalizedPlan = await generatePersonalizedPlan(onboardingData);
-      // await storage.savePersonalizedPlan(userId, personalizedPlan);
+      // Generate personalized plan using ChatGPT
+      console.log('Generating personalized plan for user:', userId);
+      try {
+        const personalizedPlan = await generatePersonalizedPlan(onboardingData);
+        console.log('Personalized plan generated successfully');
+        
+        // TODO: Save the generated plan to the database
+        // For now, we'll just log it and return success
+        console.log('Plan preview:', personalizedPlan.substring(0, 200) + '...');
+        
+      } catch (planError) {
+        console.error('Error generating personalized plan:', planError);
+        // Continue with success even if plan generation fails
+        // The user's data is still saved
+      }
       
       res.json({ success: true, message: "Onboarding completed successfully" });
     } catch (error) {

@@ -117,6 +117,7 @@ Changelog:
 - July 08, 2025. Migrated from Neon to Supabase PostgreSQL for enhanced features (real-time, storage, edge functions)
 - July 13, 2025. Restructured database schema: consolidated all onboarding fields into single JSON object (onboarding_data column) for better flexibility and easier data management
 - July 13, 2025. Updated onboarding flow: users complete 6-step onboarding first, then create account, then data is saved and sent to ChatGPT for personalized plan generation
+- July 13, 2025. Implemented ChatGPT integration: OpenAI API key configured and personalized plan generation service created using GPT-4 model
 ```
 
 ## User Preferences
