@@ -110,6 +110,9 @@ Changelog:
 - July 08, 2025. Changed equipment access to text input with voice support and helpful examples (full gym access, home gym with only dumbbells, no weights, resistance bands, etc.)
 - July 08, 2025. Removed mic input and example box from basics page per user request
 - July 08, 2025. Removed subtext "Please fill out your basic information" from basics page
+- July 08, 2025. Updated screen 6/6: Changed "How do you like to be coached?" to "Anything else you'd like to add?"
+- July 08, 2025. Updated screen 5/6: Changed subtext to "Help us customize your plan"
+- July 08, 2025. Updated screen 2/6: Fixed microphone button styling to match other forms (added variant="ghost")
 ```
 
 ## User Preferences

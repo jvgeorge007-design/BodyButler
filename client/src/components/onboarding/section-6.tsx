@@ -42,15 +42,15 @@ export default function Section6({ data, onNext, isLoading }: Section6Props) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Coaching Style */}
+          {/* Additional Information */}
           <div className="space-y-2">
-            <Label htmlFor="coaching" className="text-sm font-semibold text-gray-900">
-              How do you like to be coached?
+            <Label htmlFor="additional" className="text-sm font-semibold text-gray-900">
+              Anything else you'd like to add?
             </Label>
             <div className="relative">
               <Textarea
-                id="coaching"
-                placeholder="e.g., 'Keep it fun', 'Be strict', 'Give me science', 'Be encouraging'..."
+                id="additional"
+                placeholder="Any additional information that would help us customize your experience..."
                 rows={3}
                 value={formData.coachingStyle}
                 onChange={(e) => handleInputChange("coachingStyle", e.target.value)}

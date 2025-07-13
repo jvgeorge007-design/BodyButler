@@ -107,6 +107,7 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
               />
               <Button
                 type="button"
+                variant="ghost"
                 size="sm"
                 className="absolute bottom-3 right-3 p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
               >
