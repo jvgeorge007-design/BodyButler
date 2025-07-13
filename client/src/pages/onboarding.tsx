@@ -50,11 +50,24 @@ export default function Onboarding() {
     }
   }, [error, toast, isAuthenticated]);
 
+  // Check if user already has completed onboarding and redirect
   useEffect(() => {
-    if (existingProfile && existingProfile.onboardingData) {
-      setFormData(existingProfile.onboardingData);
+    if (isAuthenticated && existingProfile) {
+      if (existingProfile.onboardingCompleted) {
+        // User already completed onboarding, redirect to dashboard
+        toast({
+          title: "Already Complete!",
+          description: "Your onboarding is already finished. Redirecting to dashboard...",
+        });
+        setLocation("/");
+        return;
+      }
+      // Load existing data if available
+      if (existingProfile.onboardingData) {
+        setFormData(existingProfile.onboardingData);
+      }
     }
-  }, [existingProfile]);
+  }, [existingProfile, isAuthenticated, setLocation, toast]);
 
   const saveMutation = useMutation({
     mutationFn: async (data: any) => {
@@ -88,6 +101,28 @@ export default function Onboarding() {
     },
   });
 
+  const completeOnboardingMutation = useMutation({
+    mutationFn: async (data: any) => {
+      return await apiRequest("POST", "/api/auth/complete-onboarding", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/profile"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/personalized-plan"] });
+      toast({
+        title: "Onboarding Complete!",
+        description: "Your personalized plan is being generated...",
+      });
+      setLocation("/");
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to complete onboarding. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const updateFormData = (sectionData: any) => {
     setFormData(prev => ({ ...prev, ...sectionData }));
   };
@@ -112,9 +147,8 @@ export default function Onboarding() {
         });
         setLocation("/login");
       } else {
-        // For authenticated users, save to backend and send to ChatGPT
-        const finalDataWithCompletion = { ...finalData, onboardingCompleted: true };
-        saveMutation.mutate(finalDataWithCompletion);
+        // For authenticated users, call the complete-onboarding endpoint
+        completeOnboardingMutation.mutate(finalData);
       }
     }
   };

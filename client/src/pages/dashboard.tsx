@@ -87,34 +87,21 @@ export default function Dashboard() {
 
   // Check for saved onboarding data and process it after authentication
   useEffect(() => {
-    console.log('Dashboard useEffect triggered:', {
-      isAuthenticated,
-      isLoading,
-      processingOnboarding,
-      isPending: createProfileMutation.isPending,
-      profileError: profileError?.message,
-      profile: !!profile,
-      profileLoading
-    });
-
     if (isAuthenticated && !isLoading && !processingOnboarding && !createProfileMutation.isPending) {
       // Check if user has no profile but has saved onboarding data
       if (profileError && !profile && !profileLoading) {
         const savedOnboardingData = localStorage.getItem('onboardingData');
-        console.log('Checking localStorage for onboardingData:', !!savedOnboardingData);
         
         if (savedOnboardingData) {
           try {
             const onboardingData = JSON.parse(savedOnboardingData);
-            console.log('Found saved onboarding data, creating profile...', onboardingData);
+            console.log('Found saved onboarding data, creating profile...');
             setProcessingOnboarding(true);
             createProfileMutation.mutate(onboardingData);
           } catch (error) {
             console.error('Error parsing saved onboarding data:', error);
             localStorage.removeItem('onboardingData');
           }
-        } else {
-          console.log('No saved onboarding data found in localStorage');
         }
       }
     }
