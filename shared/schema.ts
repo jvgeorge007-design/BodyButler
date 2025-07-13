@@ -39,6 +39,7 @@ export const userProfiles = pgTable("user_profiles", {
   id: varchar("id").primaryKey().notNull(),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   onboardingData: jsonb("onboarding_data").notNull(),
+  personalizedPlan: jsonb("personalized_plan"),
   onboardingCompleted: boolean("onboarding_completed").default(false),
   profilePhotoUrl: varchar("profile_photo_url"),
   createdAt: timestamp("created_at").defaultNow(),

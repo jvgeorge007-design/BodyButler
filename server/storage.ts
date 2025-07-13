@@ -18,6 +18,7 @@ export interface IStorage {
   getUserProfile(userId: string): Promise<UserProfile | undefined>;
   createUserProfile(profile: InsertUserProfile): Promise<UserProfile>;
   updateUserProfile(userId: string, onboardingData: any): Promise<UserProfile | undefined>;
+  savePersonalizedPlan(userId: string, personalizedPlan: any): Promise<UserProfile | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -61,6 +62,19 @@ export class DatabaseStorage implements IStorage {
     const [updatedProfile] = await db
       .update(userProfiles)
       .set({ onboardingData, updatedAt: new Date() })
+      .where(eq(userProfiles.userId, userId))
+      .returning();
+    return updatedProfile;
+  }
+
+  async savePersonalizedPlan(userId: string, personalizedPlan: any): Promise<UserProfile | undefined> {
+    const [updatedProfile] = await db
+      .update(userProfiles)
+      .set({ 
+        personalizedPlan, 
+        onboardingCompleted: true,
+        updatedAt: new Date() 
+      })
       .where(eq(userProfiles.userId, userId))
       .returning();
     return updatedProfile;

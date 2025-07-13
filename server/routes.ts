@@ -48,8 +48,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const personalizedPlan = await generatePersonalizedPlan(onboardingData);
         console.log('Personalized plan generated successfully');
         
-        // TODO: Save the generated plan to the database
-        // For now, we'll just log it and return success
+        // Save the generated plan to the database
+        await storage.savePersonalizedPlan(userId, personalizedPlan);
+        console.log('Personalized plan saved to Supabase for user:', userId);
+        
         console.log('Plan structure:', {
           workoutPlan: personalizedPlan.workoutPlan ? 'Generated' : 'Missing',
           macroTargets: personalizedPlan.macroTargets ? 'Generated' : 'Missing',
@@ -57,7 +59,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
         
       } catch (planError) {
-        console.error('Error generating personalized plan:', planError);
+        console.error('Error generating or saving personalized plan:', planError);
         // Continue with success even if plan generation fails
         // The user's data is still saved
       }
@@ -129,6 +131,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating profile:", error);
       res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
+
+  // Get personalized plan
+  app.get('/api/personalized-plan', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const profile = await storage.getUserProfile(userId);
+      
+      if (!profile) {
+        return res.status(404).json({ message: "Profile not found" });
+      }
+      
+      if (!profile.personalizedPlan) {
+        return res.status(404).json({ message: "No personalized plan found. Please complete onboarding first." });
+      }
+      
+      res.json(profile.personalizedPlan);
+    } catch (error) {
+      console.error("Error fetching personalized plan:", error);
+      res.status(500).json({ message: "Failed to fetch personalized plan" });
     }
   });
 

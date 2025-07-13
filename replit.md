@@ -119,6 +119,7 @@ Changelog:
 - July 13, 2025. Updated onboarding flow: users complete 6-step onboarding first, then create account, then data is saved and sent to ChatGPT for personalized plan generation
 - July 13, 2025. Implemented ChatGPT integration: OpenAI API key configured and personalized plan generation service created using GPT-4 model
 - July 13, 2025. Updated ChatGPT integration with master prompt: now generates structured JSON responses with workoutPlan, macroTargets, and mealPlan sections
+- July 13, 2025. Added personalized plan storage: ChatGPT-generated plans are now saved to Supabase user_profiles table in personalizedPlan column with API endpoint for retrieval
 ```
 
 ## User Preferences
