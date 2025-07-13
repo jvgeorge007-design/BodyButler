@@ -109,6 +109,7 @@ Changelog:
 - July 08, 2025. Updated sleep scale to sliding 5-option scale: less than 5, 6, 7, 8, more than 8 hours
 - July 08, 2025. Changed equipment access to text input with voice support and helpful examples (full gym access, home gym with only dumbbells, no weights, resistance bands, etc.)
 - July 08, 2025. Removed mic input and example box from basics page per user request
+- July 08, 2025. Removed subtext "Please fill out your basic information" from basics page
 ```
 
 ## User Preferences

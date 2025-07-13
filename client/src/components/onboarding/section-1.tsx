@@ -302,7 +302,6 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
       <div className="max-w-md mx-auto space-y-8">
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold text-gray-900">The Basics</h2>
-          <p className="text-gray-600">Please fill out your basic information</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
