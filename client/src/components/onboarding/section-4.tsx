@@ -22,6 +22,8 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
   const [formData, setFormData] = useState({
     goals: data.goals || "",
     timeline: data.timeline || "",
+    goalPhase: data.goalPhase || "",
+    priorityMuscles: data.priorityMuscles || "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -85,6 +87,49 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Goal Phase */}
+          <div className="space-y-2">
+            <Label htmlFor="goalPhase" className="text-sm font-semibold text-gray-900">
+              Primary Goal Phase
+            </Label>
+            <Select value={formData.goalPhase} onValueChange={(value) => handleInputChange("goalPhase", value)}>
+              <SelectTrigger className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500">
+                <SelectValue placeholder="Select your main focus" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="cut">Cut (lose fat while maintaining muscle)</SelectItem>
+                <SelectItem value="bulk">Bulk (gain muscle, accept some fat gain)</SelectItem>
+                <SelectItem value="recomposition">Recomposition (gain muscle + lose fat simultaneously)</SelectItem>
+                <SelectItem value="maintenance">Maintenance (maintain current physique)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Priority Muscles */}
+          <div className="space-y-2">
+            <Label htmlFor="priority" className="text-sm font-semibold text-gray-900">
+              Priority/Lagging Muscle Groups (Optional)
+            </Label>
+            <div className="relative">
+              <Textarea
+                id="priority"
+                placeholder="Which muscle groups do you want to prioritize or feel are lagging? (e.g., arms, shoulders, glutes, back)"
+                rows={3}
+                value={formData.priorityMuscles}
+                onChange={(e) => handleInputChange("priorityMuscles", e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute bottom-3 right-3 p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+              >
+                <Mic className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
 
           <Button 

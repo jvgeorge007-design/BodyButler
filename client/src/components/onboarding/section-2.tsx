@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Mic } from "lucide-react";
 
 interface Section2Props {
@@ -24,6 +24,8 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
     activityDescription: data.activityDescription || "",
     sleepHours: data.sleepHours || null,
     equipmentAccess: data.equipmentAccess || "",
+    activityLevel: data.activityLevel || "",
+    recoveryCapacity: data.recoveryCapacity || "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -89,6 +91,43 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
                 </Button>
               ))}
             </div>
+          </div>
+
+          {/* Activity Level */}
+          <div className="space-y-2">
+            <Label htmlFor="activityLevel" className="text-sm font-semibold text-gray-900">
+              Activity Level
+            </Label>
+            <Select value={formData.activityLevel} onValueChange={(value) => handleInputChange("activityLevel", value)}>
+              <SelectTrigger className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500">
+                <SelectValue placeholder="Select your activity level" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="sedentary">Sedentary (desk job, little exercise)</SelectItem>
+                <SelectItem value="lightly_active">Lightly Active (light exercise 1-3 days/week)</SelectItem>
+                <SelectItem value="moderately_active">Moderately Active (moderate exercise 3-5 days/week)</SelectItem>
+                <SelectItem value="very_active">Very Active (hard exercise 6-7 days/week)</SelectItem>
+                <SelectItem value="extremely_active">Extremely Active (physical job + exercise)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Recovery Capacity */}
+          <div className="space-y-2">
+            <Label htmlFor="recoveryCapacity" className="text-sm font-semibold text-gray-900">
+              Recovery Capacity
+            </Label>
+            <Select value={formData.recoveryCapacity} onValueChange={(value) => handleInputChange("recoveryCapacity", value)}>
+              <SelectTrigger className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500">
+                <SelectValue placeholder="How well do you recover from workouts?" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="poor">Poor (always sore, need extra rest days)</SelectItem>
+                <SelectItem value="average">Average (normal soreness, recover in 1-2 days)</SelectItem>
+                <SelectItem value="good">Good (recover quickly, rarely sore)</SelectItem>
+                <SelectItem value="excellent">Excellent (can train hard daily, recover overnight)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Equipment Access */}

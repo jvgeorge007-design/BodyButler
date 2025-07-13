@@ -15,6 +15,7 @@ export default function Section3({ data, onNext, isLoading }: Section3Props) {
   const [formData, setFormData] = useState({
     dietPreferences: data.dietPreferences || "",
     weeklyBudget: data.weeklyBudget || "",
+    fastingWindow: data.fastingWindow || "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -75,6 +76,31 @@ export default function Section3({ data, onNext, isLoading }: Section3Props) {
               min="0"
               step="10"
             />
+          </div>
+
+          {/* Fasting Window */}
+          <div className="space-y-2">
+            <Label htmlFor="fasting" className="text-sm font-semibold text-gray-900">
+              Fasting Window (Optional)
+            </Label>
+            <div className="relative">
+              <Textarea
+                id="fasting"
+                placeholder="Do you practice intermittent fasting? (e.g., 16:8, OMAD, or specific eating window)"
+                rows={2}
+                value={formData.fastingWindow}
+                onChange={(e) => handleInputChange("fastingWindow", e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute bottom-3 right-3 p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+              >
+                <Mic className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
 
           <Button 

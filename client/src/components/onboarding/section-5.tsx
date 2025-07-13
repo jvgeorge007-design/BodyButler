@@ -23,6 +23,8 @@ export default function Section5({ data, onNext, isLoading }: Section5Props) {
     workoutDaysPerWeek: data.workoutDaysPerWeek || null,
     injuries: data.injuries || "",
     pastExperience: data.pastExperience || "",
+    experienceLevel: data.experienceLevel || "",
+    cardioPreference: data.cardioPreference || "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -90,6 +92,43 @@ export default function Section5({ data, onNext, isLoading }: Section5Props) {
                 <Mic className="w-5 h-5" />
               </Button>
             </div>
+          </div>
+
+          {/* Experience Level */}
+          <div className="space-y-2">
+            <Label htmlFor="experienceLevel" className="text-sm font-semibold text-gray-900">
+              Experience Level
+            </Label>
+            <Select value={formData.experienceLevel} onValueChange={(value) => handleInputChange("experienceLevel", value)}>
+              <SelectTrigger className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500">
+                <SelectValue placeholder="Select your experience level" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="beginner">Beginner (0-6 months of consistent training)</SelectItem>
+                <SelectItem value="novice">Novice (6 months - 2 years)</SelectItem>
+                <SelectItem value="intermediate">Intermediate (2-5 years)</SelectItem>
+                <SelectItem value="advanced">Advanced (5+ years)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Cardio Preference */}
+          <div className="space-y-2">
+            <Label htmlFor="cardioPreference" className="text-sm font-semibold text-gray-900">
+              Cardio Preference
+            </Label>
+            <Select value={formData.cardioPreference} onValueChange={(value) => handleInputChange("cardioPreference", value)}>
+              <SelectTrigger className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500">
+                <SelectValue placeholder="What type of cardio do you prefer?" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No cardio preference</SelectItem>
+                <SelectItem value="liss">LISS (walking, light jogging, steady pace)</SelectItem>
+                <SelectItem value="hiit">HIIT (high intensity intervals, sprints)</SelectItem>
+                <SelectItem value="both">Both LISS and HIIT</SelectItem>
+                <SelectItem value="sports">Sports/activities (basketball, swimming, etc.)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Past Experience */}

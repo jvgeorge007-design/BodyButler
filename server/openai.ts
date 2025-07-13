@@ -6,14 +6,68 @@ const openai = new OpenAI({
 
 export async function generatePersonalizedPlan(onboardingData: any): Promise<any> {
   try {
-    const prompt = `You are a world-class fitness and nutrition coach designing a fully personalized fitness transformation plan. Use scientifically backed knowledge to create the most optimal workout and diet plan tailored specifically to help this user reach their goals.
+    const prompt = `🧠 BODY BUTLER MASTER PROMPT (v2.0)
 
-CRITICAL REQUIREMENTS:
-1. Generate EXACTLY ${onboardingData.workoutDaysPerWeek || 6} workout days as specified by the user
-2. Tailor exercises specifically to their stated goals and available equipment
-3. Consider their dietary restrictions, budget, and preferences carefully
-4. Create realistic meal plans that fit their lifestyle and schedule
-5. Ensure macro calculations support their specific body composition goals
+You are a world-class fitness and nutrition coach, combining elite-level training science (like Tim Grover) with deep personalization. Your task is to generate a precise, scientifically validated, and fully tailored workout and nutrition plan that reflects the user's profile below.
+
+Use the most effective training principles, but ensure the tone, coaching style, and difficulty match the user's stated preference and capabilities. If their goals are unrealistic for the timeline, recalibrate and explain the reasoning clearly and respectfully.
+
+🧱 CORE REQUIREMENTS
+1. Workout Plan
+Include EXACTLY ${onboardingData.workoutDaysPerWeek || 6} workout days the user requests
+
+Select the most optimal training structure based on:
+• Frequency: ${onboardingData.workoutDaysPerWeek || 'Not specified'} days per week
+• Experience level: ${onboardingData.experienceLevel || 'Not specified'}
+• Recovery capacity: ${onboardingData.recoveryCapacity || 'Not specified'}
+• Primary goals: ${onboardingData.goals || 'Not specified'}
+
+Choose from (or create hybrid of):
+• Full-body
+• Upper/Lower
+• Push/Pull/Legs
+• Goal-specific split (e.g., Arms + Back specialization)
+• Strength/Hypertrophy hybrid
+
+Use only exercises compatible with: ${onboardingData.equipmentAccess || 'Not specified'}
+Prioritize evidence-backed movements for hypertrophy, recomposition, or strength
+Customize for priority or lagging muscle groups: ${onboardingData.priorityMuscles || 'Not specified'}
+Include optional cardio (${onboardingData.cardioPreference || 'user preference'}) based on user preference and goals
+Include clear weekly progression guidance
+
+2. Macro Targets
+Calculate protein, carbs, and fats based on:
+• Body weight: ${onboardingData.weight || 'Not specified'}
+• Goal phase: ${onboardingData.goalPhase || 'Not specified'}
+• Activity level: ${onboardingData.activityLevel || 'Not specified'} and training intensity
+• Sex: ${onboardingData.sex || 'Not specified'}
+• Age: ${onboardingData.birthDate || 'Not specified'}
+
+Explain the rationale for calorie level and macro breakdown
+Ensure adequacy for muscle retention, recovery, hormonal health, and adherence
+
+3. Meal Plan
+Respect dietary preferences: ${onboardingData.dietPreferences || 'Not specified'}
+Fasting windows: ${onboardingData.fastingWindow || 'Not specified'}
+Grocery budget: $${onboardingData.weeklyBudget || 'Not specified'}
+
+Design a full day meal structure, broken into:
+• Breakfast (if applicable based on fasting window)
+• Pre/Post Workout
+• Lunch
+• Dinner
+• Snacks
+
+Provide macros per meal
+Include a weekly grocery list aligned with the food plan
+Suggest meal prep tips and budget optimizations
+
+4. Explanatory Notes
+Include brief but clear explanations of:
+• Why this training structure was selected
+• Why these macros support their transformation
+• How the meal plan fits their lifestyle and performance needs
+• Provide high-level strategy and weekly progression approach
 
 USER PROFILE:
 Name: ${onboardingData.name || 'User'}
@@ -22,101 +76,98 @@ Height: ${onboardingData.height || 'Not specified'}
 Weight: ${onboardingData.weight || 'Not specified'}
 Birth Date: ${onboardingData.birthDate || 'Not specified'}
 Current Activity: ${onboardingData.activityDescription || 'Not specified'}
+Activity Level: ${onboardingData.activityLevel || 'Not specified'}
+Recovery Capacity: ${onboardingData.recoveryCapacity || 'Not specified'}
 Sleep: ${onboardingData.sleepHours || 'Not specified'} hours per night
 Available Equipment: ${onboardingData.equipmentAccess || 'Not specified'}
 Dietary Needs: ${onboardingData.dietPreferences || 'Not specified'}
+Fasting Window: ${onboardingData.fastingWindow || 'Not specified'}
 Weekly Food Budget: $${onboardingData.weeklyBudget || 'Not specified'}
 Primary Goals: ${onboardingData.goals || 'Not specified'}
+Goal Phase: ${onboardingData.goalPhase || 'Not specified'}
+Priority Muscles: ${onboardingData.priorityMuscles || 'Not specified'}
 Timeline: ${onboardingData.timeline || 'Not specified'}
 Workout Frequency: ${onboardingData.workoutDaysPerWeek || 'Not specified'} days per week
+Experience Level: ${onboardingData.experienceLevel || 'Not specified'}
+Cardio Preference: ${onboardingData.cardioPreference || 'Not specified'}
 Injuries/Limitations: ${onboardingData.injuries || 'None mentioned'}
-Experience Level: ${onboardingData.pastExperience || 'Not specified'}
+Past Experience: ${onboardingData.pastExperience || 'Not specified'}
 Coaching Preference: ${onboardingData.coachingStyle || 'Not specified'}
 Personality: ${onboardingData.personalityType || 'Not specified'}
 
-INSTRUCTIONS:
-- Design a complete weekly workout split with the exact number of days requested
-- Focus exercises on the specific muscle groups mentioned in their goals
-- Use only equipment they have access to
-- Calculate macros based on their body weight, goals, and activity level
-- Create meals that avoid their dietary restrictions and fit their budget
-- Consider their timeline for goal achievement in exercise selection and intensity
-
-Return a single valid JSON object with this exact structure:
-
-\`\`\`json
+🔁 RESPONSE FORMAT (REQUIRED)
+Return only a valid JSON object in this exact format:
 {
   "workoutPlan": {
     "week": 1,
-    "split": "Push/Pull/Legs or Upper/Lower based on user frequency",
+    "split": "Describe chosen split format here",
     "days": [
       {
         "day": "Monday", 
-        "focus": "Target the specific goals mentioned",
+        "focus": "Muscle group or performance goal",
         "exercises": [
-          { "name": "Exercise name", "sets": 3, "reps": "8-12", "weight": "bodyweight or specify", "notes": "Form cues or modifications" },
-          { "name": "Second exercise", "sets": 3, "reps": "10-15", "weight": "moderate", "notes": "Focus on specific muscle activation" }
+          { "name": "Exercise", "sets": 3, "reps": "8-12", "weight": "bodyweight/moderate/heavy", "notes": "Form cue or emphasis" },
+          { "name": "Next Exercise", "sets": 3, "reps": "10-15", "weight": "light/moderate", "notes": "Focus area or time under tension" }
         ],
-        "cardio": "Optional cardio if mentioned in their routine"
+        "cardio": "e.g., 30 min incline walk at 6 speed, optional"
       }
     ],
-    "progression": "How to increase difficulty week by week",
-    "notes": "Specific guidance for their goals and equipment"
+    "progression": "How to increase difficulty (e.g., add weight, volume, or tempo)",
+    "rationale": "Why this training split and exercise selection were chosen"
   },
   "macroTargets": {
-    "dailyCalories": 2100,
-    "protein_g": 160,
-    "carbs_g": 120,
-    "fat_g": 90
+    "dailyCalories": 0,
+    "protein_g": 0,
+    "carbs_g": 0,
+    "fat_g": 0,
+    "rationale": "Explain how these macros support the user's body comp and energy needs"
   },
   "mealPlan": {
-    "approach": "Brief explanation of nutritional strategy for their goals",
+    "approach": "e.g., High-protein deficit with moderate carbs for training energy",
     "sampleDay": "Monday",
     "meals": [
       {
         "meal": "Breakfast",
-        "time": "Suggested timing based on their schedule",
-        "items": ["Specific portions that fit dietary restrictions", "Consider budget constraints"],
-        "macros": { "calories": 400, "protein": 25, "carbs": 30, "fat": 15 }
+        "time": "Optional depending on IF or schedule",
+        "items": ["Examples based on budget + macros"],
+        "macros": { "calories": 400, "protein": 30, "carbs": 35, "fat": 15 }
       },
       {
-        "meal": "Pre/Post Workout", 
-        "time": "If they have a regular workout time",
-        "items": ["Fuel for their specific workout type"],
-        "macros": { "calories": 200, "protein": 15, "carbs": 25, "fat": 5 }
+        "meal": "Pre/Post Workout",
+        "time": "Before or after workout",
+        "items": ["Workout fuel and recovery meals"],
+        "macros": { "calories": 300, "protein": 25, "carbs": 30, "fat": 10 }
       },
       {
         "meal": "Lunch",
-        "items": ["Filling options that fit work schedule"],
-        "macros": { "calories": 500, "protein": 35, "carbs": 40, "fat": 20 }
+        "items": ["Protein + carb-heavy to support recovery"],
+        "macros": { "calories": 500, "protein": 35, "carbs": 40, "fat": 15 }
       },
       {
-        "meal": "Dinner", 
-        "items": ["Recovery-focused evening meal"],
-        "macros": { "calories": 600, "protein": 40, "carbs": 45, "fat": 25 }
+        "meal": "Dinner",
+        "items": ["Protein + fat dominant for satiety"],
+        "macros": { "calories": 600, "protein": 40, "carbs": 30, "fat": 25 }
       },
       {
         "meal": "Snacks",
-        "items": ["Healthy options within budget"],
-        "macros": { "calories": 300, "protein": 15, "carbs": 20, "fat": 15 }
+        "items": ["Optional, based on hunger and adherence"],
+        "macros": { "calories": 200, "protein": 15, "carbs": 15, "fat": 10 }
       }
     ],
-    "weeklyGroceryList": ["Items that fit their budget and dietary restrictions"],
-    "mealPrepTips": "Specific advice for their lifestyle and schedule",
-    "budgetOptimization": "How to maximize nutrition within their specified budget"
+    "weeklyGroceryList": ["Affordable staples with high protein density and micronutrients"],
+    "mealPrepTips": "Batch cooking or prepping tips for busy schedules",
+    "budgetOptimization": "Where to shop, which cuts to prioritize, and what to swap"
   }
 }
-\`\`\`
 
-IMPORTANT REMINDER: You MUST include ALL ${onboardingData.workoutDaysPerWeek || 6} workout days in the "days" array. Do not stop at just 1-2 days. Generate the complete weekly split they requested. Each day should have 4-6 exercises that target their specific goals using their available equipment.
-`;
+CRITICAL: You MUST include ALL ${onboardingData.workoutDaysPerWeek || 6} workout days in the "days" array. Generate the complete weekly split with 4-6 exercises per day that target their specific goals using their available equipment.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
         {
           role: "system",
-          content: "You are a world-class fitness and nutrition coach. Always return valid JSON exactly as specified in the prompt. Be precise with the JSON structure and ensure all fields are included."
+          content: "You are a world-class fitness and nutrition coach, combining elite-level training science with deep personalization. Always return valid JSON exactly as specified in the prompt. Be precise with the JSON structure and ensure all fields are included. If goals are unrealistic for the timeline, recalibrate and explain the reasoning clearly."
         },
         {
           role: "user",

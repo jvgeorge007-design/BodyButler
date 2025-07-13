@@ -1,0 +1,62 @@
+{
+  "workoutPlan": {
+    "week": 1,
+    "split": "Describe chosen split format here",
+    "days": [
+      {
+        "day": "Monday", 
+        "focus": "Muscle group or performance goal",
+        "exercises": [
+          { "name": "Exercise", "sets": 3, "reps": "8-12", "weight": "bodyweight/moderate/heavy", "notes": "Form cue or emphasis" },
+          { "name": "Next Exercise", "sets": 3, "reps": "10-15", "weight": "light/moderate", "notes": "Focus area or time under tension" }
+        ],
+        "cardio": "e.g., 30 min incline walk at 6 speed, optional"
+      }
+    ],
+    "progression": "How to increase difficulty (e.g., add weight, volume, or tempo)",
+    "rationale": "Why this training split and exercise selection were chosen"
+  },
+  "macroTargets": {
+    "dailyCalories": 0,
+    "protein_g": 0,
+    "carbs_g": 0,
+    "fat_g": 0,
+    "rationale": "Explain how these macros support the user’s body comp and energy needs"
+  },
+  "mealPlan": {
+    "approach": "e.g., High-protein deficit with moderate carbs for training energy",
+    "sampleDay": "Monday",
+    "meals": [
+      {
+        "meal": "Breakfast",
+        "time": "Optional depending on IF or schedule",
+        "items": ["Examples based on budget + macros"],
+        "macros": { "calories": 400, "protein": 30, "carbs": 35, "fat": 15 }
+      },
+      {
+        "meal": "Pre/Post Workout",
+        "time": "Before or after workout",
+        "items": ["Workout fuel and recovery meals"],
+        "macros": { "calories": 300, "protein": 25, "carbs": 30, "fat": 10 }
+      },
+      {
+        "meal": "Lunch",
+        "items": ["Protein + carb-heavy to support recovery"],
+        "macros": { "calories": 500, "protein": 35, "carbs": 40, "fat": 15 }
+      },
+      {
+        "meal": "Dinner",
+        "items": ["Protein + fat dominant for satiety"],
+        "macros": { "calories": 600, "protein": 40, "carbs": 30, "fat": 25 }
+      },
+      {
+        "meal": "Snacks",
+        "items": ["Optional, based on hunger and adherence"],
+        "macros": { "calories": 200, "protein": 15, "carbs": 15, "fat": 10 }
+      }
+    ],
+    "weeklyGroceryList": ["Affordable staples with high protein density and micronutrients"],
+    "mealPrepTips": "Batch cooking or prepping tips for busy schedules",
+    "budgetOptimization": "Where to shop, which cuts to prioritize, and what to swap"
+  }
+}
