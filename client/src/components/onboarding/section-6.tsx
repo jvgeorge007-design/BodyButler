@@ -42,31 +42,6 @@ export default function Section6({ data, onNext, isLoading }: Section6Props) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Additional Information */}
-          <div className="space-y-2">
-            <Label htmlFor="additional" className="text-sm font-semibold text-gray-900">
-              Anything else you'd like to add?
-            </Label>
-            <div className="relative">
-              <Textarea
-                id="additional"
-                placeholder="Any additional information that would help us customize your experience..."
-                rows={3}
-                value={formData.coachingStyle}
-                onChange={(e) => handleInputChange("coachingStyle", e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute bottom-3 right-3 p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
-              >
-                <Mic className="w-5 h-5" />
-              </Button>
-            </div>
-          </div>
-
           {/* Personality Type */}
           <div className="space-y-3">
             <Label className="text-sm font-semibold text-gray-900">
@@ -90,6 +65,31 @@ export default function Section6({ data, onNext, isLoading }: Section6Props) {
                 </label>
               ))}
             </RadioGroup>
+          </div>
+
+          {/* Additional Information */}
+          <div className="space-y-2">
+            <Label htmlFor="additional" className="text-sm font-semibold text-gray-900">
+              Anything else you'd like to add?
+            </Label>
+            <div className="relative">
+              <Textarea
+                id="additional"
+                placeholder="Any additional information that would help us customize your experience..."
+                rows={3}
+                value={formData.coachingStyle}
+                onChange={(e) => handleInputChange("coachingStyle", e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute bottom-3 right-3 p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+              >
+                <Mic className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
 
           <Button 

@@ -113,6 +113,7 @@ Changelog:
 - July 08, 2025. Updated screen 6/6: Changed "How do you like to be coached?" to "Anything else you'd like to add?"
 - July 08, 2025. Updated screen 5/6: Changed subtext to "Help us customize your plan"
 - July 08, 2025. Updated screen 2/6: Fixed microphone button styling to match other forms (added variant="ghost")
+- July 08, 2025. Reordered screen 6/6: Moved "Anything else you'd like to add?" section below the coaching personality questionnaire
 ```
 
 ## User Preferences
