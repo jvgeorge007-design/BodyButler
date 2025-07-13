@@ -120,6 +120,7 @@ Changelog:
 - July 13, 2025. Implemented ChatGPT integration: OpenAI API key configured and personalized plan generation service created using GPT-4 model
 - July 13, 2025. Updated ChatGPT integration with master prompt: now generates structured JSON responses with workoutPlan, macroTargets, and mealPlan sections
 - July 13, 2025. Added personalized plan storage: ChatGPT-generated plans are now saved to Supabase user_profiles table in personalizedPlan column with API endpoint for retrieval
+- July 13, 2025. Created comprehensive dashboard system with workout logging, meal tracking, and rolling macro count functionality
 ```
 
 ## User Preferences
