@@ -50,7 +50,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         // TODO: Save the generated plan to the database
         // For now, we'll just log it and return success
-        console.log('Plan preview:', personalizedPlan.substring(0, 200) + '...');
+        console.log('Plan structure:', {
+          workoutPlan: personalizedPlan.workoutPlan ? 'Generated' : 'Missing',
+          macroTargets: personalizedPlan.macroTargets ? 'Generated' : 'Missing',
+          mealPlan: personalizedPlan.mealPlan ? 'Generated' : 'Missing'
+        });
         
       } catch (planError) {
         console.error('Error generating personalized plan:', planError);

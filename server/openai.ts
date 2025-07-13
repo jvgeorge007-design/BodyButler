@@ -4,71 +4,91 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export async function generatePersonalizedPlan(onboardingData: any): Promise<string> {
+export async function generatePersonalizedPlan(onboardingData: any): Promise<any> {
   try {
-    const prompt = `
-You are Body Butler (BB), an expert personal trainer and nutrition coach. Create a comprehensive, personalized fitness and nutrition plan based on the following user information:
+    const prompt = `You are a world-class fitness and nutrition coach designing a fully personalized fitness transformation plan. You use scientifically backed knowledge to build out the most optimal workout and diets to help user reach goal.
 
-USER PROFILE:
-- Name: ${onboardingData.name || 'User'}
-- Sex: ${onboardingData.sex || 'Not specified'}
-- Height: ${onboardingData.height || 'Not specified'}
-- Weight: ${onboardingData.weight || 'Not specified'}
-- Birth Date: ${onboardingData.birthDate || 'Not specified'}
+Use the following user profile to tailor your response:
 
-LIFESTYLE:
-- Current Activity: ${onboardingData.activityDescription || 'Not specified'}
-- Sleep Hours: ${onboardingData.sleepHours || 'Not specified'}
-- Equipment Access: ${onboardingData.equipmentAccess || 'Not specified'}
+Name: ${onboardingData.name || 'User'}
+Sex: ${onboardingData.sex || 'Not specified'}
+Height: ${onboardingData.height || 'Not specified'}
+Weight: ${onboardingData.weight || 'Not specified'}
+Birth Date: ${onboardingData.birthDate || 'Not specified'}
+Activity Level: ${onboardingData.activityDescription || 'Not specified'}
+Average Sleep per Night: ${onboardingData.sleepHours || 'Not specified'} hours
+Equipment Access: ${onboardingData.equipmentAccess || 'Not specified'}
+Diet Preferences: ${onboardingData.dietPreferences || 'Not specified'}
+Weekly Grocery Budget: $${onboardingData.weeklyBudget || 'Not specified'}
+Fitness Goals: ${onboardingData.goals || 'Not specified'}
+Timeline to Goal: ${onboardingData.timeline || 'Not specified'}
+Workout Days per Week: ${onboardingData.workoutDaysPerWeek || 'Not specified'}
+Injuries or Chronic Conditions: ${onboardingData.injuries || 'None mentioned'}
+Past Workout/Diet Experience: ${onboardingData.pastExperience || 'Not specified'}
+Preferred Coaching Style: ${onboardingData.coachingStyle || 'Not specified'}
+Personality Type: ${onboardingData.personalityType || 'Not specified'}
 
-NUTRITION & BUDGET:
-- Diet Preferences: ${onboardingData.dietPreferences || 'Not specified'}
-- Weekly Budget: ${onboardingData.weeklyBudget || 'Not specified'}
+---
 
-GOALS & TIMELINE:
-- Goals: ${onboardingData.goals || 'Not specified'}
-- Timeline: ${onboardingData.timeline || 'Not specified'}
+Return the following 3 sections in a single valid JSON object with this exact structure:
 
-AVAILABILITY & CONSTRAINTS:
-- Workout Days Per Week: ${onboardingData.workoutDaysPerWeek || 'Not specified'}
-- Injuries/Limitations: ${onboardingData.injuries || 'None mentioned'}
-- Past Experience: ${onboardingData.pastExperience || 'Not specified'}
-
-COACHING STYLE:
-- Preferred Coaching Style: ${onboardingData.coachingStyle || 'Not specified'}
-- Personality Type: ${onboardingData.personalityType || 'Not specified'}
-
-Create a detailed plan that includes:
-
-1. **WEEKLY WORKOUT SCHEDULE**
-   - Specific exercises for each day
-   - Sets, reps, and rest periods
-   - Progressive overload strategy
-
-2. **NUTRITION PLAN**
-   - Daily calorie targets
-   - Macronutrient breakdown
-   - Meal timing suggestions
-   - Budget-friendly food recommendations
-
-3. **LIFESTYLE OPTIMIZATION**
-   - Sleep optimization tips
-   - Recovery strategies
-   - Stress management
-
-4. **PROGRESS TRACKING**
-   - Key metrics to monitor
-   - Milestone checkpoints
-   - Adjustment guidelines
-
-5. **MOTIVATIONAL COACHING**
-   - Personalized motivation based on their personality type
-   - Weekly check-in questions
-   - Habit formation strategies
-
-Make the plan actionable, specific, and tailored to their equipment access, schedule, and goals. Use their preferred coaching style and personality type to customize the tone and approach.
-
-Format the response in clear sections with bullet points and practical advice they can implement immediately.
+\`\`\`json
+{
+  "workoutPlan": {
+    "week": 1,
+    "days": [
+      {
+        "day": "Monday",
+        "focus": "Upper Body Push",
+        "exercises": [
+          { "name": "Incline Dumbbell Press", "sets": 3, "reps": 10 },
+          { "name": "Overhead Press", "sets": 3, "reps": 8 }
+        ]
+      }
+    ]
+  },
+  "macroTargets": {
+    "dailyCalories": 2100,
+    "protein_g": 160,
+    "carbs_g": 120,
+    "fat_g": 90
+  },
+  "mealPlan": {
+    "sampleDay": "Monday",
+    "meals": [
+      {
+        "meal": "Breakfast",
+        "items": ["4 egg whites", "1 slice whole grain toast", "1 tbsp almond butter"]
+      },
+      {
+        "meal": "Lunch",
+        "items": ["Grilled chicken breast", "1 cup broccoli", "½ cup quinoa"]
+      },
+      {
+        "meal": "Dinner",
+        "items": ["Salmon filet", "1 cup asparagus", "½ sweet potato"]
+      },
+      {
+        "meal": "Snacks",
+        "items": ["Greek yogurt", "handful of almonds"]
+      }
+    ],
+    "weeklyGroceryList": [
+      "12 eggs",
+      "2 chicken breasts",
+      "2 salmon filets",
+      "1 bag frozen broccoli",
+      "quinoa",
+      "1 sweet potato",
+      "1 loaf whole grain bread",
+      "almond butter",
+      "asparagus",
+      "Greek yogurt",
+      "almonds"
+    ]
+  }
+}
+\`\`\`
 `;
 
     const completion = await openai.chat.completions.create({
@@ -76,18 +96,32 @@ Format the response in clear sections with bullet points and practical advice th
       messages: [
         {
           role: "system",
-          content: "You are Body Butler (BB), an expert personal trainer and nutrition coach who creates comprehensive, personalized fitness and nutrition plans. Be specific, actionable, and motivating in your recommendations."
+          content: "You are a world-class fitness and nutrition coach. Always return valid JSON exactly as specified in the prompt. Be precise with the JSON structure and ensure all fields are included."
         },
         {
           role: "user",
           content: prompt
         }
       ],
-      max_tokens: 3000,
+      max_tokens: 4000,
       temperature: 0.7,
     });
 
-    return completion.choices[0].message.content || "Unable to generate plan at this time.";
+    const responseContent = completion.choices[0].message.content || "";
+    
+    // Parse the JSON response
+    try {
+      // Extract JSON from the response (in case it's wrapped in markdown)
+      const jsonMatch = responseContent.match(/```json\s*([\s\S]*?)\s*```/);
+      const jsonString = jsonMatch ? jsonMatch[1] : responseContent;
+      
+      const parsedPlan = JSON.parse(jsonString);
+      return parsedPlan;
+    } catch (parseError) {
+      console.error('Error parsing JSON response:', parseError);
+      console.log('Raw response:', responseContent);
+      throw new Error('Failed to parse generated plan');
+    }
   } catch (error) {
     console.error('Error generating personalized plan:', error);
     throw new Error('Failed to generate personalized plan');
