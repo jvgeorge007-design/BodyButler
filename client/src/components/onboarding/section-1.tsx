@@ -27,7 +27,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
     sex: data.sex || "",
     height: data.height || "",
     weight: data.weight || "",
-    birthDate: data.birthDate ? new Date(data.birthDate).toISOString().split('T')[0] : "",
+    birthDate: data.birthDate || "",
     profilePhotoUrl: data.profilePhotoUrl || "",
   });
 

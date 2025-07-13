@@ -17,7 +17,7 @@ export interface IStorage {
   // User profile operations
   getUserProfile(userId: string): Promise<UserProfile | undefined>;
   createUserProfile(profile: InsertUserProfile): Promise<UserProfile>;
-  updateUserProfile(userId: string, profile: Partial<InsertUserProfile>): Promise<UserProfile | undefined>;
+  updateUserProfile(userId: string, onboardingData: any): Promise<UserProfile | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -57,10 +57,10 @@ export class DatabaseStorage implements IStorage {
     return newProfile;
   }
 
-  async updateUserProfile(userId: string, profile: Partial<InsertUserProfile>): Promise<UserProfile | undefined> {
+  async updateUserProfile(userId: string, onboardingData: any): Promise<UserProfile | undefined> {
     const [updatedProfile] = await db
       .update(userProfiles)
-      .set({ ...profile, updatedAt: new Date() })
+      .set({ onboardingData, updatedAt: new Date() })
       .where(eq(userProfiles.userId, userId))
       .returning();
     return updatedProfile;

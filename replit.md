@@ -115,6 +115,7 @@ Changelog:
 - July 08, 2025. Updated screen 2/6: Fixed microphone button styling to match other forms (added variant="ghost")
 - July 08, 2025. Reordered screen 6/6: Moved "Anything else you'd like to add?" section below the coaching personality questionnaire
 - July 08, 2025. Migrated from Neon to Supabase PostgreSQL for enhanced features (real-time, storage, edge functions)
+- July 13, 2025. Restructured database schema: consolidated all onboarding fields into single JSON object (onboarding_data column) for better flexibility and easier data management
 ```
 
 ## User Preferences

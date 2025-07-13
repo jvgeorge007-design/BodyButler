@@ -39,20 +39,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/profile', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const profileData = insertUserProfileSchema.parse({ ...req.body, userId });
+      const onboardingData = req.body;
       
       const existingProfile = await storage.getUserProfile(userId);
       if (existingProfile) {
-        const updatedProfile = await storage.updateUserProfile(userId, profileData);
+        // Merge existing data with new data
+        const mergedData = { ...existingProfile.onboardingData, ...onboardingData };
+        const updatedProfile = await storage.updateUserProfile(userId, mergedData);
         return res.json(updatedProfile);
       }
       
+      // Create new profile with onboarding data
+      const profileData = {
+        userId,
+        onboardingData,
+        onboardingCompleted: false,
+      };
       const newProfile = await storage.createUserProfile(profileData);
       res.json(newProfile);
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid profile data", errors: error.errors });
-      }
       console.error("Error creating/updating profile:", error);
       res.status(500).json({ message: "Failed to save profile" });
     }
@@ -63,10 +68,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const updateData = req.body;
       
-      const updatedProfile = await storage.updateUserProfile(userId, updateData);
-      if (!updatedProfile) {
+      const existingProfile = await storage.getUserProfile(userId);
+      if (!existingProfile) {
         return res.status(404).json({ message: "Profile not found" });
       }
+      
+      // Merge existing onboarding data with new data
+      const mergedData = { ...existingProfile.onboardingData, ...updateData };
+      const updatedProfile = await storage.updateUserProfile(userId, mergedData);
       
       res.json(updatedProfile);
     } catch (error) {

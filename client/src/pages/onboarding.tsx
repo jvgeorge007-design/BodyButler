@@ -51,8 +51,8 @@ export default function Onboarding() {
   }, [error, toast, isAuthenticated]);
 
   useEffect(() => {
-    if (existingProfile) {
-      setFormData(existingProfile);
+    if (existingProfile && existingProfile.onboardingData) {
+      setFormData(existingProfile.onboardingData);
     }
   }, [existingProfile]);
 
