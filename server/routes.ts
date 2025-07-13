@@ -26,7 +26,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/auth/complete-onboarding', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const { onboardingData } = req.body;
+      // The data comes directly in req.body, not nested in onboardingData
+      const onboardingData = req.body;
+      
+      console.log('Received onboarding data:', JSON.stringify(onboardingData, null, 2));
       
       // Save onboarding data to profile
       const existingProfile = await storage.getUserProfile(userId);
@@ -44,6 +47,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Generate personalized plan using ChatGPT
       console.log('Generating personalized plan for user:', userId);
+      console.log('Using onboarding data:', { name: onboardingData.name, hasName: !!onboardingData.name });
       try {
         const personalizedPlan = await generatePersonalizedPlan(onboardingData);
         console.log('Personalized plan generated successfully');

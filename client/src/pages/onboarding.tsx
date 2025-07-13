@@ -138,6 +138,8 @@ export default function Onboarding() {
       // Final submission - onboarding complete
       const finalData = { ...formData, ...sectionData };
       
+      console.log('Onboarding final submission:', { isAuthenticated, finalData });
+      
       if (!isAuthenticated) {
         // Store data locally and redirect to account creation
         localStorage.setItem('onboardingData', JSON.stringify(finalData));
@@ -148,6 +150,7 @@ export default function Onboarding() {
         setLocation("/login");
       } else {
         // For authenticated users, call the complete-onboarding endpoint
+        console.log('User is authenticated, calling complete-onboarding with data:', finalData);
         completeOnboardingMutation.mutate(finalData);
       }
     }
@@ -262,7 +265,7 @@ export default function Onboarding() {
           <Section6 
             data={formData}
             onNext={handleNext}
-            isLoading={saveMutation.isPending}
+            isLoading={saveMutation.isPending || completeOnboardingMutation.isPending}
           />
         )}
       </div>
