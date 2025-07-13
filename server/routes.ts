@@ -159,6 +159,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Test endpoint for master prompt (remove after testing)
+  app.post('/api/test-prompt', async (req, res) => {
+    try {
+      const testData = req.body;
+      console.log('Testing improved master prompt with data:', testData);
+      
+      const personalizedPlan = await generatePersonalizedPlan(testData);
+      console.log('Generated plan structure:', {
+        workoutDays: personalizedPlan.workoutPlan?.days?.length || 0,
+        hasProgression: !!personalizedPlan.workoutPlan?.progression,
+        hasMealMacros: personalizedPlan.mealPlan?.meals?.[0]?.macros ? 'Yes' : 'No',
+        hasApproach: !!personalizedPlan.mealPlan?.approach
+      });
+      
+      res.json(personalizedPlan);
+    } catch (error) {
+      console.error("Error testing prompt:", error);
+      res.status(500).json({ message: "Failed to test prompt" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
