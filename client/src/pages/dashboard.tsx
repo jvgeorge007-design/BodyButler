@@ -119,6 +119,23 @@ export default function Dashboard() {
     setLocation("/meal-log");
   };
 
+  const handleRegeneratePlan = async () => {
+    try {
+      await apiRequest("POST", "/api/regenerate-plan");
+      queryClient.invalidateQueries({ queryKey: ["/api/personalized-plan"] });
+      toast({
+        title: "Plan Updated!",
+        description: "Your workout plan has been regenerated with all 6 days.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to regenerate plan. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleCompleteOnboarding = () => {
     setLocation("/onboarding");
   };
@@ -338,6 +355,11 @@ export default function Dashboard() {
             <span className="text-xs">Calendar</span>
           </Button>
         </div>
+
+        {/* Temporary: Regenerate Plan Button */}
+        <Button onClick={handleRegeneratePlan} variant="outline" className="w-full">
+          🔄 Update Plan (Get All 6 Workout Days)
+        </Button>
       </div>
     </div>
   );

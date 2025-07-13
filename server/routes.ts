@@ -180,6 +180,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Regenerate personalized plan endpoint
+  app.post('/api/regenerate-plan', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const profile = await storage.getUserProfile(userId);
+      
+      if (!profile || !profile.onboardingData) {
+        return res.status(404).json({ message: "Profile or onboarding data not found" });
+      }
+
+      console.log('Regenerating plan for user:', userId);
+      const personalizedPlan = await generatePersonalizedPlan(profile.onboardingData);
+      
+      // Save the new plan
+      await storage.savePersonalizedPlan(userId, personalizedPlan);
+      console.log('New plan generated with workout days:', personalizedPlan.workoutPlan?.days?.length || 0);
+      
+      res.json({ success: true, plan: personalizedPlan });
+    } catch (error) {
+      console.error("Error regenerating plan:", error);
+      res.status(500).json({ message: "Failed to regenerate plan" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
