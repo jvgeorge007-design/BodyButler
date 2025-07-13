@@ -32,10 +32,7 @@ export default function Dashboard() {
   // Mutation to create profile from saved onboarding data
   const createProfileMutation = useMutation({
     mutationFn: async (onboardingData: any) => {
-      return await apiRequest("/api/auth/complete-onboarding", {
-        method: "POST",
-        body: JSON.stringify(onboardingData),
-      });
+      return await apiRequest("POST", "/api/auth/complete-onboarding", onboardingData);
     },
     onSuccess: () => {
       // Clear localStorage and refresh queries
