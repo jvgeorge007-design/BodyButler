@@ -148,10 +148,9 @@ export default function Dashboard() {
   
   const dashboardData = {
     calories: {
-      total: 1200,
+      consumed: 1200,
       target: macroTargets.dailyCalories || 2000,
-      workout: 300,
-      exercise: 900
+      remaining: Math.max((macroTargets.dailyCalories || 2000) - 1200, 0)
     },
     workout: {
       type: todaysWorkout?.day || "Rest Day",
@@ -160,10 +159,9 @@ export default function Dashboard() {
       exerciseCount: todaysWorkout?.exercises?.length || 0
     },
     macros: {
-      calories: { current: 1200, target: macroTargets.dailyCalories || 2000, unit: 'cal' },
-      protein: { current: 80, target: macroTargets.protein_g || 150, unit: 'g' },
-      carbs: { current: 150, target: macroTargets.carbs_g || 200, unit: 'g' },
-      fat: { current: 45, target: macroTargets.fat_g || 65, unit: 'g' }
+      protein: { current: 80, target: macroTargets.protein_g || 150, unit: 'g', color: '#E67E22' },
+      carbs: { current: 150, target: macroTargets.carbs_g || 200, unit: 'g', color: '#3498DB' },
+      fat: { current: 45, target: macroTargets.fat_g || 65, unit: 'g', color: '#E74C3C' }
     },
     weeklySchedule: {
       [new Date().toISOString().split('T')[0]]: [
@@ -236,38 +234,36 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">
       {/* Header with personalized greeting */}
-      <header className="system-blur border-b border-[hsl(var(--border))] px-6 py-4 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] flex items-center justify-center">
-              <KettlebellLogo className="w-5 h-5 text-white" />
+      <header className="bg-white border-b border-gray-200 px-4 py-4 sticky top-0 z-40">
+        <div className="max-w-md mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 flex items-center justify-center">
+              <KettlebellLogo className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h1 className="text-title2 text-[hsl(var(--text-primary))]">Welcome back, {userName}</h1>
-              <p className="text-caption2">Your plan is ready</p>
+              <h1 className="text-lg font-bold text-gray-900">Welcome back, {userName}</h1>
+              <p className="text-sm text-gray-500">Your plan is ready</p>
             </div>
           </div>
           <Button
             onClick={() => window.location.href = '/api/logout'}
             variant="ghost"
             size="sm"
-            className="flex items-center gap-2 min-h-[44px]"
+            className="p-2 hover:bg-gray-100 rounded-xl"
           >
-            <LogOut className="w-4 h-4" />
-            <span className="hidden sm:inline">Logout</span>
+            <LogOut className="w-5 h-5 text-gray-600" />
           </Button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-6 py-8">
-        <div className="space-y-6">
+      <main className="max-w-md mx-auto px-4 py-6 bg-gray-50 min-h-screen">
+        <div className="space-y-4">
           {/* Circular Calorie Tracker */}
           <CircularCalorieTracker
-            totalCalories={dashboardData.calories.total}
-            targetCalories={dashboardData.calories.target}
-            workoutCalories={dashboardData.calories.workout}
-            exerciseCalories={dashboardData.calories.exercise}
+            consumed={dashboardData.calories.consumed}
+            target={dashboardData.calories.target}
+            remaining={dashboardData.calories.remaining}
           />
 
           {/* Workout Card */}
@@ -281,11 +277,9 @@ export default function Dashboard() {
 
           {/* Macro Tracker Card */}
           <MacroTrackerCard
-            calories={dashboardData.macros.calories}
             protein={dashboardData.macros.protein}
             carbs={dashboardData.macros.carbs}
             fat={dashboardData.macros.fat}
-            onLogMeal={() => setLocation("/meal-log")}
           />
 
           {/* Calendar Widget */}
