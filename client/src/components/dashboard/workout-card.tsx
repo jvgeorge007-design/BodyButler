@@ -24,12 +24,14 @@ export default function WorkoutCard({
   return (
     <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
       <div className="mb-4">
-        <h2 className="text-xl font-bold text-gray-900 mb-2">
-          Workout
-        </h2>
-        <p className="text-gray-600 mb-3">
-          {workoutType}
-        </p>
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-xl font-bold text-gray-900">
+            Workout
+          </h2>
+          <span className="text-sm font-medium text-gray-600">
+            {workoutType}
+          </span>
+        </div>
         
         {!isRestDay && (
           <div className="flex items-center gap-4 text-sm text-gray-500">
