@@ -45,9 +45,13 @@ export default function CircularCalorieTracker({
               strokeWidth={strokeWidth}
               fill="none"
               strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
+              strokeDashoffset={circumference}
               strokeLinecap="round"
-              className="transition-all duration-700 ease-out"
+              className="animate-fill-circle"
+              style={{
+                '--target-offset': `${strokeDashoffset}`,
+                '--circumference': `${circumference}`
+              } as any}
             />
             
             {/* Gradient definition */}
@@ -62,7 +66,7 @@ export default function CircularCalorieTracker({
           {/* Center content */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900 mb-1">
+              <div className="text-2xl font-bold text-gray-900 mb-1 animate-pulse-once">
                 {remaining}
               </div>
               <div className="text-xs text-gray-500 uppercase font-medium tracking-wide">

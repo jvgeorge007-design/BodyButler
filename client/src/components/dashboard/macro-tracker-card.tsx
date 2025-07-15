@@ -26,7 +26,7 @@ export default function MacroTrackerCard({
   const macros = [protein, carbs, fat];
 
   return (
-    <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 animate-pulse-soft">
+    <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">Macronutrients</h3>
         <button 
@@ -56,12 +56,12 @@ export default function MacroTrackerCard({
               {/* Progress Bar */}
               <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                 <div 
-                  className="h-2 rounded-full transition-all duration-1000 ease-out animate-pulse shadow-sm"
+                  className="h-2 rounded-full transition-all duration-1500 ease-out shadow-sm animate-fill-bar"
                   style={{ 
-                    width: `${percentage}%`,
+                    '--target-width': `${percentage}%`,
                     background: `linear-gradient(90deg, ${macro.color}, ${macro.color}dd)`,
                     boxShadow: `0 0 8px ${macro.color}40`
-                  }}
+                  } as React.CSSProperties & { '--target-width': string }}
                 />
               </div>
               
