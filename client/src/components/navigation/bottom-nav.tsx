@@ -21,15 +21,15 @@ export default function BottomNav() {
     {
       id: "ai",
       icon: () => (
-        <div className="w-8 h-10 flex items-center justify-center">
+        <div className="w-6 h-6 flex items-center justify-center">
           <img 
             src={bbLogo}
             alt="Body Butler"
-            className="w-8 h-10 object-contain"
+            className="w-6 h-6 object-contain"
           />
         </div>
       ),
-      label: "AI Coach",
+      label: "BB",
       path: "/ai-chat"
     },
     {
@@ -61,20 +61,13 @@ export default function BottomNav() {
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              {item.id === 'ai' ? (
+              <>
                 <IconComponent 
-                  className="w-8 h-10"
+                  className="w-6 h-6 mb-1"
                   strokeWidth={2}
                 />
-              ) : (
-                <>
-                  <IconComponent 
-                    className="w-6 h-6 mb-1"
-                    strokeWidth={2}
-                  />
-                  <span className="text-xs font-medium">{item.label}</span>
-                </>
-              )}
+                <span className="text-xs font-medium">{item.label}</span>
+              </>
             </button>
           );
         })}
