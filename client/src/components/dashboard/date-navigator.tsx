@@ -2,12 +2,13 @@ import { Calendar } from "lucide-react";
 import { useState } from "react";
 
 interface DateNavigatorProps {
+  selectedDate?: Date;
   onDateSelect?: (date: Date) => void;
   onCalendarOpen?: () => void;
 }
 
-export default function DateNavigator({ onDateSelect, onCalendarOpen }: DateNavigatorProps) {
-  const [selectedDate] = useState(new Date());
+export default function DateNavigator({ selectedDate: propSelectedDate, onDateSelect, onCalendarOpen }: DateNavigatorProps) {
+  const selectedDate = propSelectedDate || new Date();
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { 
@@ -23,7 +24,7 @@ export default function DateNavigator({ onDateSelect, onCalendarOpen }: DateNavi
 
   return (
     <div className="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 mb-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-center gap-4">
         <span className="text-lg font-semibold text-gray-900">
           {formatDate(selectedDate)}
         </span>

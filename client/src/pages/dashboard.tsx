@@ -23,6 +23,7 @@ export default function Dashboard() {
   const { toast } = useToast();
   const [processingOnboarding, setProcessingOnboarding] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const { data: profile, isLoading: profileLoading, error: profileError } = useQuery({
     queryKey: ["/api/profile"],
@@ -144,30 +145,54 @@ export default function Dashboard() {
   // Get user's first name for personalized greeting
   const userName = user?.firstName || user?.email?.split('@')[0] || 'there';
   
-  // Calculate data for dashboard components (in real app, this would come from API)
+  // Calculate data for dashboard components based on selected date
   const todaysWorkout = personalizedPlan?.workoutPlan?.days?.[0];
   const macroTargets = personalizedPlan?.macroTargets || {};
   
+  // Mock data that varies by selected date (in real app, this would come from API)
+  const today = new Date();
+  const isPast = selectedDate < today;
+  const isToday = selectedDate.toDateString() === today.toDateString();
+  const dayOffset = Math.floor((selectedDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  
+  const workoutTypes = ["Push Day", "Pull Day", "Leg Day", "Cardio", "Rest Day"];
+  const selectedWorkoutType = workoutTypes[Math.abs(dayOffset) % workoutTypes.length];
+  
   const dashboardData = {
     calories: {
-      consumed: 1200,
+      consumed: isPast ? 1800 + (dayOffset * 50) : (isToday ? 1200 : 0),
       target: macroTargets.dailyCalories || 2000,
-      remaining: Math.max((macroTargets.dailyCalories || 2000) - 1200, 0)
+      remaining: Math.max((macroTargets.dailyCalories || 2000) - (isPast ? 1800 + (dayOffset * 50) : (isToday ? 1200 : 0)), 0)
     },
     workout: {
-      type: todaysWorkout?.day || "Rest Day",
-      focus: todaysWorkout?.focus || "Recovery and stretching",
-      duration: "45 min",
-      exerciseCount: todaysWorkout?.exercises?.length || 0
+      type: selectedWorkoutType,
+      focus: selectedWorkoutType === "Rest Day" ? "Recovery and stretching" : `${selectedWorkoutType} focused training`,
+      duration: selectedWorkoutType === "Rest Day" ? "30 min" : "45 min",
+      exerciseCount: selectedWorkoutType === "Rest Day" ? 0 : (5 + Math.abs(dayOffset) % 3)
     },
     macros: {
-      protein: { current: 80, target: macroTargets.protein_g || 150, unit: 'g', color: '#E67E22' },
-      carbs: { current: 150, target: macroTargets.carbs_g || 200, unit: 'g', color: '#3498DB' },
-      fat: { current: 45, target: macroTargets.fat_g || 65, unit: 'g', color: '#E74C3C' }
+      protein: { 
+        current: isPast ? 120 + (dayOffset * 10) : (isToday ? 80 : 0), 
+        target: macroTargets.protein_g || 150, 
+        unit: 'g', 
+        color: '#E67E22' 
+      },
+      carbs: { 
+        current: isPast ? 180 + (dayOffset * 20) : (isToday ? 150 : 0), 
+        target: macroTargets.carbs_g || 200, 
+        unit: 'g', 
+        color: '#3498DB' 
+      },
+      fat: { 
+        current: isPast ? 55 + (dayOffset * 5) : (isToday ? 45 : 0), 
+        target: macroTargets.fat_g || 65, 
+        unit: 'g', 
+        color: '#E74C3C' 
+      }
     },
     weeklySchedule: {
-      [new Date().toISOString().split('T')[0]]: [
-        { type: 'workout', title: todaysWorkout?.day || 'Rest Day', time: '9:00 AM' },
+      [selectedDate.toISOString().split('T')[0]]: [
+        { type: 'workout', title: selectedWorkoutType, time: '9:00 AM' },
         { type: 'meal', title: 'Meal Prep', time: '6:00 PM' }
       ]
     }
@@ -246,7 +271,10 @@ export default function Dashboard() {
       <main className="max-w-md mx-auto px-4 py-6 bg-gray-50 min-h-screen">
         <div className="space-y-4">
           {/* Date Navigator */}
-          <DateNavigator onCalendarOpen={() => setIsCalendarOpen(true)} />
+          <DateNavigator 
+            selectedDate={selectedDate}
+            onCalendarOpen={() => setIsCalendarOpen(true)} 
+          />
 
           {/* Circular Calorie Tracker */}
           <CircularCalorieTracker
@@ -278,7 +306,8 @@ export default function Dashboard() {
         isOpen={isCalendarOpen}
         onClose={() => setIsCalendarOpen(false)}
         onDateSelect={(date) => {
-          console.log("Selected date:", date);
+          setSelectedDate(date);
+          setIsCalendarOpen(false);
         }}
       />
 
