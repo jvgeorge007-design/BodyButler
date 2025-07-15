@@ -56,7 +56,7 @@ export default function MacroTrackerCard({
               {/* Progress Bar */}
               <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                 <div 
-                  className="h-2 rounded-full transition-all duration-1500 ease-out shadow-sm animate-fill-bar"
+                  className="h-2 rounded-full transition-all duration-2250 ease-out shadow-sm animate-fill-bar"
                   style={{ 
                     '--target-width': `${percentage}%`,
                     background: `linear-gradient(90deg, ${macro.color}, ${macro.color}dd)`,

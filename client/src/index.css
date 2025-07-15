@@ -184,12 +184,12 @@
   /* Custom animations for macro tracker */
   .animate-fill-bar {
     width: 0%;
-    animation: fill-bar 1.5s ease-out forwards;
+    animation: fill-bar 2.25s ease-out forwards;
   }
 
   .animate-fill-circle {
     stroke-dashoffset: var(--circumference, 283);
-    animation: fill-circle 1.5s ease-out forwards;
+    animation: fill-circle 2.25s ease-out forwards;
   }
 
   .animate-pulse-once {
