@@ -1,15 +1,20 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import KettlebellLogo from "@/components/ui/kettlebell-logo";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Calendar, Dumbbell, Utensils, Target, TrendingUp, LogOut } from "lucide-react";
+import { LogOut, Dumbbell, Utensils, TrendingUp, Calendar } from "lucide-react";
+
+// Import our new dashboard components
+import StreakTracker from "@/components/dashboard/streak-tracker";
+import ProgressCard from "@/components/dashboard/progress-card";
+import DailyOverview from "@/components/dashboard/daily-overview";
+import CalendarWidget from "@/components/dashboard/calendar-widget";
+import FloatingChat from "@/components/dashboard/floating-chat";
 
 export default function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -107,39 +112,6 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, isLoading, profile, profileError, profileLoading, processingOnboarding, createProfileMutation]);
 
-  const handleLogout = () => {
-    window.location.href = "/api/logout";
-  };
-
-  const handleWorkoutLog = () => {
-    setLocation("/workout-log");
-  };
-
-  const handleMealLog = () => {
-    setLocation("/meal-log");
-  };
-
-  const handleRegeneratePlan = async () => {
-    try {
-      await apiRequest("POST", "/api/regenerate-plan");
-      queryClient.invalidateQueries({ queryKey: ["/api/personalized-plan"] });
-      toast({
-        title: "Plan Updated!",
-        description: "Your workout plan has been regenerated with all 6 days.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to regenerate plan. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleCompleteOnboarding = () => {
-    setLocation("/onboarding");
-  };
-
   // Calculate state variables
   const needsOnboarding = !profile || !profile.onboardingCompleted;
   const needsPlanGeneration = profile && profile.onboardingCompleted && !personalizedPlan;
@@ -167,234 +139,206 @@ export default function Dashboard() {
     }
   }, [needsPlanGeneration, planLoading, queryClient, toast]);
 
+  // Get user's first name for personalized greeting
+  const userName = user?.firstName || user?.email?.split('@')[0] || 'there';
+  
+  // Calculate mock data for engagement mechanics (in real app, this would come from API)
+  const mockData = {
+    streaks: {
+      workoutStreak: 5,
+      mealStreak: 7,
+      longestStreak: 12
+    },
+    todaysWorkout: personalizedPlan?.workoutPlan?.days?.[0] ? {
+      name: personalizedPlan.workoutPlan.days[0].day,
+      focus: personalizedPlan.workoutPlan.days[0].focus,
+      duration: "45 min",
+      completed: false
+    } : undefined,
+    calorieProgress: {
+      consumed: 1200,
+      target: personalizedPlan?.macroTargets?.dailyCalories || 2000
+    },
+    weeklyProgress: {
+      workoutsCompleted: 3,
+      workoutsPlanned: 6,
+      mealsLogged: 5,
+      mealsPlanned: 7
+    },
+    weeklySchedule: {
+      // This would normally come from your API
+      [new Date().toISOString().split('T')[0]]: [
+        { type: 'workout', title: 'Push Day', time: '9:00 AM' },
+        { type: 'meal', title: 'Meal Prep', time: '6:00 PM' }
+      ]
+    }
+  };
+
   if (isLoading || profileLoading || planLoading || processingOnboarding || createProfileMutation.isPending) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
-          {processingOnboarding || createProfileMutation.isPending ? (
-            <div className="space-y-2">
-              <p className="text-lg font-medium">Setting up your profile...</p>
-              <p className="text-sm text-gray-600">Generating your personalized plan with AI</p>
-            </div>
-          ) : (
-            <p className="text-gray-600">Loading...</p>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  if (needsOnboarding || needsPlanGeneration) {
-    return (
-      <div className="min-h-screen bg-gray-50 px-6 py-8">
-        <div className="max-w-md mx-auto space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-                <KettlebellLogo className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">Body Butler</h1>
-                <p className="text-sm text-gray-600">Welcome!</p>
-              </div>
-            </div>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
-              <LogOut className="w-4 h-4" />
-            </Button>
+      <div className="min-h-screen bg-[hsl(var(--background))] flex items-center justify-center">
+        <div className="text-center space-y-6 fade-in">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] flex items-center justify-center">
+            <KettlebellLogo className="w-8 h-8 text-white" />
           </div>
-
-          {/* Onboarding Prompt */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-center">Complete Your Setup</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-center text-gray-600">
-                {needsPlanGeneration 
-                  ? "Generating your personalized plan..." 
-                  : "Complete your onboarding to get your personalized fitness and nutrition plan."
-                }
-              </p>
-              {needsPlanGeneration ? (
-                <div className="flex justify-center">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
-                </div>
-              ) : (
-                <Button onClick={handleCompleteOnboarding} className="w-full">
-                  Complete Onboarding
-                </Button>
-              )}
-            </CardContent>
-          </Card>
+          <div className="space-y-2">
+            <h2 className="text-title1 text-[hsl(var(--text-primary))]">Setting up your experience</h2>
+            <p className="text-body text-[hsl(var(--text-secondary))]">This may take a moment...</p>
+          </div>
+          <div className="w-64 h-1 bg-[hsl(var(--surface-secondary))] rounded-full mx-auto overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] rounded-full animate-pulse" />
+          </div>
         </div>
       </div>
     );
   }
 
-  const todaysWorkout = personalizedPlan?.workoutPlan?.days?.[0] || null;
-  const macroTargets = personalizedPlan?.macroTargets || {};
+  if (needsOnboarding) {
+    return (
+      <div className="min-h-screen bg-[hsl(var(--background))] flex items-center justify-center p-6">
+        <div className="max-w-md w-full text-center space-y-8 fade-in">
+          <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] flex items-center justify-center">
+            <KettlebellLogo className="w-10 h-10 text-white" />
+          </div>
+          <div className="space-y-3">
+            <h2 className="text-largeTitle text-[hsl(var(--text-primary))]">Welcome to Body Butler!</h2>
+            <p className="text-body text-[hsl(var(--text-secondary))]">Let's get you set up with a personalized fitness plan</p>
+          </div>
+          <Button 
+            onClick={() => setLocation("/onboarding")}
+            className="gradient-button w-full"
+          >
+            Get Started
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (needsPlanGeneration) {
+    return (
+      <div className="min-h-screen bg-[hsl(var(--background))] flex items-center justify-center p-6">
+        <div className="max-w-md w-full text-center space-y-8 fade-in">
+          <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] flex items-center justify-center">
+            <KettlebellLogo className="w-10 h-10 text-white" />
+          </div>
+          <div className="space-y-3">
+            <h2 className="text-largeTitle text-[hsl(var(--text-primary))]">Generating Your Plan</h2>
+            <p className="text-body text-[hsl(var(--text-secondary))]">Our AI is creating your personalized workout and nutrition plan...</p>
+          </div>
+          <div className="w-full bg-[hsl(var(--surface-secondary))] rounded-full h-2">
+            <div className="bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] h-2 rounded-full animate-pulse" style={{ width: '70%' }}></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-6 py-8">
-      <div className="max-w-md mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-              <KettlebellLogo className="w-6 h-6 text-white" />
+    <div className="min-h-screen bg-[hsl(var(--background))]">
+      {/* Header with personalized greeting */}
+      <header className="system-blur border-b border-[hsl(var(--border))] px-6 py-4 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] flex items-center justify-center">
+              <KettlebellLogo className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Body Butler</h1>
-              <p className="text-sm text-gray-600">
-                Welcome back, {user?.firstName || profile?.onboardingData?.name || 'there'}!
-              </p>
+              <h1 className="text-title2 text-[hsl(var(--text-primary))]">Welcome back, {userName}</h1>
+              <p className="text-caption2">Your plan is ready</p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={handleLogout}>
+          <Button
+            onClick={() => window.location.href = '/api/logout'}
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-2 min-h-[44px]"
+          >
             <LogOut className="w-4 h-4" />
+            <span className="hidden sm:inline">Logout</span>
           </Button>
         </div>
+      </header>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-2 gap-4">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <Calendar className="w-5 h-5 text-blue-500" />
-                <div>
-                  <p className="text-sm font-medium text-gray-900">Today</p>
-                  <p className="text-xs text-gray-600">{new Date().toLocaleDateString()}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <Target className="w-5 h-5 text-green-500" />
-                <div>
-                  <p className="text-sm font-medium text-gray-900">Calories</p>
-                  <p className="text-xs text-gray-600">{macroTargets.dailyCalories || 0} target</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <div className="space-y-8">
+          {/* Streak Tracker */}
+          <StreakTracker {...mockData.streaks} />
 
-        {/* Today's Workout */}
-        {todaysWorkout && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Dumbbell className="w-5 h-5" />
-                <span>Today's Workout</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h3 className="font-semibold text-gray-900">{todaysWorkout.focus}</h3>
-                <p className="text-sm text-gray-600">{todaysWorkout.day}</p>
-              </div>
-              
-              <div className="space-y-2">
-                {todaysWorkout.exercises?.slice(0, 3).map((exercise: any, index: number) => (
-                  <div key={index} className="flex justify-between items-center">
-                    <span className="text-sm text-gray-700">{exercise.name}</span>
-                    <span className="text-xs text-gray-500">{exercise.sets}x{exercise.reps}</span>
-                  </div>
-                ))}
-                {todaysWorkout.exercises?.length > 3 && (
-                  <p className="text-xs text-gray-500">+{todaysWorkout.exercises.length - 3} more exercises</p>
-                )}
-              </div>
-              
-              <Button onClick={handleWorkoutLog} className="w-full">
-                Start Workout
+          {/* Daily Overview */}
+          <DailyOverview 
+            todaysWorkout={mockData.todaysWorkout}
+            calorieProgress={mockData.calorieProgress}
+          />
+
+          {/* Progress Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ProgressCard
+              title="Weekly Workouts"
+              current={mockData.weeklyProgress.workoutsCompleted}
+              total={mockData.weeklyProgress.workoutsPlanned}
+              description="Keep the momentum going!"
+              icon={<Dumbbell className="w-5 h-5 text-[hsl(var(--blue-primary))]" />}
+              color="hsl(var(--blue-primary))"
+              showCheckmarks={true}
+            />
+            <ProgressCard
+              title="Nutrition Goals"
+              current={mockData.weeklyProgress.mealsLogged}
+              total={mockData.weeklyProgress.mealsPlanned}
+              description="Excellent consistency!"
+              icon={<Utensils className="w-5 h-5 text-[hsl(var(--success))]" />}
+              color="hsl(var(--success))"
+              showCheckmarks={true}
+            />
+          </div>
+
+          {/* Calendar Widget */}
+          <CalendarWidget weeklySchedule={mockData.weeklySchedule} />
+
+          {/* Quick Actions */}
+          <div className="calm-card">
+            <h3 className="text-headline text-[hsl(var(--text-primary))] mb-6">Quick Actions</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Button
+                onClick={() => setLocation("/workout-log")}
+                variant="outline"
+                className="h-20 flex flex-col items-center gap-3 min-h-[44px] rounded-2xl border-[hsl(var(--border))] hover:border-[hsl(var(--blue-primary))] hover:bg-[hsl(var(--blue-primary))]/5 transition-all duration-200"
+              >
+                <Dumbbell className="w-6 h-6 text-[hsl(var(--blue-primary))]" />
+                <span className="text-callout">Start Workout</span>
               </Button>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Macro Progress */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Utensils className="w-5 h-5" />
-              <span>Today's Nutrition</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div>
-                <div className="flex justify-between text-sm">
-                  <span>Calories</span>
-                  <span>0 / {macroTargets.dailyCalories || 0}</span>
-                </div>
-                <Progress value={0} className="h-2" />
-              </div>
-              
-              <div>
-                <div className="flex justify-between text-sm">
-                  <span>Protein</span>
-                  <span>0g / {macroTargets.protein_g || 0}g</span>
-                </div>
-                <Progress value={0} className="h-2" />
-              </div>
-              
-              <div>
-                <div className="flex justify-between text-sm">
-                  <span>Carbs</span>
-                  <span>0g / {macroTargets.carbs_g || 0}g</span>
-                </div>
-                <Progress value={0} className="h-2" />
-              </div>
-              
-              <div>
-                <div className="flex justify-between text-sm">
-                  <span>Fat</span>
-                  <span>0g / {macroTargets.fat_g || 0}g</span>
-                </div>
-                <Progress value={0} className="h-2" />
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-3">
-              <Button onClick={handleMealLog} variant="outline">
-                Log Meal
+              <Button
+                onClick={() => setLocation("/meal-log")}
+                variant="outline"
+                className="h-20 flex flex-col items-center gap-3 min-h-[44px] rounded-2xl border-[hsl(var(--border))] hover:border-[hsl(var(--success))] hover:bg-[hsl(var(--success))]/5 transition-all duration-200"
+              >
+                <Utensils className="w-6 h-6 text-[hsl(var(--success))]" />
+                <span className="text-callout">Log Meal</span>
               </Button>
-              <Button onClick={() => setLocation("/workout-calendar")} variant="outline">
-                View Calendar
+              <Button
+                onClick={() => setLocation("/workout-calendar")}
+                variant="outline"
+                className="h-20 flex flex-col items-center gap-3 min-h-[44px] rounded-2xl border-[hsl(var(--border))] hover:border-[hsl(var(--warning))] hover:bg-[hsl(var(--warning))]/5 transition-all duration-200"
+              >
+                <Calendar className="w-6 h-6 text-[hsl(var(--warning))]" />
+                <span className="text-callout">View Calendar</span>
+              </Button>
+              <Button
+                variant="outline"
+                className="h-20 flex flex-col items-center gap-3 min-h-[44px] rounded-2xl border-[hsl(var(--border))] hover:border-[hsl(var(--blue-secondary))] hover:bg-[hsl(var(--blue-secondary))]/5 transition-all duration-200"
+              >
+                <TrendingUp className="w-6 h-6 text-[hsl(var(--blue-secondary))]" />
+                <span className="text-callout">Progress</span>
               </Button>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-3 gap-3">
-          <Button onClick={handleWorkoutLog} variant="outline" className="h-20 flex flex-col space-y-2">
-            <Dumbbell className="w-5 h-5" />
-            <span className="text-xs">Log Workout</span>
-          </Button>
-          
-          <Button onClick={handleMealLog} variant="outline" className="h-20 flex flex-col space-y-2">
-            <Utensils className="w-5 h-5" />
-            <span className="text-xs">Log Meal</span>
-          </Button>
-
-          <Button onClick={() => setLocation("/workout-calendar")} variant="outline" className="h-20 flex flex-col space-y-2">
-            <Calendar className="w-5 h-5" />
-            <span className="text-xs">Calendar</span>
-          </Button>
+          </div>
         </div>
+      </main>
 
-        {/* Temporary: Regenerate Plan Button */}
-        <Button onClick={handleRegeneratePlan} variant="outline" className="w-full">
-          🔄 Update Plan (Get All 6 Workout Days)
-        </Button>
-      </div>
+      {/* Floating Chat */}
+      <FloatingChat />
     </div>
   );
 }

@@ -3,34 +3,49 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0, 0%, 100%);
-  --foreground: hsl(0, 0%, 6.7%);
-  --muted: hsl(60, 4.8%, 95.9%);
-  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --background: hsl(0, 0%, 98%);
+  --foreground: hsl(240, 10%, 6%);
+  --muted: hsl(210, 40%, 96%);
+  --muted-foreground: hsl(215, 15%, 65%);
   --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(0, 0%, 6.7%);
+  --popover-foreground: hsl(240, 10%, 6%);
   --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(0, 0%, 6.7%);
-  --border: hsl(20, 5.9%, 90%);
-  --input: hsl(20, 5.9%, 90%);
+  --card-foreground: hsl(240, 10%, 6%);
+  --border: hsl(220, 13%, 91%);
+  --input: hsl(220, 13%, 91%);
   --primary: hsl(213, 94%, 68%);
   --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(60, 4.8%, 95.9%);
-  --secondary-foreground: hsl(24, 9.8%, 10%);
-  --accent: hsl(60, 4.8%, 95.9%);
-  --accent-foreground: hsl(24, 9.8%, 10%);
-  --destructive: hsl(0, 84.2%, 60.2%);
-  --destructive-foreground: hsl(60, 9.1%, 97.8%);
-  --ring: hsl(20, 14.3%, 4.1%);
-  --radius: 0.5rem;
+  --secondary: hsl(210, 40%, 96%);
+  --secondary-foreground: hsl(240, 10%, 6%);
+  --accent: hsl(210, 40%, 96%);
+  --accent-foreground: hsl(240, 10%, 6%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --ring: hsl(215, 20%, 65%);
+  --radius: 1rem;
   
-  /* Custom Body Butler colors */
+  /* Custom Body Butler colors - Oura-inspired calm palette */
   --blue-primary: hsl(213, 94%, 68%);
   --blue-secondary: hsl(221, 84%, 55%);
   --blue-light: hsl(215, 95%, 70%);
-  --gray-dark: hsl(0, 0%, 6.7%);
-  --gray-medium: hsl(220, 8.9%, 46.1%);
+  --gray-dark: hsl(240, 10%, 6%);
+  --gray-medium: hsl(215, 15%, 65%);
   --gray-light: hsl(210, 40%, 98%);
+  
+  /* Engagement colors */
+  --success: hsl(142, 76%, 36%);
+  --success-light: hsl(142, 76%, 95%);
+  --warning: hsl(38, 92%, 50%);
+  --warning-light: hsl(38, 92%, 95%);
+  --streak: hsl(25, 95%, 53%);
+  --streak-light: hsl(25, 95%, 95%);
+  
+  /* Calm neutrals */
+  --surface: hsl(0, 0%, 100%);
+  --surface-secondary: hsl(210, 40%, 98%);
+  --text-primary: hsl(240, 10%, 6%);
+  --text-secondary: hsl(215, 15%, 65%);
+  --text-tertiary: hsl(220, 9%, 46%);
 }
 
 .dark {
@@ -67,11 +82,102 @@
 }
 
 @layer utilities {
+  /* Apple HIG-inspired button styles */
   .gradient-button {
-    @apply bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 active:scale-95;
+    @apply bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] text-white font-medium py-4 px-6 rounded-2xl shadow-sm hover:shadow-md transform hover:scale-[1.02] transition-all duration-200 active:scale-95 min-h-[44px] min-w-[44px];
   }
   
   .outline-button {
-    @apply border-2 border-[hsl(var(--blue-primary))] text-[hsl(var(--blue-primary))] font-semibold py-4 px-6 rounded-2xl hover:bg-[hsl(var(--blue-primary))] hover:text-white transition-all duration-200;
+    @apply border-2 border-[hsl(var(--blue-primary))] text-[hsl(var(--blue-primary))] font-medium py-4 px-6 rounded-2xl hover:bg-[hsl(var(--blue-primary))] hover:text-white transition-all duration-200 min-h-[44px] min-w-[44px];
+  }
+  
+  .calm-card {
+    @apply bg-[hsl(var(--surface))] border border-[hsl(var(--border))] rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 backdrop-blur-sm;
+  }
+  
+  .surface-card {
+    @apply bg-[hsl(var(--surface-secondary))] border-0 rounded-2xl p-4 transition-all duration-300;
+  }
+  
+  .engagement-badge {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200;
+  }
+  
+  .streak-badge {
+    @apply engagement-badge bg-[hsl(var(--streak-light))] text-[hsl(var(--streak))] border border-[hsl(var(--streak))]/20;
+  }
+  
+  .success-badge {
+    @apply engagement-badge bg-[hsl(var(--success-light))] text-[hsl(var(--success))] border border-[hsl(var(--success))]/20;
+  }
+  
+  .warning-badge {
+    @apply engagement-badge bg-[hsl(var(--warning-light))] text-[hsl(var(--warning))] border border-[hsl(var(--warning))]/20;
+  }
+  
+  .floating-chat {
+    @apply fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center text-white z-50;
+  }
+  
+  .progress-ring {
+    @apply relative inline-flex items-center justify-center;
+  }
+  
+  .system-blur {
+    @apply backdrop-blur-xl bg-white/80 dark:bg-gray-900/80;
+  }
+  
+  /* Fluid transitions */
+  .slide-in {
+    @apply transform transition-all duration-500 ease-out;
+  }
+  
+  .fade-in {
+    @apply opacity-0 animate-pulse duration-500;
+  }
+  
+  /* Typography scale - Apple HIG inspired */
+  .text-largeTitle {
+    @apply text-3xl font-bold tracking-tight;
+  }
+  
+  .text-title1 {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+  
+  .text-title2 {
+    @apply text-xl font-semibold;
+  }
+  
+  .text-title3 {
+    @apply text-lg font-semibold;
+  }
+  
+  .text-headline {
+    @apply text-base font-semibold;
+  }
+  
+  .text-body {
+    @apply text-base;
+  }
+  
+  .text-callout {
+    @apply text-sm font-medium;
+  }
+  
+  .text-subhead {
+    @apply text-sm;
+  }
+  
+  .text-footnote {
+    @apply text-xs;
+  }
+  
+  .text-caption1 {
+    @apply text-xs font-medium;
+  }
+  
+  .text-caption2 {
+    @apply text-xs text-[hsl(var(--text-secondary))];
   }
 }
