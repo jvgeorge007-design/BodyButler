@@ -1,5 +1,6 @@
 import { Home, TrendingUp, Settings } from "lucide-react";
 import { useLocation } from "wouter";
+import bbLogo from "@assets/BB logo_1751937804698.png";
 
 export default function BottomNav() {
   const [location, setLocation] = useLocation();
@@ -20,8 +21,12 @@ export default function BottomNav() {
     {
       id: "ai",
       icon: () => (
-        <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
-          <span className="text-white font-bold text-xs">BB</span>
+        <div className="w-6 h-6 flex items-center justify-center">
+          <img 
+            src={bbLogo}
+            alt="Body Butler"
+            className="w-6 h-6 object-contain"
+          />
         </div>
       ),
       label: "AI Coach",
