@@ -268,7 +268,7 @@ export default function Dashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-md mx-auto px-4 py-6 bg-gray-50 min-h-screen">
+      <main className="max-w-md mx-auto px-4 py-6 pb-24 bg-gray-50 min-h-screen">
         <div className="space-y-4">
           {/* Date Navigator */}
           <DateNavigator 
