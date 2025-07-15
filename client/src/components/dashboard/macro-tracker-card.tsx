@@ -78,7 +78,7 @@ export default function MacroTrackerCard({
               {/* Progress Bar */}
               <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                 <div 
-                  className={`h-2 rounded-full transition-all duration-2250 ease-out shadow-sm ${isVisible ? 'animate-fill-bar' : ''}`}
+                  className={`h-2 rounded-full transition-all duration-2000 ease-out shadow-sm ${isVisible ? 'animate-fill-bar' : ''}`}
                   style={{ 
                     '--target-width': `${percentage}%`,
                     width: isVisible ? undefined : '0%',
