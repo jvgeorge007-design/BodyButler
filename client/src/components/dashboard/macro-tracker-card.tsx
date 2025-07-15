@@ -29,20 +29,12 @@ export default function MacroTrackerCard({
     <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">Macronutrients</h3>
-        <div className="flex items-center gap-2">
-          <button 
-            onClick={() => setShowAddFoodCarousel(true)}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
-          >
-            <Plus className="w-5 h-5 text-blue-600" strokeWidth={2.5} />
-          </button>
-          <button 
-            onClick={() => setShowFoodLog(true)}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
-          >
-            <BookOpen className="w-5 h-5 text-blue-600" strokeWidth={2.5} />
-          </button>
-        </div>
+        <button 
+          onClick={() => setShowFoodLog(true)}
+          className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+        >
+          <BookOpen className="w-5 h-5 text-blue-600" strokeWidth={2.5} />
+        </button>
       </div>
       
       <div className="space-y-5">
