@@ -21,9 +21,19 @@ export default function WorkoutCard({
   return (
     <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
       <div className="mb-4">
-        <h2 className="text-xl font-bold text-gray-900">
-          {workoutType}
+        <h2 className="text-xl font-bold text-gray-900 mb-2">
+          Workout
         </h2>
+        <p className="text-gray-600 mb-3">
+          {workoutType}
+        </p>
+        
+        {!isRestDay && (
+          <div className="flex items-center gap-4 text-sm text-gray-500">
+            <span>⏱️ {duration}</span>
+            <span>🎯 {exerciseCount} exercises</span>
+          </div>
+        )}
       </div>
 
       <button 
