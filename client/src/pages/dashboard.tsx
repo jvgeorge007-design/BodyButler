@@ -15,7 +15,7 @@ import WorkoutCard from "@/components/dashboard/workout-card";
 import MacroTrackerCard from "@/components/dashboard/macro-tracker-card";
 import DateNavigator from "@/components/dashboard/date-navigator";
 import WeeklyCalendarModal from "@/components/dashboard/weekly-calendar-modal";
-import FloatingChat from "@/components/dashboard/floating-chat";
+import BottomNav from "@/components/navigation/bottom-nav";
 
 export default function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -311,8 +311,8 @@ export default function Dashboard() {
         }}
       />
 
-      {/* Floating Chat */}
-      <FloatingChat />
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 }
