@@ -28,20 +28,18 @@ export default function WorkoutCard({
           <h2 className="text-xl font-bold text-gray-900">
             Workout
           </h2>
-          <span className="text-sm font-medium text-gray-600">
+          <button 
+            onClick={() => setShowExercises(true)}
+            className="text-xl font-bold text-blue-600 hover:text-blue-700 transition-colors cursor-pointer"
+          >
             {workoutType}
-          </span>
+          </button>
         </div>
         
         {!isRestDay && (
           <div className="flex items-center gap-4 text-sm text-gray-500">
             <span>⏱️ —</span>
-            <button 
-              onClick={() => setShowExercises(true)}
-              className="flex items-center gap-1 hover:text-blue-600 transition-colors cursor-pointer"
-            >
-              <span>🎯 {exerciseCount} exercises</span>
-            </button>
+            <span>🎯 {exerciseCount} exercises</span>
           </div>
         )}
       </div>
