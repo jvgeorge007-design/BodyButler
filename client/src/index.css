@@ -180,4 +180,27 @@
   .text-caption2 {
     @apply text-xs text-[hsl(var(--text-secondary))];
   }
+
+  /* Custom animations for macro tracker */
+  .animate-pulse-soft {
+    animation: pulse-soft 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.1);
+    }
+    50% {
+      box-shadow: 0 0 0 10px rgba(59, 130, 246, 0.05);
+    }
+  }
+
+  /* Enhanced button interactions */
+  .active\:brightness-110:active {
+    filter: brightness(1.1);
+  }
+
+  .active\:scale-95:active {
+    transform: scale(0.95);
+  }
 }

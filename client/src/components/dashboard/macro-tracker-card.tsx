@@ -26,12 +26,12 @@ export default function MacroTrackerCard({
   const macros = [protein, carbs, fat];
 
   return (
-    <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+    <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 animate-pulse-soft">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">Macronutrients</h3>
         <button 
           onClick={() => setShowFoodLog(true)}
-          className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+          className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 hover:shadow-md active:scale-95 active:brightness-110"
         >
           <BookOpen className="w-5 h-5 text-blue-600" strokeWidth={2.5} />
         </button>
@@ -54,12 +54,13 @@ export default function MacroTrackerCard({
               </div>
               
               {/* Progress Bar */}
-              <div className="w-full bg-gray-100 rounded-full h-2">
+              <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                 <div 
-                  className="h-2 rounded-full transition-all duration-500 ease-out"
+                  className="h-2 rounded-full transition-all duration-1000 ease-out animate-pulse shadow-sm"
                   style={{ 
                     width: `${percentage}%`,
-                    backgroundColor: macro.color
+                    background: `linear-gradient(90deg, ${macro.color}, ${macro.color}dd)`,
+                    boxShadow: `0 0 8px ${macro.color}40`
                   }}
                 />
               </div>
@@ -80,7 +81,7 @@ export default function MacroTrackerCard({
       {/* Add Food Button */}
       <button 
         onClick={() => setShowAddFoodCarousel(true)}
-        className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-2xl transition-colors flex items-center justify-center gap-2"
+        className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-2xl transition-all duration-200 hover:shadow-lg active:scale-95 active:brightness-110 flex items-center justify-center gap-2"
       >
         <Plus className="w-4 h-4" />
         Add Food

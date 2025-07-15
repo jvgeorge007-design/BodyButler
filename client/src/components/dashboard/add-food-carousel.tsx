@@ -74,7 +74,7 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
           <h2 className="text-xl font-bold text-gray-900">Add Food</h2>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 hover:shadow-md active:scale-95 active:brightness-110"
           >
             <X className="w-5 h-5 text-gray-600" />
           </button>
@@ -101,7 +101,7 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
                       </div>
                       <button
                         onClick={option.action}
-                        className={`w-full ${option.color} ${option.hoverColor} text-white font-medium py-3 rounded-2xl transition-colors`}
+                        className={`w-full ${option.color} ${option.hoverColor} text-white font-medium py-3 rounded-2xl transition-all duration-200 hover:shadow-lg active:scale-95 active:brightness-110`}
                       >
                         Choose {option.title}
                       </button>

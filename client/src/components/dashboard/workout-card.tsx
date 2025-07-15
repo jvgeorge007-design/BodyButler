@@ -30,7 +30,7 @@ export default function WorkoutCard({
           </h2>
           <button 
             onClick={() => setShowExercises(true)}
-            className="text-xl font-bold text-blue-600 hover:text-blue-700 transition-colors cursor-pointer"
+            className="text-xl font-bold text-blue-600 hover:text-blue-700 transition-all duration-200 hover:shadow-md active:scale-95 active:brightness-110 cursor-pointer"
           >
             {workoutType}
           </button>
@@ -49,7 +49,7 @@ export default function WorkoutCard({
 
       <button 
         onClick={onLogWorkout}
-        className={`w-full font-medium py-3 rounded-2xl transition-colors flex items-center justify-center gap-2 ${
+        className={`w-full font-medium py-3 rounded-2xl transition-all duration-200 hover:shadow-lg active:scale-95 active:brightness-110 flex items-center justify-center gap-2 ${
           isRestDay 
             ? 'bg-gray-100 hover:bg-gray-200 text-gray-700' 
             : 'bg-blue-600 hover:bg-blue-700 text-white'
