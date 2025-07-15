@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Dumbbell, Play } from "lucide-react";
+import ExercisesPopup from "./exercises-popup";
+import { useState } from "react";
 
 interface WorkoutCardProps {
   workoutType?: string;
@@ -17,6 +19,7 @@ export default function WorkoutCard({
   onLogWorkout
 }: WorkoutCardProps) {
   const isRestDay = workoutType === "Rest Day" || !workoutType;
+  const [showExercises, setShowExercises] = useState(false);
 
   return (
     <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
@@ -30,8 +33,13 @@ export default function WorkoutCard({
         
         {!isRestDay && (
           <div className="flex items-center gap-4 text-sm text-gray-500">
-            <span>⏱️ {duration}</span>
-            <span>🎯 {exerciseCount} exercises</span>
+            <span>⏱️ —</span>
+            <button 
+              onClick={() => setShowExercises(true)}
+              className="flex items-center gap-1 hover:text-blue-600 transition-colors cursor-pointer"
+            >
+              <span>🎯 {exerciseCount} exercises</span>
+            </button>
           </div>
         )}
       </div>
@@ -64,6 +72,14 @@ export default function WorkoutCard({
           </>
         )}
       </button>
+
+      {/* Exercises Popup */}
+      <ExercisesPopup 
+        isOpen={showExercises}
+        onClose={() => setShowExercises(false)}
+        workoutType={workoutType}
+        exercises={[]}
+      />
     </div>
   );
 }
