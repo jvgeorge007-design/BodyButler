@@ -94,15 +94,7 @@ export default function ExercisesPopup({ isOpen, onClose, workoutType, exercises
           ))}
         </div>
 
-        {/* Footer */}
-        <div className="sticky bottom-0 bg-white border-t border-gray-200 px-6 py-4 rounded-b-3xl">
-          <Button 
-            onClick={onClose}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-2xl"
-          >
-            Got it
-          </Button>
-        </div>
+
       </div>
     </div>
   );
