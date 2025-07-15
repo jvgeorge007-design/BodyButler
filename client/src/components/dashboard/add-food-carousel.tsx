@@ -27,8 +27,8 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
       icon: FileText,
       title: "Receipt Scan",
       description: "Scan grocery receipt",
-      color: "bg-blue-500",
-      hoverColor: "hover:bg-blue-600",
+      color: "bg-blue-600",
+      hoverColor: "hover:bg-blue-700",
       action: () => {
         console.log("Receipt scan selected");
         onClose();
@@ -38,8 +38,8 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
       icon: QrCode,
       title: "Barcode Scan",
       description: "Scan product barcode",
-      color: "bg-gray-700",
-      hoverColor: "hover:bg-gray-800",
+      color: "bg-blue-600",
+      hoverColor: "hover:bg-blue-700",
       action: () => {
         console.log("Barcode scan selected");
         onClose();
@@ -49,8 +49,8 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
       icon: Camera,
       title: "Take Photo",
       description: "Take a photo of your food",
-      color: "bg-gray-600",
-      hoverColor: "hover:bg-gray-700",
+      color: "bg-blue-600",
+      hoverColor: "hover:bg-blue-700",
       action: () => {
         console.log("Take photo selected");
         onClose();
