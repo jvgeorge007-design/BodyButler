@@ -7,13 +7,13 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { LogOut, Dumbbell, Utensils, TrendingUp, Calendar } from "lucide-react";
+import { Dumbbell, Utensils, TrendingUp, Calendar } from "lucide-react";
 
 // Import our new dashboard components
 import CircularCalorieTracker from "@/components/dashboard/circular-calorie-tracker";
 import WorkoutCard from "@/components/dashboard/workout-card";
 import MacroTrackerCard from "@/components/dashboard/macro-tracker-card";
-import CalendarWidget from "@/components/dashboard/calendar-widget";
+import DateNavigator from "@/components/dashboard/date-navigator";
 import FloatingChat from "@/components/dashboard/floating-chat";
 
 export default function Dashboard() {
@@ -235,27 +235,17 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-50">
       {/* Blue Ribbon Header */}
       <header className="bg-blue-600 px-4 py-4 sticky top-0 z-40">
-        <div className="max-w-md mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
-              <KettlebellLogo className="w-4 h-4 text-white" />
-            </div>
-            <h1 className="text-lg font-bold text-white">Body Butler</h1>
-          </div>
-          <Button
-            onClick={() => window.location.href = '/api/logout'}
-            variant="ghost"
-            size="sm"
-            className="p-2 hover:bg-white/10 rounded-xl"
-          >
-            <LogOut className="w-5 h-5 text-white" />
-          </Button>
+        <div className="max-w-md mx-auto flex items-center justify-center">
+          <h1 className="text-xl font-black text-white tracking-tighter">BODY BUTLER</h1>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="max-w-md mx-auto px-4 py-6 bg-gray-50 min-h-screen">
         <div className="space-y-4">
+          {/* Date Navigator */}
+          <DateNavigator />
+
           {/* Circular Calorie Tracker */}
           <CircularCalorieTracker
             consumed={dashboardData.calories.consumed}
