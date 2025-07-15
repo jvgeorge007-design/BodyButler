@@ -19,11 +19,21 @@ import BottomNav from "@/components/navigation/bottom-nav";
 
 export default function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const { toast } = useToast();
   const [processingOnboarding, setProcessingOnboarding] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  // Reset to current day when home tab is clicked
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('reset') === 'true') {
+      setSelectedDate(new Date());
+      // Clean up the URL
+      window.history.replaceState({}, '', '/dashboard');
+    }
+  }, [location]);
 
   const { data: profile, isLoading: profileLoading, error: profileError } = useQuery({
     queryKey: ["/api/profile"],

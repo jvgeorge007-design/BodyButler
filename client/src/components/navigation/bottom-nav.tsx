@@ -40,8 +40,13 @@ export default function BottomNav() {
     }
   ];
 
-  const handleNavClick = (path: string) => {
-    setLocation(path);
+  const handleNavClick = (path: string, itemId: string) => {
+    if (itemId === 'home') {
+      // For home tab, always go to dashboard and reset to current day
+      setLocation('/dashboard?reset=true');
+    } else {
+      setLocation(path);
+    }
   };
 
   return (
@@ -54,7 +59,7 @@ export default function BottomNav() {
           return (
             <button
               key={item.id}
-              onClick={() => handleNavClick(item.path)}
+              onClick={() => handleNavClick(item.path, item.id)}
               className={`flex flex-col items-center justify-center p-2 rounded-xl transition-colors ${
                 isActive 
                   ? 'text-blue-600' 
