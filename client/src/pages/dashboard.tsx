@@ -10,9 +10,9 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { LogOut, Dumbbell, Utensils, TrendingUp, Calendar } from "lucide-react";
 
 // Import our new dashboard components
-import StreakTracker from "@/components/dashboard/streak-tracker";
-import ProgressCard from "@/components/dashboard/progress-card";
-import DailyOverview from "@/components/dashboard/daily-overview";
+import CircularCalorieTracker from "@/components/dashboard/circular-calorie-tracker";
+import WorkoutCard from "@/components/dashboard/workout-card";
+import MacroTrackerCard from "@/components/dashboard/macro-tracker-card";
 import CalendarWidget from "@/components/dashboard/calendar-widget";
 import FloatingChat from "@/components/dashboard/floating-chat";
 
@@ -142,33 +142,32 @@ export default function Dashboard() {
   // Get user's first name for personalized greeting
   const userName = user?.firstName || user?.email?.split('@')[0] || 'there';
   
-  // Calculate mock data for engagement mechanics (in real app, this would come from API)
-  const mockData = {
-    streaks: {
-      workoutStreak: 5,
-      mealStreak: 7,
-      longestStreak: 12
+  // Calculate data for dashboard components (in real app, this would come from API)
+  const todaysWorkout = personalizedPlan?.workoutPlan?.days?.[0];
+  const macroTargets = personalizedPlan?.macroTargets || {};
+  
+  const dashboardData = {
+    calories: {
+      total: 1200,
+      target: macroTargets.dailyCalories || 2000,
+      workout: 300,
+      exercise: 900
     },
-    todaysWorkout: personalizedPlan?.workoutPlan?.days?.[0] ? {
-      name: personalizedPlan.workoutPlan.days[0].day,
-      focus: personalizedPlan.workoutPlan.days[0].focus,
+    workout: {
+      type: todaysWorkout?.day || "Rest Day",
+      focus: todaysWorkout?.focus || "Recovery and stretching",
       duration: "45 min",
-      completed: false
-    } : undefined,
-    calorieProgress: {
-      consumed: 1200,
-      target: personalizedPlan?.macroTargets?.dailyCalories || 2000
+      exerciseCount: todaysWorkout?.exercises?.length || 0
     },
-    weeklyProgress: {
-      workoutsCompleted: 3,
-      workoutsPlanned: 6,
-      mealsLogged: 5,
-      mealsPlanned: 7
+    macros: {
+      calories: { current: 1200, target: macroTargets.dailyCalories || 2000, unit: 'cal' },
+      protein: { current: 80, target: macroTargets.protein_g || 150, unit: 'g' },
+      carbs: { current: 150, target: macroTargets.carbs_g || 200, unit: 'g' },
+      fat: { current: 45, target: macroTargets.fat_g || 65, unit: 'g' }
     },
     weeklySchedule: {
-      // This would normally come from your API
       [new Date().toISOString().split('T')[0]]: [
-        { type: 'workout', title: 'Push Day', time: '9:00 AM' },
+        { type: 'workout', title: todaysWorkout?.day || 'Rest Day', time: '9:00 AM' },
         { type: 'meal', title: 'Meal Prep', time: '6:00 PM' }
       ]
     }
@@ -261,79 +260,36 @@ export default function Dashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="space-y-8">
-          {/* Streak Tracker */}
-          <StreakTracker {...mockData.streaks} />
-
-          {/* Daily Overview */}
-          <DailyOverview 
-            todaysWorkout={mockData.todaysWorkout}
-            calorieProgress={mockData.calorieProgress}
+      <main className="max-w-4xl mx-auto px-6 py-8">
+        <div className="space-y-6">
+          {/* Circular Calorie Tracker */}
+          <CircularCalorieTracker
+            totalCalories={dashboardData.calories.total}
+            targetCalories={dashboardData.calories.target}
+            workoutCalories={dashboardData.calories.workout}
+            exerciseCalories={dashboardData.calories.exercise}
           />
 
-          {/* Progress Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ProgressCard
-              title="Weekly Workouts"
-              current={mockData.weeklyProgress.workoutsCompleted}
-              total={mockData.weeklyProgress.workoutsPlanned}
-              description="Keep the momentum going!"
-              icon={<Dumbbell className="w-5 h-5 text-[hsl(var(--blue-primary))]" />}
-              color="hsl(var(--blue-primary))"
-              showCheckmarks={true}
-            />
-            <ProgressCard
-              title="Nutrition Goals"
-              current={mockData.weeklyProgress.mealsLogged}
-              total={mockData.weeklyProgress.mealsPlanned}
-              description="Excellent consistency!"
-              icon={<Utensils className="w-5 h-5 text-[hsl(var(--success))]" />}
-              color="hsl(var(--success))"
-              showCheckmarks={true}
-            />
-          </div>
+          {/* Workout Card */}
+          <WorkoutCard
+            workoutType={dashboardData.workout.type}
+            focus={dashboardData.workout.focus}
+            duration={dashboardData.workout.duration}
+            exerciseCount={dashboardData.workout.exerciseCount}
+            onLogWorkout={() => setLocation("/workout-log")}
+          />
+
+          {/* Macro Tracker Card */}
+          <MacroTrackerCard
+            calories={dashboardData.macros.calories}
+            protein={dashboardData.macros.protein}
+            carbs={dashboardData.macros.carbs}
+            fat={dashboardData.macros.fat}
+            onLogMeal={() => setLocation("/meal-log")}
+          />
 
           {/* Calendar Widget */}
-          <CalendarWidget weeklySchedule={mockData.weeklySchedule} />
-
-          {/* Quick Actions */}
-          <div className="calm-card">
-            <h3 className="text-headline text-[hsl(var(--text-primary))] mb-6">Quick Actions</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Button
-                onClick={() => setLocation("/workout-log")}
-                variant="outline"
-                className="h-20 flex flex-col items-center gap-3 min-h-[44px] rounded-2xl border-[hsl(var(--border))] hover:border-[hsl(var(--blue-primary))] hover:bg-[hsl(var(--blue-primary))]/5 transition-all duration-200"
-              >
-                <Dumbbell className="w-6 h-6 text-[hsl(var(--blue-primary))]" />
-                <span className="text-callout">Start Workout</span>
-              </Button>
-              <Button
-                onClick={() => setLocation("/meal-log")}
-                variant="outline"
-                className="h-20 flex flex-col items-center gap-3 min-h-[44px] rounded-2xl border-[hsl(var(--border))] hover:border-[hsl(var(--success))] hover:bg-[hsl(var(--success))]/5 transition-all duration-200"
-              >
-                <Utensils className="w-6 h-6 text-[hsl(var(--success))]" />
-                <span className="text-callout">Log Meal</span>
-              </Button>
-              <Button
-                onClick={() => setLocation("/workout-calendar")}
-                variant="outline"
-                className="h-20 flex flex-col items-center gap-3 min-h-[44px] rounded-2xl border-[hsl(var(--border))] hover:border-[hsl(var(--warning))] hover:bg-[hsl(var(--warning))]/5 transition-all duration-200"
-              >
-                <Calendar className="w-6 h-6 text-[hsl(var(--warning))]" />
-                <span className="text-callout">View Calendar</span>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-20 flex flex-col items-center gap-3 min-h-[44px] rounded-2xl border-[hsl(var(--border))] hover:border-[hsl(var(--blue-secondary))] hover:bg-[hsl(var(--blue-secondary))]/5 transition-all duration-200"
-              >
-                <TrendingUp className="w-6 h-6 text-[hsl(var(--blue-secondary))]" />
-                <span className="text-callout">Progress</span>
-              </Button>
-            </div>
-          </div>
+          <CalendarWidget weeklySchedule={dashboardData.weeklySchedule} />
         </div>
       </main>
 
