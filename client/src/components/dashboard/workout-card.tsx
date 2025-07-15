@@ -39,7 +39,10 @@ export default function WorkoutCard({
         {!isRestDay && (
           <div className="flex items-center gap-4 text-sm text-gray-500">
             <span>⏱️ —</span>
-            <span>🎯 {exerciseCount} exercises</span>
+            <div className="flex items-center gap-1">
+              <Dumbbell className="w-4 h-4" />
+              <span>{exerciseCount} exercises</span>
+            </div>
           </div>
         )}
       </div>
