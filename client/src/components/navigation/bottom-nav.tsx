@@ -21,11 +21,11 @@ export default function BottomNav() {
     {
       id: "ai",
       icon: () => (
-        <div className="w-6 h-6 flex items-center justify-center">
+        <div className="w-8 h-8 flex items-center justify-center">
           <img 
             src={bbLogo}
             alt="Body Butler"
-            className="w-6 h-6 object-contain"
+            className="w-8 h-8 object-contain"
           />
         </div>
       ),
@@ -61,15 +61,19 @@ export default function BottomNav() {
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <IconComponent 
-                className={`w-6 h-6 ${item.id === 'ai' ? '' : 'mb-1'}`}
-                strokeWidth={2}
-              />
-              {item.id !== 'ai' && (
-                <span className="text-xs font-medium">{item.label}</span>
-              )}
-              {item.id === 'ai' && (
-                <span className="text-xs font-medium mt-1">{item.label}</span>
+              {item.id === 'ai' ? (
+                <IconComponent 
+                  className="w-8 h-8"
+                  strokeWidth={2}
+                />
+              ) : (
+                <>
+                  <IconComponent 
+                    className="w-6 h-6 mb-1"
+                    strokeWidth={2}
+                  />
+                  <span className="text-xs font-medium">{item.label}</span>
+                </>
               )}
             </button>
           );
