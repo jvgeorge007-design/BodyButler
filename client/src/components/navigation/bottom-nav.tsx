@@ -21,11 +21,11 @@ export default function BottomNav() {
     {
       id: "ai",
       icon: () => (
-        <div className="w-8 h-8 flex items-center justify-center">
+        <div className="w-6 h-6 flex items-center justify-center">
           <img 
             src={bbLogo}
             alt="Body Butler"
-            className="w-8 h-8 object-contain"
+            className="w-6 h-6 object-contain"
           />
         </div>
       ),
@@ -63,7 +63,7 @@ export default function BottomNav() {
             >
               {item.id === 'ai' ? (
                 <IconComponent 
-                  className="w-8 h-8"
+                  className="w-6 h-6"
                   strokeWidth={2}
                 />
               ) : (
