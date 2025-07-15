@@ -1,5 +1,5 @@
 import { BookOpen, Plus } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import FoodLogPopup from "./food-log-popup";
 import AddFoodCarousel from "./add-food-carousel";
 
@@ -23,10 +23,32 @@ export default function MacroTrackerCard({
 }: MacroTrackerCardProps) {
   const [showFoodLog, setShowFoodLog] = useState(false);
   const [showAddFoodCarousel, setShowAddFoodCarousel] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const macros = [protein, carbs, fat];
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect(); // Only trigger once
+        }
+      },
+      {
+        threshold: 1.0 // Trigger when 100% of the element is visible
+      }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+    <div ref={containerRef} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">Macronutrients</h3>
         <button 
@@ -56,9 +78,10 @@ export default function MacroTrackerCard({
               {/* Progress Bar */}
               <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                 <div 
-                  className="h-2 rounded-full transition-all duration-2250 ease-out shadow-sm animate-fill-bar"
+                  className={`h-2 rounded-full transition-all duration-2250 ease-out shadow-sm ${isVisible ? 'animate-fill-bar' : ''}`}
                   style={{ 
                     '--target-width': `${percentage}%`,
+                    width: isVisible ? undefined : '0%',
                     background: `linear-gradient(90deg, ${macro.color}, ${macro.color}dd)`,
                     boxShadow: `0 0 8px ${macro.color}40`
                   } as React.CSSProperties & { '--target-width': string }}
