@@ -14,6 +14,7 @@ import CircularCalorieTracker from "@/components/dashboard/circular-calorie-trac
 import WorkoutCard from "@/components/dashboard/workout-card";
 import MacroTrackerCard from "@/components/dashboard/macro-tracker-card";
 import DateNavigator from "@/components/dashboard/date-navigator";
+import WeeklyCalendarModal from "@/components/dashboard/weekly-calendar-modal";
 import FloatingChat from "@/components/dashboard/floating-chat";
 
 export default function Dashboard() {
@@ -21,6 +22,7 @@ export default function Dashboard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [processingOnboarding, setProcessingOnboarding] = useState(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const { data: profile, isLoading: profileLoading, error: profileError } = useQuery({
     queryKey: ["/api/profile"],
@@ -244,7 +246,7 @@ export default function Dashboard() {
       <main className="max-w-md mx-auto px-4 py-6 bg-gray-50 min-h-screen">
         <div className="space-y-4">
           {/* Date Navigator */}
-          <DateNavigator />
+          <DateNavigator onCalendarOpen={() => setIsCalendarOpen(true)} />
 
           {/* Circular Calorie Tracker */}
           <CircularCalorieTracker
@@ -270,6 +272,15 @@ export default function Dashboard() {
           />
         </div>
       </main>
+
+      {/* Weekly Calendar Modal */}
+      <WeeklyCalendarModal 
+        isOpen={isCalendarOpen}
+        onClose={() => setIsCalendarOpen(false)}
+        onDateSelect={(date) => {
+          console.log("Selected date:", date);
+        }}
+      />
 
       {/* Floating Chat */}
       <FloatingChat />
