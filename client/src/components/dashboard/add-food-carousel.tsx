@@ -17,6 +17,7 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
       title: "Manual Add",
       description: "Enter food details manually",
       color: "bg-blue-600",
+      hoverColor: "hover:bg-blue-700",
       action: () => {
         console.log("Manual add selected");
         onClose();
@@ -26,7 +27,8 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
       icon: FileText,
       title: "Receipt Scan",
       description: "Scan grocery receipt",
-      color: "bg-green-600",
+      color: "bg-blue-500",
+      hoverColor: "hover:bg-blue-600",
       action: () => {
         console.log("Receipt scan selected");
         onClose();
@@ -36,7 +38,8 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
       icon: QrCode,
       title: "Barcode Scan",
       description: "Scan product barcode",
-      color: "bg-purple-600",
+      color: "bg-gray-700",
+      hoverColor: "hover:bg-gray-800",
       action: () => {
         console.log("Barcode scan selected");
         onClose();
@@ -46,7 +49,8 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
       icon: Camera,
       title: "Take Photo",
       description: "Take a photo of your food",
-      color: "bg-orange-600",
+      color: "bg-gray-600",
+      hoverColor: "hover:bg-gray-700",
       action: () => {
         console.log("Take photo selected");
         onClose();
@@ -97,7 +101,7 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
                       </div>
                       <button
                         onClick={option.action}
-                        className={`w-full ${option.color} hover:opacity-90 text-white font-medium py-3 rounded-2xl transition-opacity`}
+                        className={`w-full ${option.color} ${option.hoverColor} text-white font-medium py-3 rounded-2xl transition-colors`}
                       >
                         Choose {option.title}
                       </button>
