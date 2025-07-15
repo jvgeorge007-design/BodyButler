@@ -20,39 +20,10 @@ export default function WorkoutCard({
 
   return (
     <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-            isRestDay ? 'bg-gray-100' : 'bg-blue-50'
-          }`}>
-            <Dumbbell className={`w-6 h-6 ${
-              isRestDay ? 'text-gray-500' : 'text-blue-600'
-            }`} />
-          </div>
-          
-        </div>
-        {!isRestDay && (
-          <div className="text-right">
-            <div className="text-lg font-bold text-blue-600">{exerciseCount}</div>
-            <div className="text-xs text-gray-500 uppercase font-medium tracking-wide">exercises</div>
-          </div>
-        )}
-      </div>
-
-      <div className="mb-6">
-        <h4 className="text-xl font-bold text-gray-900 mb-2">
+      <div className="mb-4">
+        <h2 className="text-xl font-bold text-gray-900">
           {workoutType}
-        </h4>
-        <p className="text-gray-600 mb-3">
-          {focus}
-        </p>
-        
-        {!isRestDay && (
-          <div className="flex items-center gap-4 text-sm text-gray-500">
-            <span>⏱️ {duration}</span>
-            <span>🎯 {exerciseCount} exercises</span>
-          </div>
-        )}
+        </h2>
       </div>
 
       <button 
