@@ -232,26 +232,23 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))]">
-      {/* Header with personalized greeting */}
-      <header className="bg-white border-b border-gray-200 px-4 py-4 sticky top-0 z-40">
+    <div className="min-h-screen bg-gray-50">
+      {/* Blue Ribbon Header */}
+      <header className="bg-blue-600 px-4 py-4 sticky top-0 z-40">
         <div className="max-w-md mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
               <KettlebellLogo className="w-4 h-4 text-white" />
             </div>
-            <div>
-              <h1 className="text-lg font-bold text-gray-900">Welcome back, {userName}</h1>
-              <p className="text-sm text-gray-500">Your plan is ready</p>
-            </div>
+            <h1 className="text-lg font-bold text-white">Body Butler</h1>
           </div>
           <Button
             onClick={() => window.location.href = '/api/logout'}
             variant="ghost"
             size="sm"
-            className="p-2 hover:bg-gray-100 rounded-xl"
+            className="p-2 hover:bg-white/10 rounded-xl"
           >
-            <LogOut className="w-5 h-5 text-gray-600" />
+            <LogOut className="w-5 h-5 text-white" />
           </Button>
         </div>
       </header>
@@ -281,9 +278,6 @@ export default function Dashboard() {
             carbs={dashboardData.macros.carbs}
             fat={dashboardData.macros.fat}
           />
-
-          {/* Calendar Widget */}
-          <CalendarWidget weeklySchedule={dashboardData.weeklySchedule} />
         </div>
       </main>
 

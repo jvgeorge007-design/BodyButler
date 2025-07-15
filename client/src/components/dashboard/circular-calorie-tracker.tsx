@@ -91,11 +91,7 @@ export default function CircularCalorieTracker({
         </div>
       </div>
 
-      {/* Add Food Button */}
-      <Button className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-2xl transition-colors">
-        <Plus className="w-4 h-4 mr-2" />
-        Add Food
-      </Button>
+
     </div>
   );
 }

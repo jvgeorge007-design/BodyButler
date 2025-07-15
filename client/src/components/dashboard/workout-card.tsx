@@ -77,7 +77,7 @@ export default function WorkoutCard({
         ) : (
           <>
             <Play className="w-4 h-4 mr-2" />
-            Start {workoutType}
+            Start Workout
           </>
         )}
       </Button>
