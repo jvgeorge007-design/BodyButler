@@ -62,6 +62,16 @@ export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
           </div>
         </div>
 
+        {/* Add Food Button */}
+        <div className="px-6 pt-4">
+          <button 
+            onClick={() => {/* Will be handled by parent component */}}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-2xl transition-colors"
+          >
+            + Add Food
+          </button>
+        </div>
+
         {/* Food Entries by Meal */}
         <div className="p-6 space-y-6">
           {Object.entries(mealGroups).map(([meal, entries]) => {
