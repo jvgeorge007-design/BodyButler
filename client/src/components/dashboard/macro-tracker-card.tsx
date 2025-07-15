@@ -1,6 +1,7 @@
-import { BookOpen } from "lucide-react";
+import { BookOpen, Plus } from "lucide-react";
 import { useState } from "react";
 import FoodLogPopup from "./food-log-popup";
+import AddFoodCarousel from "./add-food-carousel";
 
 interface MacroData {
   current: number;
@@ -21,18 +22,27 @@ export default function MacroTrackerCard({
   fat
 }: MacroTrackerCardProps) {
   const [showFoodLog, setShowFoodLog] = useState(false);
+  const [showAddFoodCarousel, setShowAddFoodCarousel] = useState(false);
   const macros = [protein, carbs, fat];
 
   return (
     <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">Macronutrients</h3>
-        <button 
-          onClick={() => setShowFoodLog(true)}
-          className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
-        >
-          <BookOpen className="w-5 h-5 text-blue-600" strokeWidth={2.5} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => setShowAddFoodCarousel(true)}
+            className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+          >
+            <Plus className="w-5 h-5 text-blue-600" strokeWidth={2.5} />
+          </button>
+          <button 
+            onClick={() => setShowFoodLog(true)}
+            className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+          >
+            <BookOpen className="w-5 h-5 text-blue-600" strokeWidth={2.5} />
+          </button>
+        </div>
       </div>
       
       <div className="space-y-5">
@@ -76,11 +86,11 @@ export default function MacroTrackerCard({
       </div>
 
       {/* Add Food Button */}
-      <button className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-2xl transition-colors flex items-center justify-center gap-2">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
+      <button 
+        onClick={() => setShowAddFoodCarousel(true)}
+        className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-2xl transition-colors flex items-center justify-center gap-2"
+      >
+        <Plus className="w-4 h-4" />
         Add Food
       </button>
 
@@ -88,6 +98,12 @@ export default function MacroTrackerCard({
       <FoodLogPopup 
         isOpen={showFoodLog}
         onClose={() => setShowFoodLog(false)}
+      />
+      
+      {/* Add Food Carousel */}
+      <AddFoodCarousel 
+        isOpen={showAddFoodCarousel}
+        onClose={() => setShowAddFoodCarousel(false)}
       />
     </div>
   );
