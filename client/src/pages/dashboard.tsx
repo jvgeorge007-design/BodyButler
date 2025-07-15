@@ -283,6 +283,7 @@ export default function Dashboard() {
           {/* Date Navigator */}
           <DateNavigator 
             selectedDate={selectedDate}
+            onDateSelect={setSelectedDate}
             onCalendarOpen={() => setIsCalendarOpen(true)} 
           />
 
