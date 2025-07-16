@@ -22,9 +22,11 @@ export default function CircularCalorieTracker({
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 relative overflow-hidden">
-      {/* Subtle background shadow effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-purple-50/20 rounded-3xl"></div>
+    <div className="bg-white rounded-3xl p-8 shadow-2xl border border-gray-100 relative overflow-hidden" style={{
+      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05)'
+    }}>
+      {/* Background shadow effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 to-purple-100/40 rounded-3xl"></div>
       <div className="relative z-10">
       <div className="flex items-center justify-center mb-6">
         <div className="relative">
