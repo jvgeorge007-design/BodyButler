@@ -50,7 +50,7 @@ export default function MacroTrackerCard({
   return (
     <div ref={containerRef} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Macronutrients</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Diet</h3>
         <button 
           onClick={() => setShowFoodLog(true)}
           className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 hover:shadow-md active:scale-95 active:brightness-110"
