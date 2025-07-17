@@ -169,6 +169,7 @@ export default function Section5({ data, onNext, isLoading }: Section5Props) {
           </Button>
         </form>
       </div>
+    </main>
     </div>
   );
 }

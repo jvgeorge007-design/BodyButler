@@ -105,6 +105,7 @@ export default function Section6({ data, onNext, isLoading }: Section6Props) {
           </Button>
         </form>
       </div>
+    </main>
     </div>
   );
 }

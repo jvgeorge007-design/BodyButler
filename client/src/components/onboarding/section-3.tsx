@@ -116,6 +116,7 @@ export default function Section3({ data, onNext, isLoading }: Section3Props) {
           </Button>
         </form>
       </div>
+    </main>
     </div>
   );
 }

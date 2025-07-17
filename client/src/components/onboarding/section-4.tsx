@@ -145,6 +145,7 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
           </Button>
         </form>
       </div>
+    </main>
     </div>
   );
 }

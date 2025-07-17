@@ -168,6 +168,7 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
           </Button>
         </form>
       </div>
+    </main>
     </div>
   );
 }
