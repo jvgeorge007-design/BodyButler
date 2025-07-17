@@ -67,7 +67,7 @@ export default function MacroTrackerCard({
           // Muted background-inspired gradients like circular tracker
           const barColors = [
             { gradient: 'linear-gradient(90deg, #7c3aed, #6d28d9)', shadow: '#7c3aed' }, // Protein - Muted Purple
-            { gradient: 'linear-gradient(90deg, #ea580c, #c2410c)', shadow: '#ea580c' }, // Carbs - Muted Orange  
+            { gradient: 'linear-gradient(90deg, #d4a574, #b8956a)', shadow: '#d4a574' }, // Carbs - Light Copper  
             { gradient: 'linear-gradient(90deg, #dc2626, #b91c1c)', shadow: '#dc2626' }  // Fat - Muted Red
           ];
           
