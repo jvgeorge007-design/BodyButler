@@ -206,7 +206,7 @@ export default function Onboarding() {
           <div className="pt-4">
             <Button 
               onClick={handleBeginOnboarding}
-              className="w-full bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
+              className="w-full gradient-button"
             >
               Let's Begin
             </Button>
