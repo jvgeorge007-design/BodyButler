@@ -11,7 +11,7 @@ export default function BBAIIcon({ className = "w-6 h-6", strokeWidth = 2 }: BBA
       <img 
         src={bbAIIcon} 
         alt="BB AI" 
-        className="w-6 h-6 object-contain"
+        className="w-7 h-7 object-contain"
         style={{
           filter: strokeWidth === 2.5 
             ? 'brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%)'
