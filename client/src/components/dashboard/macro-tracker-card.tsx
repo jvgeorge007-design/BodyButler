@@ -55,7 +55,7 @@ export default function MacroTrackerCard({
           onClick={() => setShowFoodLog(true)}
           className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
         >
-          <BookOpen className="w-5 h-5 text-orange-700" strokeWidth={2.5} />
+          <BookOpen className="w-5 h-5 text-orange-800" strokeWidth={2.5} />
         </button>
       </div>
       
@@ -63,6 +63,13 @@ export default function MacroTrackerCard({
         {macros.map((macro, index) => {
           const percentage = Math.min((macro.current / macro.target) * 100, 100);
           const macroNames = ['Protein', 'Carbs', 'Fat'];
+          
+          // Complementary orange palette colors for each macro
+          const barColors = [
+            { gradient: 'linear-gradient(90deg, #c2410c, #9a3412)', shadow: '#c2410c' }, // Protein - Dark Orange
+            { gradient: 'linear-gradient(90deg, #ea580c, #c2410c)', shadow: '#ea580c' }, // Carbs - Medium Orange  
+            { gradient: 'linear-gradient(90deg, #f97316, #ea580c)', shadow: '#f97316' }  // Fat - Lighter Orange
+          ];
           
           return (
             <div key={index}>
@@ -82,8 +89,8 @@ export default function MacroTrackerCard({
                   style={{ 
                     '--target-width': `${percentage}%`,
                     width: isVisible ? undefined : '0%',
-                    background: `linear-gradient(90deg, #c2410c, #9a3412)`,
-                    boxShadow: `0 0 12px #c2410c`
+                    background: barColors[index].gradient,
+                    boxShadow: `0 0 12px ${barColors[index].shadow}`
                   } as React.CSSProperties & { '--target-width': string }}
                 />
               </div>

@@ -30,7 +30,7 @@ export default function WorkoutCard({
           </h2>
           <button 
             onClick={() => setShowExercises(true)}
-            className="text-3xl font-light text-orange-700 hover:text-orange-600 transition-all duration-300 cursor-pointer heading-serif"
+            className="text-3xl font-light text-orange-800 hover:text-orange-700 transition-all duration-300 cursor-pointer heading-serif"
           >
             {workoutType}
           </button>
