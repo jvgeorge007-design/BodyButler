@@ -1,4 +1,4 @@
-import bbAIIcon from "@assets/BB AI nav_1752765221546.png";
+import bbAIIcon from "@assets/BB AI nav_1752765774390.png";
 
 interface BBAIIconProps {
   className?: string;
