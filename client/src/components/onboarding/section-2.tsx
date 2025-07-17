@@ -41,7 +41,7 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
     <div className="min-h-screen px-6 py-8">
       <div className="max-w-md mx-auto space-y-8">
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-gray-900">Your lifestyle</h2>
+          <h2 className="text-2xl font-bold text-white">Your lifestyle</h2>
           <p className="text-gray-600">Help us understand your daily routine</p>
         </div>
 

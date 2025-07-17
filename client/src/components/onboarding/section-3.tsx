@@ -31,7 +31,7 @@ export default function Section3({ data, onNext, isLoading }: Section3Props) {
     <div className="min-h-screen px-6 py-8">
       <div className="max-w-md mx-auto space-y-8">
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-gray-900">Diet & Budget</h2>
+          <h2 className="text-2xl font-bold text-white">Diet & Budget</h2>
           <p className="text-gray-600">Tell us about your eating preferences and budget</p>
         </div>
 

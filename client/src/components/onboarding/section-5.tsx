@@ -40,7 +40,7 @@ export default function Section5({ data, onNext, isLoading }: Section5Props) {
     <div className="min-h-screen px-6 py-8">
       <div className="max-w-md mx-auto space-y-8">
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-gray-900">Availability & Constraints</h2>
+          <h2 className="text-2xl font-bold text-white">Availability & Constraints</h2>
           <p className="text-gray-600">Help us customize your plan</p>
         </div>
 
