@@ -112,7 +112,7 @@ export default function MacroTrackerCard({
         style={{
           color: 'rgb(235, 235, 240)', 
           background: 'linear-gradient(90deg, rgb(0, 95, 115) 0%, rgb(0, 85, 105) 50%, rgb(0, 75, 95) 100%)',
-          boxShadow: '0 0 20px rgba(87, 168, 255, 0.4)'
+          boxShadow: '0 0 15px rgba(87, 168, 255, 0.2)'
         }}
       >
         <Plus className="w-4 h-4" />
