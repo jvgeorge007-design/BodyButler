@@ -223,33 +223,40 @@ export default function WorkoutLog() {
                 <div className="space-y-3">
                   {exercise.completedSets.map((set, setIndex) => (
                     <div key={setIndex} className="flex items-center space-x-3 p-3 rounded-lg" style={{
-                      background: 'rgba(20, 20, 25, 0.4)',
+                      background: 'rgb(40, 40, 45)',
                       border: '1px solid rgba(255, 255, 255, 0.1)'
                     }}>
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className="text-sm font-medium body-sans" style={{color: 'rgb(59, 130, 246)'}}>
+                          Set {setIndex + 1}
+                        </span>
+                      </div>
                       <div className="flex-1 grid grid-cols-2 gap-2">
                         <div>
-                          <label className="text-xs body-sans" style={{color: 'rgb(180, 180, 190)'}}>Reps</label>
+                          <label className="text-xs body-sans" style={{color: 'rgb(59, 130, 246)'}}>Reps</label>
                           <input
                             type="number"
                             value={set.reps}
                             onChange={(e) => updateSetData(exerciseIndex, setIndex, 'reps', parseInt(e.target.value) || 0)}
-                            className="h-8 w-full px-2 rounded border-0 text-white body-sans"
+                            className="h-8 w-full px-2 rounded border-0 body-sans"
                             style={{
                               background: 'rgba(20, 20, 25, 0.6)',
-                              border: '1px solid rgba(255, 255, 255, 0.1)'
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              color: 'rgb(59, 130, 246)'
                             }}
                           />
                         </div>
                         <div>
-                          <label className="text-xs body-sans" style={{color: 'rgb(180, 180, 190)'}}>Weight (lbs)</label>
+                          <label className="text-xs body-sans" style={{color: 'rgb(59, 130, 246)'}}>Weight (lbs)</label>
                           <input
                             type="number"
                             value={set.weight || 0}
                             onChange={(e) => updateSetData(exerciseIndex, setIndex, 'weight', parseInt(e.target.value) || 0)}
-                            className="h-8 w-full px-2 rounded border-0 text-white body-sans"
+                            className="h-8 w-full px-2 rounded border-0 body-sans"
                             style={{
                               background: 'rgba(20, 20, 25, 0.6)',
-                              border: '1px solid rgba(255, 255, 255, 0.1)'
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              color: 'rgb(59, 130, 246)'
                             }}
                             placeholder="0"
                           />
@@ -257,17 +264,14 @@ export default function WorkoutLog() {
                       </div>
                       <button
                         onClick={() => completeSet(exerciseIndex, setIndex)}
-                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${set.completed 
-                          ? 'text-white' 
-                          : 'hover:bg-gray-600 hover:text-white'
-                        }`}
+                        className="px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200"
                         style={{
                           background: set.completed ? 'rgb(0, 195, 142)' : 'rgba(20, 20, 25, 0.4)',
-                          color: set.completed ? 'white' : 'rgb(180, 180, 190)',
+                          color: set.completed ? 'white' : 'rgb(59, 130, 246)',
                           border: set.completed ? 'none' : '1px solid rgba(255, 255, 255, 0.1)'
                         }}
                       >
-                        {set.completed ? <Check className="w-4 h-4" /> : `Set ${setIndex + 1}`}
+                        {set.completed ? <Check className="w-4 h-4" /> : 'Complete'}
                       </button>
                     </div>
                   ))}
