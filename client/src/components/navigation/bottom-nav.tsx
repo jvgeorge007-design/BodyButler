@@ -48,7 +48,11 @@ export default function BottomNav() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-md bg-black/70 border-t border-white/20">
+    <div className="fixed bottom-0 left-0 right-0 z-50" style={{
+      backdropFilter: 'blur(24px)',
+      background: 'rgba(20, 20, 25, 0.6)',
+      borderTop: '1px solid rgba(255, 255, 255, 0.12)'
+    }}>
       <div className="flex items-center justify-around py-2 px-4 max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive = location === item.path;
