@@ -271,9 +271,9 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
       {/* Top Header Banner - Blue Background */}
-      <header className="bg-gradient-to-r from-orange-600 to-orange-700 px-6 py-4 sticky top-0 z-40">
+      <header className="bg-gradient-to-r from-orange-700 to-orange-800 px-6 py-4 sticky top-0 z-40">
         <div className="max-w-md mx-auto text-center">
-          <h1 className="text-white text-lg font-semibold tracking-wide uppercase">
+          <h1 className="text-white text-lg font-bold tracking-widest uppercase">
             BODY BUTLER
           </h1>
         </div>
