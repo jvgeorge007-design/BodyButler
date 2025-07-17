@@ -6,6 +6,8 @@ interface BBAIIconProps {
 }
 
 export default function BBAIIcon({ className = "w-6 h-6", strokeWidth = 2 }: BBAIIconProps) {
+  const isActive = strokeWidth === 2.5;
+  
   return (
     <div className={`${className} flex items-center justify-center`}>
       <div
@@ -19,7 +21,7 @@ export default function BBAIIcon({ className = "w-6 h-6", strokeWidth = 2 }: BBA
           WebkitMaskSize: 'contain',
           WebkitMaskRepeat: 'no-repeat',
           WebkitMaskPosition: 'center',
-          backgroundColor: 'currentColor',
+          backgroundColor: isActive ? 'rgb(10, 132, 255)' : 'rgb(142, 142, 147)',
         }}
       />
     </div>
