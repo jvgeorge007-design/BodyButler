@@ -1,6 +1,7 @@
-import { Home, TrendingUp, Settings, MessageSquare } from "lucide-react";
+import { Home, TrendingUp, Settings } from "lucide-react";
 import { useLocation } from "wouter";
 import { useModal } from "@/contexts/modal-context";
+import AIKettlebellIcon from "@/components/icons/ai-kettlebell-icon";
 import bbLogo from "@assets/BB logo_1752757975860.png";
 
 export default function BottomNav() {
@@ -22,7 +23,7 @@ export default function BottomNav() {
     },
     {
       id: "ai",
-      icon: MessageSquare,
+      icon: AIKettlebellIcon,
       label: "AI",
       path: "/ai-chat"
     },
