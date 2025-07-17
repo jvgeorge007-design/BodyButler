@@ -277,15 +277,13 @@ export default function WorkoutLog() {
             ))}
             
             {/* Finish Workout */}
-            <div className="flex justify-center">
-              <button 
-                onClick={finishWorkout} 
-                className="h-12 text-lg gradient-button px-8"
-                disabled={completedSets === 0}
-              >
-                Finish Workout
-              </button>
-            </div>
+            <button 
+              onClick={finishWorkout} 
+              className="w-full h-12 text-lg gradient-button flex items-center justify-center"
+              disabled={completedSets === 0}
+            >
+              Finish Workout
+            </button>
           </div>
         )}
       </div>
