@@ -61,6 +61,29 @@
   --neu-shadow-light: rgba(255, 255, 255, 0.05);
   --neu-shadow-dark: rgba(0, 0, 0, 0.3);
   
+  /* iOS Semantic Colors - Dark Mode */
+  --system-blue: 10, 132, 255;
+  --system-green: 52, 199, 89;
+  --system-indigo: 94, 92, 230;
+  --system-orange: 255, 149, 0;
+  --system-pink: 255, 45, 85;
+  --system-purple: 175, 82, 222;
+  --system-red: 255, 69, 58;
+  --system-teal: 100, 210, 255;
+  --system-yellow: 255, 214, 10;
+  --system-gray: 142, 142, 147;
+  --system-gray2: 99, 99, 102;
+  --system-gray3: 72, 72, 74;
+  --system-gray4: 58, 58, 60;
+  --system-gray5: 44, 44, 46;
+  --system-gray6: 28, 28, 30;
+  
+  /* iOS Label Colors */
+  --label-primary: 255, 255, 255;
+  --label-secondary: 235, 235, 245;
+  --label-tertiary: 235, 235, 245;
+  --label-quaternary: 235, 235, 245;
+  
   /* Text Colors */
   --text-primary: hsl(340, 5%, 95%);
   --text-secondary: hsl(300, 5%, 65%);
@@ -104,6 +127,29 @@
   --glass-card-border: rgba(0, 0, 0, 0.1);
   --glass-card-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   
+  /* iOS Semantic Colors - Light Mode */
+  --system-blue: 0, 122, 255;
+  --system-green: 52, 199, 89;
+  --system-indigo: 88, 86, 214;
+  --system-orange: 255, 149, 0;
+  --system-pink: 255, 45, 85;
+  --system-purple: 175, 82, 222;
+  --system-red: 255, 59, 48;
+  --system-teal: 90, 200, 250;
+  --system-yellow: 255, 204, 0;
+  --system-gray: 142, 142, 147;
+  --system-gray2: 174, 174, 178;
+  --system-gray3: 199, 199, 204;
+  --system-gray4: 209, 209, 214;
+  --system-gray5: 229, 229, 234;
+  --system-gray6: 242, 242, 247;
+  
+  /* iOS Label Colors - Light Mode */
+  --label-primary: 0, 0, 0;
+  --label-secondary: 60, 60, 67;
+  --label-tertiary: 60, 60, 67;
+  --label-quaternary: 60, 60, 67;
+  
   /* Light Theme Text Colors */
   --text-primary: hsl(240, 10%, 3.9%);
   --text-secondary: hsl(240, 3.8%, 46.1%);
@@ -145,6 +191,78 @@
     min-height: 100vh;
   }
   
+  /* iOS Dynamic Type System */
+  .text-title-large {
+    font-size: 2rem;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .text-title-1 {
+    font-size: 1.75rem;
+    line-height: 1.25;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .text-title-2 {
+    font-size: 1.375rem;
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .text-title-3 {
+    font-size: 1.25rem;
+    line-height: 1.35;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  .text-headline {
+    font-size: 1.0625rem;
+    line-height: 1.4;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .text-body {
+    font-size: 1rem;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  .text-callout {
+    font-size: 1rem;
+    line-height: 1.4;
+    font-weight: 400;
+  }
+
+  .text-subhead {
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    font-weight: 400;
+  }
+
+  .text-footnote {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    font-weight: 400;
+  }
+
+  .text-caption-1 {
+    font-size: 0.75rem;
+    line-height: 1.3;
+    font-weight: 400;
+  }
+
+  .text-caption-2 {
+    font-size: 0.6875rem;
+    line-height: 1.3;
+    font-weight: 400;
+  }
+
   /* Typography System */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
@@ -163,6 +281,175 @@
 }
 
 @layer utilities {
+  /* iOS Standard Spacing */
+  .ios-padding {
+    padding: 16px;
+  }
+  
+  .ios-padding-small {
+    padding: 8px;
+  }
+  
+  .ios-padding-large {
+    padding: 24px;
+  }
+  
+  .ios-margin {
+    margin: 16px;
+  }
+  
+  .ios-margin-small {
+    margin: 8px;
+  }
+  
+  .ios-margin-large {
+    margin: 24px;
+  }
+  
+  /* iOS Standard Touch Targets */
+  .ios-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .ios-touch-target-large {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  /* iOS Corner Radius */
+  .ios-corner-radius {
+    border-radius: 8px;
+  }
+  
+  .ios-corner-radius-large {
+    border-radius: 12px;
+  }
+  
+  .ios-corner-radius-modal {
+    border-radius: 13px;
+  }
+  
+  /* iOS System Colors */
+  .ios-blue {
+    color: rgb(var(--system-blue));
+  }
+  
+  .ios-green {
+    color: rgb(var(--system-green));
+  }
+  
+  .ios-red {
+    color: rgb(var(--system-red));
+  }
+  
+  .ios-orange {
+    color: rgb(var(--system-orange));
+  }
+  
+  .ios-yellow {
+    color: rgb(var(--system-yellow));
+  }
+  
+  .ios-purple {
+    color: rgb(var(--system-purple));
+  }
+  
+  .ios-pink {
+    color: rgb(var(--system-pink));
+  }
+  
+  .ios-teal {
+    color: rgb(var(--system-teal));
+  }
+  
+  .ios-indigo {
+    color: rgb(var(--system-indigo));
+  }
+  
+  .ios-gray {
+    color: rgb(var(--system-gray));
+  }
+  
+  /* iOS Background Colors */
+  .ios-bg-blue {
+    background-color: rgb(var(--system-blue));
+  }
+  
+  .ios-bg-green {
+    background-color: rgb(var(--system-green));
+  }
+  
+  .ios-bg-red {
+    background-color: rgb(var(--system-red));
+  }
+  
+  .ios-bg-orange {
+    background-color: rgb(var(--system-orange));
+  }
+  
+  .ios-bg-yellow {
+    background-color: rgb(var(--system-yellow));
+  }
+  
+  .ios-bg-purple {
+    background-color: rgb(var(--system-purple));
+  }
+  
+  .ios-bg-pink {
+    background-color: rgb(var(--system-pink));
+  }
+  
+  .ios-bg-teal {
+    background-color: rgb(var(--system-teal));
+  }
+  
+  .ios-bg-indigo {
+    background-color: rgb(var(--system-indigo));
+  }
+  
+  .ios-bg-gray {
+    background-color: rgb(var(--system-gray));
+  }
+  
+  /* iOS Haptic Feedback Styles */
+  .ios-haptic-light {
+    transition: all 0.1s ease;
+  }
+  
+  .ios-haptic-light:active {
+    transform: scale(0.98);
+  }
+  
+  .ios-haptic-medium {
+    transition: all 0.15s ease;
+  }
+  
+  .ios-haptic-medium:active {
+    transform: scale(0.95);
+  }
+  
+  .ios-haptic-heavy {
+    transition: all 0.2s ease;
+  }
+  
+  .ios-haptic-heavy:active {
+    transform: scale(0.92);
+  }
+  
+  /* iOS Spring Animations */
+  .ios-spring {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .ios-spring-fast {
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .ios-spring-slow {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
   /* Elegant Gradient Buttons */
   .gradient-button {
     background: linear-gradient(90deg, rgb(0, 95, 115) 0%, rgb(0, 85, 105) 50%, rgb(0, 75, 95) 100%);

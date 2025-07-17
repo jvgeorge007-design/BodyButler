@@ -1,7 +1,9 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { IOSButton } from "@/components/ui/ios-button";
 import KettlebellLogo from "@/components/ui/kettlebell-logo";
+import IOSNavHeader from "@/components/navigation/ios-nav-header";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -270,26 +272,28 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
-      {/* Top Header Banner - Matching CTA Button Colors */}
-      <header 
-        className="px-6 py-4"
-        style={{
-          background: 'linear-gradient(90deg, rgb(0, 95, 115) 0%, rgb(0, 85, 105) 50%, rgb(0, 75, 95) 100%)',
-          boxShadow: '0 4px 20px rgba(87, 168, 255, 0.15)'
-        }}
-      >
-        <div className="max-w-md mx-auto text-center">
-          <h1 className="text-white text-xl font-black tracking-widest uppercase">
-            BODY BUTLER
-          </h1>
-        </div>
-      </header>
-
-      {/* Main Content with Glassmorphism Cards */}
-      <main className="max-w-md mx-auto px-6 py-8 pb-28 min-h-screen">
-        <div className="space-y-6">
+      {/* iOS Navigation Header */}
+      <IOSNavHeader 
+        title="Body Butler" 
+        subtitle="Your personal fitness companion"
+        largeTitle={true}
+        rightButton={
+          <IOSButton 
+            variant="plain" 
+            size="small"
+            onClick={() => setIsCalendarOpen(true)}
+            icon={<Calendar className="w-5 h-5" />}
+          />
+        }
+      />
+      
+      {/* Main Content with iOS-style spacing */}
+      <main className="max-w-md mx-auto ios-padding pb-28 min-h-screen" style={{ 
+        paddingTop: 'calc(env(safe-area-inset-top) + 120px)' 
+      }}>
+        <div className="ios-spacing-large">
           {/* Calendar Card */}
-          <div className="glass-card">
+          <div className="ios-card">
             <DateNavigator 
               selectedDate={selectedDate}
               onDateSelect={setSelectedDate}
@@ -298,7 +302,7 @@ export default function Dashboard() {
           </div>
 
           {/* Circular Calorie Tracker Card - Elevated */}
-          <div className="glass-card-elevated">
+          <div className="ios-card-elevated">
             <CircularCalorieTracker
               consumed={dashboardData.calories.consumed}
               target={dashboardData.calories.target}
@@ -307,7 +311,7 @@ export default function Dashboard() {
           </div>
 
           {/* Workout Card */}
-          <div className="glass-card">
+          <div className="ios-card">
             <WorkoutCard
               workoutType={dashboardData.workout.type}
               focus={dashboardData.workout.focus}
@@ -318,7 +322,7 @@ export default function Dashboard() {
           </div>
 
           {/* Diet Card */}
-          <div className="glass-card">
+          <div className="ios-card">
             <MacroTrackerCard
               protein={dashboardData.macros.protein}
               carbs={dashboardData.macros.carbs}

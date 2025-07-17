@@ -1,120 +1,171 @@
-import { User, Bell, Shield, HelpCircle, LogOut, Moon, Sun } from "lucide-react";
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { Settings as SettingsIcon, User, Bell, Shield, Moon, Sun, LogOut, ChevronRight } from "lucide-react";
+import IOSNavHeader from "@/components/navigation/ios-nav-header";
+import { IOSButton } from "@/components/ui/ios-button";
+import { IOSList, IOSListItem } from "@/components/ui/ios-list";
+import { IOSSwitch } from "@/components/ui/ios-switch";
 import { useTheme } from "@/contexts/theme-context";
 import BottomNav from "@/components/navigation/bottom-nav";
 
 export default function Settings() {
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const [notifications, setNotifications] = useState(true);
+  const [biometrics, setBiometrics] = useState(false);
 
   const handleLogout = () => {
     window.location.href = "/api/logout";
   };
 
-  const settingsGroups = [
-    {
-      title: "Appearance",
-      items: [
-        { 
-          icon: theme === 'dark' ? Moon : Sun, 
-          label: `${theme === 'dark' ? 'Dark' : 'Light'} Mode`, 
-          description: "Toggle between light and dark themes",
-          action: toggleTheme
-        }
-      ]
-    },
-    {
-      title: "Account",
-      items: [
-        { icon: User, label: "Profile Settings", description: "Update your personal information" },
-        { icon: Bell, label: "Notifications", description: "Manage your notification preferences" },
-        { icon: Shield, label: "Privacy & Security", description: "Control your data and privacy" }
-      ]
-    },
-    {
-      title: "Support",
-      items: [
-        { icon: HelpCircle, label: "Help & FAQ", description: "Get answers to common questions" }
-      ]
-    }
-  ];
-
   return (
-    <div className="min-h-screen pb-20" style={{ background: 'var(--bg-primary)' }}>
-      {/* Header */}
-      <div className="glass-card mx-6 mt-12 mb-6">
-        <h1 className="text-2xl font-bold heading-serif" style={{color: 'var(--text-primary)'}}>Settings</h1>
-      </div>
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+      {/* iOS Navigation Header */}
+      <IOSNavHeader 
+        title="Settings" 
+        subtitle="Manage your preferences"
+      />
 
-      <div className="p-6 space-y-6">
-        {/* User Info Card */}
-        <div className="glass-card">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{background: 'rgba(0, 183, 225, 0.2)'}}>
-              {user?.profileImageUrl ? (
-                <img 
-                  src={user.profileImageUrl} 
-                  alt="Profile" 
-                  className="w-16 h-16 rounded-full object-cover"
-                />
-              ) : (
-                <User className="w-8 h-8" style={{color: 'rgb(0, 183, 225)'}} />
-              )}
+      {/* Main Content */}
+      <main className="max-w-md mx-auto ios-padding pb-28 min-h-screen" style={{ 
+        paddingTop: 'calc(env(safe-area-inset-top) + 120px)' 
+      }}>
+        <div className="ios-spacing-large">
+          {/* Profile Section */}
+          <div className="ios-card">
+            <div className="flex items-center ios-spacing-small">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                <User className="w-8 h-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-headline font-semibold text-white">
+                  {user?.firstName || 'User'}
+                </h3>
+                <p className="text-footnote ios-gray">
+                  {user?.email || 'user@example.com'}
+                </p>
+              </div>
+              <IOSButton 
+                variant="secondary" 
+                size="small"
+                onClick={() => {/* TODO: Edit profile */}}
+              >
+                Edit
+              </IOSButton>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold heading-serif" style={{color: 'var(--text-primary)'}}>
-                {user?.firstName && user?.lastName 
-                  ? `${user.firstName} ${user.lastName}`
-                  : user?.email?.split('@')[0] || 'User'
+          </div>
+
+          {/* Appearance */}
+          <div className="ios-card">
+            <h3 className="text-headline font-semibold text-white mb-4">Appearance</h3>
+            <IOSList grouped>
+              <IOSListItem
+                icon={theme === 'dark' ? <Moon className="w-5 h-5 ios-blue" /> : <Sun className="w-5 h-5 ios-yellow" />}
+                title="Dark Mode"
+                subtitle="Toggle between light and dark themes"
+                accessory={
+                  <IOSSwitch 
+                    checked={theme === 'dark'}
+                    onChange={toggleTheme}
+                  />
                 }
-              </h3>
-              <p className="text-sm body-sans" style={{color: 'var(--text-secondary)'}}>{user?.email}</p>
-            </div>
+              />
+            </IOSList>
+          </div>
+
+          {/* Notifications */}
+          <div className="ios-card">
+            <h3 className="text-headline font-semibold text-white mb-4">Notifications</h3>
+            <IOSList grouped>
+              <IOSListItem
+                icon={<Bell className="w-5 h-5 ios-blue" />}
+                title="Push Notifications"
+                subtitle="Receive workout reminders and updates"
+                accessory={
+                  <IOSSwitch 
+                    checked={notifications}
+                    onChange={(e) => setNotifications(e.target.checked)}
+                  />
+                }
+              />
+            </IOSList>
+          </div>
+
+          {/* Privacy & Security */}
+          <div className="ios-card">
+            <h3 className="text-headline font-semibold text-white mb-4">Privacy & Security</h3>
+            <IOSList grouped>
+              <IOSListItem
+                icon={<Shield className="w-5 h-5 ios-green" />}
+                title="Biometric Authentication"
+                subtitle="Use Face ID or Touch ID to secure your app"
+                accessory={
+                  <IOSSwitch 
+                    checked={biometrics}
+                    onChange={(e) => setBiometrics(e.target.checked)}
+                  />
+                }
+              />
+              <IOSListItem
+                icon={<Shield className="w-5 h-5 ios-blue" />}
+                title="Privacy Policy"
+                subtitle="Read our privacy policy"
+                showChevron
+                onPress={() => {/* TODO: Open privacy policy */}}
+              />
+              <IOSListItem
+                icon={<Shield className="w-5 h-5 ios-blue" />}
+                title="Terms of Service"
+                subtitle="Read our terms of service"
+                showChevron
+                onPress={() => {/* TODO: Open terms */}}
+              />
+            </IOSList>
+          </div>
+
+          {/* Support */}
+          <div className="ios-card">
+            <h3 className="text-headline font-semibold text-white mb-4">Support</h3>
+            <IOSList grouped>
+              <IOSListItem
+                icon={<SettingsIcon className="w-5 h-5 ios-blue" />}
+                title="Help Center"
+                subtitle="Get help with Body Butler"
+                showChevron
+                onPress={() => {/* TODO: Open help */}}
+              />
+              <IOSListItem
+                icon={<SettingsIcon className="w-5 h-5 ios-blue" />}
+                title="Contact Support"
+                subtitle="Reach out to our support team"
+                showChevron
+                onPress={() => {/* TODO: Contact support */}}
+              />
+              <IOSListItem
+                icon={<SettingsIcon className="w-5 h-5 ios-blue" />}
+                title="App Version"
+                subtitle="Version 1.0.0"
+                accessory={
+                  <span className="text-footnote ios-gray">1.0.0</span>
+                }
+              />
+            </IOSList>
+          </div>
+
+          {/* Logout */}
+          <div className="ios-card">
+            <IOSList grouped>
+              <IOSListItem
+                icon={<LogOut className="w-5 h-5 text-red-500" />}
+                title="Sign Out"
+                subtitle="Sign out of your account"
+                destructive
+                onPress={handleLogout}
+              />
+            </IOSList>
           </div>
         </div>
-
-        {/* Settings Groups */}
-        {settingsGroups.map((group, groupIndex) => (
-          <div key={groupIndex} className="space-y-3">
-            <h4 className="text-sm font-medium uppercase tracking-wide px-2 body-sans" style={{color: 'var(--text-tertiary)'}}>
-              {group.title}
-            </h4>
-            <div className="glass-card p-0 overflow-hidden">
-              {group.items.map((item, itemIndex) => {
-                const IconComponent = item.icon;
-                return (
-                  <button
-                    key={itemIndex}
-                    onClick={item.action}
-                    className="w-full p-4 text-left hover:bg-black/10 transition-colors border-b last:border-b-0 flex items-center gap-4"
-                    style={{borderColor: 'var(--glass-card-border)'}}
-                  >
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{background: 'rgba(255, 255, 255, 0.1)'}}>
-                      <IconComponent className="w-5 h-5" style={{color: 'var(--text-primary)'}} />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-medium heading-serif" style={{color: 'var(--text-primary)'}}>{item.label}</h3>
-                      <p className="text-sm body-sans" style={{color: 'var(--text-secondary)'}}>{item.description}</p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-
-        {/* Logout Button */}
-        <div className="pt-4">
-          <button
-            onClick={handleLogout}
-            className="w-full p-4 transition-colors rounded-3xl flex items-center justify-center gap-3 font-medium glass-card"
-            style={{color: 'rgb(239, 68, 68)'}}
-          >
-            <LogOut className="w-5 h-5" />
-            Sign Out
-          </button>
-        </div>
-      </div>
+      </main>
 
       {/* Bottom Navigation */}
       <BottomNav />

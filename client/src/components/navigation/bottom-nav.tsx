@@ -1,4 +1,4 @@
-import { Home, TrendingUp, Settings, BookOpen } from "lucide-react";
+import { Home, TrendingUp, Settings, MessageSquare } from "lucide-react";
 import { useLocation } from "wouter";
 import { useModal } from "@/contexts/modal-context";
 import bbLogo from "@assets/BB logo_1752757975860.png";
@@ -22,14 +22,8 @@ export default function BottomNav() {
     },
     {
       id: "ai",
-      icon: () => (
-        <img 
-          src={bbLogo}
-          alt="Body Butler"
-          className="w-10 h-10 object-contain"
-        />
-      ),
-      label: "BB",
+      icon: MessageSquare,
+      label: "AI",
       path: "/ai-chat"
     },
     {
@@ -68,12 +62,13 @@ export default function BottomNav() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50" style={{
+    <div className="fixed bottom-0 left-0 right-0 z-50 ios-corner-radius-large" style={{
       backdropFilter: 'blur(24px)',
-      background: 'rgba(20, 20, 25, 0.6)',
-      borderTop: '1px solid rgba(255, 255, 255, 0.12)'
+      background: 'rgba(20, 20, 25, 0.9)',
+      borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+      paddingBottom: 'env(safe-area-inset-bottom)'
     }}>
-      <div className="flex items-center justify-around py-2 px-4 max-w-md mx-auto">
+      <div className="flex items-center justify-around py-3 px-4 max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive = location === item.path;
           const IconComponent = item.icon;
@@ -82,19 +77,19 @@ export default function BottomNav() {
             <button
               key={item.id}
               onClick={() => handleNavClick(item.path, item.id)}
-              className={`flex flex-col items-center justify-center p-2 transition-all duration-200 ${
+              className={`flex flex-col items-center justify-center ios-padding-small ios-haptic-light ios-spring-fast ios-touch-target ${
                 isActive 
-                  ? 'text-white' 
-                  : 'text-white/70 hover:text-white'
+                  ? 'ios-blue' 
+                  : 'ios-gray'
               }`}
             >
               <div className="w-6 h-6 mb-1 flex items-center justify-center">
                 <IconComponent 
                   className="w-6 h-6"
-                  strokeWidth={2}
+                  strokeWidth={isActive ? 2.5 : 2}
                 />
               </div>
-              <span className="text-xs font-medium">{item.label}</span>
+              <span className="text-caption-2 font-medium">{item.label}</span>
             </button>
           );
         })}
