@@ -115,17 +115,17 @@ export default function WeeklyCalendarModal({ isOpen, onClose, onDateSelect }: W
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl w-full max-w-md max-h-[80vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="glass-card-elevated w-full max-w-md max-h-[80vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-3xl">
+        <div className="sticky top-0 glass-card border-b border-white/20 px-6 py-4 rounded-t-3xl">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900">Calendar</h2>
+            <h2 className="text-xl font-black text-white heading-serif">Calendar</h2>
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-2 hover:bg-white/10 rounded-xl transition-colors"
             >
-              <X className="w-5 h-5 text-gray-600" />
+              <X className="w-5 h-5 text-white" />
             </button>
           </div>
           

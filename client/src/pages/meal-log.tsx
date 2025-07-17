@@ -175,29 +175,27 @@ export default function MealLog() {
     Math.min((current / target) * 100, 100);
 
   return (
-    <div className="min-h-screen bg-gray-50 px-6 py-8">
+    <div className="min-h-screen px-6 py-8" style={{ background: 'var(--bg-primary)' }}>
       <div className="max-w-md mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <Button variant="ghost" onClick={handleBack}>
+          <Button variant="ghost" onClick={handleBack} className="text-white hover:bg-white/10">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <h1 className="text-lg font-semibold">Meal Log</h1>
+          <h1 className="text-lg font-black text-white heading-serif">Meal Log</h1>
           <div className="w-16"></div> {/* Spacer */}
         </div>
 
         {/* Macro Summary */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Target className="w-5 h-5" />
-              <span>Today's Progress</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div className="glass-card p-6">
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Target className="w-5 h-5 text-white" />
+              <span className="font-black text-white heading-serif">Today's Progress</span>
+            </div>
             <div>
-              <div className="flex justify-between text-sm mb-1">
+              <div className="flex justify-between text-sm mb-1 text-white body-sans">
                 <span>Calories</span>
                 <span>{Math.round(currentMacros.calories)} / {macroTargets.dailyCalories}</span>
               </div>
@@ -205,7 +203,7 @@ export default function MealLog() {
             </div>
             
             <div>
-              <div className="flex justify-between text-sm mb-1">
+              <div className="flex justify-between text-sm mb-1 text-white body-sans">
                 <span>Protein</span>
                 <span>{Math.round(currentMacros.protein)}g / {macroTargets.protein_g}g</span>
               </div>
@@ -213,7 +211,7 @@ export default function MealLog() {
             </div>
             
             <div>
-              <div className="flex justify-between text-sm mb-1">
+              <div className="flex justify-between text-sm mb-1 text-white body-sans">
                 <span>Carbs</span>
                 <span>{Math.round(currentMacros.carbs)}g / {macroTargets.carbs_g}g</span>
               </div>
@@ -221,135 +219,135 @@ export default function MealLog() {
             </div>
             
             <div>
-              <div className="flex justify-between text-sm mb-1">
+              <div className="flex justify-between text-sm mb-1 text-white body-sans">
                 <span>Fat</span>
                 <span>{Math.round(currentMacros.fat)}g / {macroTargets.fat_g}g</span>
               </div>
               <Progress value={getProgress(currentMacros.fat, macroTargets.fat_g)} className="h-2" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Add Food */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span>Add Food</span>
-              <Button variant="outline" size="sm" onClick={() => setShowAddFood(!showAddFood)}>
-                <Plus className="w-4 h-4" />
-              </Button>
-            </CardTitle>
-          </CardHeader>
+        <div className="glass-card p-6">
+          <div className="flex items-center justify-between mb-4">
+            <span className="font-black text-white heading-serif">Add Food</span>
+            <Button variant="outline" size="sm" onClick={() => setShowAddFood(!showAddFood)} className="text-white border-white/30 hover:bg-white/10">
+              <Plus className="w-4 h-4" />
+            </Button>
+          </div>
           
           {showAddFood && (
-            <CardContent className="space-y-4">
+            <div className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div className="col-span-2">
-                  <Label>Food Name</Label>
+                  <Label className="text-white body-sans">Food Name</Label>
                   <Input
                     value={newFood.name}
                     onChange={(e) => setNewFood(prev => ({ ...prev, name: e.target.value }))}
                     placeholder="e.g., Grilled Chicken"
+                    className="bg-white/10 border-white/30 text-white placeholder:text-white/50"
                   />
                 </div>
                 
                 <div>
-                  <Label>Calories</Label>
+                  <Label className="text-white body-sans">Calories</Label>
                   <Input
                     type="number"
                     value={newFood.calories}
                     onChange={(e) => setNewFood(prev => ({ ...prev, calories: e.target.value }))}
                     placeholder="0"
+                    className="bg-white/10 border-white/30 text-white placeholder:text-white/50"
                   />
                 </div>
                 
                 <div>
-                  <Label>Quantity</Label>
+                  <Label className="text-white body-sans">Quantity</Label>
                   <Input
                     type="number"
                     value={newFood.quantity}
                     onChange={(e) => setNewFood(prev => ({ ...prev, quantity: e.target.value }))}
                     placeholder="1"
                     step="0.1"
+                    className="bg-white/10 border-white/30 text-white placeholder:text-white/50"
                   />
                 </div>
                 
                 <div>
-                  <Label>Protein (g)</Label>
+                  <Label className="text-white body-sans">Protein (g)</Label>
                   <Input
                     type="number"
                     value={newFood.protein}
                     onChange={(e) => setNewFood(prev => ({ ...prev, protein: e.target.value }))}
                     placeholder="0"
+                    className="bg-white/10 border-white/30 text-white placeholder:text-white/50"
                   />
                 </div>
                 
                 <div>
-                  <Label>Carbs (g)</Label>
+                  <Label className="text-white body-sans">Carbs (g)</Label>
                   <Input
                     type="number"
                     value={newFood.carbs}
                     onChange={(e) => setNewFood(prev => ({ ...prev, carbs: e.target.value }))}
                     placeholder="0"
+                    className="bg-white/10 border-white/30 text-white placeholder:text-white/50"
                   />
                 </div>
                 
                 <div>
-                  <Label>Fat (g)</Label>
+                  <Label className="text-white body-sans">Fat (g)</Label>
                   <Input
                     type="number"
                     value={newFood.fat}
                     onChange={(e) => setNewFood(prev => ({ ...prev, fat: e.target.value }))}
                     placeholder="0"
+                    className="bg-white/10 border-white/30 text-white placeholder:text-white/50"
                   />
                 </div>
               </div>
               
               <div className="flex space-x-2">
-                <Button onClick={addFood} className="flex-1">
+                <Button onClick={addFood} className="flex-1 bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95">
                   Add Food
                 </Button>
-                <Button variant="outline" onClick={addSampleMeal} className="flex-1">
+                <Button variant="outline" onClick={addSampleMeal} className="flex-1 text-white border-white/30 hover:bg-white/10">
                   Add Sample Meal
                 </Button>
               </div>
-            </CardContent>
+            </div>
           )}
-        </Card>
+        </div>
 
         {/* Food Entries */}
         <div className="space-y-3">
           {foodEntries.map((entry) => (
-            <Card key={entry.id}>
-              <CardContent className="p-4">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <h3 className="font-medium">{entry.name}</h3>
-                    <div className="text-sm text-gray-600 mt-1">
-                      {Math.round(entry.calories)} cal • {Math.round(entry.protein)}p • {Math.round(entry.carbs)}c • {Math.round(entry.fat)}f
-                    </div>
+            <div key={entry.id} className="glass-card p-4">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <h3 className="font-medium text-white body-sans">{entry.name}</h3>
+                  <div className="text-sm text-white/70 mt-1 body-sans">
+                    {Math.round(entry.calories)} cal • {Math.round(entry.protein)}p • {Math.round(entry.carbs)}c • {Math.round(entry.fat)}f
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeFood(entry.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    Remove
-                  </Button>
                 </div>
-              </CardContent>
-            </Card>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeFood(entry.id)}
+                  className="text-red-400 hover:text-red-300 hover:bg-white/10"
+                >
+                  Remove
+                </Button>
+              </div>
+            </div>
           ))}
           
           {foodEntries.length === 0 && (
-            <Card>
-              <CardContent className="p-6 text-center text-gray-500">
-                <Utensils className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <p>No food logged yet today</p>
-                <p className="text-sm">Add your first meal above!</p>
-              </CardContent>
-            </Card>
+            <div className="glass-card p-6 text-center">
+              <Utensils className="w-8 h-8 mx-auto mb-2 text-white/50" />
+              <p className="text-white/80 body-sans">No food logged yet today</p>
+              <p className="text-sm text-white/60 body-sans">Add your first meal above!</p>
+            </div>
           )}
         </div>
       </div>

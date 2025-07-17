@@ -67,13 +67,13 @@ export default function WorkoutCalendar() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen p-4" style={{ background: 'var(--bg-primary)' }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Workout Calendar</h1>
-            <p className="text-gray-600">Your personalized training schedule</p>
+            <h1 className="text-2xl font-black text-white heading-serif">Workout Calendar</h1>
+            <p className="text-white/80 body-sans">Your personalized training schedule</p>
           </div>
           
           {/* Week Navigation */}
@@ -81,7 +81,7 @@ export default function WorkoutCalendar() {
             <Button variant="outline" size="sm" onClick={() => navigateWeek('prev')}>
               <ChevronLeft className="w-4 h-4" />
             </Button>
-            <span className="font-medium">
+            <span className="font-bold text-white body-sans">
               {format(currentWeek, 'MMM d')} - {format(addDays(currentWeek, 6), 'MMM d, yyyy')}
             </span>
             <Button variant="outline" size="sm" onClick={() => navigateWeek('next')}>
@@ -97,34 +97,34 @@ export default function WorkoutCalendar() {
             const isCurrentDay = isToday(date);
             
             return (
-              <Card key={index} className={`${isCurrentDay ? 'ring-2 ring-blue-500' : ''}`}>
-                <CardHeader className="pb-2">
+              <div key={index} className={`glass-card p-4 ${isCurrentDay ? 'ring-2 ring-orange-600' : ''}`}>
+                <div className="pb-2">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">
+                      <p className="text-sm font-medium text-white/80 body-sans">
                         {format(date, 'EEEE')}
                       </p>
-                      <p className={`text-lg font-bold ${isCurrentDay ? 'text-blue-600' : 'text-gray-900'}`}>
+                      <p className={`text-lg font-bold ${isCurrentDay ? 'text-orange-400' : 'text-white'} body-sans`}>
                         {format(date, 'd')}
                       </p>
                     </div>
-                    {workout && <Dumbbell className="w-4 h-4 text-gray-400" />}
+                    {workout && <Dumbbell className="w-4 h-4 text-white/60" />}
                   </div>
-                </CardHeader>
-                <CardContent className="pt-0">
+                </div>
+                <div className="pt-0">
                   {workout ? (
                     <div className="space-y-2">
-                      <Badge className={getFocusColor(workout.focus)}>
+                      <div className={`px-2 py-1 rounded text-xs font-medium ${getFocusColor(workout.focus)}`}>
                         {workout.focus}
-                      </Badge>
+                      </div>
                       <div className="space-y-1">
                         {workout.exercises?.slice(0, 3).map((exercise: any, idx: number) => (
-                          <p key={idx} className="text-xs text-gray-600 truncate">
+                          <p key={idx} className="text-xs text-white/70 truncate body-sans">
                             {exercise.name}
                           </p>
                         ))}
                         {workout.exercises?.length > 3 && (
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-white/50 body-sans">
                             +{workout.exercises.length - 3} more
                           </p>
                         )}
@@ -132,55 +132,51 @@ export default function WorkoutCalendar() {
                     </div>
                   ) : (
                     <div className="text-center py-4">
-                      <p className="text-sm text-gray-400">Rest Day</p>
+                      <p className="text-sm text-white/60 body-sans">Rest Day</p>
                     </div>
                   )}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             );
           })}
         </div>
 
         {/* Week Overview */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Calendar className="w-5 h-5" />
-              <span>This Week's Overview</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-blue-600">
-                  {workoutDays.length}
-                </p>
-                <p className="text-sm text-gray-600">Workout Days</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-green-600">
-                  {7 - workoutDays.length}
-                </p>
-                <p className="text-sm text-gray-600">Rest Days</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-purple-600">
-                  {personalizedPlan.workoutPlan?.split || 'Custom'}
-                </p>
-                <p className="text-sm text-gray-600">Training Split</p>
-              </div>
+        <div className="glass-card p-6">
+          <div className="flex items-center space-x-2 mb-4">
+            <Calendar className="w-5 h-5 text-white" />
+            <span className="font-black text-white heading-serif">This Week's Overview</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-orange-400 body-sans">
+                {workoutDays.length}
+              </p>
+              <p className="text-sm text-white/70 body-sans">Workout Days</p>
             </div>
-            
-            {personalizedPlan.workoutPlan?.progression && (
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <h4 className="font-semibold text-blue-900 mb-2">Progression Notes</h4>
-                <p className="text-sm text-blue-800">
-                  {personalizedPlan.workoutPlan.progression}
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-green-400 body-sans">
+                {7 - workoutDays.length}
+              </p>
+              <p className="text-sm text-white/70 body-sans">Rest Days</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-purple-400 body-sans">
+                {personalizedPlan.workoutPlan?.split || 'Custom'}
+              </p>
+              <p className="text-sm text-white/70 body-sans">Training Split</p>
+            </div>
+          </div>
+          
+          {personalizedPlan.workoutPlan?.progression && (
+            <div className="mt-6 p-4 glass-card border border-orange-600/30 rounded-lg">
+              <h4 className="font-semibold text-orange-400 mb-2 body-sans">Progression Notes</h4>
+              <p className="text-sm text-white/80 body-sans">
+                {personalizedPlan.workoutPlan.progression}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

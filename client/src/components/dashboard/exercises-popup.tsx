@@ -58,17 +58,17 @@ export default function ExercisesPopup({ isOpen, onClose, workoutType, exercises
   const exerciseList = exercises.length > 0 ? exercises : getExercises();
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl w-full max-w-md max-h-[80vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="glass-card-elevated w-full max-w-md max-h-[80vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-3xl">
+        <div className="sticky top-0 glass-card border-b border-white/20 px-6 py-4 rounded-t-3xl">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900">{workoutType}</h2>
+            <h2 className="text-xl font-black text-white heading-serif">{workoutType}</h2>
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-2 hover:bg-white/10 rounded-xl transition-colors"
             >
-              <X className="w-5 h-5 text-gray-600" />
+              <X className="w-5 h-5 text-white" />
             </button>
           </div>
         </div>
@@ -78,17 +78,17 @@ export default function ExercisesPopup({ isOpen, onClose, workoutType, exercises
           {exerciseList.map((exercise, index) => (
             <div 
               key={index}
-              className="p-4 rounded-2xl border border-gray-200 hover:bg-gray-50 transition-colors"
+              className="p-4 rounded-xl glass-card border border-white/20 hover:bg-white/10 transition-colors"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-semibold text-gray-900">{exercise.name}</h3>
-                  <p className="text-sm text-gray-600">
+                  <h3 className="font-bold text-white body-sans">{exercise.name}</h3>
+                  <p className="text-sm text-white/70 body-sans">
                     {exercise.sets} sets × {exercise.reps}
                     {exercise.weight && ` @ ${exercise.weight}`}
                   </p>
                 </div>
-                <div className="w-6 h-6 rounded-full border-2 border-gray-300"></div>
+                <div className="w-6 h-6 rounded-full border-2 border-white/40"></div>
               </div>
             </div>
           ))}

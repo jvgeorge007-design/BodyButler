@@ -67,16 +67,16 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl w-full max-w-sm">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="glass-card-elevated w-full max-w-sm">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">Add Food</h2>
+        <div className="flex items-center justify-between p-6 border-b border-white/20">
+          <h2 className="text-xl font-black text-white heading-serif">Add Food</h2>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 hover:shadow-md active:scale-95 active:brightness-110"
+            className="p-2 hover:bg-white/10 rounded-xl transition-colors"
           >
-            <X className="w-5 h-5 text-gray-600" />
+            <X className="w-5 h-5 text-white" />
           </button>
         </div>
 
@@ -92,16 +92,16 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
                 return (
                   <div key={index} className="w-full flex-shrink-0 px-2">
                     <div className="text-center space-y-4">
-                      <div className={`w-20 h-20 ${option.color} rounded-3xl flex items-center justify-center mx-auto`}>
+                      <div className="w-20 h-20 bg-gradient-to-r from-orange-700 to-orange-800 rounded-3xl flex items-center justify-center mx-auto">
                         <IconComponent className="w-10 h-10 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">{option.title}</h3>
-                        <p className="text-sm text-gray-600 mb-6">{option.description}</p>
+                        <h3 className="text-lg font-bold text-white mb-2 heading-serif">{option.title}</h3>
+                        <p className="text-sm text-white/70 mb-6 body-sans">{option.description}</p>
                       </div>
                       <button
                         onClick={option.action}
-                        className={`w-full ${option.color} ${option.hoverColor} text-white font-medium py-3 rounded-2xl transition-all duration-200 hover:shadow-lg active:scale-95 active:brightness-110`}
+                        className="w-full bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white font-medium py-3 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
                       >
                         Choose {option.title}
                       </button>
@@ -116,10 +116,10 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
           <div className="flex items-center justify-between mt-6">
             <button
               onClick={prevSlide}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-2 hover:bg-white/10 rounded-xl transition-colors"
               disabled={currentIndex === 0}
             >
-              <ChevronLeft className={`w-6 h-6 ${currentIndex === 0 ? 'text-gray-300' : 'text-gray-600'}`} />
+              <ChevronLeft className={`w-6 h-6 ${currentIndex === 0 ? 'text-white/30' : 'text-white'}`} />
             </button>
 
             {/* Dots indicator */}
@@ -129,7 +129,7 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
                   key={index}
                   onClick={() => setCurrentIndex(index)}
                   className={`w-2 h-2 rounded-full transition-colors ${
-                    index === currentIndex ? 'bg-blue-600' : 'bg-gray-300'
+                    index === currentIndex ? 'bg-orange-600' : 'bg-white/30'
                   }`}
                 />
               ))}
@@ -137,10 +137,10 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
 
             <button
               onClick={nextSlide}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-2 hover:bg-white/10 rounded-xl transition-colors"
               disabled={currentIndex === options.length - 1}
             >
-              <ChevronRight className={`w-6 h-6 ${currentIndex === options.length - 1 ? 'text-gray-300' : 'text-gray-600'}`} />
+              <ChevronRight className={`w-6 h-6 ${currentIndex === options.length - 1 ? 'text-white/30' : 'text-white'}`} />
             </button>
           </div>
         </div>

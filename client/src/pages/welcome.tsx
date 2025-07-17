@@ -14,7 +14,7 @@ export default function Welcome() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-8 bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-8" style={{ background: 'var(--bg-primary)' }}>
       <div className="w-full max-w-sm mx-auto text-center space-y-8">
         {/* Logo Section */}
         <div className="flex flex-col items-center">
@@ -23,10 +23,10 @@ export default function Welcome() {
           
           {/* Main Title */}
           <div className="space-y-2 -mt-4">
-            <h1 className="text-4xl font-black text-gray-900 leading-none tracking-tighter">
+            <h1 className="text-4xl font-black text-white leading-none tracking-widest heading-serif">
               BODY BUTLER
             </h1>
-            <p className="text-gray-600 text-lg font-medium">
+            <p className="text-white/80 text-lg font-medium body-sans">
               Transformation tailored to you
             </p>
           </div>
@@ -37,7 +37,7 @@ export default function Welcome() {
           {/* Get Started Button (Primary) */}
           <Button 
             onClick={handleGetStarted}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 rounded-xl transition-colors"
+            className="w-full bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
           >
             Get Started
           </Button>
@@ -46,7 +46,7 @@ export default function Welcome() {
           <Button 
             onClick={handleLogin}
             variant="outline"
-            className="w-full border-2 border-blue-500 text-blue-500 hover:bg-blue-50 font-semibold py-4 rounded-xl transition-colors"
+            className="w-full border-2 border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white font-semibold py-4 rounded-xl transition-colors"
           >
             Log In
           </Button>

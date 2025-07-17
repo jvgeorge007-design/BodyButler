@@ -47,17 +47,17 @@ export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl w-full max-w-lg max-h-[80vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="glass-card-elevated w-full max-w-lg max-h-[80vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-3xl">
+        <div className="sticky top-0 glass-card border-b border-white/20 px-6 py-4 rounded-t-3xl">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900">Food Log</h2>
+            <h2 className="text-xl font-black text-white heading-serif">Food Log</h2>
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-2 hover:bg-white/10 rounded-xl transition-colors"
             >
-              <X className="w-5 h-5 text-gray-600" />
+              <X className="w-5 h-5 text-white" />
             </button>
           </div>
         </div>
@@ -66,7 +66,7 @@ export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
         <div className="px-6 pt-4">
           <button 
             onClick={() => {/* Will be handled by parent component */}}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-2xl transition-colors"
+            className="w-full bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white font-medium py-3 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
           >
             + Add Food
           </button>
@@ -79,8 +79,8 @@ export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
             return (
               <div key={meal} className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-gray-900">{meal}</h3>
-                  <div className="text-sm text-gray-600">
+                  <h3 className="text-lg font-bold text-white heading-serif">{meal}</h3>
+                  <div className="text-sm text-white/80 body-sans">
                     {totals.calories} cal
                   </div>
                 </div>
@@ -89,37 +89,37 @@ export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
                   {entries.map((entry, index) => (
                     <div 
                       key={index}
-                      className="p-3 rounded-2xl border border-gray-200 bg-gray-50"
+                      className="p-3 rounded-xl glass-card border border-white/20"
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div>
-                          <h4 className="font-medium text-gray-900">{entry.name}</h4>
-                          <p className="text-sm text-gray-600">{entry.amount}</p>
+                          <h4 className="font-medium text-white body-sans">{entry.name}</h4>
+                          <p className="text-sm text-white/70 body-sans">{entry.amount}</p>
                         </div>
-                        <div className="text-sm font-semibold text-gray-900">
+                        <div className="text-sm font-semibold text-white body-sans">
                           {entry.calories} cal
                         </div>
                       </div>
                       
-                      <div className="flex justify-between text-xs text-gray-500">
-                        <span className="text-blue-600">P: {entry.protein}g</span>
-                        <span className="text-green-600">C: {entry.carbs}g</span>
-                        <span className="text-orange-600">F: {entry.fat}g</span>
+                      <div className="flex justify-between text-xs text-white/80 body-sans">
+                        <span className="text-purple-400">P: {entry.protein}g</span>
+                        <span className="text-amber-400">C: {entry.carbs}g</span>
+                        <span className="text-rose-400">F: {entry.fat}g</span>
                       </div>
                     </div>
                   ))}
                 </div>
                 
                 {/* Meal Totals */}
-                <div className="p-3 rounded-2xl bg-gray-100 border border-gray-200">
+                <div className="p-3 rounded-xl glass-card border border-white/30">
                   <div className="flex justify-between items-center">
-                    <span className="font-medium text-gray-900">{meal} Total</span>
-                    <span className="font-semibold text-gray-900">{totals.calories} cal</span>
+                    <span className="font-bold text-white body-sans">{meal} Total</span>
+                    <span className="font-bold text-white body-sans">{totals.calories} cal</span>
                   </div>
-                  <div className="flex justify-between text-sm mt-1">
-                    <span className="text-blue-600">Protein: {totals.protein}g</span>
-                    <span className="text-green-600">Carbs: {totals.carbs}g</span>
-                    <span className="text-orange-600">Fat: {totals.fat}g</span>
+                  <div className="flex justify-between text-sm mt-1 body-sans">
+                    <span className="text-purple-400">Protein: {totals.protein}g</span>
+                    <span className="text-amber-400">Carbs: {totals.carbs}g</span>
+                    <span className="text-rose-400">Fat: {totals.fat}g</span>
                   </div>
                 </div>
               </div>

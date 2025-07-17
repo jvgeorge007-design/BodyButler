@@ -168,8 +168,8 @@ export default function Onboarding() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
       </div>
     );
   }
@@ -177,7 +177,7 @@ export default function Onboarding() {
   // Introduction screen
   if (currentSection === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 py-8 bg-gradient-to-b from-gray-50 to-white">
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 py-8" style={{ background: 'var(--bg-primary)' }}>
         <div className="w-full max-w-sm mx-auto text-center space-y-8">
           {/* Logo Section - Same as welcome page */}
           <div className="flex flex-col items-center">
@@ -186,7 +186,7 @@ export default function Onboarding() {
             
             {/* Main Title */}
             <div className="space-y-2 -mt-4">
-              <h1 className="text-2xl font-bold text-gray-900 leading-tight">
+              <h1 className="text-2xl font-black text-white leading-tight heading-serif">
                 Hi, I'm BB — Your Body Butler
               </h1>
             </div>
@@ -196,7 +196,7 @@ export default function Onboarding() {
           <div className="space-y-6">
             {/* Description */}
             <div className="space-y-4">
-              <p className="text-gray-600 text-base font-medium leading-relaxed">
+              <p className="text-white/80 text-base font-medium leading-relaxed body-sans">
                 To help create a transformation plan tailored to you, I'll ask you a few quick questions about your body, lifestyle and goals.
               </p>
             </div>
@@ -206,7 +206,7 @@ export default function Onboarding() {
           <div className="pt-4">
             <Button 
               onClick={handleBeginOnboarding}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 rounded-xl transition-colors"
+              className="w-full bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
             >
               Let's Begin
             </Button>
@@ -218,7 +218,7 @@ export default function Onboarding() {
 
   // Onboarding sections
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
       <OnboardingHeader 
         currentSection={currentSection}
         totalSections={TOTAL_SECTIONS}
