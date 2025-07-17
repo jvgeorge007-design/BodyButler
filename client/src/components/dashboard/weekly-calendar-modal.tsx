@@ -123,7 +123,7 @@ export default function WeeklyCalendarModal({ isOpen, onClose, onDateSelect }: W
       }}>
         {/* Header */}
         <div className="sticky top-0 px-6 py-4 rounded-t-2xl" style={{
-          background: 'rgba(20, 20, 25, 0.6)',
+          background: 'rgba(20, 20, 25, 0.75)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
         }}>
           <div className="flex items-center justify-between mb-4">
