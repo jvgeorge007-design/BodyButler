@@ -30,23 +30,26 @@ export default function WorkoutCard({
           </h2>
           <button 
             onClick={() => setShowExercises(true)}
-            className="text-3xl font-light text-white hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif"
+            className="text-3xl font-light text-orange-400 hover:text-orange-300 transition-all duration-300 cursor-pointer heading-serif"
           >
             {workoutType}
           </button>
         </div>
         
         {!isRestDay && (
-          <div className="flex items-center gap-1 text-white body-sans">
-            <span className="text-lg">⏱</span>
-            <span className="text-sm font-medium">— {exerciseCount} exercises</span>
+          <div className="flex items-center gap-2 text-white body-sans">
+            <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12,6 12,12 16,14"/>
+            </svg>
+            <span className="text-sm font-medium">{exerciseCount} exercises</span>
           </div>
         )}
       </div>
 
       <button 
         onClick={onLogWorkout}
-        className="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-4 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95 flex items-center justify-center gap-3"
+        className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium py-4 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95 flex items-center justify-center gap-3"
       >
         <Play className="w-5 h-5" fill="currentColor" />
         Start Workout

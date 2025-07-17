@@ -55,7 +55,7 @@ export default function MacroTrackerCard({
           onClick={() => setShowFoodLog(true)}
           className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
         >
-          <BookOpen className="w-5 h-5 text-white" strokeWidth={2.5} />
+          <BookOpen className="w-5 h-5 text-orange-400" strokeWidth={2.5} />
         </button>
       </div>
       
@@ -82,8 +82,8 @@ export default function MacroTrackerCard({
                   style={{ 
                     '--target-width': `${percentage}%`,
                     width: isVisible ? undefined : '0%',
-                    background: `linear-gradient(90deg, hsl(320, 100%, 70%), hsl(280, 100%, 65%))`,
-                    boxShadow: `0 0 12px hsl(320, 100%, 70%)`
+                    background: `linear-gradient(90deg, #fb923c, #ea580c)`,
+                    boxShadow: `0 0 12px #fb923c`
                   } as React.CSSProperties & { '--target-width': string }}
                 />
               </div>
@@ -101,7 +101,7 @@ export default function MacroTrackerCard({
       {/* Add Food Button */}
       <button 
         onClick={() => setShowAddFoodCarousel(true)}
-        className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-2xl transition-all duration-200 hover:shadow-lg active:scale-95 active:brightness-110 flex items-center justify-center gap-2"
+        className="w-full mt-6 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium py-3 rounded-2xl transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
       >
         <Plus className="w-4 h-4" />
         Add Food

@@ -43,7 +43,7 @@ export default function CircularCalorieTracker({
               cx={size / 2}
               cy={size / 2}
               r={radius}
-              stroke="url(#gradient)"
+              stroke="url(#orangeGradient)"
               strokeWidth={strokeWidth}
               fill="none"
               strokeDasharray={circumference}
@@ -58,10 +58,9 @@ export default function CircularCalorieTracker({
             
             {/* Gradient definition */}
             <defs>
-              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="hsl(320, 100%, 70%)" />
-                <stop offset="50%" stopColor="hsl(280, 100%, 65%)" />
-                <stop offset="100%" stopColor="hsl(260, 100%, 60%)" />
+              <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#fb923c" />
+                <stop offset="100%" stopColor="#ea580c" />
               </linearGradient>
             </defs>
           </svg>
