@@ -21,7 +21,7 @@ export default function BBAIIcon({ className = "w-6 h-6", strokeWidth = 2 }: BBA
           WebkitMaskSize: 'contain',
           WebkitMaskRepeat: 'no-repeat',
           WebkitMaskPosition: 'center',
-          backgroundColor: isActive ? 'rgb(10, 132, 255)' : 'rgb(142, 142, 147)',
+          backgroundColor: isActive ? 'rgb(var(--system-blue))' : 'rgb(var(--system-gray))',
         }}
       />
     </div>
