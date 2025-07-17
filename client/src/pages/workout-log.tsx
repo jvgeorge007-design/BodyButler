@@ -27,8 +27,7 @@ export default function WorkoutLog() {
   const { isAuthenticated, isLoading } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [workoutStarted, setWorkoutStarted] = useState(false);
-  const [startTime, setStartTime] = useState<Date | null>(null);
+  const [startTime, setStartTime] = useState<Date | null>(new Date());
   const [exerciseLogs, setExerciseLogs] = useState<ExerciseLog[]>([]);
 
   const { data: personalizedPlan, isLoading: planLoading, error } = useQuery({
@@ -175,7 +174,7 @@ export default function WorkoutLog() {
   );
 
   return (
-    <div className="min-h-screen px-6 py-8" style={{ background: 'var(--bg-primary)' }}>
+    <div className="min-h-screen px-6 py-8 pb-24" style={{ background: 'var(--bg-primary)' }}>
       <div className="max-w-md mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
