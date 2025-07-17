@@ -50,12 +50,12 @@ export default function MacroTrackerCard({
   return (
     <div ref={containerRef} className="bg-transparent">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-title3 text-foreground">Diet</h3>
+        <h3 className="text-3xl font-light text-white heading-serif">Diet</h3>
         <button 
           onClick={() => setShowFoodLog(true)}
-          className="p-3 hover:bg-accent/20 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95 active:brightness-110"
+          className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
         >
-          <BookOpen className="w-5 h-5 text-primary" strokeWidth={2.5} />
+          <BookOpen className="w-5 h-5 text-white" strokeWidth={2.5} />
         </button>
       </div>
       
@@ -67,10 +67,10 @@ export default function MacroTrackerCard({
           return (
             <div key={index}>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-muted-foreground body-sans">
+                <span className="text-sm font-medium text-white body-sans">
                   {macroNames[index]}
                 </span>
-                <span className="text-sm font-semibold text-foreground body-sans">
+                <span className="text-sm font-semibold text-white body-sans">
                   {macro.current}g / {macro.target}g
                 </span>
               </div>
@@ -89,10 +89,10 @@ export default function MacroTrackerCard({
               </div>
               
               <div className="flex justify-between items-center mt-2">
-                <span className="text-xs text-muted-foreground body-sans">
+                <span className="text-xs text-white/70 body-sans">
                   {Math.round(percentage)}%
                 </span>
-                <span className="text-xs text-primary body-sans">
+                <span className="text-xs text-white/70 body-sans">
                   {macro.target - macro.current}g remaining
                 </span>
               </div>
