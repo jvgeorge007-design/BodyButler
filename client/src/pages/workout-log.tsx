@@ -226,6 +226,20 @@ export default function WorkoutLog() {
                       background: 'rgb(40, 40, 45)',
                       border: '1px solid rgba(255, 255, 255, 0.1)'
                     }}>
+                      <button
+                        onClick={() => completeSet(exerciseIndex, setIndex)}
+                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${set.completed 
+                          ? 'text-white' 
+                          : 'hover:bg-gray-600 hover:text-white'
+                        }`}
+                        style={{
+                          background: set.completed ? 'rgb(0, 195, 142)' : 'rgba(20, 20, 25, 0.4)',
+                          color: set.completed ? 'white' : 'rgb(180, 180, 190)',
+                          border: set.completed ? 'none' : '1px solid rgba(255, 255, 255, 0.1)'
+                        }}
+                      >
+                        {set.completed ? <Check className="w-4 h-4" /> : `Set ${setIndex + 1}`}
+                      </button>
                       <div className="flex-1 grid grid-cols-2 gap-2">
                         <div>
                           <label className="text-xs body-sans" style={{color: 'rgb(180, 180, 190)'}}>Reps</label>
@@ -255,20 +269,6 @@ export default function WorkoutLog() {
                           />
                         </div>
                       </div>
-                      <button
-                        onClick={() => completeSet(exerciseIndex, setIndex)}
-                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${set.completed 
-                          ? 'text-white' 
-                          : 'hover:bg-gray-600 hover:text-white'
-                        }`}
-                        style={{
-                          background: set.completed ? 'rgb(0, 195, 142)' : 'rgba(20, 20, 25, 0.4)',
-                          color: set.completed ? 'white' : 'rgb(180, 180, 190)',
-                          border: set.completed ? 'none' : '1px solid rgba(255, 255, 255, 0.1)'
-                        }}
-                      >
-                        {set.completed ? <Check className="w-4 h-4" /> : `Set ${setIndex + 1}`}
-                      </button>
                     </div>
                   ))}
                 </div>
