@@ -30,15 +30,10 @@ export default function WorkoutCard({
           </h2>
           <button 
             onClick={() => setShowExercises(true)}
-            className="text-3xl font-light italic hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif flex items-center gap-2"
+            className="text-3xl font-light italic hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif"
             style={{color: 'rgb(0, 195, 142)'}}
           >
             {workoutType}
-            {!isRestDay && (
-              <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            )}
           </button>
         </div>
         
