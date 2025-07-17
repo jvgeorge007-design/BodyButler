@@ -277,14 +277,6 @@ export default function Dashboard() {
         title="Body Butler" 
         subtitle="Your personal fitness companion"
         largeTitle={true}
-        rightButton={
-          <IOSButton 
-            variant="plain" 
-            size="small"
-            onClick={() => setIsCalendarOpen(true)}
-            icon={<Calendar className="w-5 h-5" />}
-          />
-        }
       />
       
       {/* Main Content with iOS-style spacing */}
