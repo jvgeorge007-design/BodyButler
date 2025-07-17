@@ -127,6 +127,7 @@ Changelog:
 - July 17, 2025. Implemented comprehensive iOS Human Interface Guidelines (HIG) compliance: added iOS Dynamic Type system with proper text styles (Title 1, Title 2, Body, Caption, etc.), iOS semantic colors alongside existing custom scheme, iOS-standard spacing utilities (16pt margins, 8pt spacing, 44pt touch targets)
 - July 17, 2025. Created complete iOS-compliant component library: IOSNavHeader for navigation headers, IOSButton for iOS-style buttons, IOSList/IOSListItem for grouped lists, IOSSwitch for toggles, all following iOS design patterns and accessibility standards
 - July 17, 2025. Updated all main pages (Dashboard, Progress, Settings, AI Chat) to use new iOS components and styling patterns: proper spacing, typography, navigation, and interaction patterns for native iOS experience
+- July 17, 2025. Enhanced workout card with dynamic workout type display: added visual indicator arrow for clickable workout types, navigation header now stretches full width to top, BB AI icon changed to MessageCircle for better consistency
 ```
 
 ## User Preferences
