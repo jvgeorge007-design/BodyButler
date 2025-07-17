@@ -55,7 +55,7 @@ export default function MacroTrackerCard({
           onClick={() => setShowFoodLog(true)}
           className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
         >
-          <BookOpen className="w-5 h-5 text-orange-800" strokeWidth={2.5} />
+          <BookOpen className="w-5 h-5 text-white" strokeWidth={2.5} />
         </button>
       </div>
       
