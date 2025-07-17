@@ -9,7 +9,7 @@ import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { ArrowLeft, Check, Plus, Timer } from "lucide-react";
-import BottomNav from "@/components/navigation/bottom-nav";
+
 
 interface ExerciseLog {
   exerciseId: string;
@@ -27,7 +27,8 @@ export default function WorkoutLog() {
   const { isAuthenticated, isLoading } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [startTime, setStartTime] = useState<Date | null>(new Date());
+  const [workoutStarted, setWorkoutStarted] = useState(false);
+  const [startTime, setStartTime] = useState<Date | null>(null);
   const [exerciseLogs, setExerciseLogs] = useState<ExerciseLog[]>([]);
 
   const { data: personalizedPlan, isLoading: planLoading, error } = useQuery({
@@ -64,32 +65,28 @@ export default function WorkoutLog() {
     }
   }, [error, toast]);
 
-  useEffect(() => {
-    if (personalizedPlan?.workoutPlan?.days) {
-      // Initialize exercise logs with today's workout
-      const todaysWorkout = personalizedPlan.workoutPlan.days[0];
-      if (todaysWorkout?.exercises) {
-        const logs = todaysWorkout.exercises.map((exercise: any, index: number) => ({
-          exerciseId: `${index}`,
-          name: exercise.name,
-          targetSets: exercise.sets,
-          targetReps: exercise.reps,
-          completedSets: Array(exercise.sets).fill(null).map(() => ({
-            reps: exercise.reps,
-            weight: 0,
-            completed: false,
-          })),
-        }));
-        setExerciseLogs(logs);
-      }
-    }
-  }, [personalizedPlan]);
+
 
   const handleBack = () => {
     setLocation("/");
   };
 
   const startWorkout = () => {
+    if (personalizedPlan?.workoutPlan?.days?.[0]) {
+      const todaysWorkout = personalizedPlan.workoutPlan.days[0];
+      const logs = todaysWorkout.exercises.map((exercise: any) => ({
+        exerciseId: exercise.name,
+        name: exercise.name,
+        targetSets: exercise.sets,
+        targetReps: exercise.reps,
+        completedSets: Array(exercise.sets).fill(0).map(() => ({
+          reps: 0,
+          weight: 0,
+          completed: false
+        }))
+      }));
+      setExerciseLogs(logs);
+    }
     setWorkoutStarted(true);
     setStartTime(new Date());
     toast({
@@ -174,7 +171,7 @@ export default function WorkoutLog() {
   );
 
   return (
-    <div className="min-h-screen px-6 py-8 pb-24" style={{ background: 'var(--bg-primary)' }}>
+    <div className="min-h-screen px-6 py-8" style={{ background: 'var(--bg-primary)' }}>
       <div className="max-w-md mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -292,9 +289,6 @@ export default function WorkoutLog() {
           </div>
         )}
       </div>
-      
-      {/* Bottom Navigation */}
-      <BottomNav />
     </div>
   );
 }
