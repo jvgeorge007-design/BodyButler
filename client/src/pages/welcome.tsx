@@ -45,8 +45,7 @@ export default function Welcome() {
           {/* Log In Button (Secondary) */}
           <Button 
             onClick={handleLogin}
-            variant="outline"
-            className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 w-full border-2 border-orange-600 hover:bg-orange-600 hover:text-white font-semibold py-4 rounded-xl transition-colors bg-[#ffffff] text-[#005c70]"
+            className="w-full bg-white text-[rgb(0,95,115)] font-medium py-4 px-8 rounded-full shadow-lg hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300 active:scale-95 min-h-[48px] min-w-[48px] border-2 border-[rgb(0,95,115)] hover:bg-[rgb(0,95,115)] hover:text-white"
           >
             Log In
           </Button>
