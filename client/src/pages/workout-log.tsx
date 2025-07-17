@@ -222,11 +222,12 @@ export default function WorkoutLog() {
                 </div>
                 <div className="space-y-3">
                   {exercise.completedSets.map((set, setIndex) => (
-                    <div key={setIndex} className="flex items-center space-x-3 p-3 rounded-lg" style={{
+                    <div key={setIndex} className="flex space-x-3 p-3 rounded-lg" style={{
                       background: 'rgb(40, 40, 45)',
                       border: '1px solid rgba(255, 255, 255, 0.1)'
                     }}>
-                      <div className="flex items-center">
+                      <div className="flex flex-col">
+                        <div className="h-4"></div>
                         <button
                           onClick={() => completeSet(exerciseIndex, setIndex)}
                           className={`px-3 rounded-lg text-sm font-medium transition-all duration-200 ${set.completed 
