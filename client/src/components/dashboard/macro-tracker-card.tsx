@@ -90,9 +90,6 @@ export default function MacroTrackerCard({
               
               <div className="flex justify-between items-center mt-2">
                 <span className="text-xs text-white font-medium body-sans">
-                  {macro.target - macro.current}g to goal
-                </span>
-                <span className="text-xs text-white/70 body-sans">
                   {macro.target - macro.current}g remaining
                 </span>
               </div>
