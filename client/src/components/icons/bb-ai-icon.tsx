@@ -1,4 +1,4 @@
-import { Bot } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 
 interface BBAIIconProps {
   className?: string;
@@ -7,7 +7,7 @@ interface BBAIIconProps {
 
 export default function BBAIIcon({ className = "w-6 h-6", strokeWidth = 2 }: BBAIIconProps) {
   return (
-    <Bot 
+    <MessageCircle 
       className={className}
       strokeWidth={strokeWidth}
     />
