@@ -9,7 +9,7 @@ import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { ArrowLeft, Check, Plus, Timer } from "lucide-react";
-import { BottomNav } from "@/components/navigation/bottom-nav";
+import BottomNav from "@/components/navigation/bottom-nav";
 
 interface ExerciseLog {
   exerciseId: string;
