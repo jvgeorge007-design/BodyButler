@@ -24,13 +24,13 @@ export default function WorkoutCard({
   return (
     <div className="bg-transparent">
       <div className="mb-8">
-        <div className="mb-4">
-          <h2 className="text-3xl font-light text-white heading-serif mb-2">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-3xl font-light text-white heading-serif">
             Workout
           </h2>
           <button 
             onClick={() => setShowExercises(true)}
-            className="text-3xl font-light text-white hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif ml-4"
+            className="text-3xl font-light italic text-white hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif"
           >
             {workoutType}
           </button>
