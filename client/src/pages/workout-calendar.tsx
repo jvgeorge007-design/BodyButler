@@ -93,7 +93,11 @@ export default function WorkoutCalendar() {
           </div>
           
           {/* Week Navigation */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 px-4 py-2 rounded-xl" style={{
+            background: 'rgba(20, 20, 25, 0.8)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)'
+          }}>
             <Button variant="outline" size="sm" onClick={() => navigateWeek('prev')}>
               <ChevronLeft className="w-4 h-4" />
             </Button>
