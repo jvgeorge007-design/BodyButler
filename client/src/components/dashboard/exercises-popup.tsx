@@ -1,4 +1,6 @@
 import { X } from "lucide-react";
+import { useModal } from "@/contexts/modal-context";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 interface Exercise {
@@ -16,6 +18,20 @@ interface ExercisesPopupProps {
 }
 
 export default function ExercisesPopup({ isOpen, onClose, workoutType, exercises }: ExercisesPopupProps) {
+  const { registerModal, unregisterModal } = useModal();
+  
+  useEffect(() => {
+    if (isOpen) {
+      registerModal('exercises-popup', onClose);
+    } else {
+      unregisterModal('exercises-popup');
+    }
+    
+    return () => {
+      unregisterModal('exercises-popup');
+    };
+  }, [isOpen, onClose, registerModal, unregisterModal]);
+  
   if (!isOpen) return null;
 
   // Mock exercises data based on workout type

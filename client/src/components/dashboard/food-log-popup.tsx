@@ -1,4 +1,6 @@
 import { X } from "lucide-react";
+import { useModal } from "@/contexts/modal-context";
+import { useEffect } from "react";
 
 interface FoodEntry {
   name: string;
@@ -16,6 +18,20 @@ interface FoodLogPopupProps {
 }
 
 export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
+  const { registerModal, unregisterModal } = useModal();
+  
+  useEffect(() => {
+    if (isOpen) {
+      registerModal('food-log-popup', onClose);
+    } else {
+      unregisterModal('food-log-popup');
+    }
+    
+    return () => {
+      unregisterModal('food-log-popup');
+    };
+  }, [isOpen, onClose, registerModal, unregisterModal]);
+  
   if (!isOpen) return null;
 
   // Mock food data for today

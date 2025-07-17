@@ -1,9 +1,11 @@
 import { Home, TrendingUp, Settings, BookOpen } from "lucide-react";
 import { useLocation } from "wouter";
+import { useModal } from "@/contexts/modal-context";
 import bbLogo from "@assets/BB logo_1752757975860.png";
 
 export default function BottomNav() {
   const [location, setLocation] = useLocation();
+  const { closeAllModals } = useModal();
 
   const navItems = [
     {
@@ -39,12 +41,30 @@ export default function BottomNav() {
   ];
 
   const handleNavClick = (path: string, itemId: string) => {
-    if (itemId === 'home') {
-      // For home tab, always go to dashboard and reset to current day
-      setLocation('/dashboard?reset=true');
-    } else {
-      setLocation(path);
-    }
+    // Always navigate to the specified path, regardless of current state
+    // This ensures navigation works even when modals/popups are open
+    
+    // Close all registered modals first
+    closeAllModals();
+    
+    // Also dispatch escape key for any unregistered modals (fallback)
+    const escapeEvent = new KeyboardEvent('keydown', {
+      key: 'Escape',
+      keyCode: 27,
+      which: 27,
+      bubbles: true
+    });
+    document.dispatchEvent(escapeEvent);
+    
+    // Small delay to ensure modals close before navigation
+    setTimeout(() => {
+      if (itemId === 'home') {
+        // For home tab, always go to dashboard and reset to current day
+        setLocation('/dashboard?reset=true');
+      } else {
+        setLocation(path);
+      }
+    }, 100);
   };
 
   return (

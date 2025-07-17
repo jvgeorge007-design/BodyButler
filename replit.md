@@ -122,6 +122,8 @@ Changelog:
 - July 13, 2025. Added personalized plan storage: ChatGPT-generated plans are now saved to Supabase user_profiles table in personalizedPlan column with API endpoint for retrieval
 - July 13, 2025. Created comprehensive dashboard system with workout logging, meal tracking, and rolling macro count functionality
 - July 13, 2025. Fixed critical onboarding completion flow: resolved data structure mismatches, authentication logic, and ChatGPT integration - complete end-to-end flow now working
+- July 17, 2025. Enhanced navigation behavior: navigation tabs now properly close modals/popups and navigate to respective pages regardless of current state
+- July 17, 2025. Created global modal management system: added modal context for proper registration and cleanup of popups during navigation
 ```
 
 ## User Preferences
@@ -129,4 +131,5 @@ Changelog:
 ```
 Preferred communication style: Simple, everyday language.
 Focus areas for improvement: UI polish and master prompt refinement for better user engagement ("stickiness").
+Navigation behavior: Navigation bar tabs should always navigate to respective pages, even when pop-ups or modals are open.
 ```

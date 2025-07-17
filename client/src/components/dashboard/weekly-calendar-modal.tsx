@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight, X, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useModal } from "@/contexts/modal-context";
 
 interface WeeklyCalendarModalProps {
   isOpen: boolean;
@@ -22,6 +23,19 @@ interface DayData {
 
 export default function WeeklyCalendarModal({ isOpen, onClose, onDateSelect }: WeeklyCalendarModalProps) {
   const [currentWeek, setCurrentWeek] = useState(new Date());
+  const { registerModal, unregisterModal } = useModal();
+  
+  useEffect(() => {
+    if (isOpen) {
+      registerModal('weekly-calendar-modal', onClose);
+    } else {
+      unregisterModal('weekly-calendar-modal');
+    }
+    
+    return () => {
+      unregisterModal('weekly-calendar-modal');
+    };
+  }, [isOpen, onClose, registerModal, unregisterModal]);
 
   if (!isOpen) return null;
 

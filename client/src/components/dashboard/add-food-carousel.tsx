@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, ChevronLeft, ChevronRight, Edit, FileText, QrCode, Camera } from "lucide-react";
+import { useModal } from "@/contexts/modal-context";
 
 interface AddFoodCarouselProps {
   isOpen: boolean;
@@ -8,6 +9,19 @@ interface AddFoodCarouselProps {
 
 export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { registerModal, unregisterModal } = useModal();
+  
+  useEffect(() => {
+    if (isOpen) {
+      registerModal('add-food-carousel', onClose);
+    } else {
+      unregisterModal('add-food-carousel');
+    }
+    
+    return () => {
+      unregisterModal('add-food-carousel');
+    };
+  }, [isOpen, onClose, registerModal, unregisterModal]);
 
   if (!isOpen) return null;
 
