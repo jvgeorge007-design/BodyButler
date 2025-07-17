@@ -9,6 +9,7 @@ import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { ArrowLeft, Check, Plus, Timer } from "lucide-react";
+import BottomNav from "@/components/navigation/bottom-nav";
 
 
 interface ExerciseLog {
@@ -171,7 +172,7 @@ export default function WorkoutLog() {
   );
 
   return (
-    <div className="min-h-screen px-6 py-8" style={{ background: 'var(--bg-primary)' }}>
+    <div className="min-h-screen px-6 py-8 pb-24" style={{ background: 'var(--bg-primary)' }}>
       <div className="max-w-md mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -287,6 +288,9 @@ export default function WorkoutLog() {
           </div>
         )}
       </div>
+      
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 }
