@@ -1,6 +1,6 @@
 import { Home, TrendingUp, Settings, BookOpen } from "lucide-react";
 import { useLocation } from "wouter";
-import bbLogo from "@assets/BB logo_1751937804698.png";
+import bbLogo from "@assets/image_1752718827591.png";
 
 export default function BottomNav() {
   const [location, setLocation] = useLocation();

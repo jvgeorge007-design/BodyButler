@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import bbLogo from "@assets/BB logo_1751937804698.png";
+import bbLogo from "@assets/image_1752718827591.png";
 
 interface KettlebellLogoProps {
   className?: string;
@@ -10,10 +10,10 @@ export default function KettlebellLogo({ className }: KettlebellLogoProps) {
     <img 
       src={bbLogo}
       alt="Body Butler Logo"
-      className="w-60 h-72 ml-[0px] mr-[0px] pl-[0px] pr-[0px] pt-[-4px] pb-[-4px]"
+      className={cn("w-60 h-72", className)}
       style={{ 
         background: 'transparent',
-        objectFit: 'cover',
+        objectFit: 'contain',
         objectPosition: 'center'
       }}
     />
