@@ -61,6 +61,10 @@ export default {
           border: "var(--sidebar-border)",
           ring: "var(--sidebar-ring)",
         },
+        "cta-blue": "rgb(var(--cta-blue) / <alpha-value>)",
+        "sky-sapphire": "rgb(var(--sky-sapphire) / <alpha-value>)",
+        "pull-day-green": "rgb(var(--pull-day-green) / <alpha-value>)",
+        "emerald-mint": "rgb(var(--emerald-mint) / <alpha-value>)",
       },
       keyframes: {
         "accordion-down": {
