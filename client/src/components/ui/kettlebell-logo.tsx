@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import bbLogo from "@assets/image_1752718827591.png";
+import bbLogo from "@assets/BB logo_1752757975860.png";
 
 interface KettlebellLogoProps {
   className?: string;
