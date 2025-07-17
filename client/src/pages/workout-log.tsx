@@ -226,7 +226,7 @@ export default function WorkoutLog() {
                       background: 'rgb(40, 40, 45)',
                       border: '1px solid rgba(255, 255, 255, 0.1)'
                     }}>
-                      <div className="flex items-end">
+                      <div className="flex items-center">
                         <button
                           onClick={() => completeSet(exerciseIndex, setIndex)}
                           className={`px-3 rounded-lg text-sm font-medium transition-all duration-200 ${set.completed 
