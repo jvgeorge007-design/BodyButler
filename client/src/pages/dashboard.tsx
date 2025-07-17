@@ -270,8 +270,14 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
-      {/* Top Header Banner - Blue Background */}
-      <header className="bg-gradient-to-r from-orange-700 to-orange-800 px-6 py-4">
+      {/* Top Header Banner - Matching CTA Button Colors */}
+      <header 
+        className="px-6 py-4"
+        style={{
+          background: 'linear-gradient(90deg, rgb(0, 95, 115) 0%, rgb(0, 85, 105) 50%, rgb(0, 75, 95) 100%)',
+          boxShadow: '0 4px 20px rgba(87, 168, 255, 0.15)'
+        }}
+      >
         <div className="max-w-md mx-auto text-center">
           <h1 className="text-white text-xl font-black tracking-widest uppercase">
             BODY BUTLER
