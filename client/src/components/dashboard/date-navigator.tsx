@@ -41,11 +41,11 @@ export default function DateNavigator({ selectedDate: propSelectedDate, onDateSe
           onClick={handlePreviousDay}
           className="p-2 hover:bg-white/10 rounded-lg transition-colors"
         >
-          <ChevronLeft className="w-5 h-5 text-white" />
+          <ChevronLeft className="w-5 h-5" style={{color: 'rgb(235, 235, 240)'}} />
         </button>
         
         <div className="flex items-center gap-3">
-          <span className="text-lg font-medium text-white">
+          <span className="text-lg font-medium" style={{color: 'rgb(235, 235, 240)'}}>
             {formatDate(selectedDate)}
           </span>
           
@@ -53,7 +53,7 @@ export default function DateNavigator({ selectedDate: propSelectedDate, onDateSe
             onClick={handleCalendarClick}
             className="p-1 hover:bg-white/10 rounded transition-colors"
           >
-            <Calendar className="w-5 h-5 text-white" />
+            <Calendar className="w-5 h-5" style={{color: 'rgb(235, 235, 240)'}} />
           </button>
         </div>
         
@@ -61,7 +61,7 @@ export default function DateNavigator({ selectedDate: propSelectedDate, onDateSe
           onClick={handleNextDay}
           className="p-2 hover:bg-white/10 rounded-lg transition-colors"
         >
-          <ChevronRight className="w-5 h-5 text-white" />
+          <ChevronRight className="w-5 h-5" style={{color: 'rgb(235, 235, 240)'}} />
         </button>
       </div>
     </div>

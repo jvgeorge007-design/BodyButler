@@ -50,12 +50,12 @@ export default function MacroTrackerCard({
   return (
     <div ref={containerRef} className="bg-transparent">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-3xl font-light text-white heading-serif">Diet</h3>
+        <h3 className="text-3xl font-light heading-serif" style={{color: 'rgb(235, 235, 240)'}}>Diet</h3>
         <button 
           onClick={() => setShowFoodLog(true)}
           className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
         >
-          <BookOpen className="w-5 h-5 text-white" strokeWidth={2.5} />
+          <BookOpen className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
         </button>
       </div>
       
@@ -74,10 +74,10 @@ export default function MacroTrackerCard({
           return (
             <div key={index}>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-white body-sans">
+                <span className="text-sm font-medium body-sans" style={{color: 'rgb(235, 235, 240)'}}>
                   {macroNames[index]}
                 </span>
-                <span className="text-sm font-semibold text-white body-sans">
+                <span className="text-sm font-semibold body-sans" style={{color: 'rgb(235, 235, 240)'}}>
                   {macro.current}g / {macro.target}g
                 </span>
               </div>
@@ -96,7 +96,7 @@ export default function MacroTrackerCard({
               </div>
               
               <div className="flex justify-between items-center mt-2">
-                <span className="text-xs text-white font-medium body-sans">
+                <span className="text-xs font-medium body-sans" style={{color: 'rgb(180, 180, 190)'}}>
                   {macro.target - macro.current}g remaining
                 </span>
               </div>
@@ -108,7 +108,8 @@ export default function MacroTrackerCard({
       {/* Add Food Button */}
       <button 
         onClick={() => setShowAddFoodCarousel(true)}
-        className="w-full mt-6 bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white font-medium py-3 rounded-2xl transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
+        className="w-full mt-6 bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 font-medium py-3 rounded-2xl transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
+        style={{color: 'rgb(235, 235, 240)'}}
       >
         <Plus className="w-4 h-4" />
         Add Food

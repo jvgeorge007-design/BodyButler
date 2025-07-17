@@ -25,7 +25,7 @@ export default function WorkoutCard({
     <div className="bg-transparent">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-3xl font-light text-white heading-serif">
+          <h2 className="text-3xl font-light heading-serif" style={{color: 'rgb(235, 235, 240)'}}>
             Workout
           </h2>
           <button 
@@ -38,8 +38,8 @@ export default function WorkoutCard({
         </div>
         
         {!isRestDay && (
-          <div className="flex items-center gap-2 text-white body-sans">
-            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex items-center gap-2 body-sans" style={{color: 'rgb(180, 180, 190)'}}>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="10"/>
               <polyline points="12,6 12,12 16,14"/>
             </svg>

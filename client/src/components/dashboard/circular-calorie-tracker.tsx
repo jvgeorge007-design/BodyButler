@@ -70,10 +70,10 @@ export default function CircularCalorieTracker({
           {/* Center content */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <div className="text-6xl font-light text-white mb-2 animate-pulse-once heading-serif">
+              <div className="text-6xl font-light mb-2 animate-pulse-once heading-serif" style={{color: 'rgb(235, 235, 240)'}}>
                 {remaining}
               </div>
-              <div className="text-sm text-gray-400 uppercase font-medium tracking-widest body-sans">
+              <div className="text-sm uppercase font-medium tracking-widest body-sans" style={{color: 'rgb(180, 180, 190)'}}>
                 REMAINING
               </div>
             </div>
@@ -85,17 +85,17 @@ export default function CircularCalorieTracker({
       <div className="grid grid-cols-3 gap-8 text-center mt-12">
         <div>
           <div className="text-3xl font-light mb-2 heading-serif" style={{color: 'rgb(0, 183, 225)'}}>{target}</div>
-          <div className="text-xs text-gray-400 uppercase font-medium tracking-widest body-sans">GOAL</div>
+          <div className="text-xs uppercase font-medium tracking-widest body-sans" style={{color: 'rgb(180, 180, 190)'}}>GOAL</div>
         </div>
         
         <div>
           <div className="text-3xl font-light mb-2 heading-serif" style={{color: 'rgb(224, 224, 255)'}}>{consumed}</div>
-          <div className="text-xs text-gray-400 uppercase font-medium tracking-widest body-sans">FOOD</div>
+          <div className="text-xs uppercase font-medium tracking-widest body-sans" style={{color: 'rgb(180, 180, 190)'}}>FOOD</div>
         </div>
         
         <div>
           <div className="text-3xl font-light mb-2 heading-serif" style={{color: 'rgb(0, 195, 142)'}}>0</div>
-          <div className="text-xs text-gray-400 uppercase font-medium tracking-widest body-sans">EXERCISE</div>
+          <div className="text-xs uppercase font-medium tracking-widest body-sans" style={{color: 'rgb(180, 180, 190)'}}>EXERCISE</div>
         </div>
       </div>
       </div>
