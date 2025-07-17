@@ -151,15 +151,15 @@ export default function WorkoutLog() {
 
   if (!personalizedPlan?.workoutPlan?.days?.[0]) {
     return (
-      <div className="min-h-screen bg-gray-50 px-6 py-8">
+      <div className="min-h-screen bg-gray-900 px-6 py-8">
         <div className="max-w-md mx-auto">
-          <Button variant="ghost" onClick={handleBack} className="mb-4">
+          <Button variant="ghost" onClick={handleBack} className="mb-4 text-gray-300 hover:text-white hover:bg-gray-800">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <Card>
+          <Card className="bg-gray-800 border-gray-700">
             <CardContent className="p-6 text-center">
-              <p>No workout plan available. Please complete your onboarding first.</p>
+              <p className="text-white">No workout plan available. Please complete your onboarding first.</p>
             </CardContent>
           </Card>
         </div>
@@ -174,16 +174,16 @@ export default function WorkoutLog() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 px-6 py-8">
+    <div className="min-h-screen bg-gray-900 px-6 py-8">
       <div className="max-w-md mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <Button variant="ghost" onClick={handleBack}>
+          <Button variant="ghost" onClick={handleBack} className="text-gray-300 hover:text-white hover:bg-gray-800">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
           {workoutStarted && startTime && (
-            <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <div className="flex items-center space-x-2 text-sm text-gray-300">
               <Timer className="w-4 h-4" />
               <span>{Math.floor((Date.now() - startTime.getTime()) / 60000)}m</span>
             </div>
@@ -191,17 +191,17 @@ export default function WorkoutLog() {
         </div>
 
         {/* Workout Header */}
-        <Card>
+        <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
-            <CardTitle>{todaysWorkout.focus}</CardTitle>
-            <div className="flex justify-between text-sm text-gray-600">
+            <CardTitle className="text-white">{todaysWorkout.focus}</CardTitle>
+            <div className="flex justify-between text-sm text-gray-300">
               <span>{todaysWorkout.day}</span>
               <span>{completedSets} / {totalSets} sets completed</span>
             </div>
           </CardHeader>
           {!workoutStarted && (
             <CardContent>
-              <Button onClick={startWorkout} className="w-full">
+              <Button onClick={startWorkout} className="w-full bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white">
                 Start Workout
               </Button>
             </CardContent>
@@ -212,33 +212,33 @@ export default function WorkoutLog() {
         {workoutStarted && (
           <div className="space-y-4">
             {exerciseLogs.map((exercise, exerciseIndex) => (
-              <Card key={exercise.exerciseId}>
+              <Card key={exercise.exerciseId} className="bg-gray-800 border-gray-700">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg">{exercise.name}</CardTitle>
-                  <div className="text-sm text-gray-600">
+                  <CardTitle className="text-lg text-white">{exercise.name}</CardTitle>
+                  <div className="text-sm text-gray-300">
                     Target: {exercise.targetSets} sets × {exercise.targetReps} reps
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {exercise.completedSets.map((set, setIndex) => (
-                    <div key={setIndex} className="flex items-center space-x-3 p-3 border rounded-lg">
+                    <div key={setIndex} className="flex items-center space-x-3 p-3 border border-gray-600 rounded-lg bg-gray-700">
                       <div className="flex-1 grid grid-cols-2 gap-2">
                         <div>
-                          <Label className="text-xs">Reps</Label>
+                          <Label className="text-xs text-gray-300">Reps</Label>
                           <Input
                             type="number"
                             value={set.reps}
                             onChange={(e) => updateSetData(exerciseIndex, setIndex, 'reps', parseInt(e.target.value) || 0)}
-                            className="h-8"
+                            className="h-8 bg-gray-600 border-gray-500 text-white"
                           />
                         </div>
                         <div>
-                          <Label className="text-xs">Weight (lbs)</Label>
+                          <Label className="text-xs text-gray-300">Weight (lbs)</Label>
                           <Input
                             type="number"
                             value={set.weight || 0}
                             onChange={(e) => updateSetData(exerciseIndex, setIndex, 'weight', parseInt(e.target.value) || 0)}
-                            className="h-8"
+                            className="h-8 bg-gray-600 border-gray-500 text-white"
                             placeholder="0"
                           />
                         </div>
@@ -247,7 +247,10 @@ export default function WorkoutLog() {
                         variant={set.completed ? "default" : "outline"}
                         size="sm"
                         onClick={() => completeSet(exerciseIndex, setIndex)}
-                        className="px-3"
+                        className={`px-3 ${set.completed 
+                          ? 'bg-green-600 hover:bg-green-700 text-white' 
+                          : 'border-gray-500 text-gray-300 hover:bg-gray-600 hover:text-white'
+                        }`}
                       >
                         {set.completed ? <Check className="w-4 h-4" /> : `Set ${setIndex + 1}`}
                       </Button>
@@ -260,7 +263,7 @@ export default function WorkoutLog() {
             {/* Finish Workout */}
             <Button 
               onClick={finishWorkout} 
-              className="w-full h-12 text-lg"
+              className="w-full h-12 text-lg bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white"
               disabled={completedSets === 0}
             >
               Finish Workout

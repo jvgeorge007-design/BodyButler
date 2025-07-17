@@ -68,15 +68,15 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
+      <div className="bg-gray-900 rounded-2xl shadow-2xl w-full max-w-sm">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-black text-gray-900 heading-serif">Add Food</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-700">
+          <h2 className="text-xl font-black text-white heading-serif">Add Food</h2>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+            className="p-2 hover:bg-gray-800 rounded-xl transition-colors"
           >
-            <X className="w-5 h-5 text-gray-600" />
+            <X className="w-5 h-5 text-gray-300" />
           </button>
         </div>
 
@@ -96,8 +96,8 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
                         <IconComponent className="w-10 h-10 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-bold text-gray-900 mb-2 heading-serif">{option.title}</h3>
-                        <p className="text-sm text-gray-600 mb-6 body-sans">{option.description}</p>
+                        <h3 className="text-lg font-bold text-white mb-2 heading-serif">{option.title}</h3>
+                        <p className="text-sm text-gray-300 mb-6 body-sans">{option.description}</p>
                       </div>
                       <button
                         onClick={option.action}
@@ -116,10 +116,10 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
           <div className="flex items-center justify-between mt-6">
             <button
               onClick={prevSlide}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-2 hover:bg-gray-800 rounded-xl transition-colors"
               disabled={currentIndex === 0}
             >
-              <ChevronLeft className={`w-6 h-6 ${currentIndex === 0 ? 'text-gray-300' : 'text-gray-600'}`} />
+              <ChevronLeft className={`w-6 h-6 ${currentIndex === 0 ? 'text-gray-600' : 'text-gray-300'}`} />
             </button>
 
             {/* Dots indicator */}
@@ -129,7 +129,7 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
                   key={index}
                   onClick={() => setCurrentIndex(index)}
                   className={`w-2 h-2 rounded-full transition-colors ${
-                    index === currentIndex ? 'bg-orange-600' : 'bg-gray-300'
+                    index === currentIndex ? 'bg-orange-500' : 'bg-gray-600'
                   }`}
                 />
               ))}
@@ -137,10 +137,10 @@ export default function AddFoodCarousel({ isOpen, onClose }: AddFoodCarouselProp
 
             <button
               onClick={nextSlide}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-2 hover:bg-gray-800 rounded-xl transition-colors"
               disabled={currentIndex === options.length - 1}
             >
-              <ChevronRight className={`w-6 h-6 ${currentIndex === options.length - 1 ? 'text-gray-300' : 'text-gray-600'}`} />
+              <ChevronRight className={`w-6 h-6 ${currentIndex === options.length - 1 ? 'text-gray-600' : 'text-gray-300'}`} />
             </button>
           </div>
         </div>

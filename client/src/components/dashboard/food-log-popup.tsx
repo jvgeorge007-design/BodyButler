@@ -48,16 +48,16 @@ export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto">
+      <div className="bg-gray-900 rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl">
+        <div className="sticky top-0 bg-gray-900 border-b border-gray-700 px-6 py-4 rounded-t-2xl">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-black text-gray-900 heading-serif">Food Log</h2>
+            <h2 className="text-xl font-black text-white heading-serif">Food Log</h2>
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-2 hover:bg-gray-800 rounded-xl transition-colors"
             >
-              <X className="w-5 h-5 text-gray-600" />
+              <X className="w-5 h-5 text-gray-300" />
             </button>
           </div>
         </div>
@@ -79,8 +79,8 @@ export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
             return (
               <div key={meal} className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-bold text-gray-900 heading-serif">{meal}</h3>
-                  <div className="text-sm text-gray-600 body-sans">
+                  <h3 className="text-lg font-bold text-white heading-serif">{meal}</h3>
+                  <div className="text-sm text-gray-300 body-sans">
                     {totals.calories} cal
                   </div>
                 </div>
@@ -89,37 +89,37 @@ export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
                   {entries.map((entry, index) => (
                     <div 
                       key={index}
-                      className="p-3 rounded-xl bg-gray-50 border border-gray-200"
+                      className="p-3 rounded-xl bg-gray-800 border border-gray-700"
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div>
-                          <h4 className="font-medium text-gray-900 body-sans">{entry.name}</h4>
-                          <p className="text-sm text-gray-500 body-sans">{entry.amount}</p>
+                          <h4 className="font-medium text-white body-sans">{entry.name}</h4>
+                          <p className="text-sm text-gray-400 body-sans">{entry.amount}</p>
                         </div>
-                        <div className="text-sm font-semibold text-gray-900 body-sans">
+                        <div className="text-sm font-semibold text-white body-sans">
                           {entry.calories} cal
                         </div>
                       </div>
                       
-                      <div className="flex justify-between text-xs text-gray-600 body-sans">
-                        <span className="text-purple-600">P: {entry.protein}g</span>
-                        <span className="text-amber-600">C: {entry.carbs}g</span>
-                        <span className="text-rose-600">F: {entry.fat}g</span>
+                      <div className="flex justify-between text-xs text-gray-300 body-sans">
+                        <span className="text-purple-400">P: {entry.protein}g</span>
+                        <span className="text-amber-400">C: {entry.carbs}g</span>
+                        <span className="text-rose-400">F: {entry.fat}g</span>
                       </div>
                     </div>
                   ))}
                 </div>
                 
                 {/* Meal Totals */}
-                <div className="p-3 rounded-xl bg-orange-50 border border-orange-200">
+                <div className="p-3 rounded-xl bg-orange-900/30 border border-orange-700">
                   <div className="flex justify-between items-center">
-                    <span className="font-bold text-gray-900 body-sans">{meal} Total</span>
-                    <span className="font-bold text-gray-900 body-sans">{totals.calories} cal</span>
+                    <span className="font-bold text-white body-sans">{meal} Total</span>
+                    <span className="font-bold text-white body-sans">{totals.calories} cal</span>
                   </div>
                   <div className="flex justify-between text-sm mt-1 body-sans">
-                    <span className="text-purple-600">Protein: {totals.protein}g</span>
-                    <span className="text-amber-600">Carbs: {totals.carbs}g</span>
-                    <span className="text-rose-600">Fat: {totals.fat}g</span>
+                    <span className="text-purple-400">Protein: {totals.protein}g</span>
+                    <span className="text-amber-400">Carbs: {totals.carbs}g</span>
+                    <span className="text-rose-400">Fat: {totals.fat}g</span>
                   </div>
                 </div>
               </div>
