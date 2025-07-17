@@ -34,12 +34,6 @@
   --crimson: 348 83% 47%;
   --deep-purple: 280 60% 20%;
   
-  /* Brand Colors */
-  --cta-blue: 48 135 255;
-  --sky-sapphire: 48 135 255;
-  --pull-day-green: 0 221 175;
-  --emerald-mint: 0 221 175;
-  
   /* Primary Gradient Colors */
   --gradient-start: hsl(320, 100%, 70%);
   --gradient-middle: hsl(280, 100%, 65%);
