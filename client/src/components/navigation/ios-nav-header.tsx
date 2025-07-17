@@ -53,12 +53,22 @@ export default function IOSNavHeader({
         <div className="flex-1 text-center">
           {largeTitle ? (
             <div>
-              <h1 className="text-title-1 font-bold text-white">{title}</h1>
+              <h1 className="text-title-1 font-bold" style={{
+                background: 'linear-gradient(90deg, rgb(0, 183, 225) 0%, rgb(0, 183, 225) 30%, rgb(0, 189, 184) 70%, rgb(0, 195, 142) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>{title}</h1>
               {subtitle && <p className="text-footnote ios-gray mt-1">{subtitle}</p>}
             </div>
           ) : (
             <div>
-              <h1 className="text-headline font-semibold text-white">{title}</h1>
+              <h1 className="text-headline font-semibold" style={{
+                background: 'linear-gradient(90deg, rgb(0, 183, 225) 0%, rgb(0, 183, 225) 30%, rgb(0, 189, 184) 70%, rgb(0, 195, 142) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>{title}</h1>
               {subtitle && <p className="text-caption-1 ios-gray">{subtitle}</p>}
             </div>
           )}
