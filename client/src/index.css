@@ -495,6 +495,82 @@
       0 16px 48px rgba(0, 0, 0, 0.4),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
+
+  /* iOS Card Components */
+  .ios-card {
+    background: rgba(20, 20, 25, 0.3);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ios-card:hover {
+    background: rgba(20, 20, 25, 0.4);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .ios-card-elevated {
+    background: rgba(20, 20, 25, 0.4);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 
+      0 16px 48px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  /* iOS Spacing Components */
+  .ios-spacing-small > * + * {
+    margin-top: 8px;
+  }
+
+  .ios-spacing-medium > * + * {
+    margin-top: 16px;
+  }
+
+  .ios-spacing-large > * + * {
+    margin-top: 24px;
+  }
+
+  /* iOS Progress Components */
+  .ios-progress-section {
+    margin-bottom: 16px;
+  }
+
+  .ios-progress-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .ios-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .ios-progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* iOS Navigation Header */
+  .ios-nav-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    max-width: 28rem;
+    margin: 0 auto;
+  }
   
   .engagement-badge {
     @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200;
