@@ -21,11 +21,11 @@ export default function BottomNav() {
     {
       id: "ai",
       icon: () => (
-        <div className="w-8 h-8 flex items-center justify-center">
+        <div className="w-10 h-10 flex items-center justify-center">
           <img 
             src={bbLogo}
             alt="Body Butler"
-            className="w-8 h-8 object-contain"
+            className="w-10 h-10 object-contain"
           />
         </div>
       ),
@@ -50,7 +50,7 @@ export default function BottomNav() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+    <div className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-md bg-black/30 border-t border-white/20">
       <div className="flex items-center justify-around py-2 px-4 max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive = location === item.path;
@@ -62,8 +62,8 @@ export default function BottomNav() {
               onClick={() => handleNavClick(item.path, item.id)}
               className={`flex flex-col items-center justify-center p-2 transition-all duration-200 ${
                 isActive 
-                  ? 'text-blue-600' 
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'text-white' 
+                  : 'text-white/70 hover:text-white'
               }`}
             >
               <IconComponent 
