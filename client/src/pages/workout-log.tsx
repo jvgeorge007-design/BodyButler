@@ -174,7 +174,7 @@ export default function WorkoutLog() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-900 px-6 py-8">
+    <div className="min-h-screen px-6 py-8" style={{ background: 'var(--bg-primary)' }}>
       <div className="max-w-md mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -191,83 +191,98 @@ export default function WorkoutLog() {
         </div>
 
         {/* Workout Header */}
-        <Card className="bg-gray-800 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-white">{todaysWorkout.focus}</CardTitle>
-            <div className="flex justify-between text-sm text-gray-300">
+        <div className="glass-card">
+          <div className="mb-4">
+            <h2 className="text-xl font-black heading-serif" style={{color: 'rgb(235, 235, 240)'}}>{todaysWorkout.focus}</h2>
+            <div className="flex justify-between text-sm mt-2" style={{color: 'rgb(180, 180, 190)'}}>
               <span>{todaysWorkout.day}</span>
               <span>{completedSets} / {totalSets} sets completed</span>
             </div>
-          </CardHeader>
+          </div>
           {!workoutStarted && (
-            <CardContent>
-              <Button onClick={startWorkout} className="w-full bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white">
-                Start Workout
-              </Button>
-            </CardContent>
+            <button 
+              onClick={startWorkout} 
+              className="w-full gradient-button"
+            >
+              Start Workout
+            </button>
           )}
-        </Card>
+        </div>
 
         {/* Exercise List */}
         {workoutStarted && (
           <div className="space-y-4">
             {exerciseLogs.map((exercise, exerciseIndex) => (
-              <Card key={exercise.exerciseId} className="bg-gray-800 border-gray-700">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-white">{exercise.name}</CardTitle>
-                  <div className="text-sm text-gray-300">
+              <div key={exercise.exerciseId} className="glass-card">
+                <div className="mb-4">
+                  <h3 className="text-lg font-bold heading-serif" style={{color: 'rgb(235, 235, 240)'}}>{exercise.name}</h3>
+                  <div className="text-sm mt-1" style={{color: 'rgb(180, 180, 190)'}}>
                     Target: {exercise.targetSets} sets × {exercise.targetReps} reps
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
+                </div>
+                <div className="space-y-3">
                   {exercise.completedSets.map((set, setIndex) => (
-                    <div key={setIndex} className="flex items-center space-x-3 p-3 border border-gray-600 rounded-lg bg-gray-700">
+                    <div key={setIndex} className="flex items-center space-x-3 p-3 rounded-lg" style={{
+                      background: 'rgba(20, 20, 25, 0.4)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}>
                       <div className="flex-1 grid grid-cols-2 gap-2">
                         <div>
-                          <Label className="text-xs text-gray-300">Reps</Label>
-                          <Input
+                          <label className="text-xs body-sans" style={{color: 'rgb(180, 180, 190)'}}>Reps</label>
+                          <input
                             type="number"
                             value={set.reps}
                             onChange={(e) => updateSetData(exerciseIndex, setIndex, 'reps', parseInt(e.target.value) || 0)}
-                            className="h-8 bg-gray-600 border-gray-500 text-white"
+                            className="h-8 w-full px-2 rounded border-0 text-white body-sans"
+                            style={{
+                              background: 'rgba(20, 20, 25, 0.6)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}
                           />
                         </div>
                         <div>
-                          <Label className="text-xs text-gray-300">Weight (lbs)</Label>
-                          <Input
+                          <label className="text-xs body-sans" style={{color: 'rgb(180, 180, 190)'}}>Weight (lbs)</label>
+                          <input
                             type="number"
                             value={set.weight || 0}
                             onChange={(e) => updateSetData(exerciseIndex, setIndex, 'weight', parseInt(e.target.value) || 0)}
-                            className="h-8 bg-gray-600 border-gray-500 text-white"
+                            className="h-8 w-full px-2 rounded border-0 text-white body-sans"
+                            style={{
+                              background: 'rgba(20, 20, 25, 0.6)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}
                             placeholder="0"
                           />
                         </div>
                       </div>
-                      <Button
-                        variant={set.completed ? "default" : "outline"}
-                        size="sm"
+                      <button
                         onClick={() => completeSet(exerciseIndex, setIndex)}
-                        className={`px-3 ${set.completed 
-                          ? 'bg-green-600 hover:bg-green-700 text-white' 
-                          : 'border-gray-500 text-gray-300 hover:bg-gray-600 hover:text-white'
+                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${set.completed 
+                          ? 'text-white' 
+                          : 'hover:bg-gray-600 hover:text-white'
                         }`}
+                        style={{
+                          background: set.completed ? 'rgb(0, 195, 142)' : 'rgba(20, 20, 25, 0.4)',
+                          color: set.completed ? 'white' : 'rgb(180, 180, 190)',
+                          border: set.completed ? 'none' : '1px solid rgba(255, 255, 255, 0.1)'
+                        }}
                       >
                         {set.completed ? <Check className="w-4 h-4" /> : `Set ${setIndex + 1}`}
-                      </Button>
+                      </button>
                     </div>
                   ))}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
             
             {/* Finish Workout */}
-            <Button 
+            <button 
               onClick={finishWorkout} 
-              className="w-full h-12 text-lg bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white"
+              className="w-full h-12 text-lg gradient-button"
               disabled={completedSets === 0}
             >
               Finish Workout
-            </Button>
+            </button>
           </div>
         )}
       </div>

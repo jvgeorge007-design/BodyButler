@@ -48,16 +48,24 @@ export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-900 rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto">
+      <div className="rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto" style={{
+        background: 'rgba(20, 20, 25, 0.4)',
+        backdropFilter: 'blur(24px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)'
+      }}>
         {/* Header */}
-        <div className="sticky top-0 bg-gray-900 border-b border-gray-700 px-6 py-4 rounded-t-2xl">
+        <div className="sticky top-0 px-6 py-4 rounded-t-2xl" style={{
+          background: 'rgba(20, 20, 25, 0.6)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+        }}>
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-black text-white heading-serif">Food Log</h2>
+            <h2 className="text-xl font-black heading-serif" style={{color: 'rgb(235, 235, 240)'}}>Food Log</h2>
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-gray-800 rounded-xl transition-colors"
+              className="p-2 rounded-xl transition-colors hover:bg-gray-800"
+              style={{color: 'rgb(180, 180, 190)'}}
             >
-              <X className="w-5 h-5 text-gray-300" />
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -66,7 +74,7 @@ export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
         <div className="px-6 pt-4">
           <button 
             onClick={() => {/* Will be handled by parent component */}}
-            className="w-full bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white font-medium py-3 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
+            className="w-full gradient-button"
           >
             + Add Food
           </button>
@@ -79,8 +87,8 @@ export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
             return (
               <div key={meal} className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-bold text-white heading-serif">{meal}</h3>
-                  <div className="text-sm text-gray-300 body-sans">
+                  <h3 className="text-lg font-bold heading-serif" style={{color: 'rgb(235, 235, 240)'}}>{meal}</h3>
+                  <div className="text-sm body-sans" style={{color: 'rgb(180, 180, 190)'}}>
                     {totals.calories} cal
                   </div>
                 </div>
@@ -89,37 +97,44 @@ export default function FoodLogPopup({ isOpen, onClose }: FoodLogPopupProps) {
                   {entries.map((entry, index) => (
                     <div 
                       key={index}
-                      className="p-3 rounded-xl bg-gray-800 border border-gray-700"
+                      className="p-3 rounded-xl"
+                      style={{
+                        background: 'rgba(20, 20, 25, 0.4)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)'
+                      }}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div>
-                          <h4 className="font-medium text-white body-sans">{entry.name}</h4>
-                          <p className="text-sm text-gray-400 body-sans">{entry.amount}</p>
+                          <h4 className="font-medium body-sans" style={{color: 'rgb(235, 235, 240)'}}>{entry.name}</h4>
+                          <p className="text-sm body-sans" style={{color: 'rgb(180, 180, 190)'}}>{entry.amount}</p>
                         </div>
-                        <div className="text-sm font-semibold text-white body-sans">
+                        <div className="text-sm font-semibold body-sans" style={{color: 'rgb(235, 235, 240)'}}>
                           {entry.calories} cal
                         </div>
                       </div>
                       
-                      <div className="flex justify-between text-xs text-gray-300 body-sans">
-                        <span className="text-purple-400">P: {entry.protein}g</span>
-                        <span className="text-amber-400">C: {entry.carbs}g</span>
-                        <span className="text-rose-400">F: {entry.fat}g</span>
+                      <div className="flex justify-between text-xs body-sans">
+                        <span style={{color: '#2CD6D6'}}>P: {entry.protein}g</span>
+                        <span style={{color: '#3CD8A3'}}>C: {entry.carbs}g</span>
+                        <span style={{color: '#FF9A8B'}}>F: {entry.fat}g</span>
                       </div>
                     </div>
                   ))}
                 </div>
                 
                 {/* Meal Totals */}
-                <div className="p-3 rounded-xl bg-orange-900/30 border border-orange-700">
+                <div className="p-3 rounded-xl" style={{
+                  background: 'rgba(0, 183, 225, 0.1)',
+                  border: '1px solid rgba(0, 183, 225, 0.3)'
+                }}>
                   <div className="flex justify-between items-center">
-                    <span className="font-bold text-white body-sans">{meal} Total</span>
-                    <span className="font-bold text-white body-sans">{totals.calories} cal</span>
+                    <span className="font-bold body-sans" style={{color: 'rgb(235, 235, 240)'}}>{meal} Total</span>
+                    <span className="font-bold body-sans" style={{color: 'rgb(235, 235, 240)'}}>{totals.calories} cal</span>
                   </div>
                   <div className="flex justify-between text-sm mt-1 body-sans">
-                    <span className="text-purple-400">Protein: {totals.protein}g</span>
-                    <span className="text-amber-400">Carbs: {totals.carbs}g</span>
-                    <span className="text-rose-400">Fat: {totals.fat}g</span>
+                    <span style={{color: '#2CD6D6'}}>Protein: {totals.protein}g</span>
+                    <span style={{color: '#3CD8A3'}}>Carbs: {totals.carbs}g</span>
+                    <span style={{color: '#FF9A8B'}}>Fat: {totals.fat}g</span>
                   </div>
                 </div>
               </div>

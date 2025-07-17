@@ -72,8 +72,8 @@ export default function WorkoutCalendar() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-black text-white heading-serif">Workout Calendar</h1>
-            <p className="text-white/80 body-sans">Your personalized training schedule</p>
+            <h1 className="text-2xl font-black heading-serif" style={{color: 'rgb(235, 235, 240)'}}>Workout Calendar</h1>
+            <p className="body-sans" style={{color: 'rgb(180, 180, 190)'}}>Your personalized training schedule</p>
           </div>
           
           {/* Week Navigation */}
@@ -81,7 +81,7 @@ export default function WorkoutCalendar() {
             <Button variant="outline" size="sm" onClick={() => navigateWeek('prev')}>
               <ChevronLeft className="w-4 h-4" />
             </Button>
-            <span className="font-bold text-white body-sans">
+            <span className="font-bold body-sans" style={{color: 'rgb(235, 235, 240)'}}>
               {format(currentWeek, 'MMM d')} - {format(addDays(currentWeek, 6), 'MMM d, yyyy')}
             </span>
             <Button variant="outline" size="sm" onClick={() => navigateWeek('next')}>

@@ -116,41 +116,47 @@ export default function WeeklyCalendarModal({ isOpen, onClose, onDateSelect }: W
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] overflow-y-auto">
+      <div className="rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] overflow-y-auto" style={{
+        background: 'rgba(20, 20, 25, 0.4)',
+        backdropFilter: 'blur(24px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)'
+      }}>
         {/* Header */}
-        <div className="sticky top-0 bg-gray-900 border-b border-gray-700 px-6 py-4 rounded-t-2xl">
+        <div className="sticky top-0 px-6 py-4 rounded-t-2xl" style={{
+          background: 'rgba(20, 20, 25, 0.6)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+        }}>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-black text-white heading-serif">Calendar</h2>
+            <h2 className="text-xl font-black heading-serif" style={{color: 'rgb(235, 235, 240)'}}>Calendar</h2>
             <button 
               onClick={onClose}
               className="p-2 hover:bg-gray-800 rounded-xl transition-colors"
+              style={{color: 'rgb(180, 180, 190)'}}
             >
-              <X className="w-5 h-5 text-gray-300" />
+              <X className="w-5 h-5" />
             </button>
           </div>
           
           <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
               onClick={goToPreviousWeek}
-              className="p-2 hover:bg-gray-800 rounded-xl text-gray-300 hover:text-white"
+              className="p-2 hover:bg-gray-800 rounded-xl transition-colors"
+              style={{color: 'rgb(180, 180, 190)'}}
             >
               <ChevronLeft className="w-5 h-5" />
-            </Button>
+            </button>
             
-            <span className="text-lg font-semibold text-white">
+            <span className="text-lg font-semibold body-sans" style={{color: 'rgb(235, 235, 240)'}}>
               {formatWeekRange()}
             </span>
             
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
               onClick={goToNextWeek}
-              className="p-2 hover:bg-gray-800 rounded-xl text-gray-300 hover:text-white"
+              className="p-2 hover:bg-gray-800 rounded-xl transition-colors"
+              style={{color: 'rgb(180, 180, 190)'}}
             >
               <ChevronRight className="w-5 h-5" />
-            </Button>
+            </button>
           </div>
         </div>
 
@@ -166,32 +172,36 @@ export default function WeeklyCalendarModal({ isOpen, onClose, onDateSelect }: W
               <button
                 key={index}
                 onClick={() => handleDayClick(day)}
-                className={`w-full text-left p-4 rounded-2xl border transition-colors hover:bg-gray-800 ${
-                  isToday ? 'border-orange-500 bg-orange-900/30' : 'border-gray-700 bg-gray-800'
-                }`}
+                className="w-full text-left p-4 rounded-2xl transition-colors hover:bg-gray-800"
+                style={{
+                  background: isToday ? 'rgba(0, 183, 225, 0.1)' : 'rgba(20, 20, 25, 0.4)',
+                  border: isToday ? '1px solid rgba(0, 183, 225, 0.3)' : '1px solid rgba(255, 255, 255, 0.1)'
+                }}
               >
                 <div className="flex items-center justify-between mb-2">
                   <div>
-                    <div className="text-sm text-gray-400">
+                    <div className="text-sm body-sans" style={{color: 'rgb(180, 180, 190)'}}>
                       {day.toLocaleDateString('en-US', { weekday: 'short' })}
                     </div>
-                    <div className={`text-lg font-semibold ${isToday ? 'text-orange-400' : 'text-white'}`}>
+                    <div className="text-lg font-semibold body-sans" style={{
+                      color: isToday ? 'rgb(0, 183, 225)' : 'rgb(235, 235, 240)'
+                    }}>
                       {day.getDate()}
                     </div>
                   </div>
                   
                   {dayData.workout?.completed && (
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <CheckCircle className="w-5 h-5" style={{color: 'rgb(0, 195, 142)'}} />
                   )}
                 </div>
                 
                 {/* Workout Info */}
                 {dayData.workout && (
                   <div className="mb-2">
-                    <div className="text-sm font-medium text-white">
+                    <div className="text-sm font-medium body-sans" style={{color: 'rgb(235, 235, 240)'}}>
                       {dayData.workout.type}
                     </div>
-                    <div className="text-xs text-gray-400">
+                    <div className="text-xs body-sans" style={{color: 'rgb(180, 180, 190)'}}>
                       {dayData.workout.completed ? 'Completed' : (isToday ? 'Scheduled' : 'Planned')}
                     </div>
                   </div>
@@ -199,7 +209,7 @@ export default function WeeklyCalendarModal({ isOpen, onClose, onDateSelect }: W
                 
                 {/* Calorie Info */}
                 {dayData.calories && (
-                  <div className="text-xs text-gray-300">
+                  <div className="text-xs body-sans" style={{color: 'rgb(180, 180, 190)'}}>
                     {isPast || isToday ? (
                       `${dayData.calories.consumed} / ${dayData.calories.goal} cal`
                     ) : (
