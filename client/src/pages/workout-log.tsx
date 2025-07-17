@@ -223,7 +223,7 @@ export default function WorkoutLog() {
                 <div className="space-y-3">
                   {exercise.completedSets.map((set, setIndex) => (
                     <div key={setIndex} className="flex items-center space-x-3 p-3 rounded-lg" style={{
-                      background: 'rgba(20, 20, 25, 0.4)',
+                      background: 'rgb(40, 40, 45)',
                       border: '1px solid rgba(255, 255, 255, 0.1)'
                     }}>
                       <div className="flex-1 grid grid-cols-2 gap-2">
