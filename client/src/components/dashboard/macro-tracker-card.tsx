@@ -64,11 +64,11 @@ export default function MacroTrackerCard({
           const percentage = Math.min((macro.current / macro.target) * 100, 100);
           const macroNames = ['Protein', 'Carbs', 'Fat'];
           
-          // Deeper, richer gradients with enhanced depth
+          // Colors matching circular tracker style - muted and sophisticated
           const barColors = [
-            { gradient: 'linear-gradient(90deg, #6d28d9, #5b21b6)', shadow: '#6d28d9' }, // Protein - Deeper Purple
-            { gradient: 'linear-gradient(90deg, #b8956a, #a17c5a)', shadow: '#b8956a' }, // Carbs - Deeper Copper  
-            { gradient: 'linear-gradient(90deg, #b91c1c, #991b1b)', shadow: '#b91c1c' }  // Fat - Deeper Red
+            { gradient: 'linear-gradient(90deg, #c084fc, #a855f7)', shadow: '#c084fc' }, // Protein - Purple-400 to match circular tracker
+            { gradient: 'linear-gradient(90deg, #fbbf24, #f59e0b)', shadow: '#fbbf24' }, // Carbs - Amber-400 similar to orange theme  
+            { gradient: 'linear-gradient(90deg, #fb7185, #f43f5e)', shadow: '#fb7185' }  // Fat - Rose-400 for balanced palette
           ];
           
           return (
