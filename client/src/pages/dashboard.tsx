@@ -280,7 +280,7 @@ export default function Dashboard() {
       />
       
       {/* Main Content with iOS-style spacing */}
-      <main className="max-w-md mx-auto ios-padding pb-28 min-h-screen" style={{ 
+      <main className="max-w-md mx-auto ios-padding pb-36 min-h-screen" style={{ 
         paddingTop: 'calc(env(safe-area-inset-top) + 120px)' 
       }}>
         <div className="ios-spacing-large">

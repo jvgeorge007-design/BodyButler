@@ -1,5 +1,6 @@
 import { BookOpen, Plus } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { IOSButton } from "@/components/ui/ios-button";
 import FoodLogPopup from "./food-log-popup";
 import AddFoodCarousel from "./add-food-carousel";
 
@@ -106,18 +107,16 @@ export default function MacroTrackerCard({
       </div>
 
       {/* Add Food Button */}
-      <button 
+      <IOSButton 
+        variant="primary"
+        size="large"
+        fullWidth
+        icon={<Plus className="w-5 h-5" />}
         onClick={() => setShowAddFoodCarousel(true)}
-        className="w-full mt-6 font-medium py-3 rounded-2xl transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
-        style={{
-          color: 'rgb(235, 235, 240)', 
-          background: 'linear-gradient(90deg, rgb(0, 95, 115) 0%, rgb(0, 85, 105) 50%, rgb(0, 75, 95) 100%)',
-          boxShadow: '0 0 15px rgba(87, 168, 255, 0.2)'
-        }}
+        className="mt-6"
       >
-        <Plus className="w-4 h-4" />
         Add Food
-      </button>
+      </IOSButton>
 
       {/* Food Log Popup */}
       <FoodLogPopup 
