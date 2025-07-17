@@ -12,7 +12,7 @@ export default function BBAIIcon({ className = "w-6 h-6", isActive = false }: BB
       <img 
         src={bbAIIcon} 
         alt="BB AI" 
-        className="w-full h-full object-contain"
+        className="w-7 h-7 object-contain"
         style={{
           filter: isActive 
             ? 'brightness(1.8) saturate(1.5) hue-rotate(195deg) contrast(1.2)' 
