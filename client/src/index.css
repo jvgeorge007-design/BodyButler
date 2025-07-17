@@ -121,13 +121,13 @@
 @layer utilities {
   /* Elegant Gradient Buttons */
   .gradient-button {
-    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-middle) 50%, var(--gradient-end) 100%);
+    background: linear-gradient(90deg, rgb(0, 95, 115) 0%, rgb(0, 85, 105) 50%, rgb(0, 75, 95) 100%);
     @apply text-white font-medium py-4 px-8 rounded-full shadow-lg hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300 active:scale-95 min-h-[48px] min-w-[48px] border-0;
-    box-shadow: 0 10px 30px -5px rgba(192, 38, 211, 0.3);
+    box-shadow: 0 0 15px rgba(87, 168, 255, 0.2);
   }
   
   .gradient-button:hover {
-    box-shadow: 0 15px 40px -5px rgba(192, 38, 211, 0.4);
+    box-shadow: 0 0 20px rgba(87, 168, 255, 0.3);
   }
   
   .outline-button {

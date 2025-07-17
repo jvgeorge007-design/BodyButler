@@ -416,7 +416,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           <Button 
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 rounded-xl transition-colors"
+            className="w-full gradient-button"
           >
             {isLoading ? "Saving..." : "Continue"}
           </Button>
