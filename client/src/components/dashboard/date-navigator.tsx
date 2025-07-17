@@ -36,19 +36,33 @@ export default function DateNavigator({ selectedDate: propSelectedDate, onDateSe
 
   return (
     <div className="bg-transparent">
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-between">
+        <button 
+          onClick={handlePreviousDay}
+          className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+        >
+          <ChevronLeft className="w-5 h-5 text-white" />
+        </button>
+        
         <div className="flex items-center gap-3">
-          <span className="text-lg font-medium text-gray-800">
+          <span className="text-lg font-medium text-white">
             {formatDate(selectedDate)}
           </span>
           
           <button 
             onClick={handleCalendarClick}
-            className="p-1 hover:bg-gray-100 rounded transition-colors"
+            className="p-1 hover:bg-white/10 rounded transition-colors"
           >
-            <Calendar className="w-5 h-5 text-blue-600" />
+            <Calendar className="w-5 h-5 text-white" />
           </button>
         </div>
+        
+        <button 
+          onClick={handleNextDay}
+          className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+        >
+          <ChevronRight className="w-5 h-5 text-white" />
+        </button>
       </div>
     </div>
   );
