@@ -12,11 +12,11 @@ export default function BBAIIcon({ className = "w-6 h-6", isActive = false }: BB
       <img 
         src={bbAIIcon} 
         alt="BB AI" 
-        className={`w-full h-full object-contain ${isActive ? 'brightness-125' : 'brightness-75'}`}
+        className="w-full h-full object-contain"
         style={{
           filter: isActive 
-            ? 'brightness(1.2) saturate(1.3) hue-rotate(195deg)' 
-            : 'brightness(0.7) saturate(0.8)',
+            ? 'brightness(1.8) saturate(1.5) hue-rotate(195deg) contrast(1.2)' 
+            : 'brightness(1.4) saturate(1.2) contrast(1.1)',
         }}
       />
     </div>
