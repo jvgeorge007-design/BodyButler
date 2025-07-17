@@ -21,11 +21,11 @@ export default function BottomNav() {
     {
       id: "ai",
       icon: () => (
-        <div className="w-10 h-10 flex items-center justify-center">
+        <div className="w-12 h-12 flex items-center justify-center">
           <img 
             src={bbLogo}
             alt="Body Butler"
-            className="w-10 h-10 object-contain"
+            className="w-12 h-12 object-contain"
           />
         </div>
       ),
