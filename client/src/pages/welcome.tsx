@@ -46,7 +46,7 @@ export default function Welcome() {
           <Button 
             onClick={handleLogin}
             variant="outline"
-            className="w-full border-2 border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white font-semibold py-4 rounded-xl transition-colors"
+            className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 px-4 w-full border-2 border-orange-600 hover:bg-orange-600 hover:text-white font-semibold py-4 rounded-xl transition-colors bg-[#ffffff] text-[#005c70]"
           >
             Log In
           </Button>
