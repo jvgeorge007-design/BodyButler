@@ -1,4 +1,4 @@
-import { Home, TrendingUp, Settings } from "lucide-react";
+import { Home, TrendingUp, Settings, BookOpen } from "lucide-react";
 import { useLocation } from "wouter";
 import bbLogo from "@assets/BB logo_1751937804698.png";
 
@@ -21,11 +21,11 @@ export default function BottomNav() {
     {
       id: "ai",
       icon: () => (
-        <div className="w-10 h-10 flex items-center justify-center">
+        <div className="w-6 h-6 flex items-center justify-center">
           <img 
             src={bbLogo}
             alt="Body Butler"
-            className="w-10 h-10 object-contain"
+            className="w-6 h-6 object-contain"
           />
         </div>
       ),
@@ -50,8 +50,8 @@ export default function BottomNav() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 glass-card rounded-none border-t z-50" style={{ borderColor: 'hsl(var(--border) / 0.2)' }}>
-      <div className="flex items-center justify-around py-4 px-6 max-w-md mx-auto">
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+      <div className="flex items-center justify-around py-2 px-4 max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive = location === item.path;
           const IconComponent = item.icon;
@@ -60,19 +60,17 @@ export default function BottomNav() {
             <button
               key={item.id}
               onClick={() => handleNavClick(item.path, item.id)}
-              className={`flex flex-col items-center justify-center p-3 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95 ${
+              className={`flex flex-col items-center justify-center p-2 transition-all duration-200 ${
                 isActive 
-                  ? 'text-primary bg-primary/10' 
-                  : 'text-muted-foreground hover:text-foreground hover:bg-accent/20'
+                  ? 'text-blue-600' 
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <>
-                <IconComponent 
-                  className="w-6 h-6 mb-1"
-                  strokeWidth={2.5}
-                />
-                <span className="text-xs font-medium body-sans">{item.label}</span>
-              </>
+              <IconComponent 
+                className="w-6 h-6 mb-1"
+                strokeWidth={2}
+              />
+              <span className="text-xs font-medium">{item.label}</span>
             </button>
           );
         })}
