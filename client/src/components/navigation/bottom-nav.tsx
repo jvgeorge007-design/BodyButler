@@ -24,7 +24,7 @@ export default function BottomNav() {
         <img 
           src={bbLogo}
           alt="Body Butler"
-          className="w-8 h-8 object-contain"
+          className="w-9 h-9 object-contain"
         />
       ),
       label: "BB",
