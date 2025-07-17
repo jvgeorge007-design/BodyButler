@@ -24,8 +24,8 @@ export default function WorkoutCard({
   return (
     <div className="bg-transparent">
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-3xl font-light text-white heading-serif">
+        <div className="mb-4">
+          <h2 className="text-3xl font-light text-white heading-serif mb-2">
             Workout
           </h2>
           <button 
