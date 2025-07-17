@@ -64,11 +64,11 @@ export default function MacroTrackerCard({
           const percentage = Math.min((macro.current / macro.target) * 100, 100);
           const macroNames = ['Protein', 'Carbs', 'Fat'];
           
-          // Complementary orange palette colors for each macro
+          // Complementary warm palette colors for each macro
           const barColors = [
-            { gradient: 'linear-gradient(90deg, #c2410c, #9a3412)', shadow: '#c2410c' }, // Protein - Dark Orange
-            { gradient: 'linear-gradient(90deg, #ea580c, #c2410c)', shadow: '#ea580c' }, // Carbs - Medium Orange  
-            { gradient: 'linear-gradient(90deg, #f97316, #ea580c)', shadow: '#f97316' }  // Fat - Lighter Orange
+            { gradient: 'linear-gradient(90deg, #c2410c, #9a3412)', shadow: '#c2410c' }, // Protein - Orange
+            { gradient: 'linear-gradient(90deg, #dc2626, #991b1b)', shadow: '#dc2626' }, // Carbs - Red
+            { gradient: 'linear-gradient(90deg, #ca8a04, #a16207)', shadow: '#ca8a04' }  // Fat - Yellow/Gold
           ];
           
           return (
