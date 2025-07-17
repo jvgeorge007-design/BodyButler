@@ -298,118 +298,135 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
   };
 
   return (
-    <div className="min-h-screen px-6 py-8">
-      <div className="max-w-md mx-auto space-y-8">
-        <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-white">The Basics</h2>
-        </div>
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+      <main className="max-w-md mx-auto ios-padding min-h-screen" style={{ 
+        paddingTop: 'calc(env(safe-area-inset-top) + 120px)',
+        paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)'
+      }}>
+        <div className="ios-spacing-large">
+          <div className="text-center ios-spacing-medium">
+            <h2 className="text-largeTitle text-white">The Basics</h2>
+          </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="ios-spacing-large">
           {/* Name Input */}
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm font-semibold text-gray-900">
-              What's your name? *
-            </Label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="Enter your first name"
-              value={formData.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
-              className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
-                hasAttemptedSubmit && !formData.name ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'
-              }`}
-              required
-            />
+          <div className="ios-card">
+            <div className="ios-spacing-small">
+              <Label htmlFor="name" className="text-headline font-semibold text-white">
+                What's your name? *
+              </Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Enter your first name"
+                value={formData.name}
+                onChange={(e) => handleInputChange("name", e.target.value)}
+                className={`w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  hasAttemptedSubmit && !formData.name ? 'border-red-300 focus:border-red-500' : ''
+                }`}
+                required
+              />
+            </div>
           </div>
 
           {/* Biological Sex Toggle */}
-          <div className="space-y-2">
-            <Label className="text-sm font-semibold text-gray-900">Biological Sex *</Label>
-            <div className={`flex rounded-xl p-1 ${
-              hasAttemptedSubmit && !formData.sex ? 'bg-red-50 border border-red-300' : 'bg-gray-100'
-            }`}>
-              <button
-                type="button"
-                onClick={() => handleInputChange("sex", "male")}
-                className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all ${
-                  formData.sex === "male"
-                    ? "bg-blue-500 text-white shadow-sm"
-                    : "text-gray-600 hover:text-gray-800"
-                }`}
-              >
-                Male
-              </button>
-              <button
-                type="button"
-                onClick={() => handleInputChange("sex", "female")}
-                className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all ${
-                  formData.sex === "female"
-                    ? "bg-blue-500 text-white shadow-sm"
-                    : "text-gray-600 hover:text-gray-800"
-                }`}
-              >
-                Female
-              </button>
+          <div className="ios-card">
+            <div className="ios-spacing-small">
+              <Label className="text-headline font-semibold text-white">Biological Sex *</Label>
+              <div className={`flex rounded-2xl p-1 ${
+                hasAttemptedSubmit && !formData.sex ? 'bg-red-50 border border-red-300' : 'bg-white/10'
+              }`}>
+                <button
+                  type="button"
+                  onClick={() => handleInputChange("sex", "male")}
+                  className={`flex-1 py-3 px-4 rounded-xl text-body font-medium transition-all ios-touch-target ${
+                    formData.sex === "male"
+                      ? "ios-bg-blue text-white shadow-sm"
+                      : "text-white/80 hover:text-white"
+                  }`}
+                >
+                  Male
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleInputChange("sex", "female")}
+                  className={`flex-1 py-3 px-4 rounded-xl text-body font-medium transition-all ios-touch-target ${
+                    formData.sex === "female"
+                      ? "ios-bg-blue text-white shadow-sm"
+                      : "text-white/80 hover:text-white"
+                  }`}
+                >
+                  Female
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Basic Info Grid */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="height" className="text-sm font-semibold text-gray-900">Height *</Label>
-              <Input
-                id="height"
-                type="text"
-                placeholder="5'10&quot;"
-                value={formData.height}
-                onChange={(e) => handleInputChange("height", e.target.value)}
-                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
-                  hasAttemptedSubmit && !formData.height ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'
-                }`}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="weight" className="text-sm font-semibold text-gray-900">Weight *</Label>
-              <Input
-                id="weight"
-                type="text"
-                placeholder="180 lbs"
-                value={formData.weight}
-                onChange={(e) => handleInputChange("weight", e.target.value)}
-                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
-                  hasAttemptedSubmit && !formData.weight ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'
-                }`}
-                required
-              />
+          <div className="ios-card">
+            <div className="ios-spacing-small">
+              <Label className="text-headline font-semibold text-white">Physical Info *</Label>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="ios-spacing-small">
+                  <Label htmlFor="height" className="text-body text-white/80">Height</Label>
+                  <Input
+                    id="height"
+                    type="text"
+                    placeholder="5'10&quot;"
+                    value={formData.height}
+                    onChange={(e) => handleInputChange("height", e.target.value)}
+                    className={`w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      hasAttemptedSubmit && !formData.height ? 'border-red-300 focus:border-red-500' : ''
+                    }`}
+                    required
+                  />
+                </div>
+                <div className="ios-spacing-small">
+                  <Label htmlFor="weight" className="text-body text-white/80">Weight</Label>
+                  <Input
+                    id="weight"
+                    type="text"
+                    placeholder="180 lbs"
+                    value={formData.weight}
+                    onChange={(e) => handleInputChange("weight", e.target.value)}
+                    className={`w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      hasAttemptedSubmit && !formData.weight ? 'border-red-300 focus:border-red-500' : ''
+                    }`}
+                    required
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="birthDate" className="text-sm font-semibold text-gray-900">Birth Date *</Label>
-            <Input
-              id="birthDate"
-              type="date"
-              placeholder="Try: born January 1st, 1998"
-              value={formData.birthDate}
-              onChange={(e) => handleInputChange("birthDate", e.target.value)}
-              className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500/20 ${
-                hasAttemptedSubmit && !formData.birthDate ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'
-              }`}
-              required
-            />
+          <div className="ios-card">
+            <div className="ios-spacing-small">
+              <Label htmlFor="birthDate" className="text-headline font-semibold text-white">Birth Date *</Label>
+              <Input
+                id="birthDate"
+                type="date"
+                placeholder="Try: born January 1st, 1998"
+                value={formData.birthDate}
+                onChange={(e) => handleInputChange("birthDate", e.target.value)}
+                className={`w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  hasAttemptedSubmit && !formData.birthDate ? 'border-red-300 focus:border-red-500' : ''
+                }`}
+                required
+              />
+            </div>
           </div>
 
           {/* Photo Upload */}
-          <div className="space-y-2">
-            <Label className="text-sm font-semibold text-gray-900">Body Composition Photo</Label>
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-500 transition-colors cursor-pointer">
-              <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-3 flex items-center justify-center">
-                <Upload className="w-6 h-6 text-gray-400" />
+          <div className="ios-card">
+            <div className="ios-spacing-small">
+              <Label className="text-headline font-semibold text-white">Body Composition Photo</Label>
+              <div className="border-2 border-dashed border-white/20 rounded-2xl p-6 text-center hover:border-blue-500 transition-colors cursor-pointer">
+                <div className="w-16 h-16 bg-white/10 rounded-full mx-auto mb-3 flex items-center justify-center">
+                  <Upload className="w-6 h-6 text-white/60" />
+                </div>
+                <p className="text-body text-white/80">Upload or take a photo</p>
+                <p className="text-caption-1 text-white/60 mt-1">Helps us estimate body composition</p>
               </div>
-              <p className="text-sm text-gray-600">Upload or take a photo</p>
-              <p className="text-xs text-gray-400 mt-1">Helps us estimate body composition</p>
             </div>
           </div>
 
@@ -421,7 +438,8 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
             {isLoading ? "Saving..." : "Continue"}
           </Button>
         </form>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }
