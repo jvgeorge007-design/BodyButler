@@ -22,11 +22,9 @@ export default function CircularCalorieTracker({
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="bg-white rounded-3xl p-8 shadow-2xl border border-gray-100 relative overflow-hidden" style={{
-      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05)'
-    }}>
-      {/* Background shadow effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 to-purple-100/40 rounded-3xl"></div>
+    <div className="elegant-card relative overflow-hidden">
+      {/* Elegant gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-purple-500/5 rounded-3xl"></div>
       <div className="relative z-10">
       <div className="flex items-center justify-center mb-6">
         <div className="relative">
@@ -36,7 +34,7 @@ export default function CircularCalorieTracker({
               cx={size / 2}
               cy={size / 2}
               r={radius}
-              stroke="#E8F4F8"
+              stroke="hsl(var(--muted))"
               strokeWidth={strokeWidth}
               fill="none"
             />
@@ -62,8 +60,9 @@ export default function CircularCalorieTracker({
             {/* Gradient definition */}
             <defs>
               <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#4A90E2" />
-                <stop offset="100%" stopColor="#7B68EE" />
+                <stop offset="0%" stopColor="hsl(320, 100%, 70%)" />
+                <stop offset="50%" stopColor="hsl(280, 100%, 65%)" />
+                <stop offset="100%" stopColor="hsl(260, 100%, 60%)" />
               </linearGradient>
             </defs>
           </svg>
@@ -71,10 +70,10 @@ export default function CircularCalorieTracker({
           {/* Center content */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900 mb-1 animate-pulse-once">
+              <div className="text-3xl font-bold text-foreground mb-1 animate-pulse-once heading-serif">
                 {remaining}
               </div>
-              <div className="text-xs text-gray-500 uppercase font-medium tracking-wide">
+              <div className="text-xs text-muted-foreground uppercase font-medium tracking-wide body-sans">
                 REMAINING
               </div>
             </div>
@@ -82,21 +81,21 @@ export default function CircularCalorieTracker({
         </div>
       </div>
 
-      {/* Stats Grid - MyFitnessPal style */}
+      {/* Stats Grid - Elegant dark style */}
       <div className="grid grid-cols-3 gap-6 text-center">
         <div>
-          <div className="text-lg font-bold text-emerald-600 mb-1">{target}</div>
-          <div className="text-xs text-gray-500 uppercase font-medium tracking-wide">GOAL</div>
+          <div className="text-xl font-bold text-accent mb-1 heading-serif">{target}</div>
+          <div className="text-xs text-muted-foreground uppercase font-medium tracking-wide body-sans">GOAL</div>
         </div>
         
         <div>
-          <div className="text-lg font-bold text-blue-600 mb-1">{consumed}</div>
-          <div className="text-xs text-gray-500 uppercase font-medium tracking-wide">FOOD</div>
+          <div className="text-xl font-bold text-primary mb-1 heading-serif">{consumed}</div>
+          <div className="text-xs text-muted-foreground uppercase font-medium tracking-wide body-sans">FOOD</div>
         </div>
         
         <div>
-          <div className="text-lg font-bold text-orange-500 mb-1">0</div>
-          <div className="text-xs text-gray-500 uppercase font-medium tracking-wide">EXERCISE</div>
+          <div className="text-xl font-bold text-muted-foreground mb-1 heading-serif">0</div>
+          <div className="text-xs text-muted-foreground uppercase font-medium tracking-wide body-sans">EXERCISE</div>
         </div>
       </div>
       </div>

@@ -269,17 +269,28 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Blue Ribbon Header */}
-      <header className="bg-blue-600 px-4 py-4 sticky top-0 z-40">
-        <div className="max-w-md mx-auto flex items-center justify-center">
-          <h1 className="text-xl font-black text-white tracking-tighter">BODY BUTLER</h1>
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+      {/* Elegant Header */}
+      <header className="glass-card rounded-none border-0 border-b border-border/20 px-6 py-6 sticky top-0 z-40 backdrop-blur-xl">
+        <div className="max-w-md mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <KettlebellLogo className="w-10 h-10 text-primary" />
+            <h1 className="text-title2 text-primary">Body Butler</h1>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => window.location.href = '/api/logout'}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Logout
+          </Button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-md mx-auto px-4 py-6 pb-24 bg-gray-50 min-h-screen">
-        <div className="space-y-4">
+      <main className="max-w-md mx-auto px-6 py-8 pb-28 min-h-screen">
+        <div className="space-y-8">
           {/* Date Navigator */}
           <DateNavigator 
             selectedDate={selectedDate}

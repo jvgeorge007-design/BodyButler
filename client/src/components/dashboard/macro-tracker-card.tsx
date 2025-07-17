@@ -48,14 +48,14 @@ export default function MacroTrackerCard({
   }, []);
 
   return (
-    <div ref={containerRef} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+    <div ref={containerRef} className="elegant-card">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Diet</h3>
+        <h3 className="text-title3 text-foreground">Diet</h3>
         <button 
           onClick={() => setShowFoodLog(true)}
-          className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 hover:shadow-md active:scale-95 active:brightness-110"
+          className="p-3 hover:bg-accent/20 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95 active:brightness-110"
         >
-          <BookOpen className="w-5 h-5 text-blue-600" strokeWidth={2.5} />
+          <BookOpen className="w-5 h-5 text-primary" strokeWidth={2.5} />
         </button>
       </div>
       
@@ -67,32 +67,32 @@ export default function MacroTrackerCard({
           return (
             <div key={index}>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-muted-foreground body-sans">
                   {macroNames[index]}
                 </span>
-                <span className="text-sm font-semibold text-gray-900">
+                <span className="text-sm font-semibold text-foreground body-sans">
                   {macro.current}g / {macro.target}g
                 </span>
               </div>
               
               {/* Progress Bar */}
-              <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+              <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
                 <div 
-                  className={`h-2 rounded-full transition-all duration-2000 ease-out shadow-sm ${isVisible ? 'animate-fill-bar' : ''}`}
+                  className={`h-3 rounded-full transition-all duration-2000 ease-out shadow-lg ${isVisible ? 'animate-fill-bar' : ''}`}
                   style={{ 
                     '--target-width': `${percentage}%`,
                     width: isVisible ? undefined : '0%',
-                    background: `linear-gradient(90deg, ${macro.color}, ${macro.color}dd)`,
-                    boxShadow: `0 0 8px ${macro.color}40`
+                    background: `linear-gradient(90deg, hsl(320, 100%, 70%), hsl(280, 100%, 65%))`,
+                    boxShadow: `0 0 12px hsl(320, 100%, 70%)`
                   } as React.CSSProperties & { '--target-width': string }}
                 />
               </div>
               
-              <div className="flex justify-between items-center mt-1">
-                <span className="text-xs text-gray-500">
+              <div className="flex justify-between items-center mt-2">
+                <span className="text-xs text-muted-foreground body-sans">
                   {Math.round(percentage)}%
                 </span>
-                <span className="text-xs" style={{ color: macro.color }}>
+                <span className="text-xs text-primary body-sans">
                   {macro.target - macro.current}g remaining
                 </span>
               </div>

@@ -22,23 +22,23 @@ export default function WorkoutCard({
   const [showExercises, setShowExercises] = useState(false);
 
   return (
-    <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-xl font-bold text-gray-900">
+    <div className="elegant-card">
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-title3 text-foreground">
             Workout
           </h2>
           <button 
             onClick={() => setShowExercises(true)}
-            className="text-xl font-bold text-blue-600 hover:text-blue-700 transition-all duration-200 hover:shadow-md active:scale-95 active:brightness-110 cursor-pointer"
+            className="text-title3 text-primary hover:text-accent transition-all duration-300 hover:shadow-lg active:scale-95 cursor-pointer"
           >
             {workoutType}
           </button>
         </div>
         
         {!isRestDay && (
-          <div className="flex items-center gap-4 text-sm text-gray-500">
-            <span>⏱️ —</span>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground body-sans">
+            <span>⏱️ {duration}</span>
             <div className="flex items-center gap-1">
               <Dumbbell className="w-4 h-4" />
               <span>{exerciseCount} exercises</span>
@@ -49,10 +49,10 @@ export default function WorkoutCard({
 
       <button 
         onClick={onLogWorkout}
-        className={`w-full font-medium py-3 rounded-2xl transition-all duration-200 hover:shadow-lg active:scale-95 active:brightness-110 flex items-center justify-center gap-2 ${
+        className={`w-full font-medium py-4 rounded-full transition-all duration-300 hover:shadow-xl active:scale-95 flex items-center justify-center gap-2 ${
           isRestDay 
-            ? 'bg-gray-100 hover:bg-gray-200 text-gray-700' 
-            : 'bg-blue-600 hover:bg-blue-700 text-white'
+            ? 'bg-muted hover:bg-accent text-muted-foreground hover:text-foreground' 
+            : 'gradient-button'
         }`}
       >
         {isRestDay ? (

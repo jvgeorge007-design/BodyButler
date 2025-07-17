@@ -35,33 +35,33 @@ export default function DateNavigator({ selectedDate: propSelectedDate, onDateSe
   };
 
   return (
-    <div className="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 mb-4">
+    <div className="elegant-card mb-6">
       <div className="flex items-center justify-between">
         <button 
           onClick={handlePreviousDay}
-          className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 hover:shadow-md active:scale-95 active:brightness-110"
+          className="p-3 hover:bg-accent/20 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
         >
-          <ChevronLeft className="w-5 h-5 text-gray-600" />
+          <ChevronLeft className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />
         </button>
         
         <div className="flex items-center gap-4">
-          <span className="text-lg font-semibold text-gray-900">
+          <span className="text-headline text-foreground heading-serif">
             {formatDate(selectedDate)}
           </span>
           
           <button 
             onClick={handleCalendarClick}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 hover:shadow-md active:scale-95 active:brightness-110"
+            className="p-3 hover:bg-accent/20 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
           >
-            <Calendar className="w-5 h-5 text-blue-600" />
+            <Calendar className="w-5 h-5 text-primary" />
           </button>
         </div>
         
         <button 
           onClick={handleNextDay}
-          className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 hover:shadow-md active:scale-95 active:brightness-110"
+          className="p-3 hover:bg-accent/20 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
         >
-          <ChevronRight className="w-5 h-5 text-gray-600" />
+          <ChevronRight className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />
         </button>
       </div>
     </div>
