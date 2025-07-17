@@ -9,6 +9,7 @@ import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { ArrowLeft, Check, Plus, Timer } from "lucide-react";
+import { BottomNav } from "@/components/navigation/bottom-nav";
 
 interface ExerciseLog {
   exerciseId: string;
@@ -280,16 +281,21 @@ export default function WorkoutLog() {
             ))}
             
             {/* Finish Workout */}
-            <button 
-              onClick={finishWorkout} 
-              className="w-full h-12 text-lg gradient-button"
-              disabled={completedSets === 0}
-            >
-              Finish Workout
-            </button>
+            <div className="flex justify-center">
+              <button 
+                onClick={finishWorkout} 
+                className="h-12 text-lg gradient-button px-8"
+                disabled={completedSets === 0}
+              >
+                Finish Workout
+              </button>
+            </div>
           </div>
         )}
       </div>
+      
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 }
