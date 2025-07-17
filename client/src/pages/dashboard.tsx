@@ -288,38 +288,46 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/* Main Content with Glassmorphism Cards */}
       <main className="max-w-md mx-auto px-6 py-8 pb-28 min-h-screen">
-        <div className="space-y-8">
-          {/* Date Navigator */}
-          <DateNavigator 
-            selectedDate={selectedDate}
-            onDateSelect={setSelectedDate}
-            onCalendarOpen={() => setIsCalendarOpen(true)} 
-          />
+        <div className="space-y-6">
+          {/* Calendar Card */}
+          <div className="glass-card">
+            <DateNavigator 
+              selectedDate={selectedDate}
+              onDateSelect={setSelectedDate}
+              onCalendarOpen={() => setIsCalendarOpen(true)} 
+            />
+          </div>
 
-          {/* Circular Calorie Tracker */}
-          <CircularCalorieTracker
-            consumed={dashboardData.calories.consumed}
-            target={dashboardData.calories.target}
-            remaining={dashboardData.calories.remaining}
-          />
+          {/* Circular Calorie Tracker Card - Elevated */}
+          <div className="glass-card-elevated">
+            <CircularCalorieTracker
+              consumed={dashboardData.calories.consumed}
+              target={dashboardData.calories.target}
+              remaining={dashboardData.calories.remaining}
+            />
+          </div>
 
           {/* Workout Card */}
-          <WorkoutCard
-            workoutType={dashboardData.workout.type}
-            focus={dashboardData.workout.focus}
-            duration={dashboardData.workout.duration}
-            exerciseCount={dashboardData.workout.exerciseCount}
-            onLogWorkout={() => setLocation("/workout-log")}
-          />
+          <div className="glass-card">
+            <WorkoutCard
+              workoutType={dashboardData.workout.type}
+              focus={dashboardData.workout.focus}
+              duration={dashboardData.workout.duration}
+              exerciseCount={dashboardData.workout.exerciseCount}
+              onLogWorkout={() => setLocation("/workout-log")}
+            />
+          </div>
 
-          {/* Macro Tracker Card */}
-          <MacroTrackerCard
-            protein={dashboardData.macros.protein}
-            carbs={dashboardData.macros.carbs}
-            fat={dashboardData.macros.fat}
-          />
+          {/* Diet Card */}
+          <div className="glass-card">
+            <MacroTrackerCard
+              protein={dashboardData.macros.protein}
+              carbs={dashboardData.macros.carbs}
+              fat={dashboardData.macros.fat}
+            />
+          </div>
         </div>
       </main>
 

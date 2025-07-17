@@ -48,7 +48,7 @@ export default function MacroTrackerCard({
   }, []);
 
   return (
-    <div ref={containerRef} className="elegant-card">
+    <div ref={containerRef} className="bg-transparent">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-title3 text-foreground">Diet</h3>
         <button 

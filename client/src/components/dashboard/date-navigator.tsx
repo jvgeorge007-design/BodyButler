@@ -35,7 +35,7 @@ export default function DateNavigator({ selectedDate: propSelectedDate, onDateSe
   };
 
   return (
-    <div className="elegant-card mb-6">
+    <div className="bg-transparent">
       <div className="flex items-center justify-between">
         <button 
           onClick={handlePreviousDay}

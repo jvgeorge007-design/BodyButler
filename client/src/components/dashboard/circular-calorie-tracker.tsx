@@ -23,6 +23,7 @@ export default function CircularCalorieTracker({
 
   return (
     <div className="relative">
+      {/* Card content without background - parent has glassmorphism */}
       <div className="relative z-10">
       <div className="flex items-center justify-center mb-6">
         <div className="relative">

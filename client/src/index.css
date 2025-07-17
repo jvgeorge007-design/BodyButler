@@ -39,13 +39,23 @@
   --gradient-middle: hsl(280, 100%, 65%);
   --gradient-end: hsl(260, 100%, 60%);
   
-  /* Background Gradients */
-  --bg-primary: radial-gradient(ellipse at top, hsl(315, 40%, 25%) 0%, hsl(280, 60%, 20%) 50%, hsl(270, 40%, 15%) 100%);
+  /* Background Gradients - Ambient Glow Layers */
+  --bg-primary: 
+    radial-gradient(ellipse 800px 600px at 20% 30%, rgba(147, 51, 234, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 600px 800px at 80% 70%, rgba(239, 68, 68, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 400px 400px at 50% 20%, rgba(251, 146, 60, 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, hsl(0, 0%, 2%) 0%, hsl(0, 0%, 0%) 100%);
   --bg-secondary: linear-gradient(135deg, hsl(315, 40%, 25%) 0%, hsl(280, 60%, 20%) 100%);
   
-  /* Card Gradients */
-  --card-gradient: linear-gradient(135deg, hsl(280, 20%, 12%) 0%, hsl(300, 15%, 15%) 100%);
-  --card-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+  /* Glassmorphism Card System */
+  --glass-card-bg: rgba(20, 20, 25, 0.4);
+  --glass-card-border: rgba(255, 255, 255, 0.08);
+  --glass-card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --glass-card-backdrop: blur(16px);
+  
+  /* Neumorphic Elements */
+  --neu-shadow-light: rgba(255, 255, 255, 0.05);
+  --neu-shadow-dark: rgba(0, 0, 0, 0.3);
   
   /* Text Colors */
   --text-primary: hsl(340, 5%, 95%);
@@ -122,24 +132,34 @@
     border-color: hsl(var(--primary) / 0.5);
   }
   
-  /* Dark Elegant Cards */
-  .elegant-card {
-    background: var(--card-gradient);
-    @apply border rounded-3xl p-8 transition-all duration-300 backdrop-blur-sm;
-    border-color: hsl(var(--border) / 0.3);
-    box-shadow: var(--card-shadow);
-  }
-  
-  .elegant-card:hover {
-    border-color: hsl(var(--border) / 0.5);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  }
-  
+  /* Glassmorphism Card System */
   .glass-card {
-    @apply border rounded-3xl p-6 backdrop-blur-xl;
-    background-color: hsl(var(--card) / 0.6);
-    border-color: hsl(var(--border) / 0.2);
-    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.3);
+    background: var(--glass-card-bg);
+    backdrop-filter: var(--glass-card-backdrop);
+    border: 1px solid var(--glass-card-border);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: var(--glass-card-shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-card:hover {
+    background: rgba(25, 25, 30, 0.5);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
+  }
+
+  /* Elevated Glass Cards */
+  .glass-card-elevated {
+    background: rgba(30, 30, 35, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 
+      0 16px 48px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 var(--neu-shadow-light);
   }
   
   .engagement-badge {
