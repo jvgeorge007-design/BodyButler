@@ -85,17 +85,10 @@ export default function BottomNav() {
               }`}
             >
               <div className="w-6 h-6 mb-1 flex items-center justify-center">
-                {item.id === "ai" ? (
-                  <IconComponent 
-                    className="w-6 h-6"
-                    isActive={isActive}
-                  />
-                ) : (
-                  <IconComponent 
-                    className="w-6 h-6"
-                    strokeWidth={isActive ? 2.5 : 2}
-                  />
-                )}
+                <IconComponent 
+                  className="w-6 h-6"
+                  strokeWidth={isActive ? 2.5 : 2}
+                />
               </div>
               <span className="text-caption-2 font-medium">{item.label}</span>
             </button>
