@@ -30,12 +30,13 @@ export default function IOSNavHeader({
 
   return (
     <div className="ios-nav-header" style={{
-      paddingTop: 'env(safe-area-inset-top)',
       background: 'rgba(20, 20, 25, 0.9)',
       backdropFilter: 'blur(24px)',
       borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
     }}>
-      <div className="flex items-center justify-between ios-padding">
+      <div className="flex items-center justify-between px-4 py-3" style={{
+        paddingTop: `calc(env(safe-area-inset-top) + 12px)`
+      }}>
         {/* Left Side */}
         <div className="flex items-center">
           {showBackButton && (
