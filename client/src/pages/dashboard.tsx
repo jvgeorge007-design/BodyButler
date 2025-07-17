@@ -273,7 +273,7 @@ export default function Dashboard() {
       {/* Top Header Banner - Blue Background */}
       <header className="bg-gradient-to-r from-orange-700 to-orange-800 px-6 py-4 sticky top-0 z-40">
         <div className="max-w-md mx-auto text-center">
-          <h1 className="text-white text-xl font-bold tracking-widest uppercase">
+          <h1 className="text-white text-xl font-black tracking-widest uppercase">
             BODY BUTLER
           </h1>
         </div>
