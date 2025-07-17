@@ -73,8 +73,9 @@ export default function AIChat() {
       />
 
       {/* Chat Messages */}
-      <main className="max-w-md mx-auto ios-padding pb-40 min-h-screen" style={{ 
-        paddingTop: 'calc(env(safe-area-inset-top) + 120px)' 
+      <main className="max-w-md mx-auto ios-padding min-h-screen" style={{ 
+        paddingTop: 'calc(env(safe-area-inset-top) + 120px)',
+        paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)'
       }}>
         <div className="ios-spacing-small">
           {messages.map((message) => (

@@ -27,8 +27,9 @@ export default function Settings() {
       />
 
       {/* Main Content */}
-      <main className="max-w-md mx-auto ios-padding pb-28 min-h-screen" style={{ 
-        paddingTop: 'calc(env(safe-area-inset-top) + 120px)' 
+      <main className="max-w-md mx-auto ios-padding min-h-screen" style={{ 
+        paddingTop: 'calc(env(safe-area-inset-top) + 120px)',
+        paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)'
       }}>
         <div className="ios-spacing-large">
           {/* Profile Section */}
