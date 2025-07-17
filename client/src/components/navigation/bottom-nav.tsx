@@ -24,7 +24,7 @@ export default function BottomNav() {
     {
       id: "ai",
       icon: AIKettlebellIcon,
-      label: "AI",
+      label: "BB AI",
       path: "/ai-chat"
     },
     {
