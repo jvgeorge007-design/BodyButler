@@ -109,7 +109,11 @@ export default function MacroTrackerCard({
       <button 
         onClick={() => setShowAddFoodCarousel(true)}
         className="w-full mt-6 font-medium py-3 rounded-2xl transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
-        style={{color: 'rgb(235, 235, 240)', background: 'linear-gradient(90deg, rgb(0, 95, 115) 0%, rgb(0, 85, 105) 50%, rgb(0, 75, 95) 100%)'}}
+        style={{
+          color: 'rgb(235, 235, 240)', 
+          background: 'linear-gradient(90deg, rgb(0, 95, 115) 0%, rgb(0, 85, 105) 50%, rgb(0, 75, 95) 100%)',
+          boxShadow: '0 0 20px rgba(87, 168, 255, 0.4)'
+        }}
       >
         <Plus className="w-4 h-4" />
         Add Food
