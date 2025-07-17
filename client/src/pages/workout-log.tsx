@@ -226,17 +226,18 @@ export default function WorkoutLog() {
                       background: 'rgb(40, 40, 45)',
                       border: '1px solid rgba(255, 255, 255, 0.1)'
                     }}>
-                      <div className="flex items-center">
+                      <div className="flex items-end">
                         <button
                           onClick={() => completeSet(exerciseIndex, setIndex)}
-                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${set.completed 
+                          className={`px-3 rounded-lg text-sm font-medium transition-all duration-200 ${set.completed 
                             ? 'text-white' 
                             : 'hover:bg-gray-600 hover:text-white'
                           }`}
                           style={{
                             background: set.completed ? 'rgb(0, 195, 142)' : 'rgba(20, 20, 25, 0.4)',
                             color: set.completed ? 'white' : 'rgb(180, 180, 190)',
-                            border: set.completed ? 'none' : '1px solid rgba(255, 255, 255, 0.1)'
+                            border: set.completed ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
+                            height: '32px'
                           }}
                         >
                           {set.completed ? <Check className="w-4 h-4" /> : `Set ${setIndex + 1}`}
