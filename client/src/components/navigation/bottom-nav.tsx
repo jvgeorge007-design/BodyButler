@@ -1,7 +1,7 @@
 import { Home, TrendingUp, Settings } from "lucide-react";
 import { useLocation } from "wouter";
 import { useModal } from "@/contexts/modal-context";
-import AIKettlebellIcon from "@/components/icons/ai-kettlebell-icon";
+import BBAIIcon from "@/components/icons/bb-ai-icon";
 import bbLogo from "@assets/BB logo_1752757975860.png";
 
 export default function BottomNav() {
@@ -23,7 +23,7 @@ export default function BottomNav() {
     },
     {
       id: "ai",
-      icon: AIKettlebellIcon,
+      icon: BBAIIcon,
       label: "BB AI",
       path: "/ai-chat"
     },
@@ -85,10 +85,17 @@ export default function BottomNav() {
               }`}
             >
               <div className="w-6 h-6 mb-1 flex items-center justify-center">
-                <IconComponent 
-                  className="w-6 h-6"
-                  strokeWidth={isActive ? 2.5 : 2}
-                />
+                {item.id === "ai" ? (
+                  <IconComponent 
+                    className="w-6 h-6"
+                    isActive={isActive}
+                  />
+                ) : (
+                  <IconComponent 
+                    className="w-6 h-6"
+                    strokeWidth={isActive ? 2.5 : 2}
+                  />
+                )}
               </div>
               <span className="text-caption-2 font-medium">{item.label}</span>
             </button>
