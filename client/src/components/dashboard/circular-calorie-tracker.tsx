@@ -59,9 +59,9 @@ export default function CircularCalorieTracker({
             {/* Gradient definition */}
             <defs>
               <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgb(36, 128, 245)" />
-                <stop offset="50%" stopColor="rgb(56, 148, 255)" />
-                <stop offset="100%" stopColor="rgb(76, 168, 255)" />
+                <stop offset="0%" stopColor="#00D4AA" />
+                <stop offset="50%" stopColor="#00E4BA" />
+                <stop offset="100%" stopColor="#00F4CA" />
               </linearGradient>
             </defs>
           </svg>
@@ -83,7 +83,7 @@ export default function CircularCalorieTracker({
       {/* Stats Grid - Reference image style */}
       <div className="grid grid-cols-3 gap-8 text-center mt-12">
         <div>
-          <div className="text-3xl font-light mb-2 heading-serif" style={{color: 'rgb(36, 128, 245)'}}>{target}</div>
+          <div className="text-3xl font-light mb-2 heading-serif" style={{color: '#00D4AA'}}>{target}</div>
           <div className="text-xs text-gray-400 uppercase font-medium tracking-widest body-sans">GOAL</div>
         </div>
         
@@ -93,7 +93,7 @@ export default function CircularCalorieTracker({
         </div>
         
         <div>
-          <div className="text-3xl font-light text-purple-400 mb-2 heading-serif">0</div>
+          <div className="text-3xl font-light mb-2 heading-serif" style={{color: '#00D4AA'}}>0</div>
           <div className="text-xs text-gray-400 uppercase font-medium tracking-widest body-sans">EXERCISE</div>
         </div>
       </div>

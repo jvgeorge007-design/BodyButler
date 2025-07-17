@@ -30,7 +30,8 @@ export default function WorkoutCard({
           </h2>
           <button 
             onClick={() => setShowExercises(true)}
-            className="text-3xl font-light italic text-white hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif"
+            className="text-3xl font-light italic hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif"
+            style={{color: '#00D4AA'}}
           >
             {workoutType}
           </button>
@@ -49,7 +50,8 @@ export default function WorkoutCard({
 
       <button 
         onClick={onLogWorkout}
-        className="w-full bg-gradient-to-r from-orange-700 to-orange-800 hover:from-orange-800 hover:to-orange-900 text-white font-medium py-3 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95 flex items-center justify-center gap-3"
+        className="w-full text-white font-medium py-3 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95 flex items-center justify-center gap-3"
+        style={{background: 'linear-gradient(90deg, #00D4AA 0%, #00C4AA 50%, #00B4AA 100%)'}}
       >
         <Play className="w-5 h-5" fill="currentColor" />
         Start Workout
