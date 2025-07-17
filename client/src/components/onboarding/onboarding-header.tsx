@@ -24,8 +24,11 @@ export default function OnboardingHeader({ currentSection, totalSections, onBack
         <div className="flex-1 mx-4">
           <div className="bg-white/20 rounded-full h-2">
             <div 
-              className="bg-gradient-to-r from-orange-700 to-orange-800 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
+              className="h-2 rounded-full transition-all duration-300"
+              style={{ 
+                width: `${progress}%`,
+                background: 'linear-gradient(90deg, rgb(0, 183, 225) 0%, rgb(0, 183, 225) 30%, rgb(0, 189, 184) 70%, rgb(0, 195, 142) 100%)'
+              }}
             />
           </div>
         </div>
