@@ -28,14 +28,18 @@ export default function Section3({ data, onNext, isLoading }: Section3Props) {
   };
 
   return (
-    <div className="min-h-screen px-6 py-8">
-      <div className="max-w-md mx-auto space-y-8">
-        <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-white">Diet & Budget</h2>
-          <p className="text-gray-600">Tell us about your eating preferences and budget</p>
-        </div>
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+      <main className="max-w-md mx-auto ios-padding min-h-screen" style={{ 
+        paddingTop: 'calc(env(safe-area-inset-top) + 120px)',
+        paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)'
+      }}>
+        <div className="ios-spacing-large">
+          <div className="text-center ios-spacing-medium">
+            <h2 className="text-largeTitle text-white">Diet & Budget</h2>
+            <p className="text-body text-white/60">Tell us about your eating preferences and budget</p>
+          </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="ios-spacing-large">
           {/* Diet Preferences */}
           <div className="space-y-2">
             <Label htmlFor="diet" className="text-sm font-semibold text-gray-900">

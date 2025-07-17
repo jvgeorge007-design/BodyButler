@@ -177,41 +177,46 @@ export default function Onboarding() {
   // Introduction screen
   if (currentSection === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 py-8" style={{ background: 'var(--bg-primary)' }}>
-        <div className="w-full max-w-sm mx-auto text-center space-y-8">
-          {/* Logo Section - Same as welcome page */}
-          <div className="flex flex-col items-center">
-            {/* Body Butler Logo */}
-            <KettlebellLogo className="w-60 h-72" />
-            
-            {/* Main Title */}
-            <div className="space-y-2 -mt-4">
-              <h1 className="text-2xl font-black text-white leading-tight heading-serif">
-                Hi, I'm BB — Your Body Butler
-              </h1>
+      <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+        <main className="max-w-md mx-auto ios-padding min-h-screen flex flex-col items-center justify-center" style={{ 
+          paddingTop: 'calc(env(safe-area-inset-top) + 40px)',
+          paddingBottom: 'calc(env(safe-area-inset-bottom) + 40px)'
+        }}>
+          <div className="w-full text-center ios-spacing-large">
+            {/* Logo Section - Same as welcome page */}
+            <div className="flex flex-col items-center ios-spacing-large">
+              {/* Body Butler Logo */}
+              <KettlebellLogo className="w-60 h-72" />
+              
+              {/* Main Title */}
+              <div className="ios-spacing-medium -mt-4">
+                <h1 className="text-title1 font-black text-white leading-tight heading-serif">
+                  Hi, I'm BB — Your Body Butler
+                </h1>
+              </div>
+            </div>
+
+            {/* Introduction Content */}
+            <div className="ios-spacing-large">
+              {/* Description */}
+              <div className="ios-spacing-medium">
+                <p className="text-body text-white/80 font-medium leading-relaxed body-sans">
+                  To help create a transformation plan tailored to you, I'll ask you a few quick questions about your body, lifestyle and goals.
+                </p>
+              </div>
+            </div>
+
+            {/* Action Button */}
+            <div className="pt-4">
+              <Button 
+                onClick={handleBeginOnboarding}
+                className="w-full gradient-button ios-touch-target"
+              >
+                Let's Begin
+              </Button>
             </div>
           </div>
-
-          {/* Introduction Content */}
-          <div className="space-y-6">
-            {/* Description */}
-            <div className="space-y-4">
-              <p className="text-white/80 text-base font-medium leading-relaxed body-sans">
-                To help create a transformation plan tailored to you, I'll ask you a few quick questions about your body, lifestyle and goals.
-              </p>
-            </div>
-          </div>
-
-          {/* Action Button */}
-          <div className="pt-4">
-            <Button 
-              onClick={handleBeginOnboarding}
-              className="w-full gradient-button"
-            >
-              Let's Begin
-            </Button>
-          </div>
-        </div>
+        </main>
       </div>
     );
   }
