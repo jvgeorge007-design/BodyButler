@@ -67,7 +67,7 @@ export default function MacroTrackerCard({
           // Richer, darker hues - 2-3 shades deeper than previous
           const barColors = [
             { gradient: 'linear-gradient(90deg, #9333ea, #7c3aed)', shadow: '#9333ea' }, // Protein - Purple-600/700 (much richer)
-            { gradient: 'linear-gradient(90deg, #d97706, #b45309)', shadow: '#d97706' }, // Carbs - Amber-600/700 (deeper orange)  
+            { gradient: 'linear-gradient(90deg, #ca8a04, #a16207)', shadow: '#ca8a04' }, // Carbs - Yellow-600/700 (darker mustard yellow)  
             { gradient: 'linear-gradient(90deg, #e11d48, #be123c)', shadow: '#e11d48' }  // Fat - Rose-600/700 (richer red)
           ];
           
