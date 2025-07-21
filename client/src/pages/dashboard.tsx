@@ -76,19 +76,8 @@ export default function Dashboard() {
     },
   });
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      toast({
-        title: "Please sign in",
-        description: "Redirecting to login...",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        window.location.href = "/api/login";
-      }, 500);
-      return;
-    }
-  }, [isAuthenticated, isLoading, toast]);
+  // Show demo dashboard if not authenticated
+  const showDemo = !isAuthenticated && !isLoading;
 
   useEffect(() => {
     if ((profileError && isUnauthorizedError(profileError as Error)) || 
@@ -127,9 +116,9 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, isLoading, profile, profileError, profileLoading, processingOnboarding, createProfileMutation]);
 
-  // Calculate state variables
-  const needsOnboarding = !profile || !profile.onboardingCompleted;
-  const needsPlanGeneration = profile && profile.onboardingCompleted && !personalizedPlan;
+  // Calculate state variables - handle null/undefined profiles
+  const needsOnboarding = !profile || !(profile as any)?.onboardingCompleted;
+  const needsPlanGeneration = profile && (profile as any)?.onboardingCompleted && !personalizedPlan;
 
   // Auto-generate plan if user has completed onboarding but no plan
   useEffect(() => {
@@ -154,12 +143,12 @@ export default function Dashboard() {
     }
   }, [needsPlanGeneration, planLoading, queryClient, toast]);
 
-  // Get user's first name for personalized greeting
-  const userName = user?.firstName || user?.email?.split('@')[0] || 'there';
+  // Get user's first name for personalized greeting - handle null/undefined user
+  const userName = (user as any)?.firstName || (user as any)?.email?.split('@')[0] || 'there';
   
   // Calculate data for dashboard components based on selected date
-  const todaysWorkout = personalizedPlan?.workoutPlan?.days?.[0];
-  const macroTargets = personalizedPlan?.macroTargets || {};
+  const todaysWorkout = (personalizedPlan as any)?.workoutPlan?.days?.[0];
+  const macroTargets = (personalizedPlan as any)?.macroTargets || {};
   
   // Mock data that varies by selected date (in real app, this would come from API)
   const today = new Date();
@@ -225,6 +214,128 @@ export default function Dashboard() {
             <div className="h-full bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] rounded-full animate-pulse" />
           </div>
         </div>
+      </div>
+    );
+  }
+
+  // Show demo dashboard for unauthenticated users
+  if (showDemo) {
+    const demoData = {
+      calories: {
+        consumed: 1200,
+        target: 2000,
+        remaining: 800
+      },
+      workout: {
+        type: "Push Day",
+        focus: "Chest, shoulders, and triceps",
+        duration: "45 min",
+        exerciseCount: 6
+      },
+      macros: {
+        protein: { 
+          current: 80, 
+          target: 150, 
+          unit: 'g', 
+          color: '#E67E22' 
+        },
+        carbs: { 
+          current: 150, 
+          target: 200, 
+          unit: 'g', 
+          color: '#3498DB' 
+        },
+        fat: { 
+          current: 45, 
+          target: 65, 
+          unit: 'g', 
+          color: '#E74C3C' 
+        }
+      }
+    };
+
+    return (
+      <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+        {/* iOS Navigation Header */}
+        <IOSNavHeader 
+          title="Body Butler" 
+          subtitle="Your personal fitness companion"
+          largeTitle={true}
+        />
+        
+        {/* Main Content with iOS-style spacing */}
+        <main className="max-w-md mx-auto ios-padding min-h-screen" style={{ 
+          paddingTop: 'calc(env(safe-area-inset-top) + 120px)',
+          paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)'
+        }}>
+          <div className="ios-spacing-large">
+            {/* Calendar Card */}
+            <div className="ios-card">
+              <DateNavigator 
+                selectedDate={selectedDate}
+                onDateSelect={setSelectedDate}
+                onCalendarOpen={() => setIsCalendarOpen(true)} 
+              />
+            </div>
+
+            {/* Circular Calorie Tracker Card - Elevated */}
+            <div className="ios-card-elevated">
+              <CircularCalorieTracker
+                consumed={demoData.calories.consumed}
+                target={demoData.calories.target}
+                remaining={demoData.calories.remaining}
+              />
+            </div>
+
+            {/* Workout Card */}
+            <div className="ios-card">
+              <WorkoutCard
+                workoutType={demoData.workout.type}
+                focus={demoData.workout.focus}
+                duration={demoData.workout.duration}
+                exerciseCount={demoData.workout.exerciseCount}
+                onLogWorkout={() => setLocation("/workout-log")}
+              />
+            </div>
+
+            {/* Diet Card */}
+            <div className="ios-card">
+              <MacroTrackerCard
+                protein={demoData.macros.protein}
+                carbs={demoData.macros.carbs}
+                fat={demoData.macros.fat}
+              />
+            </div>
+
+            {/* Demo Notice */}
+            <div className="ios-card bg-blue-50 border-blue-200">
+              <div className="text-center p-4">
+                <p className="text-sm text-blue-800 mb-3">
+                  You're viewing a demo of the dashboard. 
+                </p>
+                <Button 
+                  onClick={() => window.location.href = "/api/login"}
+                  className="gradient-button"
+                >
+                  Sign In to Get Started
+                </Button>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {/* Weekly Calendar Modal */}
+        <WeeklyCalendarModal 
+          isOpen={isCalendarOpen}
+          onClose={() => setIsCalendarOpen(false)}
+          onDateSelect={(date) => {
+            setSelectedDate(date);
+            setIsCalendarOpen(false);
+          }}
+        />
+
+        {/* Bottom Navigation */}
+        <BottomNav />
       </div>
     );
   }

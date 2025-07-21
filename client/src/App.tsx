@@ -24,6 +24,9 @@ function Router() {
 
   return (
     <Switch>
+      {/* Dashboard is available for both authenticated and non-authenticated users */}
+      <Route path="/dashboard" component={Dashboard} />
+      
       {isLoading || !isAuthenticated ? (
         <>
           <Route path="/" component={Welcome} />
@@ -33,7 +36,6 @@ function Router() {
       ) : (
         <>
           <Route path="/" component={Dashboard} />
-          <Route path="/dashboard" component={Dashboard} />
           <Route path="/progress" component={Progress} />
           <Route path="/ai-chat" component={AIChat} />
           <Route path="/settings" component={Settings} />
