@@ -353,7 +353,7 @@ export default function Dashboard() {
       <main
         className="max-w-md mx-auto ios-padding min-h-screen"
         style={{
-          paddingTop: "calc(env(safe-area-inset-top) + 120px)",
+          paddingTop: "calc(env(safe-area-inset-top) + 20px)",
           paddingBottom: "calc(env(safe-area-inset-bottom) + 120px)",
         }}
       >
