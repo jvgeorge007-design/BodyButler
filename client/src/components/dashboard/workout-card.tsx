@@ -27,8 +27,8 @@ export default function WorkoutCard({
         <div className="flex items-center mb-4">
           <button 
             onClick={() => setShowExercises(true)}
-            className="text-3xl font-light italic hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif"
-            style={{color: 'rgb(0, 195, 142)'}}
+            className="text-3xl font-light hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif"
+            style={{color: 'rgb(235, 235, 240)'}}
           >
             {workoutType}
           </button>
