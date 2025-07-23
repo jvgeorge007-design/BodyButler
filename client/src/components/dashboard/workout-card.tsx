@@ -24,10 +24,7 @@ export default function WorkoutCard({
   return (
     <div className="bg-transparent">
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-3xl font-light heading-serif" style={{color: 'rgb(235, 235, 240)'}}>
-            Workout
-          </h2>
+        <div className="flex items-center mb-4">
           <button 
             onClick={() => setShowExercises(true)}
             className="text-3xl font-light italic hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif"
@@ -36,16 +33,6 @@ export default function WorkoutCard({
             {workoutType}
           </button>
         </div>
-        
-        {!isRestDay && (
-          <div className="flex items-center gap-2 body-sans" style={{color: 'rgb(180, 180, 190)'}}>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12,6 12,12 16,14"/>
-            </svg>
-            <span className="text-sm font-medium">{exerciseCount} exercises</span>
-          </div>
-        )}
       </div>
 
       <button 
