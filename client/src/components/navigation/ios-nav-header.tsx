@@ -34,8 +34,8 @@ export default function IOSNavHeader({
       backdropFilter: 'blur(24px)',
       borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
     }}>
-      <div className="flex items-center justify-between px-4 py-3" style={{
-        paddingTop: `calc(env(safe-area-inset-top) + 12px)`
+      <div className="flex items-center justify-between px-4 py-2" style={{
+        paddingTop: `calc(env(safe-area-inset-top) + 8px)`
       }}>
         {/* Left Side */}
         <div className="flex items-center">
@@ -59,7 +59,6 @@ export default function IOSNavHeader({
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text'
               }}>{title}</h1>
-              {subtitle && <p className="text-footnote ios-gray mt-1">{subtitle}</p>}
             </div>
           ) : (
             <div>
@@ -69,7 +68,6 @@ export default function IOSNavHeader({
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text'
               }}>{title}</h1>
-              {subtitle && <p className="text-caption-1 ios-gray">{subtitle}</p>}
             </div>
           )}
         </div>
