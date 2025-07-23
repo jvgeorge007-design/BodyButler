@@ -370,8 +370,20 @@ export default function Dashboard() {
 
 
 
-          {/* Workout Card - Half Size Right Aligned */}
-          <div className="flex justify-end">
+          {/* Two Workout Cards - Left and Right */}
+          <div className="flex gap-4">
+            {/* Left Workout Card */}
+            <div className="ios-card w-1/2">
+              <WorkoutCard
+                workoutType={dashboardData.workout.type}
+                focus={dashboardData.workout.focus}
+                duration={dashboardData.workout.duration}
+                exerciseCount={dashboardData.workout.exerciseCount}
+                onLogWorkout={() => setLocation("/workout-log")}
+              />
+            </div>
+            
+            {/* Right Workout Card */}
             <div className="ios-card w-1/2">
               <WorkoutCard
                 workoutType={dashboardData.workout.type}
