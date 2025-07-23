@@ -44,7 +44,7 @@ export default function WorkoutCard({
         }}
       >
         <Play className="w-5 h-5" fill="currentColor" />
-        Start Workout
+        Start
       </button>
 
       {/* Exercises Popup */}
