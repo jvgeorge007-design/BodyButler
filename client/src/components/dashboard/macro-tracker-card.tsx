@@ -52,12 +52,20 @@ export default function MacroTrackerCard({
     <div ref={containerRef} className="bg-transparent">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-3xl font-light heading-serif" style={{color: 'rgb(235, 235, 240)'}}>Diet</h3>
-        <button 
-          onClick={() => setShowFoodLog(true)}
-          className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
-        >
-          <BookOpen className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => setShowFoodLog(true)}
+            className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
+          >
+            <BookOpen className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
+          </button>
+          <button 
+            onClick={() => setShowAddFoodCarousel(true)}
+            className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
+          >
+            <Plus className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
+          </button>
+        </div>
       </div>
       
       <div className="space-y-5">
