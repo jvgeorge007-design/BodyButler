@@ -51,19 +51,6 @@ export default function IOSNavHeader({
 
         {/* Center Title */}
         <div className="flex-1 text-center">
-          {largeTitle ? (
-            <div>
-              <h1 className="text-title-1 font-bold" style={{
-                color: 'rgb(64, 144, 255)'
-              }}>{title}</h1>
-            </div>
-          ) : (
-            <div>
-              <h1 className="text-headline font-semibold" style={{
-                color: 'rgb(64, 144, 255)'
-              }}>{title}</h1>
-            </div>
-          )}
         </div>
 
         {/* Right Side */}
