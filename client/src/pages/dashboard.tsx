@@ -367,14 +367,7 @@ export default function Dashboard() {
             />
           </div>
 
-          {/* Circular Calorie Tracker Card - Elevated */}
-          <div className="ios-card-elevated">
-            <CircularCalorieTracker
-              consumed={dashboardData.calories.consumed}
-              target={dashboardData.calories.target}
-              remaining={dashboardData.calories.remaining}
-            />
-          </div>
+
 
           {/* Workout Card */}
           <div className="ios-card">
