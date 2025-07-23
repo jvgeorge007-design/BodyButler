@@ -370,18 +370,8 @@ export default function Dashboard() {
 
 
 
-          {/* Two Half-Size Cards */}
-          <div className="flex gap-4">
-            {/* Left: Circular Calorie Tracker - Half Size */}
-            <div className="ios-card w-1/2">
-              <CircularCalorieTracker
-                consumed={dashboardData.calories.consumed}
-                target={dashboardData.calories.target}
-                remaining={dashboardData.calories.remaining}
-              />
-            </div>
-            
-            {/* Right: Workout Card - Half Size */}
+          {/* Workout Card - Half Size Right Aligned */}
+          <div className="flex justify-end">
             <div className="ios-card w-1/2">
               <WorkoutCard
                 workoutType={dashboardData.workout.type}
