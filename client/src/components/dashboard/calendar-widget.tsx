@@ -44,29 +44,9 @@ export default function CalendarWidget({ weeklySchedule = {} }: CalendarWidgetPr
   return (
     <div className="calm-card">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-[hsl(var(--blue-primary))]" />
-          <h3 className="text-headline text-[hsl(var(--text-primary))]">This Week</h3>
-        </div>
-        <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setCurrentWeekOffset(currentWeekOffset - 1)}
-            className="h-8 w-8 p-0"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setCurrentWeekOffset(currentWeekOffset + 1)}
-            className="h-8 w-8 p-0"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
+      <div className="flex items-center gap-2 mb-6">
+        <Calendar className="w-5 h-5 text-[hsl(var(--blue-primary))]" />
+        <h3 className="text-headline text-[hsl(var(--text-primary))]">This Week</h3>
       </div>
 
       {/* Calendar Grid */}
