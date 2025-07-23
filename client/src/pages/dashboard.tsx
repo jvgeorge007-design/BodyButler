@@ -369,15 +369,27 @@ export default function Dashboard() {
 
 
 
-          {/* Workout Card */}
-          <div className="ios-card">
-            <WorkoutCard
-              workoutType={dashboardData.workout.type}
-              focus={dashboardData.workout.focus}
-              duration={dashboardData.workout.duration}
-              exerciseCount={dashboardData.workout.exerciseCount}
-              onLogWorkout={() => setLocation("/workout-log")}
-            />
+          {/* Bento Box Layout - Circular Tracker + Workout Card */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Left: Circular Calorie Tracker */}
+            <div className="ios-card-elevated">
+              <CircularCalorieTracker
+                consumed={dashboardData.calories.consumed}
+                target={dashboardData.calories.target}
+                remaining={dashboardData.calories.remaining}
+              />
+            </div>
+            
+            {/* Right: Workout Card - Half Size */}
+            <div className="ios-card">
+              <WorkoutCard
+                workoutType={dashboardData.workout.type}
+                focus={dashboardData.workout.focus}
+                duration={dashboardData.workout.duration}
+                exerciseCount={dashboardData.workout.exerciseCount}
+                onLogWorkout={() => setLocation("/workout-log")}
+              />
+            </div>
           </div>
 
           {/* Diet Card */}
