@@ -372,35 +372,13 @@ export default function Dashboard() {
 
           {/* Calorie Card Left, Workout Card Right */}
           <div className="flex gap-4">
-            {/* Left: Calorie Tracking Card */}
+            {/* Left: Circular Calorie Tracker */}
             <div className="ios-card w-1/2">
-              <div className="bg-transparent">
-                <div className="space-y-4">
-                  {/* Current Calories */}
-                  <div className="text-center">
-                    <div className="text-3xl font-bold heading-serif mb-1" style={{color: 'rgb(235, 235, 240)'}}>
-                      {dashboardData.calories.consumed}
-                    </div>
-                    <div className="text-sm font-medium body-sans" style={{color: 'rgb(180, 180, 190)'}}>
-                      calories consumed
-                    </div>
-                  </div>
-                  
-                  {/* Goal Progress */}
-                  <div className="flex items-center justify-center gap-2">
-                    <span className="text-xs font-medium body-sans" style={{color: 'rgb(180, 180, 190)'}}>
-                      Goal: {dashboardData.calories.target}
-                    </span>
-                  </div>
-                  
-                  {/* Remaining */}
-                  <div className="text-center">
-                    <span className="text-xs font-medium body-sans" style={{color: 'rgb(87, 168, 255)'}}>
-                      {dashboardData.calories.remaining} remaining
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <CircularCalorieTracker
+                consumed={dashboardData.calories.consumed}
+                target={dashboardData.calories.target}
+                remaining={dashboardData.calories.remaining}
+              />
             </div>
             
             {/* Right: Workout Card */}
