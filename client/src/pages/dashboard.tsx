@@ -17,6 +17,7 @@ import WorkoutCard from "@/components/dashboard/workout-card";
 import MacroTrackerCard from "@/components/dashboard/macro-tracker-card";
 import DateNavigator from "@/components/dashboard/date-navigator";
 import WeeklyCalendarModal from "@/components/dashboard/weekly-calendar-modal";
+import { ProgressCard } from "@/components/dashboard/progress-card";
 import BottomNav from "@/components/navigation/bottom-nav";
 
 export default function Dashboard() {
@@ -369,9 +370,15 @@ export default function Dashboard() {
 
 
 
-          {/* Workout Card - Half Size Right Aligned */}
-          <div className="flex justify-end">
-            <div className="ios-card w-1/2">
+          {/* Two Card Layout - Progress Card Left, Workout Card Right */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Left: Progress Card */}
+            <div className="ios-card">
+              <ProgressCard />
+            </div>
+            
+            {/* Right: Workout Card */}
+            <div className="ios-card">
               <WorkoutCard
                 workoutType={dashboardData.workout.type}
                 focus={dashboardData.workout.focus}
