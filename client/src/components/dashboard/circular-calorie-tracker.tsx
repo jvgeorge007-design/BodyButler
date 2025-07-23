@@ -26,8 +26,7 @@ export default function CircularCalorieTracker({
       {/* Card content without background - parent has glassmorphism */}
       <div className="relative z-10">
       <div className="flex items-center justify-center mb-6">
-        <div className="relative" style={{filter: 'drop-shadow(0 0 12px rgba(90, 255, 208, 0.25))'}}>
-          <div className="absolute inset-0 rounded-full" style={{boxShadow: '0 0 25px rgba(90, 255, 208, 0.15)'}}></div>
+        <div className="relative">
           <svg width={size} height={size} className="transform -rotate-90">
             {/* Background circle */}
             <circle

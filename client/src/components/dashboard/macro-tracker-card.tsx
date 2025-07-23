@@ -86,12 +86,11 @@ export default function MacroTrackerCard({
               {/* Progress Bar */}
               <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
                 <div 
-                  className={`h-3 rounded-full transition-all duration-2000 ease-out shadow-lg ${isVisible ? 'animate-fill-bar' : ''}`}
+                  className={`h-3 rounded-full transition-all duration-2000 ease-out ${isVisible ? 'animate-fill-bar' : ''}`}
                   style={{ 
                     '--target-width': `${percentage}%`,
                     width: isVisible ? undefined : '0%',
-                    background: barColors[index].gradient,
-                    boxShadow: `0 0 12px ${barColors[index].shadow}`
+                    background: barColors[index].gradient
                   } as React.CSSProperties & { '--target-width': string }}
                 />
               </div>
@@ -111,8 +110,7 @@ export default function MacroTrackerCard({
         onClick={() => setShowAddFoodCarousel(true)}
         className="w-full mt-6 text-white font-medium py-3 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95 flex items-center justify-center gap-3"
         style={{
-          background: 'linear-gradient(90deg, rgb(0, 95, 115) 0%, rgb(0, 85, 105) 50%, rgb(0, 75, 95) 100%)',
-          boxShadow: '0 0 15px rgba(87, 168, 255, 0.2)'
+          background: 'linear-gradient(90deg, rgb(0, 95, 115) 0%, rgb(0, 85, 105) 50%, rgb(0, 75, 95) 100%)'
         }}
       >
         <Plus className="w-5 h-5" />

@@ -128,6 +128,7 @@ Changelog:
 - July 17, 2025. Created complete iOS-compliant component library: IOSNavHeader for navigation headers, IOSButton for iOS-style buttons, IOSList/IOSListItem for grouped lists, IOSSwitch for toggles, all following iOS design patterns and accessibility standards
 - July 17, 2025. Updated all main pages (Dashboard, Progress, Settings, AI Chat) to use new iOS components and styling patterns: proper spacing, typography, navigation, and interaction patterns for native iOS experience
 - July 17, 2025. Enhanced workout card with dynamic workout type display: added visual indicator arrow for clickable workout types, navigation header now stretches full width to top, BB AI icon changed to MessageCircle for better consistency
+- July 23, 2025. Removed neon/glow effects from all progress bars and trackers: eliminated glowing box-shadows from circular calorie tracker, macro progress bars, and gradient buttons while preserving clean animations and glassmorphism card shadows
 ```
 
 ## User Preferences
