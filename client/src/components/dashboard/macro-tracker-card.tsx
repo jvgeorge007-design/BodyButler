@@ -113,34 +113,7 @@ export default function MacroTrackerCard({
         })}
       </div>
 
-      {/* Calorie Progress Bar */}
-      <div className="mt-6">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium body-sans" style={{color: 'rgb(235, 235, 240)'}}>
-            Calories
-          </span>
-          <span className="text-sm font-semibold body-sans" style={{color: 'rgb(235, 235, 240)'}}>
-            1850 / 2200
-          </span>
-        </div>
-        
-        <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
-          <div 
-            className={`h-3 rounded-full transition-all duration-2000 ease-out ${isVisible ? 'animate-fill-bar' : ''}`}
-            style={{ 
-              '--target-width': '84%',
-              width: isVisible ? undefined : '0%',
-              background: 'linear-gradient(90deg, #FFB347, #FF8C42)'
-            } as React.CSSProperties & { '--target-width': string }}
-          />
-        </div>
-        
-        <div className="flex justify-between items-center mt-2">
-          <span className="text-xs font-medium body-sans" style={{color: 'rgb(180, 180, 190)'}}>
-            350 remaining
-          </span>
-        </div>
-      </div>
+
 
       {/* Food Log Popup */}
       <FoodLogPopup 
