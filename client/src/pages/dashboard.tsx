@@ -370,10 +370,10 @@ export default function Dashboard() {
 
 
 
-          {/* Two Card Layout - Circular Calorie Tracker Left, Workout Card Right */}
-          <div className="grid grid-cols-2 gap-4">
-            {/* Left: Circular Calorie Tracker */}
-            <div className="ios-card">
+          {/* Two Half-Size Cards */}
+          <div className="flex gap-4">
+            {/* Left: Circular Calorie Tracker - Half Size */}
+            <div className="ios-card w-1/2">
               <CircularCalorieTracker
                 consumed={dashboardData.calories.consumed}
                 target={dashboardData.calories.target}
@@ -381,8 +381,8 @@ export default function Dashboard() {
               />
             </div>
             
-            {/* Right: Workout Card */}
-            <div className="ios-card">
+            {/* Right: Workout Card - Half Size */}
+            <div className="ios-card w-1/2">
               <WorkoutCard
                 workoutType={dashboardData.workout.type}
                 focus={dashboardData.workout.focus}
