@@ -14,9 +14,9 @@ export default function CircularCalorieTracker({
 }: CircularCalorieTrackerProps) {
   const percentage = target > 0 ? Math.min((consumed / target) * 100, 100) : 0;
   
-  // SVG circle parameters - Large center focus like reference
-  const size = 240;
-  const strokeWidth = 12;
+  // SVG circle parameters - Compact size for half-width cards
+  const size = 120;
+  const strokeWidth = 8;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
@@ -25,7 +25,7 @@ export default function CircularCalorieTracker({
     <div className="relative">
       {/* Card content without background - parent has glassmorphism */}
       <div className="relative z-10">
-      <div className="flex items-center justify-center mb-6">
+      <div className="flex items-center justify-center">
         <div className="relative">
           <svg width={size} height={size} className="transform -rotate-90">
             {/* Background circle */}
@@ -70,7 +70,7 @@ export default function CircularCalorieTracker({
           {/* Center content */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <div className="text-6xl font-light mb-2 animate-pulse-once heading-serif" style={{color: 'rgb(235, 235, 240)'}}>
+              <div className="text-2xl font-light mb-1 animate-pulse-once heading-serif" style={{color: 'rgb(235, 235, 240)'}}>
                 {remaining}
               </div>
               <div className="text-sm uppercase font-medium tracking-widest body-sans" style={{color: 'rgb(180, 180, 190)'}}>
@@ -81,23 +81,7 @@ export default function CircularCalorieTracker({
         </div>
       </div>
 
-      {/* Stats Grid - Reference image style */}
-      <div className="grid grid-cols-3 gap-8 text-center mt-12">
-        <div>
-          <div className="text-3xl font-light mb-2 heading-serif" style={{color: 'rgb(0, 183, 225)'}}>{target}</div>
-          <div className="text-xs uppercase font-medium tracking-widest body-sans" style={{color: 'rgb(180, 180, 190)'}}>GOAL</div>
-        </div>
-        
-        <div>
-          <div className="text-3xl font-light mb-2 heading-serif" style={{color: 'rgb(224, 224, 255)'}}>{consumed}</div>
-          <div className="text-xs uppercase font-medium tracking-widest body-sans" style={{color: 'rgb(180, 180, 190)'}}>FOOD</div>
-        </div>
-        
-        <div>
-          <div className="text-3xl font-light mb-2 heading-serif" style={{color: 'rgb(0, 195, 142)'}}>0</div>
-          <div className="text-xs uppercase font-medium tracking-widest body-sans" style={{color: 'rgb(180, 180, 190)'}}>EXERCISE</div>
-        </div>
-      </div>
+
       </div>
 
     </div>
