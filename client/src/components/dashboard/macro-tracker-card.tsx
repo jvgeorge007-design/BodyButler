@@ -50,21 +50,6 @@ export default function MacroTrackerCard({
 
   return (
     <div ref={containerRef} className="bg-transparent">
-      <div className="flex items-center justify-between mb-6">
-        <button 
-          onClick={() => setShowFoodLog(true)}
-          className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
-        >
-          <BookOpen className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
-        </button>
-        <button 
-          onClick={() => setShowAddFoodCarousel(true)}
-          className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
-        >
-          <Plus className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
-        </button>
-      </div>
-      
       <div className="space-y-5">
         {macros.map((macro, index) => {
           const percentage = Math.min((macro.current / macro.target) * 100, 100);
@@ -109,8 +94,22 @@ export default function MacroTrackerCard({
           );
         })}
       </div>
-
-
+      
+      {/* Bottom Icons */}
+      <div className="flex items-center justify-between mt-6">
+        <button 
+          onClick={() => setShowFoodLog(true)}
+          className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
+        >
+          <BookOpen className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
+        </button>
+        <button 
+          onClick={() => setShowAddFoodCarousel(true)}
+          className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
+        >
+          <Plus className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
+        </button>
+      </div>
 
       {/* Food Log Popup */}
       <FoodLogPopup 
