@@ -113,17 +113,34 @@ export default function MacroTrackerCard({
         })}
       </div>
 
-      {/* Add Food Button */}
-      <button 
-        onClick={() => setShowAddFoodCarousel(true)}
-        className="w-full mt-6 text-white font-medium py-3 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95 flex items-center justify-center gap-3"
-        style={{
-          background: 'linear-gradient(90deg, rgb(0, 95, 115) 0%, rgb(0, 85, 105) 50%, rgb(0, 75, 95) 100%)'
-        }}
-      >
-        <Plus className="w-5 h-5" />
-        Add Food
-      </button>
+      {/* Calorie Progress Bar */}
+      <div className="mt-6">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-medium body-sans" style={{color: 'rgb(235, 235, 240)'}}>
+            Calories
+          </span>
+          <span className="text-sm font-semibold body-sans" style={{color: 'rgb(235, 235, 240)'}}>
+            1850 / 2200
+          </span>
+        </div>
+        
+        <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
+          <div 
+            className={`h-3 rounded-full transition-all duration-2000 ease-out ${isVisible ? 'animate-fill-bar' : ''}`}
+            style={{ 
+              '--target-width': '84%',
+              width: isVisible ? undefined : '0%',
+              background: 'linear-gradient(90deg, #FFB347, #FF8C42)'
+            } as React.CSSProperties & { '--target-width': string }}
+          />
+        </div>
+        
+        <div className="flex justify-between items-center mt-2">
+          <span className="text-xs font-medium body-sans" style={{color: 'rgb(180, 180, 190)'}}>
+            350 remaining
+          </span>
+        </div>
+      </div>
 
       {/* Food Log Popup */}
       <FoodLogPopup 
