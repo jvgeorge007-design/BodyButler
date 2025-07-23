@@ -370,11 +370,15 @@ export default function Dashboard() {
 
 
 
-          {/* Two Card Layout - Progress Card Left, Workout Card Right */}
+          {/* Two Card Layout - Circular Calorie Tracker Left, Workout Card Right */}
           <div className="grid grid-cols-2 gap-4">
-            {/* Left: Progress Card */}
+            {/* Left: Circular Calorie Tracker */}
             <div className="ios-card">
-              <ProgressCard />
+              <CircularCalorieTracker
+                consumed={dashboardData.calories.consumed}
+                target={dashboardData.calories.target}
+                remaining={dashboardData.calories.remaining}
+              />
             </div>
             
             {/* Right: Workout Card */}
