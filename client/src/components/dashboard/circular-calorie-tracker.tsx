@@ -14,9 +14,9 @@ export default function CircularCalorieTracker({
 }: CircularCalorieTrackerProps) {
   const percentage = target > 0 ? Math.min((consumed / target) * 100, 100) : 0;
   
-  // SVG circle parameters - Compact size for half-width cards
+  // SVG circle parameters - Thicker stroke like WHOOP app
   const size = 120;
-  const strokeWidth = 8;
+  const strokeWidth = 16;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
@@ -38,7 +38,7 @@ export default function CircularCalorieTracker({
               cx={size / 2}
               cy={size / 2}
               r={radius}
-              stroke="hsl(var(--muted))"
+              stroke="rgba(180, 180, 190, 0.2)"
               strokeWidth={strokeWidth}
               fill="none"
             />
@@ -61,13 +61,12 @@ export default function CircularCalorieTracker({
               } as any}
             />
             
-            {/* Gradient definition */}
+            {/* Gradient definition - Vibrant blue like WHOOP */}
             <defs>
               <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgb(0, 183, 225)" />
-                <stop offset="30%" stopColor="rgb(0, 183, 225)" />
-                <stop offset="70%" stopColor="rgb(0, 189, 184)" />
-                <stop offset="100%" stopColor="rgb(0, 195, 142)" />
+                <stop offset="0%" stopColor="rgb(0, 122, 255)" />
+                <stop offset="50%" stopColor="rgb(52, 199, 235)" />
+                <stop offset="100%" stopColor="rgb(0, 175, 255)" />
               </linearGradient>
             </defs>
           </svg>
