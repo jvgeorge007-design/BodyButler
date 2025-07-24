@@ -1,4 +1,4 @@
-import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { useState } from "react";
 
 interface DateNavigatorProps {
@@ -22,28 +22,11 @@ export default function DateNavigator({ selectedDate: propSelectedDate, onDateSe
     onCalendarOpen?.();
   };
 
-  const handlePreviousDay = () => {
-    const previousDay = new Date(selectedDate);
-    previousDay.setDate(selectedDate.getDate() - 1);
-    onDateSelect?.(previousDay);
-  };
-
-  const handleNextDay = () => {
-    const nextDay = new Date(selectedDate);
-    nextDay.setDate(selectedDate.getDate() + 1);
-    onDateSelect?.(nextDay);
-  };
+  
 
   return (
     <div className="bg-transparent">
-      <div className="flex items-center justify-between">
-        <button 
-          onClick={handlePreviousDay}
-          className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-        >
-          <ChevronLeft className="w-5 h-5" style={{color: 'rgb(235, 235, 240)'}} />
-        </button>
-        
+      <div className="flex items-center justify-center">
         <div className="flex items-center gap-3">
           <span className="text-lg font-medium" style={{color: 'rgb(235, 235, 240)'}}>
             {formatDate(selectedDate)}
@@ -56,13 +39,6 @@ export default function DateNavigator({ selectedDate: propSelectedDate, onDateSe
             <Calendar className="w-5 h-5" style={{color: 'rgb(235, 235, 240)'}} />
           </button>
         </div>
-        
-        <button 
-          onClick={handleNextDay}
-          className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-        >
-          <ChevronRight className="w-5 h-5" style={{color: 'rgb(235, 235, 240)'}} />
-        </button>
       </div>
     </div>
   );
