@@ -28,16 +28,15 @@ export default function WorkoutCard({
         <Dumbbell className="w-5 h-5" style={{color: 'rgb(180, 180, 190)'}} />
       </div>
       
-      <div className="pt-8 mb-8">
-        <div className="flex items-center justify-center mb-4">
-          <button 
-            onClick={() => setShowExercises(true)}
-            className="text-3xl font-light hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif text-center"
-            style={{color: 'rgb(235, 235, 240)'}}
-          >
-            {workoutType}
-          </button>
-        </div>
+      {/* Center content to align with circular tracker */}
+      <div className="flex flex-col items-center justify-center h-32 mb-6">
+        <button 
+          onClick={() => setShowExercises(true)}
+          className="text-3xl font-light hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif text-center mb-2"
+          style={{color: 'rgb(235, 235, 240)'}}
+        >
+          {workoutType}
+        </button>
       </div>
 
       <button 
