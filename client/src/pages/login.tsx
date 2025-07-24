@@ -45,7 +45,7 @@ export default function Login() {
               <h1 className="text-4xl font-black text-white/90 leading-none tracking-widest">
                 BODY BUTLER
               </h1>
-              <p className="text-lg text-white/70 font-medium">
+              <p className="text-lg text-white/70 font-medium italic">
                 Transformation tailored to you
               </p>
             </div>
