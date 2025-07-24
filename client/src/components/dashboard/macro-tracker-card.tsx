@@ -1,4 +1,4 @@
-import { BookOpen, Plus } from "lucide-react";
+import { BookOpen, Plus, Utensils } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { IOSButton } from "@/components/ui/ios-button";
 import FoodLogPopup from "./food-log-popup";
@@ -49,8 +49,13 @@ export default function MacroTrackerCard({
   }, []);
 
   return (
-    <div ref={containerRef} className="bg-transparent">
-      <div className="space-y-5">
+    <div ref={containerRef} className="bg-transparent relative">
+      {/* Fork and knife icon in upper left corner */}
+      <div className="absolute top-0 left-0">
+        <Utensils className="w-5 h-5" style={{color: 'rgb(180, 180, 190)'}} />
+      </div>
+      
+      <div className="space-y-5 pt-8">
         {macros.map((macro, index) => {
           const percentage = Math.min((macro.current / macro.target) * 100, 100);
           const macroNames = ['Protein', 'Carbs', 'Fat'];
