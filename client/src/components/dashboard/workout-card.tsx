@@ -24,10 +24,10 @@ export default function WorkoutCard({
   return (
     <div className="bg-transparent">
       <div className="mb-8">
-        <div className="flex items-center mb-4">
+        <div className="flex items-center justify-center mb-4">
           <button 
             onClick={() => setShowExercises(true)}
-            className="text-3xl font-light hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif"
+            className="text-3xl font-light hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif text-center"
             style={{color: 'rgb(235, 235, 240)'}}
           >
             {workoutType}
