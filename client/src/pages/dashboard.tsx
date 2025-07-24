@@ -267,21 +267,21 @@ export default function Dashboard() {
     createProfileMutation.isPending
   ) {
     return (
-      <div className="min-h-screen bg-[hsl(var(--background))] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
         <div className="text-center space-y-6 fade-in">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
             <KettlebellLogo className="w-8 h-8 text-white" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-title1 text-[hsl(var(--text-primary))]">
+            <h2 className="text-title1 text-white">
               Setting up your experience
             </h2>
-            <p className="text-body text-[hsl(var(--text-secondary))]">
+            <p className="text-body text-white/70">
               This may take a moment...
             </p>
           </div>
-          <div className="w-64 h-1 bg-[hsl(var(--surface-secondary))] rounded-full mx-auto overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] rounded-full" 
+          <div className="w-64 h-1 bg-white/20 rounded-full mx-auto overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full" 
                  style={{animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'}} />
           </div>
         </div>
@@ -291,16 +291,16 @@ export default function Dashboard() {
 
   if (needsOnboarding) {
     return (
-      <div className="min-h-screen bg-[hsl(var(--background))] flex items-center justify-center p-6">
+      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--bg-primary)' }}>
         <div className="max-w-md w-full text-center space-y-8 fade-in">
-          <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] flex items-center justify-center">
+          <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
             <KettlebellLogo className="w-10 h-10 text-white" />
           </div>
           <div className="space-y-3">
-            <h2 className="text-largeTitle text-[hsl(var(--text-primary))]">
+            <h2 className="text-largeTitle text-white">
               Welcome to Body Butler!
             </h2>
-            <p className="text-body text-[hsl(var(--text-secondary))]">
+            <p className="text-body text-white/70">
               Let's get you set up with a personalized fitness plan
             </p>
           </div>
@@ -317,22 +317,22 @@ export default function Dashboard() {
 
   if (needsPlanGeneration) {
     return (
-      <div className="min-h-screen bg-[hsl(var(--background))] flex items-center justify-center p-6">
+      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--bg-primary)' }}>
         <div className="max-w-md w-full text-center space-y-8 fade-in">
-          <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] flex items-center justify-center">
+          <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
             <KettlebellLogo className="w-10 h-10 text-white" />
           </div>
           <div className="space-y-3">
-            <h2 className="text-largeTitle text-[hsl(var(--text-primary))]">
+            <h2 className="text-largeTitle text-white">
               Generating Your Plan
             </h2>
-            <p className="text-body text-[hsl(var(--text-secondary))]">
+            <p className="text-body text-white/70">
               Our AI is creating your personalized workout and nutrition plan...
             </p>
           </div>
-          <div className="w-full bg-[hsl(var(--surface-secondary))] rounded-full h-2">
+          <div className="w-full bg-white/20 rounded-full h-2">
             <div
-              className="bg-gradient-to-r from-[hsl(var(--blue-primary))] to-[hsl(var(--blue-secondary))] h-2 rounded-full animate-pulse"
+              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full animate-pulse"
               style={{ width: "70%" }}
             ></div>
           </div>
@@ -343,12 +343,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
-      {/* Gradient Background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-black to-gray-800/80" />
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/8 rounded-full blur-3xl" />
-      </div>
 
       {/* iOS Navigation Header */}
       <IOSNavHeader
