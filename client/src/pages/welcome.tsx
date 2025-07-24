@@ -18,7 +18,7 @@ export default function Welcome() {
       <div className="max-w-md mx-auto px-4 py-8 min-h-screen flex flex-col animate-in fade-in duration-800">
         {/* Logo and Title Section */}
         <div className="flex-1 flex flex-col items-center justify-center text-center">
-          <div className="flex flex-col items-center space-y-6 mb-12">
+          <div className="flex flex-col items-center space-y-8 mb-12">
             {/* Body Butler Logo */}
             <KettlebellLogo className="w-48 h-56" />
             

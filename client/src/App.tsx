@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { ModalProvider } from "@/contexts/modal-context";
-import Splash from "@/pages/splash";
+
 import Welcome from "@/pages/welcome";
 import Login from "@/pages/login";
 import Onboarding from "@/pages/onboarding";
@@ -28,8 +28,7 @@ function Router() {
     <Switch>
       {isLoading || !isAuthenticated ? (
         <>
-          <Route path="/" component={Splash} />
-          <Route path="/welcome" component={Welcome} />
+          <Route path="/" component={Welcome} />
           <Route path="/login" component={Login} />
           <Route path="/onboarding" component={Onboarding} />
         </>
@@ -46,7 +45,7 @@ function Router() {
           <Route path="/add-food" component={AddFood} />
           <Route path="/onboarding" component={Onboarding} />
           <Route path="/welcome" component={Welcome} />
-          <Route path="/splash" component={Splash} />
+
         </>
       )}
       <Route component={NotFound} />
