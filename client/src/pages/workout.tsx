@@ -262,41 +262,9 @@ export default function Workout() {
 
               <div className="space-y-4">
                 {exercise.sets.map((set, setIndex) => (
-                  <div key={setIndex} className="form-grid">
-                    <div className="form-row">
-                      <span className="text-body text-white/80 min-w-[50px]">
-                        Set {set.setNumber}
-                      </span>
-                      
-                      <div className="form-field">
-                        <label className="text-caption1 text-white/60 mb-1 block">
-                          Reps {workoutStarted && (
-                            <span className="text-white/40">({set.targetReps} suggested)</span>
-                          )}
-                        </label>
-                        <input
-                          type="number"
-                          value={set.completedReps}
-                          onChange={(e) => handleUpdateReps(exerciseIndex, setIndex, parseInt(e.target.value) || 0)}
-                          className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:border-blue-500/50 focus:outline-none"
-                          min="0"
-                          disabled={!workoutStarted}
-                        />
-                      </div>
-
-                      <div className="form-field">
-                        <label className="text-caption1 text-white/60 mb-1 block">Weight (lbs)</label>
-                        <input
-                          type="number"
-                          value={set.weight}
-                          onChange={(e) => handleUpdateWeight(exerciseIndex, setIndex, parseInt(e.target.value) || 0)}
-                          className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:border-blue-500/50 focus:outline-none"
-                          min="0"
-                          placeholder="0"
-                          disabled={!workoutStarted}
-                        />
-                      </div>
-
+                  <div key={setIndex} className="calm-card">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-headline text-white/90">Set {set.setNumber}</h4>
                       {workoutStarted && (
                         <button
                           onClick={() => handleCompleteSet(exerciseIndex, setIndex)}
@@ -313,6 +281,39 @@ export default function Workout() {
                           )}
                         </button>
                       )}
+                    </div>
+                    
+                    <div className="form-grid">
+                      <div className="form-row">
+                        <div className="form-field">
+                          <label className="text-caption1 text-white/60 mb-1 block">
+                            Reps {workoutStarted && (
+                              <span className="text-white/40">({set.targetReps} suggested)</span>
+                            )}
+                          </label>
+                          <input
+                            type="number"
+                            value={set.completedReps}
+                            onChange={(e) => handleUpdateReps(exerciseIndex, setIndex, parseInt(e.target.value) || 0)}
+                            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:border-blue-500/50 focus:outline-none"
+                            min="0"
+                            disabled={!workoutStarted}
+                          />
+                        </div>
+
+                        <div className="form-field">
+                          <label className="text-caption1 text-white/60 mb-1 block">Weight (lbs)</label>
+                          <input
+                            type="number"
+                            value={set.weight}
+                            onChange={(e) => handleUpdateWeight(exerciseIndex, setIndex, parseInt(e.target.value) || 0)}
+                            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:border-blue-500/50 focus:outline-none"
+                            min="0"
+                            placeholder="0"
+                            disabled={!workoutStarted}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
