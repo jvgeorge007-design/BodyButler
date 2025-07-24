@@ -41,10 +41,10 @@ export default function Login() {
           <KettlebellLogo className="w-20 h-28 mx-auto" />
           
           <div className="space-y-2">
-            <h1 className="text-2xl font-black text-white/90 leading-none tracking-widest">
+            <h1 className="text-3xl font-black text-white/90 leading-none tracking-widest">
               BODY BUTLER
             </h1>
-            <p className="text-sm text-white/70 font-medium">
+            <p className="text-base text-white/70 font-medium">
               Transformation tailored to you
             </p>
           </div>
