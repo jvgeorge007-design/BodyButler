@@ -15,7 +15,6 @@ import Progress from "@/pages/progress";
 import AIChat from "@/pages/ai-chat";
 import Settings from "@/pages/settings";
 import WorkoutLog from "@/pages/workout-log";
-import WorkoutSession from "@/pages/workout-session";
 import MealLog from "@/pages/meal-log";
 import WorkoutCalendar from "@/pages/workout-calendar";
 import AddFood from "@/pages/add-food";
@@ -40,7 +39,6 @@ function Router() {
           <Route path="/ai-chat" component={AIChat} />
           <Route path="/settings" component={Settings} />
           <Route path="/workout-log" component={WorkoutLog} />
-          <Route path="/workout-session" component={WorkoutSession} />
           <Route path="/meal-log" component={MealLog} />
           <Route path="/workout-calendar" component={WorkoutCalendar} />
           <Route path="/add-food" component={AddFood} />
