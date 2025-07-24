@@ -1,8 +1,7 @@
-import { Plus, Utensils } from "lucide-react";
+import { BookOpen, Utensils } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { IOSButton } from "@/components/ui/ios-button";
-
-import AddFoodCarousel from "./add-food-carousel";
+import FoodLogPopup from "./food-log-popup";
 
 interface MacroData {
   current: number;
@@ -22,7 +21,7 @@ export default function MacroTrackerCard({
   carbs,
   fat
 }: MacroTrackerCardProps) {
-  const [showAddFoodCarousel, setShowAddFoodCarousel] = useState(false);
+  const [showFoodLog, setShowFoodLog] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const macros = [protein, carbs, fat];
@@ -56,13 +55,13 @@ export default function MacroTrackerCard({
         <Utensils className="w-5 h-5" style={{color: 'rgb(180, 180, 190)'}} />
       </div>
       
-      {/* Plus icon in upper right corner */}
+      {/* Book icon in upper right corner */}
       <div className="absolute top-0 right-0">
         <button 
-          onClick={() => setShowAddFoodCarousel(true)}
+          onClick={() => setShowFoodLog(true)}
           className="p-1 hover:bg-white/10 rounded-system-sm haptic-light"
         >
-          <Plus className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(180, 180, 190)'}} />
+          <BookOpen className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(180, 180, 190)'}} />
         </button>
       </div>
       
@@ -113,10 +112,10 @@ export default function MacroTrackerCard({
       
 
       
-      {/* Add Food Carousel */}
-      <AddFoodCarousel 
-        isOpen={showAddFoodCarousel}
-        onClose={() => setShowAddFoodCarousel(false)}
+      {/* Food Log Popup */}
+      <FoodLogPopup 
+        isOpen={showFoodLog}
+        onClose={() => setShowFoodLog(false)}
       />
     </div>
   );
