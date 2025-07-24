@@ -60,7 +60,46 @@ export default function Login() {
           </p>
         </div>
 
-        {/* Login Options */}
+        {/* Email/Phone Login Form */}
+        <div className="space-y-4">
+          {/* Email or Phone Input */}
+          <input
+            type="text"
+            placeholder="Email or phone number"
+            className="w-full px-4 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-500/50 focus:outline-none transition-colors"
+          />
+          
+          {/* Password Input */}
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full px-4 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-500/50 focus:outline-none transition-colors"
+          />
+          
+          {/* Login Button */}
+          <Button 
+            onClick={handleEmailLogin}
+            className="w-full bg-black hover:bg-gray-900 text-white font-medium py-4 rounded-xl transition-colors"
+          >
+            LOG IN
+          </Button>
+          
+          {/* Forgot Password Link */}
+          <div className="text-center">
+            <button className="text-red-400 hover:text-red-300 text-sm transition-colors">
+              Forgot your password?
+            </button>
+          </div>
+        </div>
+
+        {/* Social Login Divider */}
+        <div className="flex items-center space-x-4">
+          <div className="flex-1 h-px bg-white/20"></div>
+          <span className="text-white/60 text-sm">or</span>
+          <div className="flex-1 h-px bg-white/20"></div>
+        </div>
+
+        {/* Social Login Options */}
         <div className="space-y-4">
           {/* Google Login */}
           <Button 
