@@ -1,31 +1,29 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
+import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
 import KettlebellLogo from "@/components/ui/kettlebell-logo";
 
 export default function Splash() {
   const [, setLocation] = useLocation();
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showCTA, setShowCTA] = useState(false);
 
+  // Show CTA after 2 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsTransitioning(true);
-      // Delay navigation to allow fade-out animation
-      setTimeout(() => {
-        setLocation("/login");
-      }, 800);
-    }, 2500); // Show splash for 2.5 seconds
-
+      setShowCTA(true);
+    }, 2000);
     return () => clearTimeout(timer);
-  }, [setLocation]);
+  }, []);
+
+  const handleContinue = () => {
+    setLocation("/login");
+  };
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
-      <div 
-        className={`max-w-md mx-auto px-4 min-h-screen flex flex-col items-center justify-center text-center transition-opacity duration-800 ${
-          isTransitioning ? 'opacity-0' : 'opacity-100'
-        }`}
-      >
-        <div className="flex flex-col items-center space-y-6">
+      <div className="max-w-md mx-auto px-4 min-h-screen flex flex-col items-center justify-center text-center">
+        <div className="flex flex-col items-center space-y-8">
           {/* Body Butler Logo */}
           <KettlebellLogo className="w-48 h-56" />
           
@@ -38,6 +36,17 @@ export default function Splash() {
               Transformation tailored to you
             </p>
           </div>
+
+          {/* Subtle CTA */}
+          {showCTA && (
+            <Button
+              onClick={handleContinue}
+              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white/80 font-medium px-6 py-3 rounded-full border border-white/20 transition-all duration-300 animate-in fade-in"
+            >
+              Continue
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          )}
         </div>
       </div>
     </div>
