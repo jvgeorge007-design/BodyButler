@@ -17,6 +17,7 @@ import Settings from "@/pages/settings";
 import WorkoutLog from "@/pages/workout-log";
 import MealLog from "@/pages/meal-log";
 import WorkoutCalendar from "@/pages/workout-calendar";
+import AddFood from "@/pages/add-food";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -40,6 +41,7 @@ function Router() {
           <Route path="/workout-log" component={WorkoutLog} />
           <Route path="/meal-log" component={MealLog} />
           <Route path="/workout-calendar" component={WorkoutCalendar} />
+          <Route path="/add-food" component={AddFood} />
           <Route path="/onboarding" component={Onboarding} />
         </>
       )}
