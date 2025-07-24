@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { Play, CheckCircle2, Circle, Dumbbell, Pause, Clock } from "lucide-react";
 import IOSNavHeader from "@/components/navigation/ios-nav-header";
+import BottomNav from "@/components/navigation/bottom-nav";
 
 interface ExerciseSet {
   setNumber: number;
@@ -340,6 +341,9 @@ export default function Workout() {
           </div>
         )}
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 }
