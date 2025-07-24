@@ -62,26 +62,6 @@ export default function Login() {
 
         {/* Login Options */}
         <div className="space-y-4">
-          {/* Email Login */}
-          <Button 
-            onClick={handleEmailLogin}
-            variant="outline"
-            className="w-full flex items-center justify-center space-x-3 py-4 glass-card border border-white/30 text-white hover:bg-white/10 transition-colors"
-          >
-            <Mail className="w-5 h-5" />
-            <span className="font-medium">Continue with Email</span>
-          </Button>
-
-          {/* Phone Login */}
-          <Button 
-            onClick={handlePhoneLogin}
-            variant="outline"
-            className="w-full flex items-center justify-center space-x-3 py-4 glass-card border border-white/30 text-white hover:bg-white/10 transition-colors"
-          >
-            <Phone className="w-5 h-5" />
-            <span className="font-medium">Continue with Phone</span>
-          </Button>
-
           {/* Google Login */}
           <Button 
             onClick={handleGoogleLogin}
