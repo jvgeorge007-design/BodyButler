@@ -37,10 +37,10 @@ export default function Login() {
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-4" style={{ background: 'var(--bg-primary)' }}>
       <div className="w-full max-w-sm mx-auto text-center flex flex-col h-full justify-center space-y-12">
         {/* Logo and Brand Section */}
-        <div className="space-y-2">
+        <div className="space-y-0">
           <KettlebellLogo className="w-40 h-56 mx-auto" />
           
-          <div className="space-y-3">
+          <div className="space-y-3 -mt-4">
             <h1 className="text-4xl font-black text-white/90 leading-none tracking-widest">
               BODY BUTLER
             </h1>
