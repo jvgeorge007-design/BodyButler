@@ -90,6 +90,13 @@ export default function AddFood() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+      {/* Gradient Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-black to-gray-800/80" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/8 rounded-full blur-3xl" />
+      </div>
+
       {/* Header */}
       <IOSNavHeader 
         title="Add Food"
@@ -99,7 +106,7 @@ export default function AddFood() {
         }}
       />
 
-      <div className="px-6 pt-4 pb-24">
+      <div className="relative z-10 px-6 pt-4 pb-24">
         {/* Meal Selection Tabs */}
         <div className="mb-6">
           <h2 className="text-headline font-medium text-white mb-4">Select Meal</h2>
