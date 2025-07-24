@@ -14,7 +14,7 @@ export default function KettlebellLogo({ className }: KettlebellLogoProps) {
       style={{ 
         background: 'transparent',
         objectFit: 'cover',
-        objectPosition: 'center center'
+        objectPosition: 'center 35%'
       }}
     />
   );
