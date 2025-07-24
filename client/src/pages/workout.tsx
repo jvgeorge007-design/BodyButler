@@ -226,6 +226,10 @@ export default function Workout() {
   const completedSets = exercises.reduce((total, exercise) => 
     total + exercise.sets.filter(set => set.completed).length, 0
   );
+  const totalExercises = exercises.length;
+  const completedExercises = exercises.filter(exercise => 
+    exercise.sets.every(set => set.completed)
+  ).length;
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
@@ -273,14 +277,26 @@ export default function Workout() {
 
         {/* Exercise List */}
         <div className="space-y-6">
-          {exercises.map((exercise, exerciseIndex) => (
-            <div key={exercise.id} className="calm-card">
-              <div className="mb-4">
-                <h3 className="text-headline text-white/90 mb-2">{exercise.name}</h3>
-                <p className="text-body text-white/60">
-                  Suggested: {exercise.targetSets} sets × {exercise.targetReps} reps
-                </p>
-              </div>
+          {exercises.map((exercise, exerciseIndex) => {
+            const completedSetsCount = exercise.sets.filter(set => set.completed).length;
+            const isExerciseComplete = completedSetsCount === exercise.sets.length;
+            
+            return (
+              <div key={exercise.id} className="calm-card">
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <h3 className="text-headline text-white/90 mb-2">{exercise.name}</h3>
+                    <p className="text-body text-white/60">
+                      Suggested: {exercise.targetSets} sets × {exercise.targetReps} reps
+                    </p>
+                  </div>
+                  {isExerciseComplete && (
+                    <div className="flex items-center gap-2 bg-green-500/20 px-3 py-1 rounded-xl">
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                      <span className="text-caption2 text-green-400">Complete</span>
+                    </div>
+                  )}
+                </div>
 
               <div className="space-y-4">
                 {exercise.sets.map((set, setIndex) => (
@@ -316,11 +332,7 @@ export default function Workout() {
                     <div className="form-grid">
                       <div className="form-row">
                         <div className="form-field">
-                          <label className="text-caption1 text-white/60 mb-1 block">
-                            Reps {workoutStarted && (
-                              <span className="text-white/40">({set.targetReps} suggested)</span>
-                            )}
-                          </label>
+                          <label className="text-caption1 text-white/60 mb-1 block">Reps</label>
                           <input
                             type="number"
                             value={set.completedReps}
@@ -348,20 +360,33 @@ export default function Workout() {
                   </div>
                 ))}
               </div>
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
 
         {/* Finish Workout Button */}
         {workoutStarted && (
           <div className="calm-card mt-6">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-body text-white/60">
-                Progress: {completedSets}/{totalSets} sets completed
-              </span>
-              <span className="text-body text-white/60">
-                Time: {formatTime(workoutTimer)}
-              </span>
+            <div className="space-y-3 mb-4">
+              <div className="flex items-center justify-between">
+                <span className="text-body text-white/60">Exercises:</span>
+                <span className="text-body text-white/80">
+                  {completedExercises}/{totalExercises} completed
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-body text-white/60">Sets:</span>
+                <span className="text-body text-white/80">
+                  {completedSets}/{totalSets} completed
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-body text-white/60">Time:</span>
+                <span className="text-body text-white/80 font-mono">
+                  {formatTime(workoutTimer)}
+                </span>
+              </div>
             </div>
             <button
               onClick={handleFinishWorkout}
