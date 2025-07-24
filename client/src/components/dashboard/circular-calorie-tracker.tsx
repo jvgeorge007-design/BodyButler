@@ -16,7 +16,7 @@ export default function CircularCalorieTracker({
   
   // SVG circle parameters - Compact size for half-width cards
   const size = 120;
-  const strokeWidth = 8;
+  const strokeWidth = 6;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
