@@ -128,15 +128,29 @@ export default function Workout() {
     );
   };
 
+  // Check if a set should be automatically marked as complete based on input
+  const isSetReadyForCompletion = (set: ExerciseSet) => {
+    // If user has entered both reps and weight (weight > 0), auto-mark as ready
+    return set.completedReps > 0 && set.weight > 0;
+  };
+
   const handleUpdateReps = (exerciseIndex: number, setIndex: number, reps: number) => {
     setExercises(prev => 
       prev.map((exercise, eIndex) => 
         eIndex === exerciseIndex 
           ? {
               ...exercise,
-              sets: exercise.sets.map((set, sIndex) =>
-                sIndex === setIndex ? { ...set, completedReps: reps } : set
-              )
+              sets: exercise.sets.map((set, sIndex) => {
+                if (sIndex === setIndex) {
+                  const updatedSet = { ...set, completedReps: reps };
+                  // Auto-complete if both reps and weight are filled
+                  if (!updatedSet.completed && updatedSet.completedReps > 0 && updatedSet.weight > 0) {
+                    updatedSet.completed = true;
+                  }
+                  return updatedSet;
+                }
+                return set;
+              })
             }
           : exercise
       )
@@ -149,9 +163,17 @@ export default function Workout() {
         eIndex === exerciseIndex 
           ? {
               ...exercise,
-              sets: exercise.sets.map((set, sIndex) =>
-                sIndex === setIndex ? { ...set, weight } : set
-              )
+              sets: exercise.sets.map((set, sIndex) => {
+                if (sIndex === setIndex) {
+                  const updatedSet = { ...set, weight };
+                  // Auto-complete if both reps and weight are filled
+                  if (!updatedSet.completed && updatedSet.completedReps > 0 && updatedSet.weight > 0) {
+                    updatedSet.completed = true;
+                  }
+                  return updatedSet;
+                }
+                return set;
+              })
             }
           : exercise
       )
@@ -266,20 +288,28 @@ export default function Workout() {
                     <div className="flex items-center justify-between mb-4">
                       <h4 className="text-headline text-white/90">Set {set.setNumber}</h4>
                       {workoutStarted && (
-                        <button
-                          onClick={() => handleCompleteSet(exerciseIndex, setIndex)}
-                          className={`p-2 rounded-xl transition-colors ${
-                            set.completed 
-                              ? 'bg-green-500/20 text-green-400' 
-                              : 'bg-white/10 text-white/60 hover:bg-white/20'
-                          }`}
-                        >
-                          {set.completed ? (
-                            <CheckCircle2 className="w-5 h-5" />
-                          ) : (
-                            <Circle className="w-5 h-5" />
+                        <div className="flex items-center gap-2">
+                          {/* Show auto-completion status */}
+                          {isSetReadyForCompletion(set) && !set.completed && (
+                            <span className="text-caption2 text-green-400">Ready!</span>
                           )}
-                        </button>
+                          <button
+                            onClick={() => handleCompleteSet(exerciseIndex, setIndex)}
+                            className={`p-2 rounded-xl transition-colors ${
+                              set.completed 
+                                ? 'bg-green-500/20 text-green-400' 
+                                : isSetReadyForCompletion(set)
+                                  ? 'bg-green-500/10 text-green-300 hover:bg-green-500/20'
+                                  : 'bg-white/10 text-white/60 hover:bg-white/20'
+                            }`}
+                          >
+                            {set.completed ? (
+                              <CheckCircle2 className="w-5 h-5" />
+                            ) : (
+                              <Circle className="w-5 h-5" />
+                            )}
+                          </button>
+                        </div>
                       )}
                     </div>
                     
