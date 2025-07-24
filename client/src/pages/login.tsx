@@ -124,7 +124,7 @@ export default function Login() {
               New to Body Butler?{' '}
               <button 
                 onClick={handleGetStarted}
-                className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                className="text-blue-400 hover:text-blue-300 font-bold transition-colors"
               >
                 Sign up
               </button>
