@@ -67,7 +67,7 @@ export default function Section6({ data, onNext, isLoading }: Section6Props) {
 
           <form onSubmit={handleSubmit} className="form-grid">
             {/* Personality Type */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <MessageCircle className="w-5 h-5 text-white/80" />
@@ -113,7 +113,7 @@ export default function Section6({ data, onNext, isLoading }: Section6Props) {
             </div>
 
             {/* Additional Information */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Plus className="w-5 h-5 text-white/80" />

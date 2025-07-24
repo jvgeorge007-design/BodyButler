@@ -41,7 +41,7 @@ export default function Section3({ data, onNext, isLoading }: Section3Props) {
 
           <form onSubmit={handleSubmit} className="form-grid">
             {/* Diet Preferences */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Utensils className="w-5 h-5 text-white/80" />
@@ -72,7 +72,7 @@ export default function Section3({ data, onNext, isLoading }: Section3Props) {
             </div>
 
             {/* Weekly Budget */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <DollarSign className="w-5 h-5 text-white/80" />
@@ -95,7 +95,7 @@ export default function Section3({ data, onNext, isLoading }: Section3Props) {
             </div>
 
             {/* Fasting Window */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Clock className="w-5 h-5 text-white/80" />

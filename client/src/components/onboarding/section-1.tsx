@@ -310,7 +310,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
 
           <form onSubmit={handleSubmit} className="form-grid">
           {/* Name Input */}
-          <div className="ios-card">
+          <div className="calm-card">
             <div className="form-field">
               <div className="flex items-center gap-2 mb-1">
                 <User className="w-5 h-5 text-white/80" />
@@ -334,7 +334,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           </div>
 
           {/* Biological Sex Toggle */}
-          <div className="ios-card">
+          <div className="calm-card">
             <div className="form-field">
               <div className="flex items-center gap-2 mb-1">
                 <User className="w-5 h-5 text-white/80" />
@@ -371,7 +371,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           </div>
 
           {/* Basic Info Grid */}
-          <div className="ios-card">
+          <div className="calm-card">
             <div className="form-field">
               <div className="flex items-center gap-2 mb-1">
                 <Ruler className="w-5 h-5 text-white/80" />
@@ -411,7 +411,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
             </div>
           </div>
 
-          <div className="ios-card">
+          <div className="calm-card">
             <div className="form-field">
               <div className="flex items-center gap-2 mb-1">
                 <Calendar className="w-5 h-5 text-white/80" />
@@ -433,7 +433,7 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           </div>
 
           {/* Photo Upload */}
-          <div className="ios-card">
+          <div className="calm-card">
             <div className="form-field">
               <div className="flex items-center gap-2 mb-1">
                 <Upload className="w-5 h-5 text-white/80" />

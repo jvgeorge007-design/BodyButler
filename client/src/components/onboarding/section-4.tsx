@@ -56,7 +56,7 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
 
           <form onSubmit={handleSubmit} className="form-grid">
             {/* Goals */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Target className="w-5 h-5 text-white/80" />
@@ -88,7 +88,7 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
             </div>
 
             {/* Timeline */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Calendar className="w-5 h-5 text-white/80" />
@@ -119,7 +119,7 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
             </div>
 
             {/* Goal Phase */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <TrendingUp className="w-5 h-5 text-white/80" />
@@ -150,7 +150,7 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
             </div>
 
             {/* Priority Muscles */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Dumbbell className="w-5 h-5 text-white/80" />

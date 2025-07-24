@@ -51,7 +51,7 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
 
           <form onSubmit={handleSubmit} className="form-grid">
             {/* Activity Description */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Activity className="w-5 h-5 text-white/80" />
@@ -82,7 +82,7 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
             </div>
 
             {/* Sleep Hours */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Moon className="w-5 h-5 text-white/80" />
@@ -110,7 +110,7 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
             </div>
 
             {/* Activity Level */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Zap className="w-5 h-5 text-white/80" />
@@ -135,7 +135,7 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
             </div>
 
             {/* Recovery Capacity */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Heart className="w-5 h-5 text-white/80" />
@@ -159,7 +159,7 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
             </div>
 
             {/* Equipment Access */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Dumbbell className="w-5 h-5 text-white/80" />

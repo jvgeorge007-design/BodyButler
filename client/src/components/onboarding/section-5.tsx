@@ -62,7 +62,7 @@ export default function Section5({ data, onNext, isLoading }: Section5Props) {
 
           <form onSubmit={handleSubmit} className="form-grid">
             {/* Workout Days */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Calendar className="w-5 h-5 text-white/80" />
@@ -93,7 +93,7 @@ export default function Section5({ data, onNext, isLoading }: Section5Props) {
             </div>
 
             {/* Experience Level */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <BookOpen className="w-5 h-5 text-white/80" />
@@ -124,7 +124,7 @@ export default function Section5({ data, onNext, isLoading }: Section5Props) {
             </div>
 
             {/* Cardio Preference */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Heart className="w-5 h-5 text-white/80" />
@@ -155,7 +155,7 @@ export default function Section5({ data, onNext, isLoading }: Section5Props) {
             </div>
 
             {/* Injuries */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <AlertTriangle className="w-5 h-5 text-white/80" />
@@ -186,7 +186,7 @@ export default function Section5({ data, onNext, isLoading }: Section5Props) {
             </div>
 
             {/* Past Experience */}
-            <div className="ios-card">
+            <div className="calm-card">
               <div className="form-field">
                 <div className="flex items-center gap-2 mb-1">
                   <Activity className="w-5 h-5 text-white/80" />
