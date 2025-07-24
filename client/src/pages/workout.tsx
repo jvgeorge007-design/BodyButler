@@ -200,13 +200,9 @@ export default function Workout() {
               </div>
               <div className="flex-1">
                 <h1 className="text-title2 text-white/90 mb-2">{todaysWorkout.focus}</h1>
-                <div className="flex items-center gap-4 text-body text-white/60">
-                  <span>{todaysWorkout.day}</span>
-                  <span>•</span>
-                  <span>{exercises.length} exercises</span>
-                  <span>•</span>
-                  <span>{totalSets} sets</span>
-                </div>
+                <p className="text-body text-white/60">
+                  {exercises.length} exercises
+                </p>
               </div>
             </div>
 
