@@ -41,7 +41,7 @@ export default function Login() {
           <KettlebellLogo className="w-40 h-56 mx-auto" />
           
           <div className="absolute inset-0 flex flex-col justify-end items-center pb-4">
-            <div className="space-y-3 text-center -mt-20">
+            <div className="space-y-3 text-center -mt-12">
               <h1 className="text-4xl font-black text-white/90 leading-none tracking-widest">
                 BODY BUTLER
               </h1>
