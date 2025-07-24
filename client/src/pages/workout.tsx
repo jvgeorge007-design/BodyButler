@@ -282,17 +282,17 @@ export default function Workout() {
             const isExerciseComplete = completedSetsCount === exercise.sets.length;
             
             return (
-              <div key={exercise.id} className="calm-card">
+              <div key={exercise.id} className={`calm-card ${isExerciseComplete ? 'bg-green-500/20 border-green-500/30' : ''}`}>
                 <div className="mb-4 flex items-center justify-between">
                   <div>
-                    <h3 className="text-headline text-white/90 mb-2">{exercise.name}</h3>
-                    <p className="text-body text-white/60">
+                    <h3 className={`text-headline mb-2 ${isExerciseComplete ? 'text-green-400' : 'text-white/90'}`}>{exercise.name}</h3>
+                    <p className={`text-body ${isExerciseComplete ? 'text-green-300' : 'text-white/60'}`}>
                       Suggested: {exercise.targetSets} sets × {exercise.targetReps} reps
                     </p>
                   </div>
                   {isExerciseComplete && (
-                    <div className="bg-green-500/20 px-3 py-1 rounded-xl">
-                      <span className="text-caption2 text-green-400">Complete</span>
+                    <div className="bg-green-500/30 px-3 py-1 rounded-xl">
+                      <span className="text-caption2 text-green-300">Complete</span>
                     </div>
                   )}
                 </div>
