@@ -51,11 +51,22 @@
     );
   --bg-secondary: linear-gradient(135deg, hsl(0, 0%, 12%) 0%, hsl(0, 0%, 8%) 100%);
   
-  /* Optimized Glassmorphism for Black Gradient */
+  /* Premium Glassmorphism with Enhanced Depth */
   --glass-card-bg: rgba(40, 40, 50, 0.5);
   --glass-card-border: rgba(255, 255, 255, 0.12);
-  --glass-card-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --glass-card-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.12),
+    0 8px 24px rgba(0, 0, 0, 0.16),
+    0 16px 48px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
   --glass-card-backdrop: blur(24px);
+  
+  /* Consistent Corner Radius System */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
   
   /* Neumorphic Elements */
   --neu-shadow-light: rgba(255, 255, 255, 0.05);
@@ -477,12 +488,13 @@
     background: var(--glass-card-bg);
     backdrop-filter: var(--glass-card-backdrop);
     border: 1px solid var(--glass-card-border);
-    border-radius: 24px;
+    border-radius: var(--radius-xl);
     padding: 24px;
     box-shadow: var(--glass-card-shadow);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
     overflow: hidden;
+    transform: translateZ(0);
   }
   
   .calm-card::before {
@@ -493,6 +505,18 @@
     right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  }
+  
+  /* Enhanced Card Interactions */
+  .calm-card:hover {
+    background: rgba(50, 50, 60, 0.6);
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.15),
+      0 12px 32px rgba(0, 0, 0, 0.2),
+      0 24px 64px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px) translateZ(0);
   }
 
   .glass-card:hover {
@@ -732,12 +756,72 @@
     }
   }
 
-  /* Enhanced button interactions */
+  /* Enhanced button interactions with haptic feedback */
   .active\:brightness-110:active {
     filter: brightness(1.1);
   }
 
   .active\:scale-95:active {
     transform: scale(0.95);
+  }
+  
+  /* Haptic Feedback System */
+  .haptic-light {
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .haptic-light:active {
+    transform: scale(0.98);
+    filter: brightness(0.9);
+  }
+  
+  .haptic-medium {
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .haptic-medium:active {
+    transform: scale(0.95);
+    filter: brightness(0.85);
+  }
+  
+  .haptic-heavy {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .haptic-heavy:active {
+    transform: scale(0.92);
+    filter: brightness(0.8);
+  }
+  
+  /* Consistent Corner Radius Classes */
+  .rounded-system-xs { border-radius: var(--radius-xs); }
+  .rounded-system-sm { border-radius: var(--radius-sm); }
+  .rounded-system-md { border-radius: var(--radius-md); }
+  .rounded-system-lg { border-radius: var(--radius-lg); }
+  .rounded-system-xl { border-radius: var(--radius-xl); }
+  
+  /* Responsive Typography System */
+  @media (max-width: 640px) {
+    .text-largeTitle { font-size: 2.5rem; line-height: 1.1; }
+    .text-title1 { font-size: 2rem; line-height: 1.15; }
+    .text-title2 { font-size: 1.75rem; line-height: 1.2; }
+    .text-title3 { font-size: 1.5rem; line-height: 1.25; }
+    .text-headline { font-size: 1.125rem; line-height: 1.3; }
+    .text-body { font-size: 1rem; line-height: 1.4; }
+    .text-callout { font-size: 0.875rem; line-height: 1.3; }
+    .text-subhead { font-size: 0.8125rem; line-height: 1.25; }
+    .text-footnote { font-size: 0.75rem; line-height: 1.2; }
+  }
+  
+  @media (min-width: 1024px) {
+    .text-largeTitle { font-size: 4.5rem; line-height: 1.05; }
+    .text-title1 { font-size: 3.5rem; line-height: 1.1; }
+    .text-title2 { font-size: 2.5rem; line-height: 1.15; }
+    .text-title3 { font-size: 2rem; line-height: 1.2; }
+    .text-headline { font-size: 1.25rem; line-height: 1.25; }
+    .text-body { font-size: 1.125rem; line-height: 1.35; }
+    .text-callout { font-size: 1rem; line-height: 1.3; }
+    .text-subhead { font-size: 0.9375rem; line-height: 1.25; }
+    .text-footnote { font-size: 0.875rem; line-height: 1.2; }
   }
 }

@@ -79,7 +79,7 @@ export default function MacroTrackerCard({
               </div>
               
               {/* Progress Bar */}
-              <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-muted rounded-system-xs h-3 overflow-hidden">
                 <div 
                   className={`h-3 rounded-full transition-all duration-2000 ease-out ${isVisible ? 'animate-fill-bar' : ''}`}
                   style={{ 
@@ -104,13 +104,13 @@ export default function MacroTrackerCard({
       <div className="flex items-center justify-between mt-6">
         <button 
           onClick={() => setShowFoodLog(true)}
-          className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
+          className="p-3 hover:bg-white/10 rounded-system-md haptic-light"
         >
           <BookOpen className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
         </button>
         <button 
           onClick={() => setShowAddFoodCarousel(true)}
-          className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
+          className="p-3 hover:bg-white/10 rounded-system-md haptic-light"
         >
           <Plus className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
         </button>
