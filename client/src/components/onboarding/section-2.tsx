@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Mic } from "lucide-react";
+import { Mic, Activity, Moon, Zap, Heart, Dumbbell } from "lucide-react";
 
 interface Section2Props {
   data: any;
@@ -53,13 +53,17 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
             {/* Activity Description */}
             <div className="ios-card">
               <div className="form-field">
-                <Label htmlFor="activity" className="text-headline font-semibold text-white">
-                  Current Physical Activity
-                </Label>
+                <div className="flex items-center gap-2 mb-1">
+                  <Activity className="w-5 h-5 text-white/80" />
+                  <Label htmlFor="activity" className="text-headline font-semibold text-white">
+                    Current Physical Activity
+                  </Label>
+                </div>
+                <p className="text-caption-1 text-white/60 mb-3">Tell us about your current exercise routine, sports, or daily activities</p>
                 <div className="relative">
                   <Textarea
                     id="activity"
-                    placeholder="Describe your current physical activity or routine..."
+                    placeholder="Examples: gym 3x/week, daily walks, play tennis, yoga classes, mostly sedentary..."
                     rows={4}
                     value={formData.activityDescription}
                     onChange={(e) => handleInputChange("activityDescription", e.target.value)}
@@ -80,7 +84,11 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
             {/* Sleep Hours */}
             <div className="ios-card">
               <div className="form-field">
-                <Label className="text-headline font-semibold text-white">Average Sleep Hours *</Label>
+                <div className="flex items-center gap-2 mb-1">
+                  <Moon className="w-5 h-5 text-white/80" />
+                  <Label className="text-headline font-semibold text-white">Average Sleep Hours *</Label>
+                </div>
+                <p className="text-caption-1 text-white/60 mb-3">Sleep affects recovery, energy levels, and your fitness progress</p>
                 <div className="flex gap-2">
                   {sleepOptions.map((option) => (
                     <Button
@@ -104,9 +112,13 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
             {/* Activity Level */}
             <div className="ios-card">
               <div className="form-field">
-                <Label htmlFor="activityLevel" className="text-headline font-semibold text-white">
-                  Activity Level *
-                </Label>
+                <div className="flex items-center gap-2 mb-1">
+                  <Zap className="w-5 h-5 text-white/80" />
+                  <Label htmlFor="activityLevel" className="text-headline font-semibold text-white">
+                    Activity Level *
+                  </Label>
+                </div>
+                <p className="text-caption-1 text-white/60 mb-3">This helps us calculate your daily calorie needs accurately</p>
                 <Select value={formData.activityLevel} onValueChange={(value) => handleInputChange("activityLevel", value)}>
                   <SelectTrigger className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <SelectValue placeholder="Select your activity level" />
@@ -125,9 +137,13 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
             {/* Recovery Capacity */}
             <div className="ios-card">
               <div className="form-field">
-                <Label htmlFor="recoveryCapacity" className="text-headline font-semibold text-white">
-                  Recovery Capacity *
-                </Label>
+                <div className="flex items-center gap-2 mb-1">
+                  <Heart className="w-5 h-5 text-white/80" />
+                  <Label htmlFor="recoveryCapacity" className="text-headline font-semibold text-white">
+                    Recovery Capacity *
+                  </Label>
+                </div>
+                <p className="text-caption-1 text-white/60 mb-3">How well you recover affects workout frequency and intensity</p>
                 <Select value={formData.recoveryCapacity} onValueChange={(value) => handleInputChange("recoveryCapacity", value)}>
                   <SelectTrigger className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <SelectValue placeholder="How well do you recover from workouts?" />
@@ -145,9 +161,13 @@ export default function Section2({ data, onNext, isLoading }: Section2Props) {
             {/* Equipment Access */}
             <div className="ios-card">
               <div className="form-field">
-                <Label htmlFor="equipment" className="text-headline font-semibold text-white">
-                  Equipment Access
-                </Label>
+                <div className="flex items-center gap-2 mb-1">
+                  <Dumbbell className="w-5 h-5 text-white/80" />
+                  <Label htmlFor="equipment" className="text-headline font-semibold text-white">
+                    Equipment Access
+                  </Label>
+                </div>
+                <p className="text-caption-1 text-white/60 mb-3">Tell us what equipment you have access to so we can design the perfect workout</p>
                 <div className="relative">
                   <Textarea
                     id="equipment"

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Upload } from "lucide-react";
+import { Upload, User, Ruler, Weight, Calendar } from "lucide-react";
 
 // Web Speech API types
 declare global {
@@ -312,9 +312,13 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           {/* Name Input */}
           <div className="ios-card">
             <div className="form-field">
-              <Label htmlFor="name" className="text-headline font-semibold text-white">
-                What's your name? *
-              </Label>
+              <div className="flex items-center gap-2 mb-1">
+                <User className="w-5 h-5 text-white/80" />
+                <Label htmlFor="name" className="text-headline font-semibold text-white">
+                  What's your name? *
+                </Label>
+              </div>
+              <p className="text-caption-1 text-white/60 mb-3">This helps us personalize your experience</p>
               <Input
                 id="name"
                 type="text"
@@ -332,7 +336,11 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           {/* Biological Sex Toggle */}
           <div className="ios-card">
             <div className="form-field">
-              <Label className="text-headline font-semibold text-white">Biological Sex *</Label>
+              <div className="flex items-center gap-2 mb-1">
+                <User className="w-5 h-5 text-white/80" />
+                <Label className="text-headline font-semibold text-white">Biological Sex *</Label>
+              </div>
+              <p className="text-caption-1 text-white/60 mb-3">Used for accurate metabolic calculations</p>
               <div className={`flex rounded-2xl p-1 ${
                 hasAttemptedSubmit && !formData.sex ? 'bg-red-50 border border-red-300' : 'bg-white/10'
               }`}>
@@ -365,7 +373,11 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           {/* Basic Info Grid */}
           <div className="ios-card">
             <div className="form-field">
-              <Label className="text-headline font-semibold text-white">Physical Info *</Label>
+              <div className="flex items-center gap-2 mb-1">
+                <Ruler className="w-5 h-5 text-white/80" />
+                <Label className="text-headline font-semibold text-white">Physical Info *</Label>
+              </div>
+              <p className="text-caption-1 text-white/60 mb-3">Essential for calculating your nutrition and fitness needs</p>
               <div className="form-row">
                 <div className="form-field">
                   <Label htmlFor="height" className="text-body text-white/80">Height</Label>
@@ -401,7 +413,11 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
 
           <div className="ios-card">
             <div className="form-field">
-              <Label htmlFor="birthDate" className="text-headline font-semibold text-white">Birth Date *</Label>
+              <div className="flex items-center gap-2 mb-1">
+                <Calendar className="w-5 h-5 text-white/80" />
+                <Label htmlFor="birthDate" className="text-headline font-semibold text-white">Birth Date *</Label>
+              </div>
+              <p className="text-caption-1 text-white/60 mb-3">Helps us tailor recommendations to your age group</p>
               <Input
                 id="birthDate"
                 type="date"
@@ -419,7 +435,11 @@ export default function Section1({ data, onNext, isLoading }: Section1Props) {
           {/* Photo Upload */}
           <div className="ios-card">
             <div className="form-field">
-              <Label className="text-headline font-semibold text-white">Body Composition Photo</Label>
+              <div className="flex items-center gap-2 mb-1">
+                <Upload className="w-5 h-5 text-white/80" />
+                <Label className="text-headline font-semibold text-white">Body Composition Photo (Optional)</Label>
+              </div>
+              <p className="text-caption-1 text-white/60 mb-3">Upload a photo to help us better understand your starting point</p>
               <div className="border-2 border-dashed border-white/20 rounded-2xl p-6 text-center hover:border-blue-500 transition-colors cursor-pointer">
                 <div className="w-16 h-16 bg-white/10 rounded-full mx-auto mb-3 flex items-center justify-center">
                   <Upload className="w-6 h-6 text-white/60" />
