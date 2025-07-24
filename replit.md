@@ -129,6 +129,7 @@ Changelog:
 - July 17, 2025. Updated all main pages (Dashboard, Progress, Settings, AI Chat) to use new iOS components and styling patterns: proper spacing, typography, navigation, and interaction patterns for native iOS experience
 - July 17, 2025. Enhanced workout card with dynamic workout type display: added visual indicator arrow for clickable workout types, navigation header now stretches full width to top, BB AI icon changed to MessageCircle for better consistency
 - July 23, 2025. Removed neon/glow effects from all progress bars and trackers: eliminated glowing box-shadows from circular calorie tracker, macro progress bars, and gradient buttons while preserving clean animations and glassmorphism card shadows
+- July 24, 2025. Implemented centered plus icon navigation with elevated design: reorganized tab order to Home | Progress | Add Food | BB AI | Settings, created smart meal-based add food page with time detection, unified theme consistency between dashboard and add food pages with matching gradient backgrounds and calm-card styling
 ```
 
 ## User Preferences

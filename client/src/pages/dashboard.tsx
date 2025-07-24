@@ -343,6 +343,13 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
+      {/* Gradient Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-black to-gray-800/80" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/8 rounded-full blur-3xl" />
+      </div>
+
       {/* iOS Navigation Header */}
       <IOSNavHeader
         title="Body Butler"
@@ -352,7 +359,7 @@ export default function Dashboard() {
 
       {/* Main Content with iOS-style spacing */}
       <main
-        className="max-w-md mx-auto ios-padding min-h-screen"
+        className="relative z-10 max-w-md mx-auto ios-padding min-h-screen"
         style={{
           paddingTop: "calc(env(safe-area-inset-top) + 20px)",
           paddingBottom: "calc(env(safe-area-inset-bottom) + 120px)",
@@ -360,7 +367,7 @@ export default function Dashboard() {
       >
         <div className="ios-spacing-large">
           {/* Calendar Card */}
-          <div className="ios-card">
+          <div className="calm-card">
             <DateNavigator
               selectedDate={selectedDate}
               onDateSelect={setSelectedDate}
@@ -373,7 +380,7 @@ export default function Dashboard() {
           {/* Calorie Card Left, Workout Card Right */}
           <div className="flex gap-4">
             {/* Left: Circular Calorie Tracker */}
-            <div className="ios-card w-1/2">
+            <div className="calm-card w-1/2">
               <CircularCalorieTracker
                 consumed={dashboardData.calories.consumed}
                 target={dashboardData.calories.target}
@@ -382,7 +389,7 @@ export default function Dashboard() {
             </div>
             
             {/* Right: Workout Card */}
-            <div className="ios-card w-1/2">
+            <div className="calm-card w-1/2">
               <WorkoutCard
                 workoutType={dashboardData.workout.type}
                 focus={dashboardData.workout.focus}
@@ -394,7 +401,7 @@ export default function Dashboard() {
           </div>
 
           {/* Diet Card */}
-          <div className="ios-card">
+          <div className="calm-card">
             <MacroTrackerCard
               protein={dashboardData.macros.protein}
               carbs={dashboardData.macros.carbs}
