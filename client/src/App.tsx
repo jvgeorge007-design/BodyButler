@@ -14,7 +14,6 @@ import Dashboard from "@/pages/dashboard";
 import Progress from "@/pages/progress";
 import AIChat from "@/pages/ai-chat";
 import Settings from "@/pages/settings";
-import WorkoutLog from "@/pages/workout-log";
 import MealLog from "@/pages/meal-log";
 import WorkoutCalendar from "@/pages/workout-calendar";
 import AddFood from "@/pages/add-food";
@@ -38,7 +37,6 @@ function Router() {
           <Route path="/progress" component={Progress} />
           <Route path="/ai-chat" component={AIChat} />
           <Route path="/settings" component={Settings} />
-          <Route path="/workout-log" component={WorkoutLog} />
           <Route path="/meal-log" component={MealLog} />
           <Route path="/workout-calendar" component={WorkoutCalendar} />
           <Route path="/add-food" component={AddFood} />
