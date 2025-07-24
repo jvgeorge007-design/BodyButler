@@ -43,10 +43,10 @@ export default function Welcome() {
               Log In
             </Button>
             
-            {/* Get Started Button (Secondary) */}
+            {/* Get Started Button (Secondary - Inverse) */}
             <Button 
               onClick={handleGetStarted}
-              className="w-full bg-white/10 hover:bg-white/20 text-white/90 font-medium py-4 rounded-xl border border-white/20 transition-colors"
+              className="w-full bg-white hover:bg-gray-100 text-blue-500 font-medium py-4 rounded-xl transition-colors"
             >
               Get Started
             </Button>
