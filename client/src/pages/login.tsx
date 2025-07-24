@@ -27,9 +27,11 @@ export default function Login() {
     console.log("Apple login clicked");
   };
 
-  const handleBack = () => {
-    setLocation("/");
+  const handleGetStarted = () => {
+    setLocation("/onboarding");
   };
+
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-8" style={{ background: 'var(--bg-primary)' }}>
@@ -101,14 +103,14 @@ export default function Login() {
           </Button>
         </div>
 
-        {/* Back to Welcome */}
+        {/* Get Started Option */}
         <div className="pt-4">
+          <p className="text-white/60 text-sm mb-3">New to Body Butler?</p>
           <Button 
-            onClick={handleBack}
-            variant="ghost"
-            className="text-white/70 hover:text-white hover:bg-white/10"
+            onClick={handleGetStarted}
+            className="w-full bg-white hover:bg-gray-100 text-blue-500 font-medium py-4 rounded-xl transition-colors"
           >
-            ← Back to Welcome
+            Get Started
           </Button>
         </div>
       </div>
