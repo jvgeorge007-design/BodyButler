@@ -40,7 +40,7 @@ export default function Login() {
         <div className="space-y-0">
           <KettlebellLogo className="w-40 h-56 mx-auto" />
           
-          <div className="space-y-3 -mt-20">
+          <div className="space-y-3 -mt-24">
             <h1 className="text-4xl font-black text-white/90 leading-none tracking-widest">
               BODY BUTLER
             </h1>
