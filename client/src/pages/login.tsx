@@ -122,15 +122,17 @@ export default function Login() {
           </Button>
         </div>
 
-        {/* Get Started Option */}
-        <div className="pt-4">
-          <p className="text-white/60 text-sm mb-3">New to Body Butler?</p>
-          <Button 
-            onClick={handleGetStarted}
-            className="w-full bg-white hover:bg-gray-100 text-blue-500 font-medium py-4 rounded-xl transition-colors"
-          >
-            Get Started
-          </Button>
+        {/* Sign Up Link */}
+        <div className="pt-6 text-center">
+          <p className="text-white/60 text-sm">
+            New to Body Butler?{' '}
+            <button 
+              onClick={handleGetStarted}
+              className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+            >
+              Sign up
+            </button>
+          </p>
         </div>
       </div>
     </div>
