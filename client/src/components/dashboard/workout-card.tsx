@@ -44,8 +44,8 @@ export default function WorkoutCard({
         onClick={onLogWorkout}
         className="w-full text-white font-medium py-3 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95 flex items-center justify-center gap-3"
         style={{
-          background: 'linear-gradient(90deg, rgb(52, 199, 235) 0%, rgb(0, 122, 255) 50%, rgb(0, 84, 166) 100%)',
-          boxShadow: '0 0 15px rgba(87, 168, 255, 0.2)'
+          background: 'rgb(0, 122, 255)',
+          boxShadow: '0 0 15px rgba(0, 122, 255, 0.2)'
         }}
       >
         <Play className="w-5 h-5" fill="currentColor" />
