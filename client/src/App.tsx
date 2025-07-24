@@ -46,6 +46,7 @@ function Router() {
           <Route path="/add-food" component={AddFood} />
           <Route path="/onboarding" component={Onboarding} />
           <Route path="/welcome" component={Welcome} />
+          <Route path="/splash" component={Splash} />
         </>
       )}
       <Route component={NotFound} />
