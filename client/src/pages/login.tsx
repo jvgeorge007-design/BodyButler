@@ -60,6 +60,36 @@ export default function Login() {
           </p>
         </div>
 
+        {/* Social Login Options */}
+        <div className="space-y-4">
+          {/* Google Login */}
+          <Button 
+            onClick={handleGoogleLogin}
+            variant="outline"
+            className="w-full flex items-center justify-center space-x-3 py-4 glass-card border border-white/30 text-white hover:bg-white/10 transition-colors"
+          >
+            <FaGoogle className="w-5 h-5 text-red-400" />
+            <span className="font-medium">Continue with Google</span>
+          </Button>
+
+          {/* Apple Login */}
+          <Button 
+            onClick={handleAppleLogin}
+            variant="outline"
+            className="w-full flex items-center justify-center space-x-3 py-4 glass-card border border-white/30 text-white hover:bg-white/10 transition-colors"
+          >
+            <FaApple className="w-5 h-5 text-white" />
+            <span className="font-medium">Continue with Apple</span>
+          </Button>
+        </div>
+
+        {/* Social Login Divider */}
+        <div className="flex items-center space-x-4">
+          <div className="flex-1 h-px bg-white/20"></div>
+          <span className="text-white/60 text-sm">or</span>
+          <div className="flex-1 h-px bg-white/20"></div>
+        </div>
+
         {/* Email/Phone Login Form */}
         <div className="space-y-4">
           {/* Email or Phone Input */}
@@ -90,36 +120,6 @@ export default function Login() {
               Forgot your password?
             </button>
           </div>
-        </div>
-
-        {/* Social Login Divider */}
-        <div className="flex items-center space-x-4">
-          <div className="flex-1 h-px bg-white/20"></div>
-          <span className="text-white/60 text-sm">or</span>
-          <div className="flex-1 h-px bg-white/20"></div>
-        </div>
-
-        {/* Social Login Options */}
-        <div className="space-y-4">
-          {/* Google Login */}
-          <Button 
-            onClick={handleGoogleLogin}
-            variant="outline"
-            className="w-full flex items-center justify-center space-x-3 py-4 glass-card border border-white/30 text-white hover:bg-white/10 transition-colors"
-          >
-            <FaGoogle className="w-5 h-5 text-red-400" />
-            <span className="font-medium">Continue with Google</span>
-          </Button>
-
-          {/* Apple Login */}
-          <Button 
-            onClick={handleAppleLogin}
-            variant="outline"
-            className="w-full flex items-center justify-center space-x-3 py-4 glass-card border border-white/30 text-white hover:bg-white/10 transition-colors"
-          >
-            <FaApple className="w-5 h-5 text-white" />
-            <span className="font-medium">Continue with Apple</span>
-          </Button>
         </div>
 
         {/* Get Started Option */}
