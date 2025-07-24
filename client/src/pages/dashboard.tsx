@@ -236,19 +236,19 @@ export default function Dashboard() {
         current: isPast ? 120 + dayOffset * 10 : isToday ? 80 : 0,
         target: macroTargets.protein_g || 150,
         unit: "g",
-        color: "#E67E22",
+        color: "#60A5FA", // Blue-400 - complements main CTA
       },
       carbs: {
         current: isPast ? 180 + dayOffset * 20 : isToday ? 150 : 0,
         target: macroTargets.carbs_g || 200,
         unit: "g",
-        color: "#3498DB",
+        color: "#34D399", // Emerald-400 - complementary to blue
       },
       fat: {
         current: isPast ? 55 + dayOffset * 5 : isToday ? 45 : 0,
         target: macroTargets.fat_g || 65,
         unit: "g",
-        color: "#E74C3C",
+        color: "#A78BFA", // Violet-400 - harmonious with blue palette
       },
     },
     weeklySchedule: {
