@@ -20,6 +20,13 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+      {/* Gradient Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-black to-gray-800/80" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/8 rounded-full blur-3xl" />
+      </div>
+
       {/* iOS Navigation Header */}
       <IOSNavHeader 
         title="Settings" 
@@ -27,13 +34,13 @@ export default function Settings() {
       />
 
       {/* Main Content */}
-      <main className="max-w-md mx-auto ios-padding min-h-screen" style={{ 
+      <main className="relative z-10 max-w-md mx-auto ios-padding min-h-screen" style={{ 
         paddingTop: 'calc(env(safe-area-inset-top) + 120px)',
         paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)'
       }}>
         <div className="ios-spacing-large">
           {/* Profile Section */}
-          <div className="ios-card">
+          <div className="calm-card">
             <div className="flex items-center ios-spacing-small">
               <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                 <User className="w-8 h-8 text-white" />
@@ -57,7 +64,7 @@ export default function Settings() {
           </div>
 
           {/* Appearance */}
-          <div className="ios-card">
+          <div className="calm-card">
             <h3 className="text-headline font-semibold text-white mb-4">Appearance</h3>
             <IOSList grouped>
               <IOSListItem
@@ -75,7 +82,7 @@ export default function Settings() {
           </div>
 
           {/* Notifications */}
-          <div className="ios-card">
+          <div className="calm-card">
             <h3 className="text-headline font-semibold text-white mb-4">Notifications</h3>
             <IOSList grouped>
               <IOSListItem
@@ -93,7 +100,7 @@ export default function Settings() {
           </div>
 
           {/* Privacy & Security */}
-          <div className="ios-card">
+          <div className="calm-card">
             <h3 className="text-headline font-semibold text-white mb-4">Privacy & Security</h3>
             <IOSList grouped>
               <IOSListItem
@@ -125,7 +132,7 @@ export default function Settings() {
           </div>
 
           {/* Support */}
-          <div className="ios-card">
+          <div className="calm-card">
             <h3 className="text-headline font-semibold text-white mb-4">Support</h3>
             <IOSList grouped>
               <IOSListItem
@@ -154,7 +161,7 @@ export default function Settings() {
           </div>
 
           {/* Logout */}
-          <div className="ios-card">
+          <div className="calm-card">
             <IOSList grouped>
               <IOSListItem
                 icon={<LogOut className="w-5 h-5 text-red-500" />}
