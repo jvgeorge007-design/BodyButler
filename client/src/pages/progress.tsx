@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
-import { TrendingUp, Calendar, Award, Target, ChevronRight } from "lucide-react";
+import { TrendingUp, Calendar, Award, Target, ChevronRight, Trophy, Flame, Star, TrendingDown, Zap } from "lucide-react";
 import IOSNavHeader from "@/components/navigation/ios-nav-header";
 import { IOSButton } from "@/components/ui/ios-button";
 import { IOSList, IOSListItem } from "@/components/ui/ios-list";
@@ -20,8 +20,8 @@ export default function Progress() {
       caloriesTarget: 2000,
       weightChange: -0.5,
       achievements: [
-        { title: "Consistency Champion", description: "Completed 4 workouts this week", icon: "🏆" },
-        { title: "Calorie Control", description: "Stayed within calorie goals 6/7 days", icon: "🎯" }
+        { title: "Consistency Champion", description: "Completed 4 workouts this week", icon: Trophy },
+        { title: "Calorie Control", description: "Stayed within calorie goals 6/7 days", icon: Target }
       ]
     },
     month: {
@@ -31,8 +31,8 @@ export default function Progress() {
       caloriesTarget: 2000,
       weightChange: -2.3,
       achievements: [
-        { title: "Monthly Warrior", description: "Completed 16 workouts this month", icon: "💪" },
-        { title: "Progress Tracker", description: "Lost 2.3 lbs this month", icon: "📉" }
+        { title: "Monthly Warrior", description: "Completed 16 workouts this month", icon: Zap },
+        { title: "Progress Tracker", description: "Lost 2.3 lbs this month", icon: TrendingDown }
       ]
     },
     year: {
@@ -42,8 +42,8 @@ export default function Progress() {
       caloriesTarget: 2000,
       weightChange: -15.2,
       achievements: [
-        { title: "Transformation", description: "Lost 15.2 lbs this year", icon: "🌟" },
-        { title: "Dedication", description: "Completed 180 workouts", icon: "🔥" }
+        { title: "Transformation", description: "Lost 15.2 lbs this year", icon: Star },
+        { title: "Dedication", description: "Completed 180 workouts", icon: Flame }
       ]
     }
   };
@@ -162,7 +162,7 @@ export default function Progress() {
               {currentData.achievements.map((achievement, index) => (
                 <IOSListItem
                   key={index}
-                  icon={<span className="text-xl">{achievement.icon}</span>}
+                  icon={<achievement.icon className="w-5 h-5 text-yellow-400" />}
                   title={achievement.title}
                   subtitle={achievement.description}
                   showChevron
