@@ -106,6 +106,13 @@ export default function Login() {
             className="w-full px-4 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-500/50 focus:outline-none transition-colors"
           />
           
+          {/* Forgot Password Link */}
+          <div className="text-center">
+            <button className="text-white/60 hover:text-white/80 text-sm font-bold transition-colors">
+              Forgot your password?
+            </button>
+          </div>
+          
           {/* Login Button */}
           <Button 
             onClick={handleEmailLogin}
@@ -113,13 +120,6 @@ export default function Login() {
           >
             LOG IN
           </Button>
-          
-          {/* Forgot Password Link */}
-          <div className="text-center">
-            <button className="text-white/60 hover:text-white/80 text-sm transition-colors">
-              Forgot your password?
-            </button>
-          </div>
         </div>
 
         {/* Get Started Option */}
