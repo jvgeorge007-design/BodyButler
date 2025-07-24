@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Clock, Star, Utensils } from 'lucide-react';
 import { useLocation } from 'wouter';
 import IOSNavHeader from '@/components/navigation/ios-nav-header';
+import BottomNav from '@/components/navigation/bottom-nav';
 
 interface FoodItem {
   id: string;
@@ -227,6 +228,9 @@ export default function AddFood() {
           </div>
         )}
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 }
