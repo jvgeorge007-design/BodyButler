@@ -22,8 +22,13 @@ export default function WorkoutCard({
   const [showExercises, setShowExercises] = useState(false);
 
   return (
-    <div className="bg-transparent">
-      <div className="mb-8">
+    <div className="bg-transparent relative">
+      {/* Barbell icon in upper left corner */}
+      <div className="absolute top-0 left-0">
+        <Dumbbell className="w-5 h-5" style={{color: 'rgb(180, 180, 190)'}} />
+      </div>
+      
+      <div className="pt-8 mb-8">
         <div className="flex items-center justify-center mb-4">
           <button 
             onClick={() => setShowExercises(true)}
