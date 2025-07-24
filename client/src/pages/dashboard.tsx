@@ -366,40 +366,21 @@ export default function Dashboard() {
         }}
       >
         <div className="ios-spacing-large">
-          {/* Personalized Greeting */}
-          <div className="text-center ios-spacing-medium">
-            <h2 className="text-largeTitle text-white">Welcome back, {userName}!</h2>
-            <p className="text-body text-white/60">Let's crush your fitness goals today</p>
-          </div>
-
-          <div className="form-grid">
           {/* Calendar Card */}
-          <div className="ios-card">
-            <div className="form-field">
-              <div className="flex items-center gap-2 mb-1">
-                <Calendar className="w-5 h-5 text-white/80" />
-                <h3 className="text-headline font-semibold text-white">Today's Schedule</h3>
-              </div>
-              <p className="text-caption-1 text-white/60 mb-3">Navigate through your fitness journey</p>
-              <DateNavigator
-                selectedDate={selectedDate}
-                onDateSelect={setSelectedDate}
-                onCalendarOpen={() => setIsCalendarOpen(true)}
-              />
-            </div>
+          <div className="calm-card">
+            <DateNavigator
+              selectedDate={selectedDate}
+              onDateSelect={setSelectedDate}
+              onCalendarOpen={() => setIsCalendarOpen(true)}
+            />
           </div>
 
 
 
           {/* Calorie Card Left, Workout Card Right */}
-          <div className="form-row">
+          <div className="flex gap-4">
             {/* Left: Circular Calorie Tracker */}
-            <div className="ios-card form-field">
-              <div className="flex items-center gap-2 mb-1">
-                <TrendingUp className="w-5 h-5 text-white/80" />
-                <h3 className="text-headline font-semibold text-white">Calories</h3>
-              </div>
-              <p className="text-caption-1 text-white/60 mb-3">Track your daily energy intake</p>
+            <div className="calm-card w-1/2">
               <CircularCalorieTracker
                 consumed={dashboardData.calories.consumed}
                 target={dashboardData.calories.target}
@@ -408,12 +389,7 @@ export default function Dashboard() {
             </div>
             
             {/* Right: Workout Card */}
-            <div className="ios-card form-field">
-              <div className="flex items-center gap-2 mb-1">
-                <Dumbbell className="w-5 h-5 text-white/80" />
-                <h3 className="text-headline font-semibold text-white">Workout</h3>
-              </div>
-              <p className="text-caption-1 text-white/60 mb-3">Today's training session</p>
+            <div className="calm-card w-1/2">
               <WorkoutCard
                 workoutType={dashboardData.workout.type}
                 focus={dashboardData.workout.focus}
@@ -425,20 +401,12 @@ export default function Dashboard() {
           </div>
 
           {/* Diet Card */}
-          <div className="ios-card">
-            <div className="form-field">
-              <div className="flex items-center gap-2 mb-1">
-                <Utensils className="w-5 h-5 text-white/80" />
-                <h3 className="text-headline font-semibold text-white">Nutrition</h3>
-              </div>
-              <p className="text-caption-1 text-white/60 mb-3">Monitor your macro balance for optimal results</p>
-              <MacroTrackerCard
-                protein={dashboardData.macros.protein}
-                carbs={dashboardData.macros.carbs}
-                fat={dashboardData.macros.fat}
-              />
-            </div>
-          </div>
+          <div className="calm-card">
+            <MacroTrackerCard
+              protein={dashboardData.macros.protein}
+              carbs={dashboardData.macros.carbs}
+              fat={dashboardData.macros.fat}
+            />
           </div>
         </div>
       </main>
