@@ -183,7 +183,7 @@ export default function AddFood() {
                   selectedOption === option.label ? 'bg-blue-500/20 border-blue-400/50' : ''
                 }`}
               >
-                <option.icon className="w-6 h-6 text-blue-400 mb-2" />
+                <option.icon className="w-6 h-6 text-white/80 mb-2" />
                 <div className="text-body font-medium text-white">{option.label}</div>
                 <div className="text-footnote text-gray-400 mt-1">{option.description}</div>
               </button>
@@ -204,7 +204,7 @@ export default function AddFood() {
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div className="text-body font-medium text-white">{food.name}</div>
-                    <div className="text-callout font-medium text-blue-400">{food.calories} cal</div>
+                    <div className="text-callout font-medium text-white/80">{food.calories} cal</div>
                   </div>
                   <div className="flex justify-between text-footnote text-gray-400">
                     <span>{food.serving}</span>

@@ -81,7 +81,7 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
                     size="sm"
                     className="absolute bottom-3 right-3 p-2 text-white/60 hover:bg-white/10 rounded-lg transition-colors"
                   >
-                    <Mic className="w-5 h-5" />
+                    <Mic className="w-5 h-5 text-white/80" />
                   </Button>
                 </div>
               </div>
@@ -174,7 +174,7 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
                     size="sm"
                     className="absolute bottom-3 right-3 p-2 text-white/60 hover:bg-white/10 rounded-lg transition-colors"
                   >
-                    <Mic className="w-5 h-5" />
+                    <Mic className="w-5 h-5 text-white/80" />
                   </Button>
                 </div>
               </div>

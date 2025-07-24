@@ -162,7 +162,7 @@ export default function Progress() {
               {currentData.achievements.map((achievement, index) => (
                 <IOSListItem
                   key={index}
-                  icon={<achievement.icon className="w-5 h-5 text-yellow-400" />}
+                  icon={<achievement.icon className="w-5 h-5 text-white/80" />}
                   title={achievement.title}
                   subtitle={achievement.description}
                   showChevron
@@ -177,21 +177,21 @@ export default function Progress() {
             <h3 className="text-headline font-semibold text-white mb-4">Quick Actions</h3>
             <IOSList grouped>
               <IOSListItem
-                icon={<Calendar className="w-5 h-5 ios-blue" />}
+                icon={<Calendar className="w-5 h-5 text-white/80" />}
                 title="View Workout History"
                 subtitle="See all your completed workouts"
                 showChevron
                 onPress={() => {/* TODO: Navigate to workout history */}}
               />
               <IOSListItem
-                icon={<Target className="w-5 h-5 ios-green" />}
+                icon={<Target className="w-5 h-5 text-white/80" />}
                 title="Update Goals"
                 subtitle="Adjust your fitness targets"
                 showChevron
                 onPress={() => {/* TODO: Navigate to goals */}}
               />
               <IOSListItem
-                icon={<Award className="w-5 h-5 ios-yellow" />}
+                icon={<Award className="w-5 h-5 text-white/80" />}
                 title="All Achievements"
                 subtitle="View your complete achievement list"
                 showChevron

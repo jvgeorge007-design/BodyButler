@@ -68,7 +68,7 @@ export default function Settings() {
             <h3 className="text-headline font-semibold text-white mb-4">Appearance</h3>
             <IOSList grouped>
               <IOSListItem
-                icon={theme === 'dark' ? <Moon className="w-5 h-5 ios-blue" /> : <Sun className="w-5 h-5 ios-yellow" />}
+                icon={theme === 'dark' ? <Moon className="w-5 h-5 text-white/80" /> : <Sun className="w-5 h-5 text-white/80" />}
                 title="Dark Mode"
                 subtitle="Toggle between light and dark themes"
                 accessory={
@@ -86,7 +86,7 @@ export default function Settings() {
             <h3 className="text-headline font-semibold text-white mb-4">Notifications</h3>
             <IOSList grouped>
               <IOSListItem
-                icon={<Bell className="w-5 h-5 ios-blue" />}
+                icon={<Bell className="w-5 h-5 text-white/80" />}
                 title="Push Notifications"
                 subtitle="Receive workout reminders and updates"
                 accessory={
@@ -104,7 +104,7 @@ export default function Settings() {
             <h3 className="text-headline font-semibold text-white mb-4">Privacy & Security</h3>
             <IOSList grouped>
               <IOSListItem
-                icon={<Shield className="w-5 h-5 ios-green" />}
+                icon={<Shield className="w-5 h-5 text-white/80" />}
                 title="Biometric Authentication"
                 subtitle="Use Face ID or Touch ID to secure your app"
                 accessory={
@@ -115,14 +115,14 @@ export default function Settings() {
                 }
               />
               <IOSListItem
-                icon={<Shield className="w-5 h-5 ios-blue" />}
+                icon={<Shield className="w-5 h-5 text-white/80" />}
                 title="Privacy Policy"
                 subtitle="Read our privacy policy"
                 showChevron
                 onPress={() => {/* TODO: Open privacy policy */}}
               />
               <IOSListItem
-                icon={<Shield className="w-5 h-5 ios-blue" />}
+                icon={<Shield className="w-5 h-5 text-white/80" />}
                 title="Terms of Service"
                 subtitle="Read our terms of service"
                 showChevron
@@ -136,21 +136,21 @@ export default function Settings() {
             <h3 className="text-headline font-semibold text-white mb-4">Support</h3>
             <IOSList grouped>
               <IOSListItem
-                icon={<SettingsIcon className="w-5 h-5 ios-blue" />}
+                icon={<SettingsIcon className="w-5 h-5 text-white/80" />}
                 title="Help Center"
                 subtitle="Get help with Body Butler"
                 showChevron
                 onPress={() => {/* TODO: Open help */}}
               />
               <IOSListItem
-                icon={<SettingsIcon className="w-5 h-5 ios-blue" />}
+                icon={<SettingsIcon className="w-5 h-5 text-white/80" />}
                 title="Contact Support"
                 subtitle="Reach out to our support team"
                 showChevron
                 onPress={() => {/* TODO: Contact support */}}
               />
               <IOSListItem
-                icon={<SettingsIcon className="w-5 h-5 ios-blue" />}
+                icon={<SettingsIcon className="w-5 h-5 text-white/80" />}
                 title="App Version"
                 subtitle="Version 1.0.0"
                 accessory={
@@ -164,7 +164,7 @@ export default function Settings() {
           <div className="calm-card">
             <IOSList grouped>
               <IOSListItem
-                icon={<LogOut className="w-5 h-5 text-red-500" />}
+                icon={<LogOut className="w-5 h-5 text-white/80" />}
                 title="Sign Out"
                 subtitle="Sign out of your account"
                 destructive
