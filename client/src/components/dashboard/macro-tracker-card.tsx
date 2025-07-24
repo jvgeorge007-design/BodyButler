@@ -112,7 +112,7 @@ export default function MacroTrackerCard({
           onClick={() => setShowAddFoodCarousel(true)}
           className="p-3 hover:bg-white/10 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
         >
-          <Plus className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(0, 122, 255)'}} />
+          <Plus className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
         </button>
       </div>
 
