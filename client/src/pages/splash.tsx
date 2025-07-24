@@ -1,13 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import KettlebellLogo from "@/components/ui/kettlebell-logo";
 
 export default function Splash() {
   const [, setLocation] = useLocation();
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLocation("/login");
+      setIsTransitioning(true);
+      // Delay navigation to allow fade-out animation
+      setTimeout(() => {
+        setLocation("/login");
+      }, 800);
     }, 2500); // Show splash for 2.5 seconds
 
     return () => clearTimeout(timer);
@@ -15,8 +20,12 @@ export default function Splash() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
-      <div className="max-w-md mx-auto px-4 min-h-screen flex flex-col items-center justify-center text-center">
-        <div className="flex flex-col items-center space-y-6 animate-in fade-in duration-1000">
+      <div 
+        className={`max-w-md mx-auto px-4 min-h-screen flex flex-col items-center justify-center text-center transition-opacity duration-800 ${
+          isTransitioning ? 'opacity-0' : 'opacity-100'
+        }`}
+      >
+        <div className="flex flex-col items-center space-y-6">
           {/* Body Butler Logo */}
           <KettlebellLogo className="w-48 h-56" />
           
