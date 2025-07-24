@@ -15,7 +15,8 @@ export default function KettlebellLogo({ className }: KettlebellLogoProps) {
         background: 'transparent',
         objectFit: 'cover',
         objectPosition: 'center 35%',
-        filter: 'brightness(0) invert(1)'
+        filter: 'brightness(0) invert(1)',
+        opacity: '0.6'
       }}
     />
   );
