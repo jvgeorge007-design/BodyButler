@@ -25,7 +25,7 @@ export default function WorkoutCard({
     <div className="bg-transparent relative">
       {/* Barbell icon in upper left corner */}
       <div className="absolute top-0 left-0">
-        <Dumbbell className="w-5 h-5" style={{color: 'rgb(180, 180, 190)'}} />
+        <Dumbbell className="w-5 h-5" style={{color: 'rgb(34, 197, 94)'}} />
       </div>
       
       <div className="pt-8 mb-8">

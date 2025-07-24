@@ -25,7 +25,7 @@ export default function CircularCalorieTracker({
     <div className="relative">
       {/* Cal. text in upper left corner */}
       <div className="absolute top-0 left-0 z-20">
-        <span className="text-sm font-medium body-sans" style={{color: 'rgb(180, 180, 190)'}}>Cal.</span>
+        <span className="text-sm font-medium body-sans" style={{color: 'rgb(34, 197, 94)'}}>Cal.</span>
       </div>
       
       {/* Card content without background - parent has glassmorphism */}

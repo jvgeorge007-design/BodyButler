@@ -52,7 +52,7 @@ export default function MacroTrackerCard({
     <div ref={containerRef} className="bg-transparent relative">
       {/* Fork and knife icon in upper left corner */}
       <div className="absolute top-0 left-0">
-        <Utensils className="w-5 h-5" style={{color: 'rgb(180, 180, 190)'}} />
+        <Utensils className="w-5 h-5" style={{color: 'rgb(34, 197, 94)'}} />
       </div>
       
       <div className="space-y-5 pt-8">
