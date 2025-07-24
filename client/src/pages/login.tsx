@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { FaGoogle, FaApple } from "react-icons/fa";
 import { Mail, Phone } from "lucide-react";
+import KettlebellLogo from "@/components/ui/kettlebell-logo";
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -33,12 +34,26 @@ export default function Login() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-8" style={{ background: 'var(--bg-primary)' }}>
       <div className="w-full max-w-sm mx-auto text-center space-y-8">
+        {/* Logo and Brand Section */}
+        <div className="space-y-6">
+          <KettlebellLogo className="w-32 h-40 mx-auto" />
+          
+          <div className="space-y-2">
+            <h1 className="text-title1 font-black text-white/90 leading-none tracking-widest">
+              BODY BUTLER
+            </h1>
+            <p className="text-body text-white/70 font-medium">
+              Transformation tailored to you
+            </p>
+          </div>
+        </div>
+
         {/* Header */}
-        <div className="space-y-4">
-          <h1 className="text-3xl font-black text-white heading-serif">
+        <div className="space-y-2">
+          <h2 className="text-headline text-white/90">
             Welcome Back
-          </h1>
-          <p className="text-white/80 text-lg body-sans">
+          </h2>
+          <p className="text-body text-white/60">
             Choose how you'd like to sign in
           </p>
         </div>

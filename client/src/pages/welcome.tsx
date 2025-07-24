@@ -16,24 +16,8 @@ export default function Welcome() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
       <div className="max-w-md mx-auto px-4 py-8 min-h-screen flex flex-col animate-in fade-in duration-800">
-        {/* Logo and Title Section */}
+        {/* Action Buttons */}
         <div className="flex-1 flex flex-col items-center justify-center text-center">
-          <div className="flex flex-col items-center space-y-8 mb-12">
-            {/* Body Butler Logo */}
-            <KettlebellLogo className="w-48 h-56" />
-            
-            {/* Main Title */}
-            <div className="space-y-2">
-              <h1 className="text-title1 font-black text-white/90 leading-none tracking-widest">
-                BODY BUTLER
-              </h1>
-              <p className="text-body text-white/70 font-medium">
-                Transformation tailored to you
-              </p>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
           <div className="w-full space-y-4">
             {/* Log In Button (Primary) */}
             <Button 
