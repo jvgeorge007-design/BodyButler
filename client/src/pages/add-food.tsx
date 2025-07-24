@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Clock, Star, Utensils } from 'lucide-react';
 import { useLocation } from 'wouter';
+import { useQuery } from '@tanstack/react-query';
 import IOSNavHeader from '@/components/navigation/ios-nav-header';
 import BottomNav from '@/components/navigation/bottom-nav';
 
@@ -41,6 +42,12 @@ export default function AddFood() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
+  // Fetch personalized plan data (same as dashboard)
+  const { data: personalizedPlan } = useQuery({
+    queryKey: ['/api/personalized-plan'],
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
   // Smart meal detection based on current time
   useEffect(() => {
     const now = new Date();
@@ -78,12 +85,38 @@ export default function AddFood() {
   };
 
   const getCurrentMealProgress = () => {
-    // Mock data - in real app, get from API based on selectedMeal
+    // Use same data calculation as dashboard
+    const macroTargets = personalizedPlan?.macroTargets || {};
+    const today = new Date();
+    const selectedDate = new Date(); // Assuming current date for add-food page
+    const isPast = selectedDate < today;
+    const isToday = selectedDate.toDateString() === today.toDateString();
+    const dayOffset = Math.floor((selectedDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+    // Calculate current daily totals (same as dashboard)
+    const dailyCalories = isPast ? 1800 + dayOffset * 50 : isToday ? 1200 : 0;
+    const dailyProtein = isPast ? 120 + dayOffset * 10 : isToday ? 80 : 0;
+    const dailyCarbs = isPast ? 180 + dayOffset * 20 : isToday ? 150 : 0;
+    const dailyFat = isPast ? 55 + dayOffset * 5 : isToday ? 45 : 0;
+
+    // Return daily totals (not per-meal) to match dashboard
     return {
-      calories: { current: 420, target: 600 },
-      protein: { current: 25, target: 40 },
-      carbs: { current: 45, target: 75 },
-      fat: { current: 12, target: 20 }
+      calories: { 
+        current: dailyCalories, 
+        target: macroTargets.dailyCalories || 2000 
+      },
+      protein: { 
+        current: dailyProtein, 
+        target: macroTargets.protein_g || 150 
+      },
+      carbs: { 
+        current: dailyCarbs, 
+        target: macroTargets.carbs_g || 200 
+      },
+      fat: { 
+        current: dailyFat, 
+        target: macroTargets.fat_g || 65 
+      }
     };
   };
 
@@ -128,11 +161,11 @@ export default function AddFood() {
           </div>
         </div>
 
-        {/* Current Meal Progress */}
+        {/* Daily Progress */}
         {selectedMeal && (
           <div className="calm-card mb-6">
             <h3 className="text-body font-medium text-white mb-3">
-              {MEAL_TIMES[selectedMeal as keyof typeof MEAL_TIMES].label} Progress
+              Today's Progress
             </h3>
             <div className="grid grid-cols-4 gap-3">
               {Object.entries(mealProgress).map(([macro, data]) => {
