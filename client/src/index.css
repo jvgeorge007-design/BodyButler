@@ -597,6 +597,45 @@
     margin-bottom: 0;
   }
 
+  /* Horizontal Alignment Grid System */
+  .form-grid {
+    display: grid;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .form-field {
+    display: grid;
+    gap: 8px;
+    align-items: start;
+  }
+
+  .form-field label {
+    text-align: left;
+    align-self: start;
+  }
+
+  .form-field input, 
+  .form-field textarea, 
+  .form-field select,
+  .form-field [role="combobox"] {
+    width: 100%;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .form-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+
   .ios-progress-bar {
     width: 100%;
     height: 6px;
