@@ -1,7 +1,7 @@
-import { BookOpen, Plus, Utensils } from "lucide-react";
+import { Plus, Utensils } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { IOSButton } from "@/components/ui/ios-button";
-import FoodLogPopup from "./food-log-popup";
+
 import AddFoodCarousel from "./add-food-carousel";
 
 interface MacroData {
@@ -22,7 +22,6 @@ export default function MacroTrackerCard({
   carbs,
   fat
 }: MacroTrackerCardProps) {
-  const [showFoodLog, setShowFoodLog] = useState(false);
   const [showAddFoodCarousel, setShowAddFoodCarousel] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -55,6 +54,16 @@ export default function MacroTrackerCard({
       {/* Fork and knife icon in upper left corner */}
       <div className="absolute top-0 left-0">
         <Utensils className="w-5 h-5" style={{color: 'rgb(180, 180, 190)'}} />
+      </div>
+      
+      {/* Plus icon in upper right corner */}
+      <div className="absolute top-0 right-0">
+        <button 
+          onClick={() => setShowAddFoodCarousel(true)}
+          className="p-1 hover:bg-white/10 rounded-system-sm haptic-light"
+        >
+          <Plus className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(180, 180, 190)'}} />
+        </button>
       </div>
       
       <div className="space-y-5 pt-8">
@@ -102,27 +111,7 @@ export default function MacroTrackerCard({
         })}
       </div>
       
-      {/* Bottom Icons */}
-      <div className="flex items-center justify-between mt-6">
-        <button 
-          onClick={() => setShowFoodLog(true)}
-          className="p-3 hover:bg-white/10 rounded-system-md haptic-light"
-        >
-          <BookOpen className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
-        </button>
-        <button 
-          onClick={() => setShowAddFoodCarousel(true)}
-          className="p-3 hover:bg-white/10 rounded-system-md haptic-light"
-        >
-          <Plus className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(235, 235, 240)'}} />
-        </button>
-      </div>
 
-      {/* Food Log Popup */}
-      <FoodLogPopup 
-        isOpen={showFoodLog}
-        onClose={() => setShowFoodLog(false)}
-      />
       
       {/* Add Food Carousel */}
       <AddFoodCarousel 
