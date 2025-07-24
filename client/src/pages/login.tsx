@@ -109,7 +109,7 @@ export default function Login() {
           {/* Login Button */}
           <Button 
             onClick={handleEmailLogin}
-            className="w-full bg-black hover:bg-gray-900 text-white font-medium py-4 rounded-xl transition-colors"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-4 rounded-xl transition-colors"
           >
             LOG IN
           </Button>
