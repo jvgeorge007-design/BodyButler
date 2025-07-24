@@ -37,14 +37,14 @@ export default function Login() {
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-4" style={{ background: 'var(--bg-primary)' }}>
       <div className="w-full max-w-sm mx-auto text-center space-y-6">
         {/* Logo and Brand Section */}
-        <div className="space-y-1">
-          <KettlebellLogo className="w-24 h-32 mx-auto" />
+        <div className="space-y-3">
+          <KettlebellLogo className="w-20 h-28 mx-auto" />
           
-          <div className="space-y-0">
-            <h1 className="text-xl font-black text-white/90 leading-none tracking-widest">
+          <div className="space-y-1">
+            <h1 className="text-lg font-black text-white/90 leading-none tracking-widest">
               BODY BUTLER
             </h1>
-            <p className="text-sm text-white/70 font-medium">
+            <p className="text-xs text-white/70 font-medium">
               Transformation tailored to you
             </p>
           </div>
@@ -52,10 +52,10 @@ export default function Login() {
 
         {/* Header */}
         <div className="space-y-1">
-          <h2 className="text-lg text-white/90">
+          <h2 className="text-base font-medium text-white/90">
             Welcome Back
           </h2>
-          <p className="text-sm text-white/60">
+          <p className="text-xs text-white/60">
             Choose how you'd like to sign in
           </p>
         </div>
