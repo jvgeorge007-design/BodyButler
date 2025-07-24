@@ -43,6 +43,7 @@ function Router() {
           <Route path="/workout-calendar" component={WorkoutCalendar} />
           <Route path="/add-food" component={AddFood} />
           <Route path="/onboarding" component={Onboarding} />
+          <Route path="/welcome" component={Welcome} />
         </>
       )}
       <Route component={NotFound} />
