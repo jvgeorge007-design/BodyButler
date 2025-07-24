@@ -7,7 +7,7 @@ export default function Splash() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLocation("/welcome");
+      setLocation("/login");
     }, 2500); // Show splash for 2.5 seconds
 
     return () => clearTimeout(timer);
