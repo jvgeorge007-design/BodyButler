@@ -13,8 +13,8 @@ export default function KettlebellLogo({ className }: KettlebellLogoProps) {
       className={cn("w-60 h-72", className)}
       style={{ 
         background: 'transparent',
-        objectFit: 'contain',
-        objectPosition: 'center'
+        objectFit: 'cover',
+        objectPosition: 'center top'
       }}
     />
   );
