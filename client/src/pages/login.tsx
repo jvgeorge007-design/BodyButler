@@ -50,15 +50,7 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Header */}
-        <div className="space-y-1">
-          <h2 className="text-base font-medium text-white/90">
-            Welcome Back
-          </h2>
-          <p className="text-xs text-white/60">
-            Choose how you'd like to sign in
-          </p>
-        </div>
+
 
         {/* Social Login Options */}
         <div className="space-y-3">
