@@ -72,7 +72,7 @@ export default function MacroTrackerCard({
           
           // Blue-complementary color scheme for macro bars
           const barColors = [
-            { gradient: 'linear-gradient(90deg, #60A5FA, #3B82F6)', shadow: '#60A5FA' }, // Protein - Blue
+            { gradient: 'linear-gradient(90deg, #F59E0B, #D97706)', shadow: '#F59E0B' }, // Protein - Amber
             { gradient: 'linear-gradient(90deg, #34D399, #10B981)', shadow: '#34D399' }, // Carbs - Emerald
             { gradient: 'linear-gradient(90deg, #A78BFA, #8B5CF6)', shadow: '#A78BFA' }  // Fat - Violet
           ];

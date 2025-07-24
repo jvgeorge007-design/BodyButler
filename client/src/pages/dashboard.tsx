@@ -236,7 +236,7 @@ export default function Dashboard() {
         current: isPast ? 120 + dayOffset * 10 : isToday ? 80 : 0,
         target: macroTargets.protein_g || 150,
         unit: "g",
-        color: "#60A5FA", // Blue-400 - complements main CTA
+        color: "#F59E0B", // Amber-500 - complementary to blue CTA
       },
       carbs: {
         current: isPast ? 180 + dayOffset * 20 : isToday ? 150 : 0,
