@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import { Play, CheckCircle2, Circle, Dumbbell } from "lucide-react";
+import { Play, CheckCircle2, Circle, Dumbbell, Pause, Clock } from "lucide-react";
 import IOSNavHeader from "@/components/navigation/ios-nav-header";
 
 interface ExerciseSet {
@@ -29,6 +29,8 @@ export default function Workout() {
   const { toast } = useToast();
   const [workoutStarted, setWorkoutStarted] = useState(false);
   const [exercises, setExercises] = useState<WorkoutExercise[]>([]);
+  const [workoutTimer, setWorkoutTimer] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
 
   const { data: personalizedPlan, isLoading: planLoading, error } = useQuery({
     queryKey: ["/api/personalized-plan"],
@@ -84,11 +86,29 @@ export default function Workout() {
     }
   }, [error, toast]);
 
+  // Timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isTimerRunning) {
+      interval = setInterval(() => {
+        setWorkoutTimer(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isTimerRunning]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   const handleStartWorkout = () => {
     setWorkoutStarted(true);
+    setIsTimerRunning(true);
     toast({
       title: "Workout Started!",
-      description: "Let's crush this session!",
+      description: "Timer is now running. Let's crush this session!",
     });
   };
 
@@ -143,9 +163,10 @@ export default function Workout() {
       total + exercise.sets.filter(set => set.completed).length, 0
     );
     
+    setIsTimerRunning(false);
     toast({
       title: "Workout Complete!",
-      description: `Great job! You completed ${completedSets}/${totalSets} sets.`,
+      description: `Great job! You completed ${completedSets}/${totalSets} sets in ${formatTime(workoutTimer)}.`,
     });
     setLocation('/');
   };
@@ -192,20 +213,27 @@ export default function Workout() {
       />
 
       <div className="px-6 py-8 pb-24 max-w-md mx-auto">
-        {!workoutStarted && (
-          <div className="calm-card mb-6">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 rounded-xl bg-blue-500/20">
-                <Dumbbell className="w-5 h-5 text-white/80" />
-              </div>
-              <div className="flex-1">
-                <h1 className="text-title2 text-white/90 mb-2">{todaysWorkout.focus}</h1>
-                <p className="text-body text-white/60">
-                  {exercises.length} exercises
-                </p>
-              </div>
+        {/* Workout Header Card */}
+        <div className="calm-card mb-6">
+          <div className="flex items-start gap-4 mb-6">
+            <div className="p-3 rounded-xl bg-blue-500/20">
+              <Dumbbell className="w-5 h-5 text-white/80" />
             </div>
+            <div className="flex-1">
+              <h1 className="text-title2 text-white/90 mb-2">{todaysWorkout.focus}</h1>
+              <p className="text-body text-white/60">
+                {exercises.length} exercises
+              </p>
+            </div>
+            {workoutStarted && (
+              <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-xl">
+                <Clock className="w-4 h-4 text-white/60" />
+                <span className="text-body text-white/80 font-mono">{formatTime(workoutTimer)}</span>
+              </div>
+            )}
+          </div>
 
+          {!workoutStarted ? (
             <button 
               onClick={handleStartWorkout}
               className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 rounded-2xl transition-colors flex items-center justify-center gap-3"
@@ -213,8 +241,15 @@ export default function Workout() {
               <Play className="w-5 h-5 text-white/80" fill="currentColor" />
               Start Workout
             </button>
-          </div>
-        )}
+          ) : (
+            <div className="flex items-center justify-center gap-3 text-body text-white/60">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span>Workout in progress</span>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Exercise List */}
         <div className="space-y-6">
@@ -291,11 +326,19 @@ export default function Workout() {
         {/* Finish Workout Button */}
         {workoutStarted && (
           <div className="calm-card mt-6">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-body text-white/60">
+                Progress: {completedSets}/{totalSets} sets completed
+              </span>
+              <span className="text-body text-white/60">
+                Time: {formatTime(workoutTimer)}
+              </span>
+            </div>
             <button
               onClick={handleFinishWorkout}
               className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-4 rounded-2xl transition-colors"
             >
-              Finish Workout ({completedSets}/{totalSets} sets completed)
+              Finish Workout
             </button>
           </div>
         )}
