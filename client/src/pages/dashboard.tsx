@@ -395,7 +395,7 @@ export default function Dashboard() {
                 focus={dashboardData.workout.focus}
                 duration={dashboardData.workout.duration}
                 exerciseCount={dashboardData.workout.exerciseCount}
-                onLogWorkout={() => {}}
+                onLogWorkout={() => setLocation("/workout")}
               />
             </div>
           </div>

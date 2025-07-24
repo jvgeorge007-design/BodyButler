@@ -41,15 +41,15 @@ export default function WorkoutCard({
       </div>
 
       <button 
-        disabled
-        className="w-full text-gray-400 font-medium py-3 rounded-system-md flex items-center justify-center gap-3 cursor-not-allowed opacity-60"
+        onClick={onLogWorkout}
+        className="w-full text-white font-medium py-3 rounded-system-md haptic-medium flex items-center justify-center gap-3"
         style={{
-          background: 'rgb(60, 60, 67)',
-          boxShadow: 'none'
+          background: 'rgb(0, 122, 255)',
+          boxShadow: '0 4px 20px rgba(0, 122, 255, 0.3), 0 2px 8px rgba(0, 122, 255, 0.2)'
         }}
       >
         <Play className="w-5 h-5" fill="currentColor" />
-        Start
+        Let's go!
       </button>
 
       {/* Exercises Popup */}
