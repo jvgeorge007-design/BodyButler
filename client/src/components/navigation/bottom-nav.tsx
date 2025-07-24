@@ -1,8 +1,7 @@
-import { Home, TrendingUp, Settings } from "lucide-react";
+import { Home, TrendingUp, Settings, Plus } from "lucide-react";
 import { useLocation } from "wouter";
 import { useModal } from "@/contexts/modal-context";
 import BBAIIcon from "@/components/icons/bb-ai-icon";
-import bbLogo from "@assets/BB logo_1752757975860.png";
 
 export default function BottomNav() {
   const [location, setLocation] = useLocation();
@@ -20,6 +19,13 @@ export default function BottomNav() {
       icon: TrendingUp,
       label: "Progress",
       path: "/progress"
+    },
+    {
+      id: "add",
+      icon: Plus,
+      label: "Add Food",
+      path: "/add-food",
+      isMainAction: true
     },
     {
       id: "ai",
@@ -73,24 +79,46 @@ export default function BottomNav() {
         {navItems.map((item) => {
           const isActive = location === item.path;
           const IconComponent = item.icon;
+          const isMainAction = item.isMainAction;
           
           return (
             <button
               key={item.id}
               onClick={() => handleNavClick(item.path, item.id)}
-              className={`flex flex-col items-center justify-center ios-padding-small ios-haptic-light ios-spring-fast ios-touch-target ${
+              className={`flex flex-col items-center justify-center ios-haptic-medium ios-spring-fast ${
+                isMainAction 
+                  ? 'ios-touch-target-large relative' 
+                  : 'ios-padding-small ios-touch-target'
+              } ${
                 isActive 
                   ? 'ios-blue' 
-                  : 'ios-gray'
+                  : isMainAction 
+                    ? 'text-white' 
+                    : 'ios-gray'
               }`}
             >
-              <div className="w-6 h-6 mb-1 flex items-center justify-center">
-                <IconComponent 
-                  className="w-6 h-6"
-                  strokeWidth={isActive ? 2.5 : 2}
-                />
-              </div>
-              <span className="text-caption-2 font-medium">{item.label}</span>
+              {isMainAction ? (
+                <>
+                  {/* Main action button with elevated design */}
+                  <div className="w-14 h-14 mb-1 flex items-center justify-center bg-blue-500 rounded-full shadow-lg transform transition-all duration-200 active:scale-95">
+                    <IconComponent 
+                      className="w-7 h-7 text-white"
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                  <span className="text-caption-2 font-medium text-blue-400">{item.label}</span>
+                </>
+              ) : (
+                <>
+                  <div className="w-6 h-6 mb-1 flex items-center justify-center">
+                    <IconComponent 
+                      className="w-6 h-6"
+                      strokeWidth={isActive ? 2.5 : 2}
+                    />
+                  </div>
+                  <span className="text-caption-2 font-medium">{item.label}</span>
+                </>
+              )}
             </button>
           );
         })}
