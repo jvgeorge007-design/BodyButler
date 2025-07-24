@@ -23,9 +23,9 @@ export default function CircularCalorieTracker({
 
   return (
     <div className="relative">
-      {/* Cal. text in upper left corner */}
+      {/* Cal. text in upper left corner - same size as other card icons */}
       <div className="absolute top-0 left-0 z-20">
-        <span className="text-sm font-medium body-sans" style={{color: 'rgb(180, 180, 190)'}}>Cal.</span>
+        <span className="text-lg font-medium body-sans w-5 h-5 flex items-center" style={{color: 'rgb(180, 180, 190)'}}>Cal.</span>
       </div>
       
       {/* Card content without background - parent has glassmorphism */}
@@ -74,7 +74,7 @@ export default function CircularCalorieTracker({
           {/* Center content */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <div className="text-2xl font-light mb-1 animate-pulse-once heading-serif" style={{color: 'rgb(235, 235, 240)'}}>
+              <div className="text-3xl font-light mb-1 animate-pulse-once heading-serif" style={{color: 'rgb(235, 235, 240)'}}>
                 {remaining}
               </div>
               <div className="text-sm uppercase font-medium tracking-widest body-sans" style={{color: 'rgb(180, 180, 190)'}}>
