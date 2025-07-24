@@ -215,10 +215,7 @@ export default function Workout() {
       <div className="px-6 py-8 pb-24 max-w-md mx-auto">
         {/* Workout Header Card */}
         <div className="calm-card mb-6">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="p-3 rounded-xl bg-blue-500/20">
-              <Dumbbell className="w-5 h-5 text-white/80" />
-            </div>
+          <div className="flex items-start justify-between mb-6">
             <div className="flex-1">
               <h1 className="text-title2 text-white/90 mb-2">{todaysWorkout.focus}</h1>
               <p className="text-body text-white/60">
