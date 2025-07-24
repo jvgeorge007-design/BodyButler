@@ -291,8 +291,7 @@ export default function Workout() {
                     </p>
                   </div>
                   {isExerciseComplete && (
-                    <div className="flex items-center gap-2 bg-green-500/20 px-3 py-1 rounded-xl">
-                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                    <div className="bg-green-500/20 px-3 py-1 rounded-xl">
                       <span className="text-caption2 text-green-400">Complete</span>
                     </div>
                   )}
