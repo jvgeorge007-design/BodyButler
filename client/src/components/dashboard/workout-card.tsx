@@ -42,11 +42,7 @@ export default function WorkoutCard({
 
       <button 
         onClick={onLogWorkout}
-        className="w-full text-white font-medium py-3 rounded-system-md haptic-medium flex items-center justify-center"
-        style={{
-          background: 'rgb(0, 122, 255)',
-          boxShadow: '0 4px 20px rgba(0, 122, 255, 0.3), 0 2px 8px rgba(0, 122, 255, 0.2)'
-        }}
+        className="w-full text-white font-medium py-3 rounded-system-md haptic-medium flex items-center justify-center bg-blue-400 hover:bg-blue-500 transition-colors duration-300"
       >
         Let's go!
       </button>
