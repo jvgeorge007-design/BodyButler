@@ -72,9 +72,17 @@ export default function FoodLogSummary({ date = new Date().toISOString().split('
     if (startX !== undefined) {
       const diff = startX - currentX;
       const element = document.getElementById(`item-${itemId}`);
+      const deleteBackground = document.getElementById(`delete-${itemId}`);
+      
       if (element && diff > 0) {
-        element.style.transform = `translateX(-${Math.min(diff, 80)}px)`;
+        const swipeDistance = Math.min(diff, 80);
+        element.style.transform = `translateX(-${swipeDistance}px)`;
         element.style.opacity = diff > 40 ? '0.7' : '1';
+        
+        // Show delete background proportionally
+        if (deleteBackground) {
+          deleteBackground.style.transform = `translateX(${100 - (swipeDistance / 80) * 100}%)`;
+        }
       }
     }
   };
@@ -84,6 +92,7 @@ export default function FoodLogSummary({ date = new Date().toISOString().split('
     if (startX !== undefined) {
       const diff = startX - endX;
       const element = document.getElementById(`item-${itemId}`);
+      const deleteBackground = document.getElementById(`delete-${itemId}`);
       
       if (diff > 80) {
         // Delete item
@@ -92,6 +101,9 @@ export default function FoodLogSummary({ date = new Date().toISOString().split('
         // Reset position
         element.style.transform = 'translateX(0)';
         element.style.opacity = '1';
+        if (deleteBackground) {
+          deleteBackground.style.transform = 'translateX(100%)';
+        }
       }
       
       setSwipeDirection(prev => {
@@ -257,7 +269,10 @@ export default function FoodLogSummary({ date = new Date().toISOString().split('
                     </div>
                     
                     {/* Delete background - revealed on swipe */}
-                    <div className="absolute inset-y-0 right-0 w-20 bg-red-500/20 flex items-center justify-center">
+                    <div 
+                      id={`delete-${item.id || index}`}
+                      className="absolute inset-y-0 right-0 w-20 bg-red-500/20 flex items-center justify-center translate-x-full transition-transform duration-200"
+                    >
                       <Trash2 className="w-5 h-5 text-red-400" />
                     </div>
                   </div>
