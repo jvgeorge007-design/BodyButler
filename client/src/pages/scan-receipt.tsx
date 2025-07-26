@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import BottomNav from "@/components/navigation/bottom-nav";
 
 
 interface ParsedItem {
@@ -260,6 +261,9 @@ export default function ScanReceiptPage() {
             </Card>
           </div>
         </div>
+
+        {/* Bottom Navigation */}
+        <BottomNav />
       </div>
     );
   }
@@ -406,6 +410,9 @@ export default function ScanReceiptPage() {
             </Button>
           </div>
         </div>
+
+        {/* Bottom Navigation */}
+        <BottomNav />
       </div>
     );
   }
