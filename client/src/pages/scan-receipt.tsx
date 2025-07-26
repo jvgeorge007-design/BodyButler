@@ -129,10 +129,12 @@ export default function ScanReceiptPage() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
+    // Accept JPEG, PNG, HEIC formats specifically
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/heic', 'image/heif'];
+    if (!validTypes.includes(file.type.toLowerCase())) {
       toast({
-        title: "Invalid File",
-        description: "Please select an image file.",
+        title: "Invalid File Format",
+        description: "Please select a JPEG, PNG, or HEIC image file.",
         variant: "destructive",
       });
       return;
@@ -171,9 +173,9 @@ export default function ScanReceiptPage() {
       canvas.width = width;
       canvas.height = height;
       
-      // Draw and compress
+      // Draw and compress - use higher quality for receipt text clarity
       ctx?.drawImage(img, 0, 0, width, height);
-      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.9);
       const base64Data = compressedBase64.split(',')[1];
       
       parseReceiptMutation.mutate({ image: base64Data });
@@ -324,7 +326,7 @@ export default function ScanReceiptPage() {
                     MozOsxFontSmoothing: 'grayscale',
                     textRendering: 'optimizeLegibility'
                   }}>
-                    Supported formats: JPG, PNG, HEIC
+                    Supported formats: JPEG, PNG, HEIC
                   </p>
                 </div>
               </div>
