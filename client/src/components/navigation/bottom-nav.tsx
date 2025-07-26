@@ -100,7 +100,13 @@ export default function BottomNav() {
               {isMainAction ? (
                 <>
                   {/* Main action button with elevated design */}
-                  <div className="w-14 h-14 mb-1 flex items-center justify-center bg-blue-400 rounded-full transform transition-all duration-200 active:scale-95 hover:bg-blue-500">
+                  <div className="w-14 h-14 mb-1 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95"
+                    style={{
+                      backgroundColor: 'rgb(59, 130, 246)'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(37, 99, 235)'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(59, 130, 246)'}
+                  >
                     <IconComponent 
                       className="w-7 h-7 text-white"
                       strokeWidth={2.5}

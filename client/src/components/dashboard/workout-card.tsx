@@ -42,7 +42,12 @@ export default function WorkoutCard({
 
       <button 
         onClick={onLogWorkout}
-        className="w-full text-white font-medium py-3 rounded-system-md haptic-medium flex items-center justify-center bg-blue-400 hover:bg-blue-500 transition-colors duration-300"
+        className="w-full text-white font-medium py-3 rounded-system-md haptic-medium flex items-center justify-center transition-colors duration-300"
+        style={{
+          backgroundColor: 'rgb(59, 130, 246)'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(37, 99, 235)'}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(59, 130, 246)'}
       >
         Let's go!
       </button>
