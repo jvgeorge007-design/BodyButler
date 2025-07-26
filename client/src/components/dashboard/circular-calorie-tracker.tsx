@@ -61,12 +61,12 @@ export default function CircularCalorieTracker({
               } as any}
             />
             
-            {/* Gradient definition - Light blue to dark blue like WHOOP */}
+            {/* Gradient definition - Reduced saturation blue gradient */}
             <defs>
               <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgb(52, 199, 235)" />
-                <stop offset="50%" stopColor="rgb(0, 122, 255)" />
-                <stop offset="100%" stopColor="rgb(0, 84, 166)" />
+                <stop offset="0%" stopColor="rgb(96, 165, 250)" />
+                <stop offset="50%" stopColor="rgb(59, 130, 246)" />
+                <stop offset="100%" stopColor="rgb(37, 99, 235)" />
               </linearGradient>
             </defs>
           </svg>
