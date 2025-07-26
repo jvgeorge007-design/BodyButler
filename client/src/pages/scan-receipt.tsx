@@ -85,6 +85,7 @@ export default function ScanReceiptPage() {
       return result;
     },
     onSuccess: (data: ParsedReceipt) => {
+      console.log('Receipt parsing successful, switching to confirm step:', data);
       setIsProcessing(false);
       setProcessingStatus('');
       setParsedReceipt(data);
@@ -98,6 +99,7 @@ export default function ScanReceiptPage() {
       });
       setSelectedItems(initialSelections);
       setStep('confirm');
+      console.log('Step set to confirm, initial selections:', initialSelections);
     },
     onError: (error) => {
       setIsProcessing(false);
@@ -362,6 +364,7 @@ export default function ScanReceiptPage() {
   }
 
   if (step === 'confirm' && parsedReceipt) {
+    console.log('Rendering confirm step with parsedReceipt:', parsedReceipt.items.length, 'items');
     const selectedCount = Object.values(selectedItems).filter(item => item.selected).length;
 
     return (
@@ -453,11 +456,6 @@ export default function ScanReceiptPage() {
                         />
                         <div className="flex-1">
                           <h4 className="font-medium text-white">{item.name}</h4>
-                          {usdaMatch?.bestMatch && (
-                            <p className="text-sm text-white/60">
-                              Matched: {usdaMatch.bestMatch.description}
-                            </p>
-                          )}
                           {!usdaMatch?.bestMatch && (
                             <p className="text-sm text-yellow-400 flex items-center">
                               <AlertCircle className="w-4 h-4 mr-1" />
@@ -515,5 +513,6 @@ export default function ScanReceiptPage() {
     );
   }
 
+  console.log('Current step:', step, 'parsedReceipt exists:', !!parsedReceipt);
   return null;
 }
