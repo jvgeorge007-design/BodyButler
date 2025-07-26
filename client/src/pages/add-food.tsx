@@ -90,7 +90,7 @@ export default function AddFood() {
 
   const getCurrentMealProgress = () => {
     // Use same data calculation as dashboard
-    const macroTargets = personalizedPlan?.macroTargets || {};
+    const macroTargets = (personalizedPlan?.macroTargets as any) || {};
     const today = new Date();
     const selectedDate = new Date(); // Assuming current date for add-food page
     const isPast = selectedDate < today;
@@ -132,13 +132,36 @@ export default function AddFood() {
       {/* Header */}
       <IOSNavHeader 
         title="Add Food"
-        leftButton={{
-          icon: ArrowLeft,
-          onClick: () => setLocation('/')
-        }}
+        onBackClick={() => setLocation('/')}
       />
 
       <div className="relative z-10 px-6 pt-4 pb-24">
+        {/* Daily Progress */}
+        <div className="calm-card mb-6">
+          <h3 className="text-body font-medium text-white mb-3">
+            Today's Progress
+          </h3>
+          <div className="grid grid-cols-4 gap-3">
+            {Object.entries(mealProgress).map(([macro, data]) => {
+              const percentage = Math.min((data.current / data.target) * 100, 100);
+              return (
+                <div key={macro} className="text-center">
+                  <div className="text-footnote text-gray-400 mb-1 capitalize">{macro}</div>
+                  <div className="text-callout font-medium text-white">
+                    {data.current}/{data.target}
+                  </div>
+                  <div className="w-full bg-gray-700 rounded-system-xs h-1.5 mt-1">
+                    <div 
+                      className="h-1.5 rounded-system-xs transition-all duration-500 bg-blue-400"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Meal Selection Tabs */}
         <div className="mb-6">
           <h2 className="text-headline font-medium text-white mb-4">Select Meal</h2>
@@ -158,34 +181,6 @@ export default function AddFood() {
             ))}
           </div>
         </div>
-
-        {/* Daily Progress */}
-        {selectedMeal && (
-          <div className="calm-card mb-6">
-            <h3 className="text-body font-medium text-white mb-3">
-              Today's Progress
-            </h3>
-            <div className="grid grid-cols-4 gap-3">
-              {Object.entries(mealProgress).map(([macro, data]) => {
-                const percentage = Math.min((data.current / data.target) * 100, 100);
-                return (
-                  <div key={macro} className="text-center">
-                    <div className="text-footnote text-gray-400 mb-1 capitalize">{macro}</div>
-                    <div className="text-callout font-medium text-white">
-                      {data.current}/{data.target}
-                    </div>
-                    <div className="w-full bg-gray-700 rounded-system-xs h-1.5 mt-1">
-                      <div 
-                        className="h-1.5 rounded-system-xs transition-all duration-500 bg-blue-400"
-                        style={{ width: `${percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
 
         {/* Search Bar */}
         <div className="mb-6">
