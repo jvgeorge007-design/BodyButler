@@ -214,11 +214,23 @@ export default function ScanReceiptPage() {
 
           {/* Content */}
           <div className="flex-1 px-4 pb-6">
-            <Card className="calm-card p-8 text-center">
+            <Card className="calm-card p-8 text-center" style={{ 
+              WebkitFontSmoothing: 'antialiased',
+              MozOsxFontSmoothing: 'grayscale',
+              textRendering: 'optimizeLegibility'
+            }}>
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-semibold text-white">Upload Receipt</h2>
-                  <p className="text-white/70">
+                  <h2 className="text-2xl font-semibold text-white" style={{
+                    WebkitFontSmoothing: 'antialiased',
+                    MozOsxFontSmoothing: 'grayscale',
+                    textRendering: 'optimizeLegibility'
+                  }}>Upload Receipt</h2>
+                  <p className="text-white/70" style={{
+                    WebkitFontSmoothing: 'antialiased',
+                    MozOsxFontSmoothing: 'grayscale',
+                    textRendering: 'optimizeLegibility'
+                  }}>
                     Take a photo or upload an image of your receipt to automatically log food items
                   </p>
                 </div>
@@ -228,6 +240,11 @@ export default function ScanReceiptPage() {
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isProcessing || parseReceiptMutation.isPending}
                     className="w-full h-16 text-lg bg-blue-600 hover:bg-blue-700 text-white"
+                    style={{
+                      WebkitFontSmoothing: 'antialiased',
+                      MozOsxFontSmoothing: 'grayscale',
+                      textRendering: 'optimizeLegibility'
+                    }}
                   >
                     {isProcessing || parseReceiptMutation.isPending ? (
                       <>
@@ -253,7 +270,11 @@ export default function ScanReceiptPage() {
                 </div>
 
                 <div className="pt-4 border-t border-white/10">
-                  <p className="text-sm text-white/60">
+                  <p className="text-sm text-white/60" style={{
+                    WebkitFontSmoothing: 'antialiased',
+                    MozOsxFontSmoothing: 'grayscale',
+                    textRendering: 'optimizeLegibility'
+                  }}>
                     Supported formats: JPG, PNG, HEIC
                   </p>
                 </div>
