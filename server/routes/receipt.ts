@@ -195,12 +195,21 @@ router.get("/food-log/:date", async (req, res) => {
     const date = new Date(req.params.date);
     const startOfDay = new Date(date.setHours(0, 0, 0, 0));
     const endOfDay = new Date(date.setHours(23, 59, 59, 999));
+    const userId = req.user!.claims!.sub;
+
+    console.log(`Getting food log for user ${userId} on ${req.params.date}`);
+    console.log(`Date range: ${startOfDay.toISOString()} to ${endOfDay.toISOString()}`);
 
     const entries = await storage.getFoodLogEntriesByDateRange(
-      req.user!.claims!.sub,
+      userId,
       startOfDay,
       endOfDay
     );
+
+    console.log(`Found ${entries.length} food log entries for user ${userId}`);
+    if (entries.length > 0) {
+      console.log('Sample entry:', JSON.stringify(entries[0], null, 2));
+    }
 
     // Group by meal type and calculate totals
     const groupedEntries = {
