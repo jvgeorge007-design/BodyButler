@@ -103,7 +103,7 @@ export default function Login() {
             />
             
             {/* Forgot Password Link - centered and closer to password input */}
-            <div className="text-center -mt-3 mb-3">
+            <div className="text-center -mt-1 mb-3">
               <button className="text-white/60 hover:text-white/80 text-xs font-bold underline transition-colors">
                 Forgot your password?
               </button>
