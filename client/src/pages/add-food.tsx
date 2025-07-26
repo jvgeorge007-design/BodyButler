@@ -50,6 +50,13 @@ export default function AddFood() {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
+  // Fetch today's food log to show logged items
+  const today = new Date().toISOString().split('T')[0];
+  const { data: foodLog } = useQuery({
+    queryKey: ['/api/receipt/food-log', today],
+    staleTime: 1000 * 30, // 30 seconds - fresh data for recently logged items
+  });
+
   // Smart meal detection based on current time
   useEffect(() => {
     const now = new Date();

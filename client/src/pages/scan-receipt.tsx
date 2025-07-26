@@ -133,7 +133,11 @@ export default function ScanReceiptPage() {
         title: "Food Logged Successfully",
         description: `Added ${data.loggedItemsCount} items to your ${mealType} log.`,
       });
+      // Invalidate all food-related queries to refresh the UI
       queryClient.invalidateQueries({ queryKey: ['/api/receipt/food-log'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/food-log'] });
+      
+      // Navigate back to add food page to show the logged items
       setLocation('/add-food');
     },
     onError: (error) => {
