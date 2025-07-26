@@ -102,8 +102,8 @@ export default function Login() {
               className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-blue-500/50 focus:outline-none transition-colors text-sm"
             />
             
-            {/* Forgot Password Link */}
-            <div className="text-center">
+            {/* Forgot Password Link - moved closer to password input */}
+            <div className="text-right -mt-2 mb-2">
               <button className="text-white/60 hover:text-white/80 text-xs font-bold transition-colors">
                 Forgot your password?
               </button>
