@@ -26,6 +26,7 @@ const confirmReceiptSchema = z.object({
 // Parse receipt (image or text)
 router.post("/parse", async (req, res) => {
   try {
+    console.log('Receipt parsing started for user:', req.user?.claims?.sub);
     const { image, text } = parseReceiptSchema.parse(req.body);
     
     if (!image && !text) {
@@ -33,14 +34,18 @@ router.post("/parse", async (req, res) => {
     }
 
     // Check if user is authenticated
-    if (!req.user?.replit?.id) {
+    if (!req.user?.claims?.sub) {
+      console.log('Authentication failed - no user found');
       return res.status(401).json({ error: "User not authenticated" });
     }
 
+    console.log('Starting OCR processing...');
     // Parse receipt using OCR service
     const parsedReceipt = image 
       ? await receiptOCRService.parseReceiptImage(image)
       : await receiptOCRService.parseReceiptText(text!);
+    
+    console.log('OCR completed, found', parsedReceipt.items.length, 'items');
 
     // Search USDA for each item with error handling
     const usdaMatches = await Promise.all(
@@ -68,7 +73,7 @@ router.post("/parse", async (req, res) => {
     const receiptId = `receipt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const parsedFoodLog = await storage.createParsedFoodLog({
       id: receiptId,
-      userId: req.user.replit.id,
+      userId: req.user.claims.sub,
       rawText: parsedReceipt.rawText,
       establishment: parsedReceipt.establishment,
       parsedItems: parsedReceipt.items,
@@ -96,13 +101,13 @@ router.post("/confirm", async (req, res) => {
     const { receiptId, forMeOnly, selectedItems, mealType } = confirmReceiptSchema.parse(req.body);
     
     // Check if user is authenticated
-    if (!req.user?.replit?.id) {
+    if (!req.user?.claims?.sub) {
       return res.status(401).json({ error: "User not authenticated" });
     }
 
     // Get the parsed receipt
     const parsedReceipt = await storage.getParsedFoodLog(receiptId);
-    if (!parsedReceipt || parsedReceipt.userId !== req.user.replit.id) {
+    if (!parsedReceipt || parsedReceipt.userId !== req.user.claims.sub) {
       return res.status(404).json({ error: "Receipt not found" });
     }
 
@@ -138,7 +143,7 @@ router.post("/confirm", async (req, res) => {
       const entryId = `entry_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const foodLogEntry = await storage.createFoodLogEntry({
         id: entryId,
-        userId: req.user!.replit!.id,
+        userId: req.user!.claims!.sub,
         fdcId: usdaFood.fdcId,
         foodName: usdaFood.description,
         quantity: selection.quantity.toString(),
@@ -192,7 +197,7 @@ router.get("/food-log/:date", async (req, res) => {
     const endOfDay = new Date(date.setHours(23, 59, 59, 999));
 
     const entries = await storage.getFoodLogEntriesByDateRange(
-      req.user!.replit!.id,
+      req.user!.claims!.sub,
       startOfDay,
       endOfDay
     );

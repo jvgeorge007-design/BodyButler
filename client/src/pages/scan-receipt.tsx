@@ -41,6 +41,7 @@ export default function ScanReceiptPage() {
   
   const [step, setStep] = useState<'upload' | 'confirm'>('upload');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [processingStatus, setProcessingStatus] = useState<string>('');
   const [parsedReceipt, setParsedReceipt] = useState<ParsedReceipt | null>(null);
   const [forMeOnly, setForMeOnly] = useState(true);
   const [selectedItems, setSelectedItems] = useState<Record<number, { selected: boolean; quantity: number }>>({});
@@ -61,16 +62,31 @@ export default function ScanReceiptPage() {
 
   const parseReceiptMutation = useMutation({
     mutationFn: async (data: { image?: string; text?: string }) => {
+      console.log('Starting receipt parsing...');
+      setProcessingStatus('Analyzing receipt image...');
+      
       const response = await fetch('/api/receipt/parse', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      if (!response.ok) throw new Error('Failed to parse receipt');
-      return await response.json() as ParsedReceipt;
+      
+      setProcessingStatus('Extracting food items...');
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('Parse error:', errorData);
+        throw new Error(errorData.error || 'Failed to parse receipt');
+      }
+      
+      setProcessingStatus('Matching nutrition data...');
+      const result = await response.json() as ParsedReceipt;
+      console.log('Parsing completed:', result);
+      return result;
     },
     onSuccess: (data: ParsedReceipt) => {
       setIsProcessing(false);
+      setProcessingStatus('');
       setParsedReceipt(data);
       // Initialize all items as selected with their parsed quantities
       const initialSelections: Record<number, { selected: boolean; quantity: number }> = {};
@@ -85,9 +101,11 @@ export default function ScanReceiptPage() {
     },
     onError: (error) => {
       setIsProcessing(false);
+      setProcessingStatus('');
+      console.error('Receipt parsing error:', error);
       toast({
         title: "Parsing Failed",
-        description: "Could not parse the receipt. Please try again or enter food manually.",
+        description: error.message || "Could not parse the receipt. Please try again or enter food manually.",
         variant: "destructive",
       });
     }
@@ -303,7 +321,7 @@ export default function ScanReceiptPage() {
                     {isProcessing || parseReceiptMutation.isPending ? (
                       <>
                         <div className="w-5 h-5 animate-spin rounded-full border-2 border-white/30 border-t-white mr-3" />
-                        Processing...
+                        {processingStatus || 'Processing...'}
                       </>
                     ) : (
                       <>
