@@ -362,4 +362,27 @@ router.get("/food-log/:date", async (req, res) => {
   }
 });
 
+// Delete a specific food log entry
+router.delete("/food-log/:itemId", async (req, res) => {
+  try {
+    const itemId = req.params.itemId;
+    const userId = req.user!.claims!.sub;
+
+    console.log(`Deleting food log entry ${itemId} for user ${userId}`);
+
+    // Verify the item belongs to the user before deleting
+    const existingEntry = await storage.getFoodLogEntryById(itemId);
+    if (!existingEntry || existingEntry.userId !== userId) {
+      return res.status(404).json({ error: "Food log entry not found" });
+    }
+
+    await storage.deleteFoodLogEntry(itemId);
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting food log entry:", error);
+    res.status(500).json({ error: "Failed to delete food log entry" });
+  }
+});
+
 export default router;

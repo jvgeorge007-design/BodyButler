@@ -32,6 +32,8 @@ export interface IStorage {
   createFoodLogEntry(entry: InsertFoodLogEntry): Promise<FoodLogEntry>;
   getFoodLogEntriesByDateRange(userId: string, startDate: Date, endDate: Date): Promise<FoodLogEntry[]>;
   getFoodLogEntriesByMeal(userId: string, date: Date, mealType: string): Promise<FoodLogEntry[]>;
+  getFoodLogEntryById(id: string): Promise<FoodLogEntry | undefined>;
+  deleteFoodLogEntry(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -143,6 +145,15 @@ export class DatabaseStorage implements IStorage {
           lte(foodLogEntries.loggedAt, endOfDay)
         )
       );
+  }
+
+  async getFoodLogEntryById(id: string): Promise<FoodLogEntry | undefined> {
+    const [entry] = await db.select().from(foodLogEntries).where(eq(foodLogEntries.id, id));
+    return entry;
+  }
+
+  async deleteFoodLogEntry(id: string): Promise<void> {
+    await db.delete(foodLogEntries).where(eq(foodLogEntries.id, id));
   }
 }
 
