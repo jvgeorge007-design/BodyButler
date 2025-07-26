@@ -51,9 +51,8 @@ export default function AddFood() {
   });
 
   // Fetch today's food log to show logged items
-  const today = new Date().toISOString().split('T')[0];
   const { data: foodLog } = useQuery({
-    queryKey: ['/api/receipt/food-log', today],
+    queryKey: ['/api/receipt/food-log'],
     staleTime: 1000 * 30, // 30 seconds - fresh data for recently logged items
   });
 

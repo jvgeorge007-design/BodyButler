@@ -26,8 +26,8 @@ interface FoodLogSummaryProps {
 
 export default function FoodLogSummary({ date = new Date().toISOString().split('T')[0], className = '' }: FoodLogSummaryProps) {
   const { data: foodLog, isLoading } = useQuery<FoodLogSummary>({
-    queryKey: ['/api/receipt/food-log', date],
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    queryKey: ['/api/receipt/food-log'],
+    staleTime: 1000 * 30, // 30 seconds - fresh data for debugging
   });
 
   if (isLoading) {

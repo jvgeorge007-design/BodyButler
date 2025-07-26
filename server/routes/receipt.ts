@@ -189,6 +189,97 @@ router.post("/confirm", async (req, res) => {
   }
 });
 
+// Get user's food log entries for today (simple endpoint for debugging)
+router.get("/food-log", async (req, res) => {
+  try {
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+    const userId = req.user!.claims!.sub;
+
+    console.log(`Getting food log for user ${userId} for today`);
+    console.log(`Date range: ${startOfDay.toISOString()} to ${endOfDay.toISOString()}`);
+
+    const entries = await storage.getFoodLogEntriesByDateRange(
+      userId,
+      startOfDay,
+      endOfDay
+    );
+
+    console.log(`Found ${entries.length} food log entries for user ${userId}`);
+    entries.forEach((entry, i) => {
+      console.log(`Entry ${i + 1}:`, {
+        id: entry.id,
+        foodName: entry.foodName,
+        mealType: entry.mealType,
+        calories: entry.calories,
+        loggedAt: entry.loggedAt
+      });
+    });
+
+    // Group by meal type and calculate totals
+    const groupedEntries = {
+      breakfast: [],
+      lunch: [],
+      dinner: [],
+      snacks: [],
+    };
+
+    let dailyTotals = {
+      calories: 0,
+      protein: 0,
+      totalCarbs: 0,
+      healthScoreSum: 0,
+      itemCount: 0,
+    };
+
+    for (const entry of entries) {
+      const mealType = entry.mealType as keyof typeof groupedEntries;
+      if (groupedEntries[mealType]) {
+        groupedEntries[mealType].push(entry);
+      }
+
+      // Add to daily totals
+      dailyTotals.calories += parseFloat(entry.calories || '0');
+      dailyTotals.protein += parseFloat(entry.protein || '0');
+      dailyTotals.totalCarbs += parseFloat(entry.totalCarbs || '0');
+      dailyTotals.healthScoreSum += parseFloat(entry.healthScore || '0');
+      dailyTotals.itemCount++;
+    }
+
+    // Calculate average health score and grade
+    const avgHealthScore = dailyTotals.itemCount > 0 
+      ? dailyTotals.healthScoreSum / dailyTotals.itemCount 
+      : 0;
+    const dailyGrade = usdaService.calculateHealthScore({
+      calories: dailyTotals.calories,
+      protein: dailyTotals.protein,
+      totalCarbs: dailyTotals.totalCarbs,
+      // Use aggregated values for scoring
+      fiber: 0, sugars: 0, addedSugars: 0, totalFat: 0,
+      saturatedFat: 0, monoFat: 0, polyFat: 0, transFat: 0, sodium: 0,
+    }).grade;
+
+    const response = {
+      date: today.toISOString().split('T')[0],
+      meals: groupedEntries,
+      dailyTotals: {
+        calories: Math.round(dailyTotals.calories),
+        protein: Math.round(dailyTotals.protein),
+        carbs: Math.round(dailyTotals.totalCarbs),
+        grade: dailyGrade,
+      },
+      totalItems: dailyTotals.itemCount,
+    };
+
+    console.log('Sending response:', JSON.stringify(response, null, 2));
+    res.json(response);
+  } catch (error) {
+    console.error("Error getting food log:", error);
+    res.status(500).json({ error: "Failed to get food log" });
+  }
+});
+
 // Get user's food log entries for a specific date
 router.get("/food-log/:date", async (req, res) => {
   try {
