@@ -70,6 +70,7 @@ export default function ScanReceiptPage() {
       return await response.json() as ParsedReceipt;
     },
     onSuccess: (data: ParsedReceipt) => {
+      setIsProcessing(false);
       setParsedReceipt(data);
       // Initialize all items as selected with their parsed quantities
       const initialSelections: Record<number, { selected: boolean; quantity: number }> = {};
@@ -83,6 +84,7 @@ export default function ScanReceiptPage() {
       setStep('confirm');
     },
     onError: (error) => {
+      setIsProcessing(false);
       toast({
         title: "Parsing Failed",
         description: "Could not parse the receipt. Please try again or enter food manually.",
@@ -136,12 +138,59 @@ export default function ScanReceiptPage() {
       return;
     }
 
+    // Check file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast({
+        title: "File Too Large",
+        description: "Please select an image under 10MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsProcessing(true);
+    
+    // Compress image if it's too large
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      // Calculate new dimensions (max 1920px width/height)
+      const maxSize = 1920;
+      let { width, height } = img;
+      
+      if (width > height && width > maxSize) {
+        height = (height * maxSize) / width;
+        width = maxSize;
+      } else if (height > maxSize) {
+        width = (width * maxSize) / height;
+        height = maxSize;
+      }
+      
+      canvas.width = width;
+      canvas.height = height;
+      
+      // Draw and compress
+      ctx?.drawImage(img, 0, 0, width, height);
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+      const base64Data = compressedBase64.split(',')[1];
+      
+      parseReceiptMutation.mutate({ image: base64Data });
+    };
+    
+    img.onerror = () => {
+      setIsProcessing(false);
+      toast({
+        title: "Image Error",
+        description: "Could not process the image. Please try another file.",
+        variant: "destructive",
+      });
+    };
+    
     const reader = new FileReader();
     reader.onload = () => {
-      const base64 = reader.result as string;
-      const base64Data = base64.split(',')[1]; // Remove data:image/... prefix
-      parseReceiptMutation.mutate({ image: base64Data });
+      img.src = reader.result as string;
     };
     reader.onerror = () => {
       toast({
