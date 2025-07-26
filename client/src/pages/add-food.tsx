@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Search, Clock, Star, Utensils } from 'lucide-react';
+import { ArrowLeft, Search, Clock, Star, Utensils, Camera } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import IOSNavHeader from '@/components/navigation/ios-nav-header';
 import BottomNav from '@/components/navigation/bottom-nav';
+import FoodLogSummary from '@/components/food-log-summary';
 
 interface FoodItem {
   id: string;
@@ -30,6 +31,7 @@ const RECENT_FOODS: FoodItem[] = [
 ];
 
 const QUICK_ADD_OPTIONS = [
+  { icon: Camera, label: 'Scan Receipt', description: 'Auto-log from receipt photo', route: '/scan-receipt' },
   { icon: Clock, label: 'Recent Foods', description: 'From your food history' },
   { icon: Star, label: 'Favorites', description: 'Your saved favorites' },
   { icon: Search, label: 'Search Foods', description: 'Find any food item' },
@@ -68,9 +70,11 @@ export default function AddFood() {
     setSelectedMeal(meal);
   };
 
-  const handleQuickAdd = (option: string) => {
+  const handleQuickAdd = (option: string, route?: string) => {
     setSelectedOption(option);
-    if (option === 'Search Foods') {
+    if (route) {
+      setLocation(route);
+    } else if (option === 'Search Foods') {
       // Focus on search input
       const searchInput = document.getElementById('food-search');
       searchInput?.focus();
@@ -205,7 +209,7 @@ export default function AddFood() {
             {QUICK_ADD_OPTIONS.map((option) => (
               <button
                 key={option.label}
-                onClick={() => handleQuickAdd(option.label)}
+                onClick={() => handleQuickAdd(option.label, (option as any).route)}
                 className={`p-4 bg-white/5 border border-white/10 rounded-system-lg haptic-medium transition-all duration-300 hover:bg-white/10 hover:border-white/20 text-left ${
                   selectedOption === option.label ? 'bg-blue-500/20 border-blue-400/50' : ''
                 }`}
@@ -215,6 +219,14 @@ export default function AddFood() {
                 <div className="text-footnote text-gray-400 mt-1">{option.description}</div>
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Food Log Summary */}
+        <div className="mb-6">
+          <h3 className="text-headline font-medium text-white mb-4">Today's Food Log</h3>
+          <div className="space-y-3">
+            <FoodLogSummary />
           </div>
         </div>
 

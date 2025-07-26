@@ -5,6 +5,7 @@ import { setupAuth, isAuthenticated } from "./replitAuth";
 import { generatePersonalizedPlan } from "./openai";
 import { insertUserProfileSchema } from "@shared/schema";
 import { z } from "zod";
+import receiptRoutes from "./routes/receipt.js";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -34,7 +35,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Save onboarding data to profile
       const existingProfile = await storage.getUserProfile(userId);
       if (existingProfile) {
-        const mergedData = { ...existingProfile.onboardingData, ...onboardingData };
+        const mergedData = { ...(existingProfile.onboardingData as any), ...onboardingData };
         await storage.updateUserProfile(userId, mergedData);
       } else {
         const profileData = {
@@ -98,7 +99,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const existingProfile = await storage.getUserProfile(userId);
       if (existingProfile) {
         // Merge existing data with new data
-        const mergedData = { ...existingProfile.onboardingData, ...onboardingData };
+        const mergedData = { ...(existingProfile.onboardingData as any), ...onboardingData };
         const updatedProfile = await storage.updateUserProfile(userId, mergedData);
         return res.json(updatedProfile);
       }
@@ -128,7 +129,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Merge existing onboarding data with new data
-      const mergedData = { ...existingProfile.onboardingData, ...updateData };
+      const mergedData = { ...(existingProfile.onboardingData as any), ...updateData };
       const updatedProfile = await storage.updateUserProfile(userId, mergedData);
       
       res.json(updatedProfile);
@@ -203,6 +204,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to regenerate plan" });
     }
   });
+
+  // Register receipt/food logging routes
+  app.use('/api/receipt', isAuthenticated, receiptRoutes);
 
   const httpServer = createServer(app);
   return httpServer;

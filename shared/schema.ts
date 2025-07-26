@@ -46,8 +46,59 @@ export const userProfiles = pgTable("user_profiles", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Food logging and receipt parsing tables
+export const parsedFoodLogs = pgTable("parsed_food_logs", {
+  id: varchar("id").primaryKey().notNull(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  rawText: text("raw_text").notNull(),
+  establishment: varchar("establishment"),
+  parsedItems: jsonb("parsed_items").notNull(), // Array of ParsedReceiptItem
+  usdaMatches: jsonb("usda_matches"), // Array of matched USDA foods
+  confidence: decimal("confidence", { precision: 3, scale: 2 }),
+  sourceType: varchar("source_type").notNull(), // 'image' | 'text'
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const foodLogEntries = pgTable("food_log_entries", {
+  id: varchar("id").primaryKey().notNull(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  fdcId: integer("fdc_id").notNull(),
+  foodName: varchar("food_name").notNull(),
+  quantity: decimal("quantity", { precision: 8, scale: 2 }).notNull(),
+  unit: varchar("unit").notNull(),
+  mealType: varchar("meal_type").notNull(), // 'breakfast' | 'lunch' | 'dinner' | 'snacks'
+  loggedAt: timestamp("logged_at").notNull(),
+  
+  // Nutritional data (stored for quick access)
+  calories: decimal("calories", { precision: 8, scale: 2 }),
+  protein: decimal("protein", { precision: 8, scale: 2 }),
+  totalCarbs: decimal("total_carbs", { precision: 8, scale: 2 }),
+  fiber: decimal("fiber", { precision: 8, scale: 2 }),
+  sugars: decimal("sugars", { precision: 8, scale: 2 }),
+  addedSugars: decimal("added_sugars", { precision: 8, scale: 2 }),
+  totalFat: decimal("total_fat", { precision: 8, scale: 2 }),
+  saturatedFat: decimal("saturated_fat", { precision: 8, scale: 2 }),
+  transFat: decimal("trans_fat", { precision: 8, scale: 2 }),
+  sodium: decimal("sodium", { precision: 8, scale: 2 }),
+  
+  // Health scoring
+  healthScore: decimal("health_score", { precision: 5, scale: 2 }),
+  healthGrade: varchar("health_grade", { length: 2 }),
+  
+  // Source tracking
+  sourceReceiptId: varchar("source_receipt_id").references(() => parsedFoodLogs.id),
+  manualEntry: boolean("manual_entry").default(false),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
+export type ParsedFoodLog = typeof parsedFoodLogs.$inferSelect;
+export type InsertParsedFoodLog = typeof parsedFoodLogs.$inferInsert;
+export type FoodLogEntry = typeof foodLogEntries.$inferSelect;
+export type InsertFoodLogEntry = typeof foodLogEntries.$inferInsert;
 
 // Schema for the onboarding data JSON structure
 export const onboardingDataSchema = z.object({
