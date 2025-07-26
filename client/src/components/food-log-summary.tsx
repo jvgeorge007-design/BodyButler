@@ -65,52 +65,101 @@ export default function FoodLogSummary({ date = new Date().toISOString().split('
   };
 
   return (
-    <Card className={`calm-card p-4 ${className}`}>
-      <div className="space-y-4">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-white">Today's Nutrition</h3>
-            <p className="text-sm text-white/60">{foodLog.totalItems} items logged</p>
+    <div className={`space-y-4 ${className}`}>
+      {/* Overall Summary */}
+      <Card className="calm-card p-4">
+        <div className="space-y-4">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-white">Today's Nutrition</h3>
+              <p className="text-sm text-white/60">{foodLog.totalItems} items logged</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Trophy className="w-5 h-5 text-yellow-400" />
+              <span className={`text-xl font-bold ${getGradeColor(foodLog.dailyTotals.grade)}`}>
+                {foodLog.dailyTotals.grade}
+              </span>
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Trophy className="w-5 h-5 text-yellow-400" />
-            <span className={`text-xl font-bold ${getGradeColor(foodLog.dailyTotals.grade)}`}>
-              {foodLog.dailyTotals.grade}
-            </span>
+
+          {/* Macros */}
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <p className="text-2xl font-bold text-white">{foodLog.dailyTotals.calories}</p>
+              <p className="text-sm text-white/60">Calories</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-white">{foodLog.dailyTotals.protein}g</p>
+              <p className="text-sm text-white/60">Protein</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-white">{foodLog.dailyTotals.carbs}g</p>
+              <p className="text-sm text-white/60">Carbs</p>
+            </div>
           </div>
         </div>
+      </Card>
 
-        {/* Macros Summary */}
-        <div className="grid grid-cols-3 gap-4">
-          <div className="text-center">
-            <div className="text-xs text-white/60 mb-1">Calories</div>
-            <div className="text-lg font-semibold text-white">{foodLog.dailyTotals.calories}</div>
-          </div>
-          <div className="text-center">
-            <div className="text-xs text-white/60 mb-1">Protein</div>
-            <div className="text-lg font-semibold text-white">{foodLog.dailyTotals.protein}g</div>
-          </div>
-          <div className="text-center">
-            <div className="text-xs text-white/60 mb-1">Carbs</div>
-            <div className="text-lg font-semibold text-white">{foodLog.dailyTotals.carbs}g</div>
-          </div>
-        </div>
+      {/* Meal Breakdown */}
+      {Object.entries(foodLog.meals).map(([mealType, items]) => {
+        if (!items || items.length === 0) return null;
+        
+        const mealTotals = items.reduce((acc: any, item: any) => ({
+          calories: acc.calories + parseFloat(item.calories || '0'),
+          protein: acc.protein + parseFloat(item.protein || '0'),
+          carbs: acc.carbs + parseFloat(item.totalCarbs || '0'),
+        }), { calories: 0, protein: 0, carbs: 0 });
 
-        {/* Meals Breakdown */}
-        <div className="space-y-2">
-          {Object.entries(foodLog.meals).map(([mealType, items]) => {
-            if (items.length === 0) return null;
-            
-            return (
-              <div key={mealType} className="flex items-center justify-between py-2 border-t border-white/10 first:border-t-0">
-                <div className="capitalize text-white/80 text-sm font-medium">{mealType}</div>
-                <div className="text-white/60 text-xs">{items.length} item{items.length !== 1 ? 's' : ''}</div>
+        return (
+          <Card key={mealType} className="calm-card p-4">
+            <div className="space-y-3">
+              {/* Meal Header */}
+              <div className="flex items-center justify-between">
+                <h4 className="text-lg font-semibold text-white capitalize">{mealType}</h4>
+                <span className="text-sm text-white/60">{items.length} item{items.length !== 1 ? 's' : ''}</span>
               </div>
-            );
-          })}
-        </div>
-      </div>
-    </Card>
+
+              {/* Meal Totals */}
+              <div className="grid grid-cols-3 gap-4 text-center bg-white/5 rounded-lg p-3">
+                <div>
+                  <p className="text-lg font-bold text-white">{Math.round(mealTotals.calories)}</p>
+                  <p className="text-xs text-white/60">Calories</p>
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-white">{Math.round(mealTotals.protein)}g</p>
+                  <p className="text-xs text-white/60">Protein</p>
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-white">{Math.round(mealTotals.carbs)}g</p>
+                  <p className="text-xs text-white/60">Carbs</p>
+                </div>
+              </div>
+
+              {/* Food Items */}
+              <div className="space-y-2">
+                {items.map((item: any, index: number) => (
+                  <div key={item.id || index} className="flex items-center justify-between bg-white/5 rounded-lg p-3">
+                    <div className="flex-1">
+                      <p className="font-medium text-white text-sm">{item.foodName}</p>
+                      <div className="flex items-center space-x-3 mt-1">
+                        <span className="text-xs text-white/60">{item.quantity} {item.unit}</span>
+                        <span className={`text-xs px-2 py-1 rounded ${getGradeColor(item.healthGrade)} bg-white/10`}>
+                          {item.healthGrade}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-white">{Math.round(parseFloat(item.calories || '0'))} cal</p>
+                      <p className="text-xs text-white/60">{Math.round(parseFloat(item.protein || '0'))}p • {Math.round(parseFloat(item.totalCarbs || '0'))}c</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+        );
+      })}
+    </div>
   );
 }
