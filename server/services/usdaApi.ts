@@ -84,21 +84,29 @@ export interface HealthScore {
 
 export class USDAService {
   private async makeRequest(endpoint: string, params: Record<string, any> = {}) {
-    const url = new URL(`${USDA_BASE_URL}${endpoint}`);
-    url.searchParams.append('api_key', USDA_API_KEY);
-    
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        url.searchParams.append(key, value.toString());
+    try {
+      const url = new URL(`${USDA_BASE_URL}${endpoint}`);
+      url.searchParams.append('api_key', USDA_API_KEY);
+      
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          url.searchParams.append(key, value.toString());
+        }
+      });
+
+      const response = await fetch(url.toString());
+      if (!response.ok) {
+        console.error(`USDA API error: ${response.status} ${response.statusText}`);
+        // Return empty results instead of throwing for API errors
+        return { foods: [] };
       }
-    });
 
-    const response = await fetch(url.toString());
-    if (!response.ok) {
-      throw new Error(`USDA API error: ${response.status} ${response.statusText}`);
+      return response.json();
+    } catch (error) {
+      console.error('USDA API request failed:', error);
+      // Return empty results for network errors
+      return { foods: [] };
     }
-
-    return response.json();
   }
 
   async searchFoods(query: string, pageSize: number = 25): Promise<USDASearchResponse> {
