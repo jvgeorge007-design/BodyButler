@@ -199,7 +199,7 @@ export default function Workout() {
   if (isLoading || planLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderBottomColor: 'rgb(59, 130, 246)' }}></div>
       </div>
     );
   }
@@ -260,7 +260,12 @@ export default function Workout() {
           {!workoutStarted ? (
             <button 
               onClick={handleStartWorkout}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 rounded-2xl transition-colors flex items-center justify-center gap-3"
+              className="w-full text-white font-semibold py-4 rounded-2xl transition-colors flex items-center justify-center gap-3"
+              style={{
+                backgroundColor: 'rgb(59, 130, 246)'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(37, 99, 235)'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(59, 130, 246)'}
             >
               <Play className="w-5 h-5 text-white/80" fill="currentColor" />
               Start Workout

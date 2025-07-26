@@ -72,7 +72,10 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
                     rows={4}
                     value={formData.goals}
                     onChange={(e) => handleInputChange("goals", e.target.value)}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:border-transparent resize-none"
+                    style={{
+                      '--tw-ring-color': 'rgb(59, 130, 246)'
+                    } as any}
                     required
                   />
                   <Button
@@ -105,9 +108,12 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
                       variant={formData.timeline === option.value ? "default" : "outline"}
                       className={`p-3 rounded-xl text-left transition-all h-auto ${
                         formData.timeline === option.value
-                          ? "ios-bg-blue text-white shadow-sm"
-                          : "bg-white/10 border border-white/20 text-white/80 hover:text-white hover:border-blue-500"
+                          ? "text-white shadow-sm"
+                          : "bg-white/10 border border-white/20 text-white/80 hover:text-white"
                       }`}
+                      style={{
+                        backgroundColor: formData.timeline === option.value ? 'rgb(59, 130, 246)' : undefined
+                      }}
                       onClick={() => handleInputChange("timeline", option.value)}
                     >
                       <div className="font-medium text-sm">{option.label}</div>
@@ -136,9 +142,12 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
                       variant={formData.goalPhase === option.value ? "default" : "outline"}
                       className={`w-full p-3 rounded-xl text-left transition-all h-auto ${
                         formData.goalPhase === option.value
-                          ? "ios-bg-blue text-white shadow-sm"
-                          : "bg-white/10 border border-white/20 text-white/80 hover:text-white hover:border-blue-500"
+                          ? "text-white shadow-sm"
+                          : "bg-white/10 border border-white/20 text-white/80 hover:text-white"
                       }`}
+                      style={{
+                        backgroundColor: formData.goalPhase === option.value ? 'rgb(59, 130, 246)' : undefined
+                      }}
                       onClick={() => handleInputChange("goalPhase", option.value)}
                     >
                       <div className="font-medium">{option.label}</div>
@@ -166,7 +175,10 @@ export default function Section4({ data, onNext, isLoading }: Section4Props) {
                     rows={3}
                     value={formData.priorityMuscles}
                     onChange={(e) => handleInputChange("priorityMuscles", e.target.value)}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:border-transparent resize-none"
+                    style={{
+                      '--tw-ring-color': 'rgb(59, 130, 246)'
+                    } as any}
                   />
                   <Button
                     type="button"

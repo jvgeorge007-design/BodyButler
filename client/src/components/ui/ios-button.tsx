@@ -23,7 +23,7 @@ const IOSButton = forwardRef<HTMLButtonElement, IOSButtonProps>(
     const baseStyles = "ios-haptic-light ios-spring-fast ios-touch-target flex items-center justify-center font-medium rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
     
     const variants = {
-      primary: "ios-bg-blue text-white shadow-lg hover:shadow-xl",
+      primary: "text-white shadow-lg hover:shadow-xl",
       secondary: "bg-white/10 text-white border border-white/20 hover:bg-white/20",
       destructive: "ios-bg-red text-white shadow-lg hover:shadow-xl",
       plain: "text-white hover:bg-white/10"
@@ -46,6 +46,10 @@ const IOSButton = forwardRef<HTMLButtonElement, IOSButtonProps>(
           widthClass,
           className
         )}
+        style={{
+          backgroundColor: variant === 'primary' ? 'rgb(59, 130, 246)' : undefined,
+          ...props.style
+        }}
         ref={ref}
         {...props}
       >

@@ -290,12 +290,15 @@ export default function ScanReceiptPage() {
                   <Button
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isProcessing || parseReceiptMutation.isPending}
-                    className="w-full h-16 text-lg bg-blue-600 hover:bg-blue-700 text-white"
+                    className="w-full h-16 text-lg text-white"
                     style={{
+                      backgroundColor: 'rgb(59, 130, 246)',
                       WebkitFontSmoothing: 'antialiased',
                       MozOsxFontSmoothing: 'grayscale',
                       textRendering: 'optimizeLegibility'
                     }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(37, 99, 235)'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(59, 130, 246)'}
                   >
                     {isProcessing || parseReceiptMutation.isPending ? (
                       <>
@@ -469,7 +472,12 @@ export default function ScanReceiptPage() {
             <Button
               onClick={handleConfirm}
               disabled={selectedCount === 0 || confirmReceiptMutation.isPending}
-              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-lg"
+              className="w-full h-12 text-white text-lg"
+              style={{
+                backgroundColor: 'rgb(59, 130, 246)'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(37, 99, 235)'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(59, 130, 246)'}
             >
               {confirmReceiptMutation.isPending ? (
                 <>

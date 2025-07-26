@@ -112,7 +112,7 @@ export default function BottomNav() {
                       strokeWidth={2.5}
                     />
                   </div>
-                  <span className="text-caption-2 font-medium text-blue-400">{item.label}</span>
+                  <span className="text-caption-2 font-medium" style={{ color: 'rgb(59, 130, 246)' }}>{item.label}</span>
                 </>
               ) : (
                 <>

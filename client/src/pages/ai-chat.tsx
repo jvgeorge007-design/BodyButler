@@ -94,9 +94,12 @@ export default function AIChat() {
               
               <div className={`max-w-xs px-4 py-3 rounded-2xl ${
                 message.sender === 'user' 
-                  ? 'ios-bg-blue text-white ml-12' 
+                  ? 'text-white ml-12' 
                   : 'bg-white/10 text-white mr-12'
-              }`}>
+              }`}
+                style={{
+                  backgroundColor: message.sender === 'user' ? 'rgb(59, 130, 246)' : undefined
+                }}>
                 <p className="text-body">{message.text}</p>
                 <p className="text-caption-2 ios-gray mt-1">
                   {message.timestamp.toLocaleTimeString([], { 
@@ -159,7 +162,10 @@ export default function AIChat() {
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="Ask me anything..."
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:border-transparent"
+                style={{
+                  '--tw-ring-color': 'rgb(59, 130, 246)'
+                } as any}
               />
             </div>
             <IOSButton
