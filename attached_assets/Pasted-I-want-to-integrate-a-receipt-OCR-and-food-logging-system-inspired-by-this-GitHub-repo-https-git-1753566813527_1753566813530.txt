@@ -1,0 +1,130 @@
+I want to integrate a receipt OCR and food logging system inspired by this GitHub repo:
+ https://github.com/chrehall68/health-receipt
+Use the USDA FDC API as the food database.
+API Key: 2tVbJfcgadPxWhwe2ulXqWomH61uaDHLn3fcqIDW
+ Build / Refactor These Core Components
+ 1. 
+Receipt Parsing Flow
+Use OCR (OpenAI Vision or equivalent) to extract:
+Establishment name
+Food item names
+Quantities (if present)
+
+
+After parsing:
+Ask: “Was this order just for you?”
+Yes → auto-log all items
+No → show all items with checkboxes
+
+
+Then ask: “Would you like to adjust any quantities?”
+
+
+Log only selected + adjusted items to user’s food journal
+ 2. 
+Match Foods via USDA FDC API
+Fuzzy match parsed items to USDA using:
+search or direct fdcId queries
+
+
+ Nutrient Extraction Logic (Dual-Path)
+# Branded food — use labelNutrients
+if "labelNutrients" in food:
+    calories = food["labelNutrients"].get("calories", {}).get("value")
+    total_carbs = food["labelNutrients"].get("carbohydrates", {}).get("value")
+    protein = food["labelNutrients"].get("protein", {}).get("value")
+    fiber = food["labelNutrients"].get("fiber", {}).get("value")
+    sugars = food["labelNutrients"].get("sugars", {}).get("value")
+    added_sugars = food["labelNutrients"].get("addedSugars", {}).get("value")
+    total_fat = food["labelNutrients"].get("fat", {}).get("value")
+    saturated_fat = food["labelNutrients"].get("saturatedFat", {}).get("value")
+    trans_fat = food["labelNutrients"].get("transFat", {}).get("value")
+# Foundation/survey foods — use foodNutrients
+else:
+    def get_nutrient(nid): return next((n["value"] for n in food["foodNutrients"] if n["nutrientId"] == nid), 0)
+    calories = get_nutrient(1008)
+    total_carbs = get_nutrient(1005)
+    protein = get_nutrient(1003)
+    fiber = get_nutrient(1079)
+    sugars = get_nutrient(2000)
+    added_sugars = get_nutrient(1235)
+    total_fat = get_nutrient(1004)
+    saturated_fat = get_nutrient(1258)
+    mono_fat = get_nutrient(1292)
+    poly_fat = get_nutrient(1293)
+    trans_fat = get_nutrient(1257)
+# Optional fallback if carbs are still None
+if total_carbs is None:
+    total_carbs = (fiber or 0) + (sugars or 0)
+ 3. 
+Meal-Level Health Score
+Aggregate total macros per meal/snack, then apply this logic:
+score = 100
+# Sugars
+if sugars > 10: score -= 15
+elif sugars > 5: score -= 10
+if added_sugars > 5: score -= 10
+# Sodium
+if sodium > 600: score -= 10
+elif sodium > 300: score -= 5
+# Fiber (carb quality)
+if fiber < 2: score -= (2 - fiber) * 5
+# Protein
+if protein > 20: score += 10
+elif protein > 10: score += 5
+# Fat quality scoring
+if total_fat > 35: score -= 5
+if total_fat > 0:
+    sat_ratio = saturated_fat / total_fat
+    if sat_ratio > 0.5:
+        score -= 10
+if trans_fat > 0:
+    score -= 10
+if mono_fat + poly_fat >= saturated_fat:
+    score += 5
+score = max(0, min(score, 100))
+ 4. 
+Score to Grade Conversion
+def convert_score_to_grade(score):
+    if score >= 97: return "A+"
+    elif score >= 93: return "A"
+    elif score >= 90: return "A−"
+    elif score >= 87: return "B+"
+    elif score >= 83: return "B"
+    elif score >= 80: return "B−"
+    elif score >= 77: return "C+"
+    elif score >= 73: return "C"
+    elif score >= 70: return "C−"
+    elif score >= 60: return "D"
+    else: return "F"
+ 5. 
+Frontend Display Requirements
+ Per-Item Food Cards (Optional)
+Food name
+Calories
+Protein
+ Meal Summary Card
+SHOW ONLY:
+Total Calories
+Total Protein
+Total Carbs ( now working)
+Grade (A+ to F)
+ DO NOT display:
+Fiber
+Sugars
+Fat breakdown (saturated, trans, etc.)
+Health score (0-100)
+ These are calculated and stored on the backend but hidden in the UI for now.
+ 6. (Bonus) Cache All Parsed Items
+Create a table (parsed_food_logs) in Supabase or SQLite to store:
+Raw text
+Final USDA match
+Macros
+Timestamp
+Source establishment
+Manual edits
+
+
+This enables faster re-logging, trend insights, and improved food suggestions
+
+
