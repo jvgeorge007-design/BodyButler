@@ -386,7 +386,7 @@ export default function ScanReceiptPage() {
           </div>
 
           {/* Content */}
-          <div className="flex-1 px-4 pb-24 overflow-y-auto">
+          <div className="flex-1 px-4 pb-6 overflow-y-auto">
             <div className="space-y-6">
               {/* Restaurant Info */}
               <Card className="calm-card p-4">
@@ -480,41 +480,41 @@ export default function ScanReceiptPage() {
                   })}
                 </div>
               </Card>
-            </div>
-          </div>
 
-          {/* Footer - Fixed positioning to ensure visibility */}
-          <div className="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-sm border-t border-white/10 p-4 z-50" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}>
-            <div className="max-w-md mx-auto">
-              <Button
-                onClick={handleConfirm}
-                disabled={selectedCount === 0 || confirmReceiptMutation.isPending}
-                className="w-full h-12 text-white text-lg font-semibold"
-                style={{
-                  backgroundColor: selectedCount > 0 ? 'rgb(59, 130, 246)' : 'rgb(75, 85, 99)'
-                }}
-                onMouseEnter={(e) => {
-                  if (selectedCount > 0) e.currentTarget.style.backgroundColor = 'rgb(37, 99, 235)'
-                }}
-                onMouseLeave={(e) => {
-                  if (selectedCount > 0) e.currentTarget.style.backgroundColor = 'rgb(59, 130, 246)'
-                }}
-              >
-                {confirmReceiptMutation.isPending ? (
-                  <>
-                    <div className="w-5 h-5 animate-spin rounded-full border-2 border-white/30 border-t-white mr-3" />
-                    Logging Food...
-                  </>
-                ) : selectedCount === 0 ? (
-                  'Select items to continue'
-                ) : (
-                  `Log ${selectedCount} Item${selectedCount !== 1 ? 's' : ''} to ${mealType.charAt(0).toUpperCase() + mealType.slice(1)}`
-                )}
-              </Button>
+              {/* CTA Button - Floating below content */}
+              <div className="mt-6 px-4">
+                <Button
+                  onClick={handleConfirm}
+                  disabled={selectedCount === 0 || confirmReceiptMutation.isPending}
+                  className="w-full h-12 text-white text-lg font-semibold"
+                  style={{
+                    backgroundColor: selectedCount > 0 ? 'rgb(59, 130, 246)' : 'rgb(75, 85, 99)'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (selectedCount > 0) e.currentTarget.style.backgroundColor = 'rgb(37, 99, 235)'
+                  }}
+                  onMouseLeave={(e) => {
+                    if (selectedCount > 0) e.currentTarget.style.backgroundColor = 'rgb(59, 130, 246)'
+                  }}
+                >
+                  {confirmReceiptMutation.isPending ? (
+                    <>
+                      <div className="w-5 h-5 animate-spin rounded-full border-2 border-white/30 border-t-white mr-3" />
+                      Logging Food...
+                    </>
+                  ) : selectedCount === 0 ? (
+                    'Select items to continue'
+                  ) : (
+                    `Log ${selectedCount} Item${selectedCount !== 1 ? 's' : ''} to ${mealType.charAt(0).toUpperCase() + mealType.slice(1)}`
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
 
+        {/* Bottom Navigation */}
+        <BottomNav />
       </div>
     );
   }
