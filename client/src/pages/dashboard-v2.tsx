@@ -345,9 +345,9 @@ export default function DashboardV2() {
   ]);
 
   // Calculate state variables
-  const needsOnboarding = !profile || !profile.onboardingCompleted;
+  const needsOnboarding = !profile || !(profile as any)?.onboardingCompleted;
   const needsPlanGeneration =
-    profile && profile.onboardingCompleted && !personalizedPlan;
+    profile && (profile as any)?.onboardingCompleted && !personalizedPlan;
 
   // Auto-generate plan if user has completed onboarding but no plan
   useEffect(() => {
@@ -375,10 +375,10 @@ export default function DashboardV2() {
   }, [needsPlanGeneration, planLoading, queryClient, toast]);
 
   // Get user's first name for personalized greeting
-  const userName = user?.firstName || user?.email?.split("@")[0] || "there";
+  const userName = (user as any)?.firstName || (user as any)?.email?.split("@")[0] || "there";
 
   // Calculate dashboard data
-  const macroTargets = personalizedPlan?.macroTargets || {};
+  const macroTargets = (personalizedPlan as any)?.macroTargets || {};
   const today = new Date();
   const isToday = selectedDate.toDateString() === today.toDateString();
   
