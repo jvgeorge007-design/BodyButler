@@ -69,26 +69,25 @@ router.post("/parse", async (req, res) => {
       })
     );
 
-    const userId = req.user!.id;
-
-    // Store parsed receipt
+    // Store parsed receipt in database
     const receiptId = `receipt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    await storage.createParsedFoodLog({
+    const parsedFoodLog = await storage.createParsedFoodLog({
       id: receiptId,
-      userId: userId,
-      rawText: image ? 'Image processed' : text!,
-      establishment: parsedReceipt.establishment || null,
+      userId: req.user.claims.sub,
+      rawText: parsedReceipt.rawText,
+      establishment: parsedReceipt.establishment,
       parsedItems: parsedReceipt.items,
-      usdaMatches: fatSecretMatches, // Store FatSecret matches in existing field
-      confidence: parsedReceipt.confidence ? parsedReceipt.confidence.toString() : "0.8",
+      usdaMatches: fatSecretMatches, // Store FatSecret matches in the same field for compatibility
+      confidence: parsedReceipt.confidence.toString(),
       sourceType: image ? 'image' : 'text',
     });
 
     res.json({
       receiptId,
       establishment: parsedReceipt.establishment,
-      items: fatSecretMatches,
-      totalItems: parsedReceipt.items.length,
+      items: parsedReceipt.items,
+      fatSecretMatches,
+      confidence: parsedReceipt.confidence,
     });
   } catch (error) {
     console.error("Error parsing receipt:", error);
@@ -96,133 +95,103 @@ router.post("/parse", async (req, res) => {
   }
 });
 
-// Confirm receipt and log selected items
+// Confirm and log selected items
 router.post("/confirm", async (req, res) => {
   try {
     const { receiptId, forMeOnly, selectedItems, mealType } = confirmReceiptSchema.parse(req.body);
     
-    if (!req.user?.id) {
+    // Check if user is authenticated
+    if (!req.user?.claims?.sub) {
       return res.status(401).json({ error: "User not authenticated" });
     }
-    
-    const userId = req.user!.id;
 
-    // Get the stored receipt
-    const storedReceipt = await storage.getParsedFoodLogById(receiptId);
-    if (!storedReceipt || storedReceipt.userId !== userId) {
+    // Get the parsed receipt
+    const parsedReceipt = await storage.getParsedFoodLog(receiptId);
+    if (!parsedReceipt || parsedReceipt.userId !== req.user.claims.sub) {
       return res.status(404).json({ error: "Receipt not found" });
     }
 
+    const fatSecretMatches = parsedReceipt.usdaMatches as any[]; // Data is stored in usdaMatches field for compatibility
     const loggedItems = [];
 
     // Process each selected item
     for (const selection of selectedItems) {
       if (!selection.selected) continue;
 
-      const matchData = (storedReceipt.usdaMatches as any[])[selection.index];
-      if (!matchData?.bestMatch) continue;
+      const match = fatSecretMatches[selection.index];
+      if (!match?.bestMatch) continue;
 
-      const { bestMatch } = matchData;
-      const quantity = selection.quantity;
-
-      try {
-        // Get detailed nutrition from FatSecret
-        const nutritionData = await fatSecretService.getFoodById(bestMatch.food_id);
-        const serving = nutritionData.food.servings.serving[0];
-        
-        // Calculate nutrition for user's quantity
-        const scaledNutrients = {
-          calories: ((parseFloat(serving?.calories || '0') * quantity) / 1).toFixed(1),
-          protein: ((parseFloat(serving?.protein || '0') * quantity) / 1).toFixed(1),
-          totalCarbs: ((parseFloat(serving?.carbohydrate || '0') * quantity) / 1).toFixed(1),
-          fiber: ((parseFloat(serving?.fiber || '0') * quantity) / 1).toFixed(1),
-          sugars: ((parseFloat(serving?.sugar || '0') * quantity) / 1).toFixed(1),
-          totalFat: ((parseFloat(serving?.fat || '0') * quantity) / 1).toFixed(1),
-          saturatedFat: ((parseFloat(serving?.saturated_fat || '0') * quantity) / 1).toFixed(1),
-          sodium: ((parseFloat(serving?.sodium || '0') * quantity) / 1).toFixed(1),
-        };
-
-        // Calculate health score
-        const healthScore = fatSecretService.calculateHealthScore({
-          calories: parseFloat(scaledNutrients.calories),
-          protein: parseFloat(scaledNutrients.protein),
-          totalCarbs: parseFloat(scaledNutrients.totalCarbs),
-          fiber: parseFloat(scaledNutrients.fiber),
-          sugars: parseFloat(scaledNutrients.sugars),
-          addedSugars: 0,
-          totalFat: parseFloat(scaledNutrients.totalFat),
-          saturatedFat: parseFloat(scaledNutrients.saturatedFat),
-          monoFat: 0,
-          polyFat: 0,
-          transFat: 0,
-          sodium: parseFloat(scaledNutrients.sodium),
-        });
-
-        // 1. Save to user's personal food log
-        const foodLogEntryId = `foodlog_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        const foodLogEntry = await storage.createFoodLogEntry({
-          id: foodLogEntryId,
-          userId: userId,
-          fdcId: parseInt(bestMatch.food_id),
-          foodName: bestMatch.food_name,
-          quantity: quantity.toString(),
-          unit: "serving",
-          mealType: mealType,
-          loggedAt: new Date(),
-          
-          calories: scaledNutrients.calories,
-          protein: scaledNutrients.protein,
-          totalCarbs: scaledNutrients.totalCarbs,
-          fiber: scaledNutrients.fiber,
-          sugars: scaledNutrients.sugars,
-          totalFat: scaledNutrients.totalFat,
-          saturatedFat: scaledNutrients.saturatedFat,
-          sodium: scaledNutrients.sodium,
-          
-          healthScore: healthScore.score.toString(),
-          healthGrade: healthScore.grade,
-          
-          sourceReceiptId: receiptId,
-          manualEntry: false,
-        });
-
-        // 2. Save to aggregated global nutrition database
-        await storage.addToGlobalNutritionDatabase({
-          foodName: bestMatch.food_name,
-          brandName: bestMatch.brand_name || null,
-          establishment: storedReceipt.establishment || null,
-          
-          // Nutritional data per serving
-          calories: parseFloat(serving?.calories || '0'),
-          protein: parseFloat(serving?.protein || '0'),
-          totalCarbs: parseFloat(serving?.carbohydrate || '0'),
-          fiber: parseFloat(serving?.fiber || '0'),
-          sugars: parseFloat(serving?.sugar || '0'),
-          totalFat: parseFloat(serving?.fat || '0'),
-          saturatedFat: parseFloat(serving?.saturated_fat || '0'),
-          sodium: parseFloat(serving?.sodium || '0'),
-          
-          healthScore: healthScore.score,
-          healthGrade: healthScore.grade,
-          
-          // Tracking information
-          userId: userId,
-          fatSecretFoodId: bestMatch.food_id,
-          timesLogged: 1,
-          dataSource: 'receipt-parsing',
-          loggedAt: new Date(),
-        });
-
-        loggedItems.push({
-          ...foodLogEntry,
-          nutrients: scaledNutrients,
-          healthScore,
-        });
-
-      } catch (error) {
-        console.error(`Error processing item ${bestMatch.food_name}:`, error);
+      const fatSecretFood = match.bestMatch;
+      
+      // Get detailed nutrition information from FatSecret
+      const nutrition = await fatSecretService.getFoodById(fatSecretFood.food_id);
+      if (!nutrition) {
+        console.error(`Could not get nutrition for food ID: ${fatSecretFood.food_id}`);
         continue;
       }
+
+      // Get the best serving for the requested quantity
+      const servingInfo = fatSecretService.getBestServingForQuantity(
+        nutrition, 
+        selection.quantity.toString(), 
+        match.originalItem.unit || 'each'
+      );
+
+      const nutrients = fatSecretService.extractNutrients(nutrition, servingInfo.servingIndex);
+      const healthScore = fatSecretService.calculateHealthScore(nutrients);
+
+      // Scale nutrients by quantity and serving scale factor
+      const totalScaleFactor = servingInfo.scaleFactor;
+      const scaledNutrients = {
+        calories: nutrients.calories * totalScaleFactor,
+        protein: nutrients.protein * totalScaleFactor,
+        totalCarbs: nutrients.totalCarbs * totalScaleFactor,
+        fiber: nutrients.fiber * totalScaleFactor,
+        sugars: nutrients.sugars * totalScaleFactor,
+        addedSugars: nutrients.addedSugars * totalScaleFactor,
+        totalFat: nutrients.totalFat * totalScaleFactor,
+        saturatedFat: nutrients.saturatedFat * totalScaleFactor,
+        transFat: nutrients.transFat * totalScaleFactor,
+        sodium: nutrients.sodium * totalScaleFactor,
+      };
+
+      // Create food log entry
+      const entryId = `entry_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const foodLogEntry = await storage.createFoodLogEntry({
+        id: entryId,
+        userId: req.user!.claims!.sub,
+        fdcId: parseInt(fatSecretFood.food_id), // Convert string to number for compatibility
+        foodName: fatSecretFood.food_name,
+        quantity: selection.quantity.toString(),
+        unit: match.originalItem.unit || 'each',
+        mealType,
+        loggedAt: new Date(),
+        
+        // Nutritional data
+        calories: scaledNutrients.calories.toString(),
+        protein: scaledNutrients.protein.toString(),
+        totalCarbs: scaledNutrients.totalCarbs.toString(),
+        fiber: scaledNutrients.fiber.toString(),
+        sugars: scaledNutrients.sugars.toString(),
+        addedSugars: scaledNutrients.addedSugars.toString(),
+        totalFat: scaledNutrients.totalFat.toString(),
+        saturatedFat: scaledNutrients.saturatedFat.toString(),
+        transFat: scaledNutrients.transFat.toString(),
+        sodium: scaledNutrients.sodium.toString(),
+        
+        // Health scoring
+        healthScore: healthScore.score.toString(),
+        healthGrade: healthScore.grade,
+        
+        sourceReceiptId: receiptId,
+        manualEntry: false,
+      });
+
+      loggedItems.push({
+        ...foodLogEntry,
+        nutrients: scaledNutrients,
+        healthScore,
+      });
     }
 
     res.json({
@@ -236,13 +205,13 @@ router.post("/confirm", async (req, res) => {
   }
 });
 
-// Get user's food log entries for today
+// Get user's food log entries for today (simple endpoint for debugging)
 router.get("/food-log", async (req, res) => {
   try {
     const today = new Date();
     const startOfDay = new Date(today.setHours(0, 0, 0, 0));
     const endOfDay = new Date(today.setHours(23, 59, 59, 999));
-    const userId = req.user!.id;
+    const userId = req.user!.claims!.sub;
 
     console.log(`Getting food log for user ${userId} for today`);
     console.log(`Date range: ${startOfDay.toISOString()} to ${endOfDay.toISOString()}`);
@@ -254,6 +223,15 @@ router.get("/food-log", async (req, res) => {
     );
 
     console.log(`Found ${entries.length} food log entries for user ${userId}`);
+    entries.forEach((entry, i) => {
+      console.log(`Entry ${i + 1}:`, {
+        id: entry.id,
+        foodName: entry.foodName,
+        mealType: entry.mealType,
+        calories: entry.calories,
+        loggedAt: entry.loggedAt
+      });
+    });
 
     // Group by meal type and calculate totals
     const groupedEntries = {
@@ -293,6 +271,7 @@ router.get("/food-log", async (req, res) => {
       calories: dailyTotals.calories,
       protein: dailyTotals.protein,
       totalCarbs: dailyTotals.totalCarbs,
+      // Use aggregated values for scoring
       fiber: 0, sugars: 0, addedSugars: 0, totalFat: 0,
       saturatedFat: 0, monoFat: 0, polyFat: 0, transFat: 0, sodium: 0,
     }).grade;
@@ -323,15 +302,21 @@ router.get("/food-log/:date", async (req, res) => {
     const date = new Date(req.params.date);
     const startOfDay = new Date(date.setHours(0, 0, 0, 0));
     const endOfDay = new Date(date.setHours(23, 59, 59, 999));
-    const userId = req.user!.id;
+    const userId = req.user!.claims!.sub;
 
     console.log(`Getting food log for user ${userId} on ${req.params.date}`);
+    console.log(`Date range: ${startOfDay.toISOString()} to ${endOfDay.toISOString()}`);
 
     const entries = await storage.getFoodLogEntriesByDateRange(
       userId,
       startOfDay,
       endOfDay
     );
+
+    console.log(`Found ${entries.length} food log entries for user ${userId}`);
+    if (entries.length > 0) {
+      console.log('Sample entry:', JSON.stringify(entries[0], null, 2));
+    }
 
     // Group by meal type and calculate totals
     const groupedEntries = {
@@ -349,21 +334,53 @@ router.get("/food-log/:date", async (req, res) => {
       itemCount: 0,
     };
 
+    console.log('\n=== DETAILED MACRO CALCULATION BREAKDOWN ===');
+    
     for (const entry of entries) {
       const mealType = entry.mealType as keyof typeof groupedEntries;
       if (groupedEntries[mealType]) {
         groupedEntries[mealType].push(entry);
       }
 
+      // Log detailed breakdown for each entry
+      const entryCalories = parseFloat(entry.calories || '0');
+      const entryProtein = parseFloat(entry.protein || '0');
+      const entryCarbs = parseFloat(entry.totalCarbs || '0');
+      
+      console.log(`\n${entry.mealType.toUpperCase()} - ${entry.foodName}:`);
+      console.log(`  Quantity: ${entry.quantity} ${entry.unit}`);
+      console.log(`  Calories: ${entryCalories}`);
+      console.log(`  Protein: ${entryProtein}g`);
+      console.log(`  Carbs: ${entryCarbs}g`);
+      console.log(`  Health Score: ${entry.healthScore}/100 (${entry.healthGrade})`);
+
       // Add to daily totals
-      dailyTotals.calories += parseFloat(entry.calories || '0');
-      dailyTotals.protein += parseFloat(entry.protein || '0');
-      dailyTotals.totalCarbs += parseFloat(entry.totalCarbs || '0');
+      dailyTotals.calories += entryCalories;
+      dailyTotals.protein += entryProtein;
+      dailyTotals.totalCarbs += entryCarbs;
       dailyTotals.healthScoreSum += parseFloat(entry.healthScore || '0');
       dailyTotals.itemCount++;
     }
 
-    // Calculate average daily grade
+    // Log meal-specific totals
+    console.log('\n=== MEAL-SPECIFIC TOTALS ===');
+    Object.entries(groupedEntries).forEach(([mealType, mealEntries]) => {
+      if (mealEntries.length > 0) {
+        const mealTotals = mealEntries.reduce((acc, entry) => ({
+          calories: acc.calories + parseFloat(entry.calories || '0'),
+          protein: acc.protein + parseFloat(entry.protein || '0'),
+          carbs: acc.carbs + parseFloat(entry.totalCarbs || '0'),
+        }), { calories: 0, protein: 0, carbs: 0 });
+        
+        console.log(`\n${mealType.toUpperCase()} TOTALS:`);
+        console.log(`  Items: ${mealEntries.length}`);
+        console.log(`  Calories: ${Math.round(mealTotals.calories)}`);
+        console.log(`  Protein: ${Math.round(mealTotals.protein)}g`);
+        console.log(`  Carbs: ${Math.round(mealTotals.carbs)}g`);
+      }
+    });
+
+    // Calculate average health score and grade
     const avgHealthScore = dailyTotals.itemCount > 0 
       ? dailyTotals.healthScoreSum / dailyTotals.itemCount 
       : 0;
@@ -371,9 +388,19 @@ router.get("/food-log/:date", async (req, res) => {
       calories: dailyTotals.calories,
       protein: dailyTotals.protein,
       totalCarbs: dailyTotals.totalCarbs,
+      // Use aggregated values for scoring
       fiber: 0, sugars: 0, addedSugars: 0, totalFat: 0,
       saturatedFat: 0, monoFat: 0, polyFat: 0, transFat: 0, sodium: 0,
     }).grade;
+
+    console.log('\n=== FINAL DAILY TOTALS ===');
+    console.log(`Total Items: ${dailyTotals.itemCount}`);
+    console.log(`Total Calories: ${Math.round(dailyTotals.calories)}`);
+    console.log(`Total Protein: ${Math.round(dailyTotals.protein)}g`);
+    console.log(`Total Carbs: ${Math.round(dailyTotals.totalCarbs)}g`);
+    console.log(`Average Health Score: ${Math.round(avgHealthScore)}/100`);
+    console.log(`Overall Grade: ${dailyGrade}`);
+    console.log('=== END BREAKDOWN ===\n');
 
     const responseData = {
       date: req.params.date,
@@ -387,6 +414,15 @@ router.get("/food-log/:date", async (req, res) => {
       totalItems: dailyTotals.itemCount,
     };
 
+    console.log('API Response Summary:', {
+      totalItems: responseData.totalItems,
+      breakfastItems: responseData.meals.breakfast.length,
+      lunchItems: responseData.meals.lunch.length,
+      dinnerItems: responseData.meals.dinner.length,
+      snackItems: responseData.meals.snacks.length,
+      dailyTotals: responseData.dailyTotals
+    });
+
     res.json(responseData);
   } catch (error) {
     console.error("Error getting food log:", error);
@@ -398,7 +434,7 @@ router.get("/food-log/:date", async (req, res) => {
 router.delete("/food-log/:itemId", async (req, res) => {
   try {
     const itemId = req.params.itemId;
-    const userId = req.user!.id;
+    const userId = req.user!.claims!.sub;
 
     console.log(`Deleting food log entry ${itemId} for user ${userId}`);
 
