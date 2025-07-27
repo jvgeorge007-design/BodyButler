@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { receiptOCRService } from "../services/receiptOCR.js";
-import { usdaService } from "../services/usdaApi.js";
+import { fatSecretService } from "../services/fatSecretApi.js";
 import { storage } from "../storage.js";
 
 const router = Router();
@@ -47,22 +47,22 @@ router.post("/parse", async (req, res) => {
     
     console.log('OCR completed, found', parsedReceipt.items.length, 'items');
 
-    // Search USDA for each item with error handling
-    const usdaMatches = await Promise.all(
+    // Search FatSecret for each item with error handling
+    const fatSecretMatches = await Promise.all(
       parsedReceipt.items.map(async (item) => {
         try {
-          const searchResults = await usdaService.fuzzySearchFood(item.name);
+          const searchResults = await fatSecretService.fuzzySearchFood(item.name);
           return {
             originalItem: item,
-            usdaOptions: searchResults.slice(0, 3), // Top 3 matches
+            fatSecretOptions: searchResults.slice(0, 3), // Top 3 matches
             bestMatch: searchResults[0] || null,
           };
         } catch (error) {
-          console.error(`Error searching USDA for item "${item.name}":`, error);
-          // Return empty results if USDA search fails
+          console.error(`Error searching FatSecret for item "${item.name}":`, error);
+          // Return empty results if FatSecret search fails
           return {
             originalItem: item,
-            usdaOptions: [],
+            fatSecretOptions: [],
             bestMatch: null,
           };
         }
@@ -77,7 +77,7 @@ router.post("/parse", async (req, res) => {
       rawText: parsedReceipt.rawText,
       establishment: parsedReceipt.establishment,
       parsedItems: parsedReceipt.items,
-      usdaMatches,
+      usdaMatches: fatSecretMatches, // Store FatSecret matches in the same field for compatibility
       confidence: parsedReceipt.confidence.toString(),
       sourceType: image ? 'image' : 'text',
     });
@@ -86,7 +86,7 @@ router.post("/parse", async (req, res) => {
       receiptId,
       establishment: parsedReceipt.establishment,
       items: parsedReceipt.items,
-      usdaMatches,
+      fatSecretMatches,
       confidence: parsedReceipt.confidence,
     });
   } catch (error) {
@@ -111,32 +111,48 @@ router.post("/confirm", async (req, res) => {
       return res.status(404).json({ error: "Receipt not found" });
     }
 
-    const usdaMatches = parsedReceipt.usdaMatches as any[];
+    const fatSecretMatches = parsedReceipt.usdaMatches as any[]; // Data is stored in usdaMatches field for compatibility
     const loggedItems = [];
 
     // Process each selected item
     for (const selection of selectedItems) {
       if (!selection.selected) continue;
 
-      const match = usdaMatches[selection.index];
+      const match = fatSecretMatches[selection.index];
       if (!match?.bestMatch) continue;
 
-      const usdaFood = match.bestMatch;
-      const nutrients = usdaService.extractNutrients(usdaFood);
-      const healthScore = usdaService.calculateHealthScore(nutrients);
+      const fatSecretFood = match.bestMatch;
+      
+      // Get detailed nutrition information from FatSecret
+      const nutrition = await fatSecretService.getFoodById(fatSecretFood.food_id);
+      if (!nutrition) {
+        console.error(`Could not get nutrition for food ID: ${fatSecretFood.food_id}`);
+        continue;
+      }
 
-      // Scale nutrients by quantity
+      // Get the best serving for the requested quantity
+      const servingInfo = fatSecretService.getBestServingForQuantity(
+        nutrition, 
+        selection.quantity.toString(), 
+        match.originalItem.unit || 'each'
+      );
+
+      const nutrients = fatSecretService.extractNutrients(nutrition, servingInfo.servingIndex);
+      const healthScore = fatSecretService.calculateHealthScore(nutrients);
+
+      // Scale nutrients by quantity and serving scale factor
+      const totalScaleFactor = servingInfo.scaleFactor;
       const scaledNutrients = {
-        calories: nutrients.calories * selection.quantity,
-        protein: nutrients.protein * selection.quantity,
-        totalCarbs: nutrients.totalCarbs * selection.quantity,
-        fiber: nutrients.fiber * selection.quantity,
-        sugars: nutrients.sugars * selection.quantity,
-        addedSugars: nutrients.addedSugars * selection.quantity,
-        totalFat: nutrients.totalFat * selection.quantity,
-        saturatedFat: nutrients.saturatedFat * selection.quantity,
-        transFat: nutrients.transFat * selection.quantity,
-        sodium: nutrients.sodium * selection.quantity,
+        calories: nutrients.calories * totalScaleFactor,
+        protein: nutrients.protein * totalScaleFactor,
+        totalCarbs: nutrients.totalCarbs * totalScaleFactor,
+        fiber: nutrients.fiber * totalScaleFactor,
+        sugars: nutrients.sugars * totalScaleFactor,
+        addedSugars: nutrients.addedSugars * totalScaleFactor,
+        totalFat: nutrients.totalFat * totalScaleFactor,
+        saturatedFat: nutrients.saturatedFat * totalScaleFactor,
+        transFat: nutrients.transFat * totalScaleFactor,
+        sodium: nutrients.sodium * totalScaleFactor,
       };
 
       // Create food log entry
@@ -144,8 +160,8 @@ router.post("/confirm", async (req, res) => {
       const foodLogEntry = await storage.createFoodLogEntry({
         id: entryId,
         userId: req.user!.claims!.sub,
-        fdcId: usdaFood.fdcId,
-        foodName: usdaFood.description,
+        fdcId: parseInt(fatSecretFood.food_id), // Convert string to number for compatibility
+        foodName: fatSecretFood.food_name,
         quantity: selection.quantity.toString(),
         unit: match.originalItem.unit || 'each',
         mealType,
@@ -368,7 +384,7 @@ router.get("/food-log/:date", async (req, res) => {
     const avgHealthScore = dailyTotals.itemCount > 0 
       ? dailyTotals.healthScoreSum / dailyTotals.itemCount 
       : 0;
-    const dailyGrade = usdaService.calculateHealthScore({
+    const dailyGrade = fatSecretService.calculateHealthScore({
       calories: dailyTotals.calories,
       protein: dailyTotals.protein,
       totalCarbs: dailyTotals.totalCarbs,
