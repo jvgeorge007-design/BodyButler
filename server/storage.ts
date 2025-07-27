@@ -200,7 +200,6 @@ export class DatabaseStorage implements IStorage {
     sodium: number;
     healthScore: number;
     healthGrade: string;
-    fatSecretFoodId?: string;
     dataSource: string;
     loggedAt: Date;
     userAgeRange?: string;

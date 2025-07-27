@@ -68,9 +68,6 @@ export const globalNutritionDatabase = pgTable("global_nutrition_database", {
   brandName: varchar("brand_name"),
   establishment: varchar("establishment"), // Restaurant/store where this was purchased
   
-  // API source information
-  fatSecretFoodId: varchar("fatsecret_food_id"),
-  
   // Nutritional data per serving (averaged across all logs)
   avgCalories: decimal("avg_calories", { precision: 8, scale: 2 }),
   avgProtein: decimal("avg_protein", { precision: 8, scale: 2 }),

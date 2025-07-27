@@ -219,8 +219,7 @@ router.post("/confirm", async (req, res) => {
           healthScore: healthScore.score,
           healthGrade: healthScore.grade,
           
-          // Tracking information (no personal data)
-          fatSecretFoodId: selectedFood.food_id,
+          // Tracking information (no personal data - NO FATSECRET ID)
           dataSource: 'receipt-parsing',
           loggedAt: new Date(),
           mealType: mealType,
