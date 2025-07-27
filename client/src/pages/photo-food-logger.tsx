@@ -272,19 +272,19 @@ export default function PhotoFoodLogger() {
                   <div className="flex justify-center gap-8 mb-6">
                     <MacroRing 
                       label="Protein" 
-                      value={analysisResult.macros.protein} 
+                      value={analysisResult.macros?.protein || 0} 
                       max={50} 
                       color="#EF4444" 
                     />
                     <MacroRing 
                       label="Carbs" 
-                      value={analysisResult.macros.carbs} 
+                      value={analysisResult.macros?.carbs || 0} 
                       max={60} 
                       color="#F97316" 
                     />
                     <MacroRing 
                       label="Fat" 
-                      value={analysisResult.macros.fat} 
+                      value={analysisResult.macros?.fat || 0} 
                       max={30} 
                       color="#3B82F6" 
                     />
@@ -293,7 +293,7 @@ export default function PhotoFoodLogger() {
                   <div className="space-y-2">
                     <h4 className="font-medium text-white">Foods Detected:</h4>
                     <div className="flex flex-wrap gap-2">
-                      {analysisResult.foodItems.map((item, index) => (
+                      {(analysisResult.foodItems || []).map((item, index) => (
                         <span
                           key={index}
                           className="bg-white/10 text-white/90 px-3 py-1 rounded-full text-sm"
@@ -311,7 +311,7 @@ export default function PhotoFoodLogger() {
                     <Sparkles className="w-5 h-5 text-blue-400" />
                     Personalized Insights
                   </h3>
-                  {analysisResult.insights.map((insight, index) => (
+                  {(analysisResult.insights || []).map((insight, index) => (
                     <InsightCard key={index} insight={insight} index={index} />
                   ))}
                 </div>
