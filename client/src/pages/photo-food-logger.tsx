@@ -105,6 +105,7 @@ export default function PhotoFoodLogger() {
       });
     },
     onSuccess: (data: NutritionAnalysis) => {
+      console.log('Analysis received:', data);
       setAnalysisResult(data);
       setIsAnalyzing(false);
     },
@@ -258,13 +259,13 @@ export default function PhotoFoodLogger() {
                 <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10">
                   <div className="text-center mb-6">
                     <div className="text-4xl font-bold text-white mb-2">
-                      {analysisResult.totalCalories}
+                      {analysisResult?.totalCalories || 0}
                     </div>
                     <div className="text-white/70">calories</div>
                     <div className="mt-2">
                       <span className="inline-flex items-center gap-1 bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm">
                         <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-                        Health Score: {analysisResult.healthScore}/10
+                        Health Score: {analysisResult?.healthScore || 0}/10
                       </span>
                     </div>
                   </div>
