@@ -59,57 +59,89 @@ export const parsedFoodLogs = pgTable("parsed_food_logs", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// Global nutrition database - aggregated data from all users' receipt parsing
-export const globalNutritionDatabase = pgTable("global_nutrition_database", {
+// Custom nutrition database - our own comprehensive food database
+export const customNutritionDatabase = pgTable("custom_nutrition_database", {
   id: varchar("id").primaryKey().notNull(),
   
   // Food identification
   foodName: varchar("food_name").notNull(),
   brandName: varchar("brand_name"),
-  establishment: varchar("establishment"), // Restaurant/store where this was purchased
+  brandOwner: varchar("brand_owner"), // Company that owns the brand
+  category: varchar("category"), // "dairy", "meat", "snacks", etc.
   
-  // Nutritional data per serving (averaged across all logs)
-  avgCalories: decimal("avg_calories", { precision: 8, scale: 2 }),
-  avgProtein: decimal("avg_protein", { precision: 8, scale: 2 }),
-  avgTotalCarbs: decimal("avg_total_carbs", { precision: 8, scale: 2 }),
-  avgFiber: decimal("avg_fiber", { precision: 8, scale: 2 }),
-  avgSugars: decimal("avg_sugars", { precision: 8, scale: 2 }),
-  avgTotalFat: decimal("avg_total_fat", { precision: 8, scale: 2 }),
-  avgSaturatedFat: decimal("avg_saturated_fat", { precision: 8, scale: 2 }),
-  avgSodium: decimal("avg_sodium", { precision: 8, scale: 2 }),
+  // Product identification
+  upcBarcode: varchar("upc_barcode"), // For grocery products
+  usdaFdcId: integer("usda_fdc_id"), // USDA reference ID
+  restaurantChain: varchar("restaurant_chain"), // For restaurant items
   
-  // Health scoring (averaged)
-  avgHealthScore: decimal("avg_health_score", { precision: 5, scale: 2 }),
-  mostCommonHealthGrade: varchar("most_common_health_grade", { length: 2 }),
+  // Serving information
+  servingSize: decimal("serving_size", { precision: 8, scale: 2 }),
+  servingSizeUnit: varchar("serving_size_unit"), // "g", "ml", "cup", "piece"
+  householdServing: varchar("household_serving"), // "1 cup", "1 slice", etc.
   
-  // Demographic insights (anonymized aggregates)
-  ageRangeBreakdown: jsonb("age_range_breakdown"), // {"18-25": 45, "26-35": 30, "36-50": 25}
-  genderBreakdown: jsonb("gender_breakdown"), // {"male": 60, "female": 40}
-  fitnessGoalBreakdown: jsonb("fitness_goal_breakdown"), // {"weight_loss": 40, "muscle_gain": 35, "maintenance": 25}
-  activityLevelBreakdown: jsonb("activity_level_breakdown"), // {"sedentary": 20, "moderate": 50, "active": 30}
+  // Nutritional data per serving
+  calories: decimal("calories", { precision: 8, scale: 2 }).notNull(),
+  protein: decimal("protein", { precision: 8, scale: 2 }).notNull(),
+  totalFat: decimal("total_fat", { precision: 8, scale: 2 }).notNull(),
+  saturatedFat: decimal("saturated_fat", { precision: 8, scale: 2 }),
+  transFat: decimal("trans_fat", { precision: 8, scale: 2 }),
+  cholesterol: decimal("cholesterol", { precision: 8, scale: 2 }),
+  sodium: decimal("sodium", { precision: 8, scale: 2 }),
+  totalCarbs: decimal("total_carbs", { precision: 8, scale: 2 }).notNull(),
+  fiber: decimal("fiber", { precision: 8, scale: 2 }),
+  totalSugars: decimal("total_sugars", { precision: 8, scale: 2 }),
+  addedSugars: decimal("added_sugars", { precision: 8, scale: 2 }),
   
-  // Geographic and temporal insights
-  popularRegions: text("popular_regions").array(), // Where this food is commonly logged
-  peakOrderTimes: text("peak_order_times").array(), // Time patterns when ordered
-  seasonalTrends: jsonb("seasonal_trends"), // Monthly/seasonal ordering patterns
-  weekdayVsWeekend: jsonb("weekday_vs_weekend"), // {"weekday": 70, "weekend": 30}
-  mealTypeBreakdown: jsonb("meal_type_breakdown"), // {"breakfast": 10, "lunch": 40, "dinner": 35, "snacks": 15}
+  // Additional nutrients
+  vitaminD: decimal("vitamin_d", { precision: 8, scale: 2 }),
+  calcium: decimal("calcium", { precision: 8, scale: 2 }),
+  iron: decimal("iron", { precision: 8, scale: 2 }),
+  potassium: decimal("potassium", { precision: 8, scale: 2 }),
   
-  // Establishment insights
-  establishmentType: varchar("establishment_type"), // "fast-food", "restaurant", "coffee-shop", etc.
-  avgEstablishmentHealthRating: decimal("avg_establishment_health_rating", { precision: 3, scale: 2 }),
+  // Ingredients and allergens
+  ingredients: text("ingredients"),
+  allergens: text("allergens").array(),
   
-  // Usage analytics
-  timesLogged: integer("times_logged").default(1),
-  uniqueUsers: integer("unique_users").default(1),
-  dataSource: varchar("data_source").notNull(), // "receipt-parsing", "fatsecret", "manual"
-  firstLoggedAt: timestamp("first_logged_at").notNull(),
-  lastLoggedAt: timestamp("last_logged_at").notNull(),
-  popularityRank: integer("popularity_rank"), // Ranking by times logged
-  trendingScore: decimal("trending_score", { precision: 5, scale: 2 }), // Recent activity score
+  // Data source and quality
+  dataSource: varchar("data_source").notNull(), // "usda", "restaurant", "manual", "grocery-api"
+  dataQuality: varchar("data_quality").default("verified"), // "verified", "estimated", "user-submitted"
+  lastVerified: timestamp("last_verified"),
+  
+  // Search optimization
+  searchTokens: text("search_tokens").array(), // For fuzzy matching
+  popularity: integer("popularity").default(0), // How often this food is logged
   
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// User analytics table (no nutrition data - just food choices and patterns)
+export const userFoodPatterns = pgTable("user_food_patterns", {
+  id: varchar("id").primaryKey().notNull(),
+  
+  // Food identification (no nutrition data)
+  foodId: varchar("food_id").notNull().references(() => customNutritionDatabase.id),
+  foodName: varchar("food_name").notNull(),
+  brandName: varchar("brand_name"),
+  establishment: varchar("establishment"),
+  
+  // User context (anonymized demographics only)
+  userAgeRange: varchar("user_age_range"), // "25-34"
+  userGender: varchar("user_gender"), // "male", "female", "other"
+  userFitnessGoals: text("user_fitness_goals").array(), // ["weight_loss", "muscle_building"]
+  userActivityLevel: varchar("user_activity_level"), // "sedentary", "moderate", "active"
+  
+  // Temporal and contextual patterns
+  mealType: varchar("meal_type").notNull(), // "breakfast", "lunch", "dinner", "snacks"
+  loggedAt: timestamp("logged_at").notNull(),
+  dayOfWeek: integer("day_of_week"), // 1-7
+  isWeekend: boolean("is_weekend"),
+  timeOfDay: varchar("time_of_day"), // "morning", "afternoon", "evening", "night"
+  
+  // Context
+  dataSource: varchar("data_source").notNull(), // "receipt-parsing", "manual"
+  
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const foodLogEntries = pgTable("food_log_entries", {
@@ -152,8 +184,10 @@ export type ParsedFoodLog = typeof parsedFoodLogs.$inferSelect;
 export type InsertParsedFoodLog = typeof parsedFoodLogs.$inferInsert;
 export type FoodLogEntry = typeof foodLogEntries.$inferSelect;
 export type InsertFoodLogEntry = typeof foodLogEntries.$inferInsert;
-export type GlobalNutrition = typeof globalNutritionDatabase.$inferSelect;
-export type InsertGlobalNutrition = typeof globalNutritionDatabase.$inferInsert;
+export type CustomNutrition = typeof customNutritionDatabase.$inferSelect;
+export type InsertCustomNutrition = typeof customNutritionDatabase.$inferInsert;
+export type UserFoodPattern = typeof userFoodPatterns.$inferSelect;
+export type InsertUserFoodPattern = typeof userFoodPatterns.$inferInsert;
 
 // Schema for the onboarding data JSON structure
 export const onboardingDataSchema = z.object({
