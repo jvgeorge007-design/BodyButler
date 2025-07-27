@@ -71,29 +71,45 @@ export const globalNutritionDatabase = pgTable("global_nutrition_database", {
   // API source information
   fatSecretFoodId: varchar("fatsecret_food_id"),
   
-  // Nutritional data per serving
-  calories: decimal("calories", { precision: 8, scale: 2 }),
-  protein: decimal("protein", { precision: 8, scale: 2 }),
-  totalCarbs: decimal("total_carbs", { precision: 8, scale: 2 }),
-  fiber: decimal("fiber", { precision: 8, scale: 2 }),
-  sugars: decimal("sugars", { precision: 8, scale: 2 }),
-  totalFat: decimal("total_fat", { precision: 8, scale: 2 }),
-  saturatedFat: decimal("saturated_fat", { precision: 8, scale: 2 }),
-  sodium: decimal("sodium", { precision: 8, scale: 2 }),
+  // Nutritional data per serving (averaged across all logs)
+  avgCalories: decimal("avg_calories", { precision: 8, scale: 2 }),
+  avgProtein: decimal("avg_protein", { precision: 8, scale: 2 }),
+  avgTotalCarbs: decimal("avg_total_carbs", { precision: 8, scale: 2 }),
+  avgFiber: decimal("avg_fiber", { precision: 8, scale: 2 }),
+  avgSugars: decimal("avg_sugars", { precision: 8, scale: 2 }),
+  avgTotalFat: decimal("avg_total_fat", { precision: 8, scale: 2 }),
+  avgSaturatedFat: decimal("avg_saturated_fat", { precision: 8, scale: 2 }),
+  avgSodium: decimal("avg_sodium", { precision: 8, scale: 2 }),
   
-  // Health scoring
-  healthScore: decimal("health_score", { precision: 5, scale: 2 }),
-  healthGrade: varchar("health_grade", { length: 2 }),
+  // Health scoring (averaged)
+  avgHealthScore: decimal("avg_health_score", { precision: 5, scale: 2 }),
+  mostCommonHealthGrade: varchar("most_common_health_grade", { length: 2 }),
   
-  // Tracking and analytics
+  // Demographic insights (anonymized aggregates)
+  ageRangeBreakdown: jsonb("age_range_breakdown"), // {"18-25": 45, "26-35": 30, "36-50": 25}
+  genderBreakdown: jsonb("gender_breakdown"), // {"male": 60, "female": 40}
+  fitnessGoalBreakdown: jsonb("fitness_goal_breakdown"), // {"weight_loss": 40, "muscle_gain": 35, "maintenance": 25}
+  activityLevelBreakdown: jsonb("activity_level_breakdown"), // {"sedentary": 20, "moderate": 50, "active": 30}
+  
+  // Geographic and temporal insights
+  popularRegions: text("popular_regions").array(), // Where this food is commonly logged
+  peakOrderTimes: text("peak_order_times").array(), // Time patterns when ordered
+  seasonalTrends: jsonb("seasonal_trends"), // Monthly/seasonal ordering patterns
+  weekdayVsWeekend: jsonb("weekday_vs_weekend"), // {"weekday": 70, "weekend": 30}
+  mealTypeBreakdown: jsonb("meal_type_breakdown"), // {"breakfast": 10, "lunch": 40, "dinner": 35, "snacks": 15}
+  
+  // Establishment insights
+  establishmentType: varchar("establishment_type"), // "fast-food", "restaurant", "coffee-shop", etc.
+  avgEstablishmentHealthRating: decimal("avg_establishment_health_rating", { precision: 3, scale: 2 }),
+  
+  // Usage analytics
   timesLogged: integer("times_logged").default(1),
   uniqueUsers: integer("unique_users").default(1),
   dataSource: varchar("data_source").notNull(), // "receipt-parsing", "fatsecret", "manual"
   firstLoggedAt: timestamp("first_logged_at").notNull(),
   lastLoggedAt: timestamp("last_logged_at").notNull(),
-  
-  // User who first added this item (for data quality tracking)
-  firstLoggedByUserId: varchar("first_logged_by_user_id").notNull().references(() => users.id),
+  popularityRank: integer("popularity_rank"), // Ranking by times logged
+  trendingScore: decimal("trending_score", { precision: 5, scale: 2 }), // Recent activity score
   
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

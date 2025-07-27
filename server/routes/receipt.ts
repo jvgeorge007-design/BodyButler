@@ -186,7 +186,11 @@ router.post("/confirm", async (req, res) => {
           manualEntry: false,
         });
 
-        // 2. Save to aggregated global nutrition database (anonymized)
+        // 2. Save to aggregated global nutrition database (anonymized with demographics)
+        // Get user demographics for anonymized analytics
+        const userProfile = await storage.getUserProfile(userId);
+        const demographicData = extractAnonymizedDemographics(userProfile);
+        
         await storage.addToGlobalNutritionDatabase({
           foodName: bestMatch.food_name,
           brandName: bestMatch.brand_name || null,
@@ -209,6 +213,13 @@ router.post("/confirm", async (req, res) => {
           fatSecretFoodId: bestMatch.food_id,
           dataSource: 'receipt-parsing',
           loggedAt: new Date(),
+          mealType: mealType,
+          
+          // Anonymized demographic insights
+          userAgeRange: demographicData.ageRange,
+          userGender: demographicData.gender,
+          userFitnessGoals: demographicData.fitnessGoals,
+          userActivityLevel: demographicData.activityLevel,
         });
 
         loggedItems.push({
@@ -414,5 +425,67 @@ router.delete("/food-log/:itemId", async (req, res) => {
     res.status(500).json({ error: "Failed to delete food log entry" });
   }
 });
+
+// Helper function to extract anonymized demographics from user profile
+function extractAnonymizedDemographics(userProfile: any) {
+  if (!userProfile?.onboardingData) {
+    return {
+      ageRange: undefined,
+      gender: undefined,
+      fitnessGoals: undefined,
+      activityLevel: undefined,
+    };
+  }
+
+  const data = userProfile.onboardingData;
+  
+  // Convert birth date to age range (anonymized)
+  let ageRange: string | undefined;
+  if (data.birthDate) {
+    const birthYear = new Date(data.birthDate).getFullYear();
+    const currentYear = new Date().getFullYear();
+    const age = currentYear - birthYear;
+    
+    if (age < 18) ageRange = 'under-18';
+    else if (age <= 25) ageRange = '18-25';
+    else if (age <= 35) ageRange = '26-35';
+    else if (age <= 45) ageRange = '36-45';
+    else if (age <= 55) ageRange = '46-55';
+    else ageRange = '55+';
+  }
+
+  // Extract fitness goals from goals text
+  let fitnessGoals: string | undefined;
+  if (data.goals) {
+    const goals = data.goals.toLowerCase();
+    if (goals.includes('lose') || goals.includes('weight loss')) fitnessGoals = 'weight-loss';
+    else if (goals.includes('gain') || goals.includes('muscle') || goals.includes('bulk')) fitnessGoals = 'muscle-gain';
+    else if (goals.includes('maintain') || goals.includes('tone')) fitnessGoals = 'maintenance';
+    else if (goals.includes('endurance') || goals.includes('cardio')) fitnessGoals = 'endurance';
+    else fitnessGoals = 'general-fitness';
+  }
+
+  // Extract activity level from activity description
+  let activityLevel: string | undefined;
+  if (data.activityDescription) {
+    const activity = data.activityDescription.toLowerCase();
+    if (activity.includes('sedentary') || activity.includes('desk') || activity.includes('sit')) {
+      activityLevel = 'sedentary';
+    } else if (activity.includes('moderate') || activity.includes('few times') || activity.includes('2-3')) {
+      activityLevel = 'moderate';
+    } else if (activity.includes('active') || activity.includes('daily') || activity.includes('regular')) {
+      activityLevel = 'active';
+    } else if (activity.includes('very') || activity.includes('athlete') || activity.includes('intense')) {
+      activityLevel = 'very-active';
+    }
+  }
+
+  return {
+    ageRange,
+    gender: data.sex?.toLowerCase(),
+    fitnessGoals,
+    activityLevel,
+  };
+}
 
 export default router;

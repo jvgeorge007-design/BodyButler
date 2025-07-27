@@ -139,6 +139,7 @@ Changelog:
 - July 26, 2025. Enhanced UI layout and navigation consistency: moved "Today's Progress" above meal selection tabs in add food page, ensured bottom navigation included on all pages including scan receipt page, fixed missing useEffect import causing receipt scanning crashes
 - July 27, 2025. Successfully migrated from USDA API to FatSecret API integration: implemented complete OAuth authentication, updated all receipt processing endpoints, created enhanced mock data system for development (while IP whitelist propagates), maintained full backward compatibility with existing food logs, added realistic nutrition data generation based on food item context
 - July 27, 2025. Implemented comprehensive dual-storage nutrition database system: receipt parsing data now saves to both individual user food logs (personal tracking) and anonymized global nutrition database (cross-user analytics and insights), enabling powerful nutrition trend analysis while preserving user privacy
+- July 27, 2025. Enhanced global nutrition database with rich demographic insights: captures anonymized age ranges, gender, fitness goals, activity levels, meal types, temporal patterns (weekday/weekend), and establishment analytics while maintaining complete user privacy for comprehensive nutrition trend analysis
 ```
 
 ## User Preferences
