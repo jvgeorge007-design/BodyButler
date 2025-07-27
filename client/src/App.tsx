@@ -21,6 +21,7 @@ import WorkoutCalendar from "@/pages/workout-calendar";
 import AddFood from "@/pages/add-food";
 import ScanReceipt from "@/pages/scan-receipt";
 import DashboardV2 from "@/pages/dashboard-v2";
+import PhotoFoodLogger from "@/pages/photo-food-logger";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -46,6 +47,7 @@ function Router() {
           <Route path="/workout-calendar" component={WorkoutCalendar} />
           <Route path="/add-food" component={AddFood} />
           <Route path="/scan-receipt" component={ScanReceipt} />
+          <Route path="/photo-food-logger" component={PhotoFoodLogger} />
           <Route path="/onboarding" component={Onboarding} />
 
 

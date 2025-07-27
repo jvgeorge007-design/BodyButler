@@ -208,6 +208,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register receipt/food logging routes
   app.use('/api/receipt', isAuthenticated, receiptRoutes);
 
+  // Vision-based food analysis routes
+  app.post('/api/analyze-food-photo', isAuthenticated, async (req: any, res) => {
+    try {
+      const { imageBase64, userContext } = req.body;
+      
+      if (!imageBase64) {
+        return res.status(400).json({ message: "Image is required" });
+      }
+
+      const { analyzeFood } = await import("./services/visionNutritionService");
+      const analysis = await analyzeFood(imageBase64, userContext);
+      
+      res.json(analysis);
+    } catch (error) {
+      console.error("Food analysis error:", error);
+      res.status(500).json({ message: "Failed to analyze food photo" });
+    }
+  });
+
+  app.post('/api/log-meal', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const mealData = req.body;
+      
+      // Store meal in user's food log with simplified structure
+      const logEntry = {
+        id: `meal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        userId,
+        timestamp: mealData.timestamp || new Date().toISOString(),
+        date: new Date().toISOString().split('T')[0],
+        foodItems: mealData.foodItems,
+        totalCalories: mealData.totalCalories,
+        macros: mealData.macros,
+        insights: mealData.insights,
+        mealType: mealData.mealType,
+        healthScore: mealData.healthScore
+      };
+
+      // For now, store in memory (in production, you'd use your database)
+      if (!global.mealLogs) global.mealLogs = [];
+      global.mealLogs.push(logEntry);
+      
+      res.json({ success: true, message: "Meal logged successfully" });
+    } catch (error) {
+      console.error("Meal logging error:", error);
+      res.status(500).json({ message: "Failed to log meal" });
+    }
+  });
+
+  app.get('/api/daily-nutrition', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const date = req.query.date || new Date().toISOString().split('T')[0];
+      
+      // Get today's meals from temporary storage
+      const meals = (global.mealLogs || []).filter(
+        (meal: any) => meal.userId === userId && meal.date === date
+      );
+      
+      // Calculate totals
+      const totalCalories = meals.reduce((sum: number, meal: any) => sum + meal.totalCalories, 0);
+      const totalMacros = meals.reduce((acc: any, meal: any) => ({
+        protein: acc.protein + meal.macros.protein,
+        carbs: acc.carbs + meal.macros.carbs,
+        fat: acc.fat + meal.macros.fat
+      }), { protein: 0, carbs: 0, fat: 0 });
+
+      // Generate daily insights using AI
+      const { generateDailyInsights } = await import("./services/visionNutritionService");
+      const profile = await storage.getUserProfile(userId);
+      const userContext = {
+        fitnessGoals: (profile?.onboardingData as any)?.goals || [],
+        activityLevel: (profile?.onboardingData as any)?.activityLevel || 'moderate'
+      };
+      
+      const insights = meals.length > 0 ? await generateDailyInsights(meals, userContext) : [];
+      
+      res.json({
+        date,
+        meals,
+        totals: {
+          calories: totalCalories,
+          macros: totalMacros
+        },
+        insights
+      });
+    } catch (error) {
+      console.error("Daily nutrition error:", error);
+      res.status(500).json({ message: "Failed to get daily nutrition" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -377,61 +377,65 @@ export default function DashboardV2() {
   // Get user's first name for personalized greeting
   const userName = (user as any)?.firstName || (user as any)?.email?.split("@")[0] || "there";
 
+  // Get daily nutrition data from Vision API
+  const { data: dailyNutrition } = useQuery({
+    queryKey: ["/api/daily-nutrition", selectedDate.toISOString().split('T')[0]],
+    enabled: isAuthenticated && !isLoading,
+    retry: false,
+  });
+
   // Calculate dashboard data
   const macroTargets = (personalizedPlan as any)?.macroTargets || {};
   const today = new Date();
   const isToday = selectedDate.toDateString() === today.toDateString();
   
-  // Mock data that would come from your nutrition database
+  // Real data from Vision API or defaults
+  const consumedCalories = dailyNutrition?.totals?.calories || 0;
+  const consumedMacros = dailyNutrition?.totals?.macros || { protein: 0, carbs: 0, fat: 0 };
+  
   const dashboardData = {
     calories: {
-      consumed: isToday ? 1200 : 0,
+      consumed: consumedCalories,
       target: macroTargets.dailyCalories || 2500,
-      remaining: Math.max((macroTargets.dailyCalories || 2500) - (isToday ? 1200 : 0), 0),
+      remaining: Math.max((macroTargets.dailyCalories || 2500) - consumedCalories, 0),
     },
     macros: {
       protein: {
-        current: isToday ? 78 : 0,
+        current: consumedMacros.protein,
         target: macroTargets.protein_g || 180,
         unit: "g",
         color: "#EF4444", // Red for protein (universal convention)
         icon: <Target className="w-4 h-4 text-red-400" />
       },
       carbs: {
-        current: isToday ? 89 : 0,
+        current: consumedMacros.carbs,
         target: macroTargets.carbs_g || 250,
         unit: "g",
         color: "#F97316", // Orange for carbs
         icon: <Flame className="w-4 h-4 text-orange-400" />
       },
       fat: {
-        current: isToday ? 48 : 0,
+        current: consumedMacros.fat,
         target: macroTargets.fat_g || 80,
         unit: "g",
         color: "#3B82F6", // Blue for fats
         icon: <TrendingUp className="w-4 h-4 text-blue-400" />
       },
     },
-    recentItems: [
-      {
-        name: "Apple Salmon salad...",
-        time: "9:00am",
-        calories: 500,
-        protein: 78,
-        carbs: 78,
-        fat: 78,
-        image: "/placeholder-salad.jpg"
-      },
-      {
-        name: "Weight lifting",
-        time: "12:42 PM",
-        calories: 50,
-        protein: 0,
-        carbs: 0,
-        fat: 0,
-        image: "/placeholder-workout.jpg"
-      }
-    ]
+    recentItems: dailyNutrition?.meals?.slice(-2).map((meal: any) => ({
+      name: meal.foodItems.join(', ').substring(0, 20) + '...',
+      time: new Date(meal.timestamp).toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true 
+      }),
+      calories: meal.totalCalories,
+      protein: meal.macros.protein,
+      carbs: meal.macros.carbs,
+      fat: meal.macros.fat,
+      image: "/placeholder-food.jpg"
+    })) || [],
+    insights: dailyNutrition?.insights || []
   };
 
   if (
@@ -555,13 +559,35 @@ export default function DashboardV2() {
 
         {/* Photo-first logging as primary interaction */}
         <div className="mb-6">
-          <PhotoFoodLogger onScanPhoto={() => setLocation("/scan-receipt")} />
+          <PhotoFoodLogger onScanPhoto={() => setLocation("/photo-food-logger")} />
         </div>
 
         {/* Recently logged with visual meal history */}
-        <div className="mb-6">
-          <RecentlyLogged items={dashboardData.recentItems} />
-        </div>
+        {dashboardData.recentItems.length > 0 && (
+          <div className="mb-6">
+            <RecentlyLogged items={dashboardData.recentItems} />
+          </div>
+        )}
+
+        {/* Daily AI Insights */}
+        {dashboardData.insights.length > 0 && (
+          <div className="mb-6">
+            <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10">
+              <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                <Target className="w-5 h-5 text-blue-400" />
+                Today's Insights
+              </h3>
+              <div className="space-y-3">
+                {dashboardData.insights.map((insight: string, index: number) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
+                    <p className="text-white/90 text-sm leading-relaxed">{insight}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Quick Actions */}
         <div className="space-y-3">
@@ -585,7 +611,7 @@ export default function DashboardV2() {
       
       {/* Floating Add Button (Cal AI style) */}
       <button 
-        onClick={() => setLocation("/add-food")}
+        onClick={() => setLocation("/photo-food-logger")}
         className="fixed bottom-24 right-6 w-14 h-14 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg z-50 transition-all"
       >
         <Plus className="w-6 h-6 text-white" />
