@@ -140,6 +140,7 @@ Changelog:
 - July 27, 2025. Successfully migrated from USDA API to FatSecret API integration: implemented complete OAuth authentication, updated all receipt processing endpoints, created enhanced mock data system for development (while IP whitelist propagates), maintained full backward compatibility with existing food logs, added realistic nutrition data generation based on food item context
 - July 27, 2025. Implemented comprehensive dual-storage nutrition database system: receipt parsing data now saves to both individual user food logs (personal tracking) and anonymized global nutrition database (cross-user analytics and insights), enabling powerful nutrition trend analysis while preserving user privacy
 - July 27, 2025. Enhanced global nutrition database with rich demographic insights: captures anonymized age ranges, gender, fitness goals, activity levels, meal types, temporal patterns (weekday/weekend), and establishment analytics while maintaining complete user privacy for comprehensive nutrition trend analysis
+- July 27, 2025. Strategic pivot from FatSecret API to custom nutrition database: discovered FatSecret compliance severely limits AI insights (24-hour data retention, no cross-user analytics, no historical tracking), decided to build proprietary database using USDA FoodData Central, restaurant nutrition guides, and grocery product APIs for complete control and unlimited AI capabilities
 ```
 
 ## User Preferences
