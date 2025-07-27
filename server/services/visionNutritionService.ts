@@ -43,7 +43,7 @@ export async function analyzeFood(
 
 USER CONTEXT:
 - Recent workouts: ${JSON.stringify(userContext.recentWorkouts || [])}
-- Fitness goals: ${userContext.fitnessGoals?.join(', ') || 'general health'}
+- Fitness goals: ${Array.isArray(userContext.fitnessGoals) ? userContext.fitnessGoals.join(', ') : userContext.fitnessGoals || 'general health'}
 - Activity level: ${userContext.activityLevel || 'moderate'}
 - Time of day: ${timeOfDay}
 - Previous meals today: ${JSON.stringify(userContext.previousMeals || [])}
@@ -137,7 +137,7 @@ ${todaysMeals.map((meal, i) =>
 
 USER CONTEXT:
 - Recent workouts: ${JSON.stringify(userContext.recentWorkouts || [])}
-- Fitness goals: ${userContext.fitnessGoals?.join(', ') || 'general health'}
+- Fitness goals: ${Array.isArray(userContext.fitnessGoals) ? userContext.fitnessGoals.join(', ') : userContext.fitnessGoals || 'general health'}
 - Activity level: ${userContext.activityLevel || 'moderate'}
 
 Totals: ${totalCalories} calories, ${totalProtein}g protein

@@ -93,9 +93,10 @@ export default function PhotoFoodLogger() {
   const analyzeImageMutation = useMutation({
     mutationFn: async (imageBase64: string) => {
       const userContext = {
-        fitnessGoals: (profile as any)?.onboardingData?.goals || [],
+        fitnessGoals: (profile as any)?.onboardingData?.goals || 'general health',
         activityLevel: (profile as any)?.onboardingData?.activityLevel || 'moderate',
-        // TODO: Add recent workouts and previous meals from your data
+        recentWorkouts: [], // TODO: Add recent workouts from your data
+        previousMeals: [] // TODO: Add previous meals from your data
       };
 
       return await apiRequest('POST', '/api/analyze-food-photo', {
