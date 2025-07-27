@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import crypto from 'crypto';
 
-const FATSECRET_CLIENT_ID = '6773a66128a14d72bfea8905f50e6a09';
-const FATSECRET_CLIENT_SECRET = '8269976ded2944a7b7f98e6111daf7bd';
+const FATSECRET_CLIENT_ID = process.env.FATSECRET_CLIENT_ID || '6773a66128a14d72bfea8905f50e6a09';
+const FATSECRET_CLIENT_SECRET = process.env.FATSECRET_CLIENT_SECRET || '8269976ded2944a7b7f98e6111daf7bd';
 const FATSECRET_BASE_URL = 'https://platform.fatsecret.com/rest/server.api';
 
 // FatSecret API response schemas
