@@ -26,7 +26,7 @@ const confirmReceiptSchema = z.object({
 // Parse receipt (image or text)
 router.post("/parse", async (req, res) => {
   try {
-    console.log('Receipt parsing started for user:', req.user?.claims?.sub);
+    console.log('Receipt parsing started for user:', req.user?.id);
     const { image, text } = parseReceiptSchema.parse(req.body);
     
     if (!image && !text) {
@@ -34,7 +34,7 @@ router.post("/parse", async (req, res) => {
     }
 
     // Check if user is authenticated
-    if (!req.user?.claims?.sub) {
+    if (!req.user?.id) {
       console.log('Authentication failed - no user found');
       return res.status(401).json({ error: "User not authenticated" });
     }
@@ -267,7 +267,7 @@ router.get("/food-log", async (req, res) => {
     const avgHealthScore = dailyTotals.itemCount > 0 
       ? dailyTotals.healthScoreSum / dailyTotals.itemCount 
       : 0;
-    const dailyGrade = usdaService.calculateHealthScore({
+    const dailyGrade = fatSecretService.calculateHealthScore({
       calories: dailyTotals.calories,
       protein: dailyTotals.protein,
       totalCarbs: dailyTotals.totalCarbs,
