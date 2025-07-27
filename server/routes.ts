@@ -219,6 +219,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const { analyzeFood } = await import("./services/visionNutritionService");
       const analysis = await analyzeFood(imageBase64, userContext);
+      console.log('Analysis result before sending:', analysis);
       
       res.json(analysis);
     } catch (error) {

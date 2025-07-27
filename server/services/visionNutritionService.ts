@@ -100,7 +100,11 @@ Respond in JSON format: {
       max_tokens: 1000,
     });
 
-    const result = JSON.parse(response.choices[0].message.content || '{}');
+    const content = response.choices[0].message.content;
+    console.log('OpenAI raw response:', content);
+    
+    const result = JSON.parse(content || '{}');
+    console.log('Parsed JSON result:', result);
     
     return {
       foodItems: result.foodItems || [],
