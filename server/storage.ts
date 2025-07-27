@@ -53,9 +53,7 @@ export interface IStorage {
     sodium: number;
     healthScore: number;
     healthGrade: string;
-    userId: string;
     fatSecretFoodId?: string;
-    timesLogged: number;
     dataSource: string;
     loggedAt: Date;
   }): Promise<void>;
@@ -196,9 +194,7 @@ export class DatabaseStorage implements IStorage {
     sodium: number;
     healthScore: number;
     healthGrade: string;
-    userId: string;
     fatSecretFoodId?: string;
-    timesLogged: number;
     dataSource: string;
     loggedAt: Date;
   }): Promise<void> {
@@ -261,12 +257,12 @@ export class DatabaseStorage implements IStorage {
         sodium: data.sodium.toString(),
         healthScore: data.healthScore.toString(),
         healthGrade: data.healthGrade,
-        timesLogged: data.timesLogged,
+        timesLogged: 1,
         uniqueUsers: 1,
         dataSource: data.dataSource,
         firstLoggedAt: data.loggedAt,
         lastLoggedAt: data.loggedAt,
-        firstLoggedByUserId: data.userId,
+        firstLoggedByUserId: 'anonymous',
       });
     }
   }

@@ -186,7 +186,7 @@ router.post("/confirm", async (req, res) => {
           manualEntry: false,
         });
 
-        // 2. Save to aggregated global nutrition database
+        // 2. Save to aggregated global nutrition database (anonymized)
         await storage.addToGlobalNutritionDatabase({
           foodName: bestMatch.food_name,
           brandName: bestMatch.brand_name || null,
@@ -205,10 +205,8 @@ router.post("/confirm", async (req, res) => {
           healthScore: healthScore.score,
           healthGrade: healthScore.grade,
           
-          // Tracking information
-          userId: userId,
+          // Tracking information (no personal data)
           fatSecretFoodId: bestMatch.food_id,
-          timesLogged: 1,
           dataSource: 'receipt-parsing',
           loggedAt: new Date(),
         });

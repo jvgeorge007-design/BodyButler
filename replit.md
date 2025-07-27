@@ -138,6 +138,7 @@ Changelog:
 - July 26, 2025. Completed implementation of comprehensive receipt OCR and food logging system with OpenAI Vision integration: created complete database schema with new tables (foodItems, userFoodLogs, mealSummaries), built full frontend receipt scanning workflow including photo upload, item confirmation, quantity adjustment, and nutrition logging, integrated USDA FDC API service with fuzzy matching for nutritional data extraction and health scoring algorithm
 - July 26, 2025. Enhanced UI layout and navigation consistency: moved "Today's Progress" above meal selection tabs in add food page, ensured bottom navigation included on all pages including scan receipt page, fixed missing useEffect import causing receipt scanning crashes
 - July 27, 2025. Successfully migrated from USDA API to FatSecret API integration: implemented complete OAuth authentication, updated all receipt processing endpoints, created enhanced mock data system for development (while IP whitelist propagates), maintained full backward compatibility with existing food logs, added realistic nutrition data generation based on food item context
+- July 27, 2025. Implemented comprehensive dual-storage nutrition database system: receipt parsing data now saves to both individual user food logs (personal tracking) and anonymized global nutrition database (cross-user analytics and insights), enabling powerful nutrition trend analysis while preserving user privacy
 ```
 
 ## User Preferences
