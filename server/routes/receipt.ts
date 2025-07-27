@@ -19,6 +19,7 @@ const confirmReceiptSchema = z.object({
     index: z.number(),
     quantity: z.number(),
     selected: z.boolean(),
+    selectedFoodId: z.string().optional(), // FatSecret food_id chosen by user
   })),
   mealType: z.enum(['breakfast', 'lunch', 'dinner', 'snacks']),
 });
@@ -54,8 +55,8 @@ router.post("/parse", async (req, res) => {
           const searchResults = await fatSecretService.fuzzySearchFood(item.name);
           return {
             originalItem: item,
-            fatSecretOptions: searchResults.slice(0, 3), // Top 3 matches
-            bestMatch: searchResults[0] || null,
+            fatSecretOptions: searchResults.slice(0, 5), // Top 5 options for user selection
+            selectedOption: null, // User will select before confirmation
           };
         } catch (error) {
           console.error(`Error searching FatSecret for item "${item.name}":`, error);
@@ -63,7 +64,7 @@ router.post("/parse", async (req, res) => {
           return {
             originalItem: item,
             fatSecretOptions: [],
-            bestMatch: null,
+            selectedOption: null,
           };
         }
       })
@@ -117,17 +118,26 @@ router.post("/confirm", async (req, res) => {
 
     // Process each selected item
     for (const selection of selectedItems) {
-      if (!selection.selected) continue;
+      if (!selection.selected || !selection.selectedFoodId) continue;
 
       const matchData = (storedReceipt.usdaMatches as any[])[selection.index];
-      if (!matchData?.bestMatch) continue;
+      if (!matchData?.fatSecretOptions) continue;
 
-      const { bestMatch } = matchData;
+      // Find the specific food option the user selected
+      const selectedFood = matchData.fatSecretOptions.find(
+        (option: any) => option.food_id === selection.selectedFoodId
+      );
+      
+      if (!selectedFood) {
+        console.error(`Selected food ID ${selection.selectedFoodId} not found in options`);
+        continue;
+      }
+
       const quantity = selection.quantity;
 
       try {
-        // Get detailed nutrition from FatSecret
-        const nutritionData = await fatSecretService.getFoodById(bestMatch.food_id);
+        // Get detailed nutrition from FatSecret using selected food
+        const nutritionData = await fatSecretService.getFoodById(selectedFood.food_id);
         const serving = nutritionData.food.servings.serving[0];
         
         // Calculate nutrition for user's quantity
@@ -163,8 +173,8 @@ router.post("/confirm", async (req, res) => {
         const foodLogEntry = await storage.createFoodLogEntry({
           id: foodLogEntryId,
           userId: userId,
-          fdcId: parseInt(bestMatch.food_id),
-          foodName: bestMatch.food_name,
+          fdcId: parseInt(selectedFood.food_id),
+          foodName: selectedFood.food_name,
           quantity: quantity.toString(),
           unit: "serving",
           mealType: mealType,
@@ -192,8 +202,8 @@ router.post("/confirm", async (req, res) => {
         const demographicData = extractAnonymizedDemographics(userProfile);
         
         await storage.addToGlobalNutritionDatabase({
-          foodName: bestMatch.food_name,
-          brandName: bestMatch.brand_name || null,
+          foodName: selectedFood.food_name,
+          brandName: selectedFood.brand_name || null,
           establishment: storedReceipt.establishment || null,
           
           // Nutritional data per serving
@@ -210,7 +220,7 @@ router.post("/confirm", async (req, res) => {
           healthGrade: healthScore.grade,
           
           // Tracking information (no personal data)
-          fatSecretFoodId: bestMatch.food_id,
+          fatSecretFoodId: selectedFood.food_id,
           dataSource: 'receipt-parsing',
           loggedAt: new Date(),
           mealType: mealType,
@@ -229,7 +239,7 @@ router.post("/confirm", async (req, res) => {
         });
 
       } catch (error) {
-        console.error(`Error processing item ${bestMatch.food_name}:`, error);
+        console.error(`Error processing item ${selectedFood.food_name}:`, error);
         continue;
       }
     }
