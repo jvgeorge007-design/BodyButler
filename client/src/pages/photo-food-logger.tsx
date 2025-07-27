@@ -99,10 +99,12 @@ export default function PhotoFoodLogger() {
         previousMeals: [] // TODO: Add previous meals from your data
       };
 
-      return await apiRequest('POST', '/api/analyze-food-photo', {
+      const response = await apiRequest('POST', '/api/analyze-food-photo', {
         imageBase64,
         userContext
       });
+      
+      return await response.json();
     },
     onSuccess: (data: NutritionAnalysis) => {
       console.log('Analysis received:', data);
@@ -122,11 +124,13 @@ export default function PhotoFoodLogger() {
 
   const logMealMutation = useMutation({
     mutationFn: async (mealData: NutritionAnalysis) => {
-      return await apiRequest('POST', '/api/log-meal', {
+      const response = await apiRequest('POST', '/api/log-meal', {
         ...mealData,
         imageBase64: capturedImage,
         timestamp: new Date().toISOString(),
       });
+      
+      return await response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/daily-nutrition'] });
