@@ -318,19 +318,51 @@ router.get("/food-log/:date", async (req, res) => {
       itemCount: 0,
     };
 
+    console.log('\n=== DETAILED MACRO CALCULATION BREAKDOWN ===');
+    
     for (const entry of entries) {
       const mealType = entry.mealType as keyof typeof groupedEntries;
       if (groupedEntries[mealType]) {
         groupedEntries[mealType].push(entry);
       }
 
+      // Log detailed breakdown for each entry
+      const entryCalories = parseFloat(entry.calories || '0');
+      const entryProtein = parseFloat(entry.protein || '0');
+      const entryCarbs = parseFloat(entry.totalCarbs || '0');
+      
+      console.log(`\n${entry.mealType.toUpperCase()} - ${entry.foodName}:`);
+      console.log(`  Quantity: ${entry.quantity} ${entry.unit}`);
+      console.log(`  Calories: ${entryCalories}`);
+      console.log(`  Protein: ${entryProtein}g`);
+      console.log(`  Carbs: ${entryCarbs}g`);
+      console.log(`  Health Score: ${entry.healthScore}/100 (${entry.healthGrade})`);
+
       // Add to daily totals
-      dailyTotals.calories += parseFloat(entry.calories || '0');
-      dailyTotals.protein += parseFloat(entry.protein || '0');
-      dailyTotals.totalCarbs += parseFloat(entry.totalCarbs || '0');
+      dailyTotals.calories += entryCalories;
+      dailyTotals.protein += entryProtein;
+      dailyTotals.totalCarbs += entryCarbs;
       dailyTotals.healthScoreSum += parseFloat(entry.healthScore || '0');
       dailyTotals.itemCount++;
     }
+
+    // Log meal-specific totals
+    console.log('\n=== MEAL-SPECIFIC TOTALS ===');
+    Object.entries(groupedEntries).forEach(([mealType, mealEntries]) => {
+      if (mealEntries.length > 0) {
+        const mealTotals = mealEntries.reduce((acc, entry) => ({
+          calories: acc.calories + parseFloat(entry.calories || '0'),
+          protein: acc.protein + parseFloat(entry.protein || '0'),
+          carbs: acc.carbs + parseFloat(entry.totalCarbs || '0'),
+        }), { calories: 0, protein: 0, carbs: 0 });
+        
+        console.log(`\n${mealType.toUpperCase()} TOTALS:`);
+        console.log(`  Items: ${mealEntries.length}`);
+        console.log(`  Calories: ${Math.round(mealTotals.calories)}`);
+        console.log(`  Protein: ${Math.round(mealTotals.protein)}g`);
+        console.log(`  Carbs: ${Math.round(mealTotals.carbs)}g`);
+      }
+    });
 
     // Calculate average health score and grade
     const avgHealthScore = dailyTotals.itemCount > 0 
@@ -345,7 +377,16 @@ router.get("/food-log/:date", async (req, res) => {
       saturatedFat: 0, monoFat: 0, polyFat: 0, transFat: 0, sodium: 0,
     }).grade;
 
-    res.json({
+    console.log('\n=== FINAL DAILY TOTALS ===');
+    console.log(`Total Items: ${dailyTotals.itemCount}`);
+    console.log(`Total Calories: ${Math.round(dailyTotals.calories)}`);
+    console.log(`Total Protein: ${Math.round(dailyTotals.protein)}g`);
+    console.log(`Total Carbs: ${Math.round(dailyTotals.totalCarbs)}g`);
+    console.log(`Average Health Score: ${Math.round(avgHealthScore)}/100`);
+    console.log(`Overall Grade: ${dailyGrade}`);
+    console.log('=== END BREAKDOWN ===\n');
+
+    const responseData = {
       date: req.params.date,
       meals: groupedEntries,
       dailyTotals: {
@@ -355,7 +396,18 @@ router.get("/food-log/:date", async (req, res) => {
         grade: dailyGrade,
       },
       totalItems: dailyTotals.itemCount,
+    };
+
+    console.log('API Response Summary:', {
+      totalItems: responseData.totalItems,
+      breakfastItems: responseData.meals.breakfast.length,
+      lunchItems: responseData.meals.lunch.length,
+      dinnerItems: responseData.meals.dinner.length,
+      snackItems: responseData.meals.snacks.length,
+      dailyTotals: responseData.dailyTotals
     });
+
+    res.json(responseData);
   } catch (error) {
     console.error("Error getting food log:", error);
     res.status(500).json({ error: "Failed to get food log" });
