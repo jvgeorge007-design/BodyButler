@@ -19,9 +19,9 @@ interface ParsedItem {
   originalText: string;
 }
 
-interface USDAMatch {
+interface FatSecretMatch {
   originalItem: ParsedItem;
-  usdaOptions: any[];
+  fatSecretOptions: any[];
   bestMatch: any;
 }
 
@@ -29,7 +29,7 @@ interface ParsedReceipt {
   receiptId: string;
   establishment: string;
   items: ParsedItem[];
-  usdaMatches: USDAMatch[];
+  fatSecretMatches: FatSecretMatch[];
   confidence: number;
 }
 
@@ -450,7 +450,7 @@ export default function ScanReceiptPage() {
                   {parsedReceipt.items.map((item, index) => {
                     const isSelected = selectedItems[index]?.selected || false;
                     const quantity = selectedItems[index]?.quantity || item.quantity || 1;
-                    const usdaMatch = parsedReceipt.usdaMatches[index];
+                    const fatSecretMatch = parsedReceipt.fatSecretMatches[index];
 
                     return (
                       <div key={index} className="flex items-center space-x-3 p-3 rounded-lg bg-black/20">
@@ -460,7 +460,7 @@ export default function ScanReceiptPage() {
                         />
                         <div className="flex-1">
                           <h4 className="font-medium text-white">{item.name}</h4>
-                          {!usdaMatch?.bestMatch && (
+                          {!fatSecretMatch?.bestMatch && (
                             <p className="text-sm text-yellow-400 flex items-center">
                               <AlertCircle className="w-4 h-4 mr-1" />
                               No nutrition data found
