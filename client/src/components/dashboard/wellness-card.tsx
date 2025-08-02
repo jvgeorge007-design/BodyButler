@@ -76,7 +76,7 @@ export default function WellnessCard({}: WellnessCardProps) {
       <div className="mb-2">
         <div className="flex items-center gap-2">
           <Heart className="w-5 h-5 text-white" />
-          <h3 className="text-lg font-semibold text-white">Wellness</h3>
+          <h3 className="text-lg font-semibold text-white/60">Wellness</h3>
         </div>
       </div>
       

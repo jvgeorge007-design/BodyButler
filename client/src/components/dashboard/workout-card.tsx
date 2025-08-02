@@ -27,7 +27,7 @@ export default function WorkoutCard({
       <div className="mb-2">
         <div className="flex items-center gap-2">
           <Dumbbell className="w-5 h-5 text-white" />
-          <h3 className="text-lg font-semibold text-white">Workout</h3>
+          <h3 className="text-lg font-semibold text-white/60">Workout</h3>
         </div>
       </div>
       
