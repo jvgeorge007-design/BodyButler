@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Navigation, TrendingUp, AlertCircle, CheckCircle, Target } from 'lucide-react';
+import { Compass, TrendingUp, AlertCircle, CheckCircle, Target } from 'lucide-react';
 
 interface TrekInsight {
   type: 'nutrition' | 'workout' | 'recovery' | 'habit';
@@ -64,7 +64,7 @@ export function TrekNavigationCard() {
     return (
       <div className="calm-card">
         <div className="flex items-center gap-2 mb-2">
-          <Navigation className="w-5 h-5 text-white" />
+          <Compass className="w-5 h-5 text-white" />
           <h3 className="text-lg font-semibold text-white/60">Trek Navigation</h3>
         </div>
         

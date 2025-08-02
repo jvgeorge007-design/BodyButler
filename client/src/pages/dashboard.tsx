@@ -473,6 +473,9 @@ export default function Dashboard() {
 
 
 
+          {/* Trek Navigation Card - Full Width */}
+          <TrekNavigationCard />
+
           {/* Trail Fuel Card - Full Width */}
           <div className="calm-card">
             <div className="space-y-2">
@@ -500,9 +503,6 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-
-          {/* Trek Navigation Card - Full Width */}
-          <TrekNavigationCard />
 
           {/* Workout Card (Left) and Wellness Card (Right) */}
           <div className="flex gap-4">
