@@ -471,15 +471,46 @@ export default function Dashboard() {
 
 
 
-          {/* Calorie Card Left, Workout Card Right */}
+          {/* Trail Fuel Card (Left) and Workout Card (Right) */}
           <div className="flex gap-4">
-            {/* Left: Circular Calorie Tracker */}
+            {/* Left: Trail Fuel Card - Combined Calories and Macros */}
             <div className="calm-card w-1/2">
-              <CircularCalorieTracker
-                consumed={dashboardData.calories.consumed}
-                target={dashboardData.calories.target}
-                remaining={dashboardData.calories.remaining}
-              />
+              <div className="text-center space-y-4">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Trail Fuel</h3>
+                
+                {/* Centered Calorie Tracker */}
+                <div className="flex justify-center">
+                  <CircularCalorieTracker
+                    consumed={dashboardData.calories.consumed}
+                    target={dashboardData.calories.target}
+                    remaining={dashboardData.calories.remaining}
+                  />
+                </div>
+                
+                {/* Macros Below */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Protein</span>
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                      {dashboardData.macros.protein.consumed}g / {dashboardData.macros.protein.target}g
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Carbs</span>
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                      {dashboardData.macros.carbs.consumed}g / {dashboardData.macros.carbs.target}g
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Fat</span>
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                      {dashboardData.macros.fat.consumed}g / {dashboardData.macros.fat.target}g
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
             
             {/* Right: Workout Card */}
@@ -492,15 +523,6 @@ export default function Dashboard() {
                 onLogWorkout={() => setLocation("/workout")}
               />
             </div>
-          </div>
-
-          {/* Diet Card */}
-          <div className="calm-card">
-            <MacroTrackerCard
-              protein={dashboardData.macros.protein}
-              carbs={dashboardData.macros.carbs}
-              fat={dashboardData.macros.fat}
-            />
           </div>
         </div>
       </main>
