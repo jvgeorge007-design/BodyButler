@@ -15,14 +15,14 @@ export default function FloatingChatButton({ className = "" }: FloatingChatButto
   return (
     <button
       onClick={handleChatClick}
-      className={`fixed bottom-24 right-6 z-40 w-14 h-14 rounded-full shadow-lg ${className}`}
+      className={`fixed top-32 right-4 z-40 w-12 h-12 rounded-full shadow-lg ${className}`}
       style={{
         background: 'linear-gradient(135deg, rgb(59, 130, 246), rgb(37, 99, 235))'
       }}
     >
       <div className="flex items-center justify-center w-full h-full">
         <MessageCircle 
-          className="w-6 h-6 text-white" 
+          className="w-5 h-5 text-white" 
           strokeWidth={2}
         />
       </div>
