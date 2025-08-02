@@ -471,58 +471,55 @@ export default function Dashboard() {
 
 
 
-          {/* Trail Fuel Card (Left) and Workout Card (Right) */}
-          <div className="flex gap-4">
-            {/* Left: Trail Fuel Card - Combined Calories and Macros */}
-            <div className="calm-card w-1/2">
-              <div className="text-center space-y-4">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Trail Fuel</h3>
-                
-                {/* Centered Calorie Tracker */}
-                <div className="flex justify-center">
-                  <CircularCalorieTracker
-                    consumed={dashboardData.calories.consumed}
-                    target={dashboardData.calories.target}
-                    remaining={dashboardData.calories.remaining}
-                  />
+          {/* Trail Fuel Card - Full Width */}
+          <div className="calm-card">
+            <div className="text-center space-y-4">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Trail Fuel</h3>
+              
+              {/* Centered Calorie Tracker */}
+              <div className="flex justify-center">
+                <CircularCalorieTracker
+                  consumed={dashboardData.calories.consumed}
+                  target={dashboardData.calories.target}
+                  remaining={dashboardData.calories.remaining}
+                />
+              </div>
+              
+              {/* Macros Below */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Protein</span>
+                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                    {dashboardData.macros.protein.consumed}g / {dashboardData.macros.protein.target}g
+                  </span>
                 </div>
                 
-                {/* Macros Below */}
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Protein</span>
-                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                      {dashboardData.macros.protein.consumed}g / {dashboardData.macros.protein.target}g
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Carbs</span>
-                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                      {dashboardData.macros.carbs.consumed}g / {dashboardData.macros.carbs.target}g
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Fat</span>
-                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                      {dashboardData.macros.fat.consumed}g / {dashboardData.macros.fat.target}g
-                    </span>
-                  </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Carbs</span>
+                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                    {dashboardData.macros.carbs.consumed}g / {dashboardData.macros.carbs.target}g
+                  </span>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Fat</span>
+                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                    {dashboardData.macros.fat.consumed}g / {dashboardData.macros.fat.target}g
+                  </span>
                 </div>
               </div>
             </div>
-            
-            {/* Right: Workout Card */}
-            <div className="calm-card w-1/2">
-              <WorkoutCard
-                workoutType={dashboardData.workout.type}
-                focus={dashboardData.workout.focus}
-                duration={dashboardData.workout.duration}
-                exerciseCount={dashboardData.workout.exerciseCount}
-                onLogWorkout={() => setLocation("/workout")}
-              />
-            </div>
+          </div>
+
+          {/* Workout Card */}
+          <div className="calm-card">
+            <WorkoutCard
+              workoutType={dashboardData.workout.type}
+              focus={dashboardData.workout.focus}
+              duration={dashboardData.workout.duration}
+              exerciseCount={dashboardData.workout.exerciseCount}
+              onLogWorkout={() => setLocation("/workout")}
+            />
           </div>
         </div>
       </main>
