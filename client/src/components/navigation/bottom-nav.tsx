@@ -100,7 +100,7 @@ export default function BottomNav() {
               {isMainAction ? (
                 <>
                   {/* Main action button with elevated design */}
-                  <div className="w-12 h-12 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95"
+                  <div className="w-14 h-14 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95"
                     style={{
                       background: 'linear-gradient(135deg, rgb(59, 130, 246), rgb(37, 99, 235))'
                     }}
@@ -112,7 +112,7 @@ export default function BottomNav() {
                     }}
                   >
                     <IconComponent 
-                      className="w-5 h-5 text-white"
+                      className="w-6 h-6 text-white"
                       strokeWidth={3}
                     />
                   </div>
