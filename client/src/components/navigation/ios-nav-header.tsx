@@ -92,7 +92,7 @@ export default function IOSNavHeader({
                 <div className="w-10" />
               )}
               
-              <h2 className="text-xl font-bold text-white text-center flex-1">
+              <h2 className="text-xl font-bold text-white flex-1">
                 {formatDate(selectedDate)}
               </h2>
 
