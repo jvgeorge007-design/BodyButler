@@ -370,13 +370,13 @@ export default function Dashboard() {
 
       {/* Main Content with iOS-style spacing */}
       <main
-        className="relative z-10 max-w-md mx-auto ios-padding min-h-screen"
+        className="relative z-10 max-w-md mx-auto ios-padding flex-1"
         style={{
-          paddingTop: "calc(env(safe-area-inset-top) + 120px)",
-          paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)",
+          paddingTop: "calc(env(safe-area-inset-top) + 130px)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 90px)",
         }}
       >
-        <div className="space-y-2">
+        <div className="flex flex-col h-full justify-between space-y-3">
           {/* Trek Navigation Card - Full Width */}
           <TrekNavigationCard />
 
