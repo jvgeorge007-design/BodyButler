@@ -93,10 +93,10 @@ export function TrekNavigationCard() {
           </p>
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-1">
           {/* Top Priority Insight */}
           {topInsight && (
-            <div className="bg-white/5 rounded-lg p-2 border border-white/10">
+            <div className="bg-white/5 rounded-lg p-1.5 border border-white/10">
               <div className="flex items-start gap-2">
                 <div className="flex-shrink-0 mt-0.5">
                   <div className={`flex items-center gap-1 ${getPriorityColor(topInsight.priority)}`}>
@@ -121,7 +121,7 @@ export function TrekNavigationCard() {
               </div>
               
               {/* Confidence Bar */}
-              <div className="mt-2 flex items-center gap-2">
+              <div className="mt-1 flex items-center gap-2">
                 <span className="text-xs text-white/50">Confidence</span>
                 <div className="flex-1 bg-white/10 rounded-full h-1">
                   <div 

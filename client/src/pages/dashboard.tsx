@@ -459,10 +459,10 @@ export default function Dashboard() {
         className="relative z-10 max-w-md mx-auto ios-padding min-h-screen"
         style={{
           paddingTop: "calc(env(safe-area-inset-top) + 20px)",
-          paddingBottom: "calc(env(safe-area-inset-bottom) + 120px)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 100px)",
         }}
       >
-        <div className="ios-spacing-large">
+        <div className="space-y-3">
           {/* Calendar Card */}
           <DateBanner 
             selectedDate={selectedDate}
@@ -505,7 +505,7 @@ export default function Dashboard() {
           </div>
 
           {/* Workout Card (Left) and Wellness Card (Right) */}
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             {/* Left: Workout Card */}
             <div className="calm-card w-1/2">
               <WorkoutCard

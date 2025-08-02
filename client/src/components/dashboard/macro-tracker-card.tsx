@@ -50,7 +50,7 @@ export default function MacroTrackerCard({
 
   return (
     <div ref={containerRef} className="bg-transparent relative">
-      <div className="space-y-5">
+      <div className="space-y-3">
         {macros.map((macro, index) => {
           const percentage = Math.min((macro.current / macro.target) * 100, 100);
           const macroNames = ['Protein', 'Carbs', 'Fat'];
