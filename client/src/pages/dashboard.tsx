@@ -374,10 +374,10 @@ export default function Dashboard() {
         className="relative z-10 max-w-md mx-auto ios-padding flex-1"
         style={{
           paddingTop: "calc(env(safe-area-inset-top) + 130px)",
-          paddingBottom: "calc(env(safe-area-inset-bottom) + 70px)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 75px)",
         }}
       >
-        <div className="flex flex-col h-full justify-between space-y-2.5">
+        <div className="flex flex-col h-full justify-between space-y-4">
           {/* Trek Navigation Card - Full Width */}
           <TrekNavigationCard />
 
