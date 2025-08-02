@@ -431,7 +431,7 @@ export default function Dashboard() {
           <DateBanner 
             selectedDate={selectedDate}
             onProfileClick={() => setLocation("/settings")}
-            dailyNutrition={dailyNutrition}
+            dailyNutrition={{ totals: { calories: dashboardData.calories.consumed } }}
             macroTargets={(personalizedPlan as any)?.macroTargets}
           />
 
