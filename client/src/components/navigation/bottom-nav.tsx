@@ -75,7 +75,7 @@ export default function BottomNav() {
       borderTop: '1px solid rgba(255, 255, 255, 0.08)',
       paddingBottom: 'env(safe-area-inset-bottom)'
     }}>
-      <div className="flex items-center justify-around py-0.5 px-3 max-w-md mx-auto">
+      <div className="flex items-center justify-around py-2 px-3 max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive = location === item.path;
           const IconComponent = item.icon;
