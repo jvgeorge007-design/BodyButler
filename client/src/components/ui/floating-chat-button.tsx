@@ -15,7 +15,7 @@ export default function FloatingChatButton({ className = "" }: FloatingChatButto
   return (
     <button
       onClick={handleChatClick}
-      className={`fixed bottom-18 right-4 z-40 w-12 h-12 rounded-full shadow-lg ${className}`}
+      className={`fixed bottom-20 right-4 z-40 w-12 h-12 rounded-full shadow-lg ${className}`}
       style={{
         background: 'linear-gradient(135deg, rgb(59, 130, 246), rgb(37, 99, 235))'
       }}
