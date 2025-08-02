@@ -1,6 +1,7 @@
-import { Home, TrendingUp, Settings, UtensilsCrossed, Dumbbell } from "lucide-react";
+import { Home, TrendingUp, Settings, Plus, UtensilsCrossed, Dumbbell } from "lucide-react";
 import { useLocation } from "wouter";
 import { useModal } from "@/contexts/modal-context";
+import BBAIIcon from "@/components/icons/bb-ai-icon";
 
 export default function BottomNav() {
   const [location, setLocation] = useLocation();
@@ -20,6 +21,13 @@ export default function BottomNav() {
       path: "/progress"
     },
     {
+      id: "add",
+      icon: Plus,
+      label: "Add Food",
+      path: "/add-food",
+      isMainAction: true
+    },
+    {
       id: "food",
       icon: UtensilsCrossed,
       label: "Food",
@@ -30,12 +38,6 @@ export default function BottomNav() {
       icon: Dumbbell,
       label: "Workout",
       path: "/workout"
-    },
-    {
-      id: "settings",
-      icon: Settings,
-      label: "Settings",
-      path: "/settings"
     }
   ];
 
