@@ -89,15 +89,15 @@ const DateBanner = ({ selectedDate, onProfileClick, profile, activityStreak }: {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-white/80 text-sm font-medium">Summit Progress</span>
+                <span className="text-white text-sm font-medium">Summit Progress</span>
                 {activityStreak > 0 && (
                   <div className="flex items-center gap-1 ml-2">
-                    <Mountain className="w-3 h-3 text-green-400" />
-                    <span className="text-green-400 text-xs font-medium">{activityStreak} day trek</span>
+                    <Mountain className="w-3 h-3 text-white" />
+                    <span className="text-white text-xs font-medium">{activityStreak} day trek</span>
                   </div>
                 )}
               </div>
-              <span className="text-white/60 text-sm">{Math.round(summitProgressPercentage)}%</span>
+              <span className="text-white text-sm">{Math.round(summitProgressPercentage)}%</span>
             </div>
             <div className="w-full bg-white/20 rounded-full h-2">
               <div 
