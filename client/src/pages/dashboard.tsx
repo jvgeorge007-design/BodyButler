@@ -50,11 +50,8 @@ const DateBanner = ({ selectedDate, onProfileClick, dailyNutrition, macroTargets
         <div className="flex-1">
           <div className="mb-4">
             <h2 className="text-2xl font-bold text-white mb-1">
-              {isToday ? 'Today' : formatDate(selectedDate)}
+              {formatDate(selectedDate)}
             </h2>
-            <p className="text-white/60 text-sm">
-              {isToday ? formatDate(selectedDate) : 'Selected date'}
-            </p>
           </div>
           
           {/* Goal Progress Tracker */}
