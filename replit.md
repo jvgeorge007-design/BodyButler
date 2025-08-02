@@ -9,6 +9,7 @@ Body Butler is a full-stack web application designed to provide personalized fit
 Preferred communication style: Simple, everyday language.
 Focus areas for improvement: UI polish and master prompt refinement for better user engagement ("stickiness").
 Navigation behavior: Navigation bar tabs should always navigate to respective pages, even when pop-ups or modals are open.
+Dashboard preference: User prefers the original dashboard.tsx with gradient calorie circle over dashboard-v2.tsx.
 
 ## System Architecture
 

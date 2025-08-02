@@ -20,6 +20,7 @@ import MealLog from "@/pages/meal-log";
 import WorkoutCalendar from "@/pages/workout-calendar";
 import AddFood from "@/pages/add-food";
 import ScanReceipt from "@/pages/scan-receipt";
+import Dashboard from "@/pages/dashboard";
 import DashboardV2 from "@/pages/dashboard-v2";
 
 import PhotoFoodLogger from "@/pages/photo-food-logger";
@@ -37,8 +38,8 @@ function Router() {
         </>
       ) : (
         <>
-          <Route path="/" component={DashboardV2} />
-          <Route path="/dashboard" component={DashboardV2} />
+          <Route path="/" component={Dashboard} />
+          <Route path="/dashboard" component={Dashboard} />
         <Route path="/dashboard-v2" component={DashboardV2} />
 
           <Route path="/progress" component={Progress} />

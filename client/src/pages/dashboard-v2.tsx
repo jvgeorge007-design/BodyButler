@@ -540,7 +540,6 @@ export default function DashboardV2() {
                 size={80}
                 strokeWidth={6}
                 color="#06B6D4"
-                color="#06B6D4"
                 backgroundColor="rgba(255,255,255,0.2)"
               />
             </div>
