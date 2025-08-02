@@ -63,7 +63,8 @@ export function TrekNavigationCard() {
   if (isLoading) {
     return (
       <div className="calm-card">
-        <div className="mb-2">
+        <div className="flex items-center gap-2 mb-2">
+          <Compass className="w-5 h-5 text-white" />
           <h3 className="text-lg font-semibold text-white/60">Trek Navigation</h3>
         </div>
         
@@ -80,13 +81,13 @@ export function TrekNavigationCard() {
 
   return (
     <div className="calm-card">
-      <div className="mb-2">
+      <div className="flex items-center gap-2 mb-2">
+        <Compass className="w-5 h-5 text-white" />
         <h3 className="text-lg font-semibold text-white/60">Trek Navigation</h3>
       </div>
       
       {insights.length === 0 ? (
         <div className="text-center py-3">
-          <div className="text-2xl mb-1">🧭</div>
           <p className="text-white/60 text-sm">
             Log more activities to unlock personalized insights
           </p>
