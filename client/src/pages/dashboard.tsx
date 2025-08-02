@@ -466,7 +466,7 @@ export default function Dashboard() {
             selectedDate={selectedDate}
             onProfileClick={() => setLocation("/settings")}
             profile={profile}
-            activityStreak={activityStreakData?.streak || 0}
+            activityStreak={3}
           />
 
 
