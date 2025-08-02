@@ -85,7 +85,7 @@ export default function BottomNav() {
             <button
               key={item.id}
               onClick={() => handleNavClick(item.path, item.id)}
-              className={`flex flex-col items-center justify-center ios-haptic-medium ios-spring-fast ${
+              className={`flex flex-col items-center justify-center ios-haptic-medium ios-spring-fast min-h-[50px] ${
                 isMainAction 
                   ? 'ios-touch-target-large relative' 
                   : 'ios-padding-small ios-touch-target'
@@ -100,7 +100,7 @@ export default function BottomNav() {
               {isMainAction ? (
                 <>
                   {/* Main action button with elevated design */}
-                  <div className="w-11 h-11 mb-0.5 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95"
+                  <div className="w-11 h-11 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95"
                     style={{
                       backgroundColor: 'rgb(59, 130, 246)'
                     }}
@@ -115,13 +115,13 @@ export default function BottomNav() {
                 </>
               ) : (
                 <>
-                  <div className="w-5 h-5 mb-0.5 flex items-center justify-center">
+                  <div className="w-5 h-5 mb-1 flex items-center justify-center">
                     <IconComponent 
                       className="w-4 h-4"
                       strokeWidth={isActive ? 2.5 : 2}
                     />
                   </div>
-                  <span className="text-caption-2 font-medium">{item.label}</span>
+                  <span className="text-caption-2 font-medium leading-none">{item.label}</span>
                 </>
               )}
             </button>
