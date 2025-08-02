@@ -85,7 +85,7 @@ export default function BottomNav() {
             <button
               key={item.id}
               onClick={() => handleNavClick(item.path, item.id)}
-              className={`flex flex-col items-center justify-center ios-haptic-medium ios-spring-fast min-h-[44px] ${
+              className={`flex flex-col items-center justify-center ios-haptic-medium ios-spring-fast min-h-[50px] ${
                 isMainAction 
                   ? 'ios-touch-target-large relative' 
                   : 'ios-padding-small ios-touch-target'
