@@ -31,7 +31,7 @@ export default function WorkoutCard({
         </div>
       </div>
       
-      <div className="mb-2">
+      <div className="mb-5">
         <div className="flex items-center justify-center">
           <button 
             onClick={() => setShowExercises(true)}
