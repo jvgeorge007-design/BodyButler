@@ -73,17 +73,17 @@ export default function WellnessCard({}: WellnessCardProps) {
   return (
     <div className="bg-transparent relative">
       {/* Wellness title with heart icon */}
-      <div className="mb-4">
+      <div className="mb-2">
         <div className="flex items-center gap-2">
           <Heart className="w-5 h-5 text-white" />
           <h3 className="text-lg font-semibold text-white">Wellness</h3>
         </div>
       </div>
       
-      <div className="space-y-4">
+      <div className="mb-2">
         {/* Health Score Display */}
         <div className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-1">
+          <div className="flex items-center justify-center gap-2">
             <span className={`text-3xl font-bold ${getScoreColor(averageHealthScore)}`}>
               {averageHealthScore > 0 ? averageHealthScore : '--'}
             </span>
@@ -91,7 +91,7 @@ export default function WellnessCard({}: WellnessCardProps) {
           </div>
           
           {averageHealthScore > 0 && (
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-2 mt-1">
               <span className="text-sm text-white/80">
                 {getHealthGrade(averageHealthScore)}
               </span>
@@ -103,7 +103,7 @@ export default function WellnessCard({}: WellnessCardProps) {
         {averageHealthScore > 0 && (
           <>
             {/* Stats */}
-            <div className="space-y-1">
+            <div className="space-y-1 mt-2">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-white/60">Meals Logged</span>
                 <span className="text-sm font-medium text-white">
@@ -120,7 +120,7 @@ export default function WellnessCard({}: WellnessCardProps) {
             </div>
             
             {/* Motivational Message */}
-            <div className="text-center">
+            <div className="text-center mt-2">
               <p className="text-xs text-white/60">
                 {averageHealthScore >= 80
                   ? "Excellent nutrition choices! 🌟"
