@@ -474,8 +474,8 @@ export default function Dashboard() {
 
           {/* Trail Fuel Card - Full Width */}
           <div className="calm-card">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 mb-2">
                 <Utensils className="w-5 h-5 text-white" />
                 <h3 className="text-lg font-semibold text-white/60">Trail Fuel</h3>
               </div>
@@ -490,11 +490,13 @@ export default function Dashboard() {
               </div>
               
               {/* Macros Below with Progress Bars */}
-              <MacroTrackerCard
-                protein={dashboardData.macros.protein}
-                carbs={dashboardData.macros.carbs}
-                fat={dashboardData.macros.fat}
-              />
+              <div className="mb-2">
+                <MacroTrackerCard
+                  protein={dashboardData.macros.protein}
+                  carbs={dashboardData.macros.carbs}
+                  fat={dashboardData.macros.fat}
+                />
+              </div>
             </div>
           </div>
 
