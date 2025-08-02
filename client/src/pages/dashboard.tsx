@@ -372,8 +372,8 @@ export default function Dashboard() {
       <main
         className="relative z-10 max-w-md mx-auto ios-padding min-h-screen"
         style={{
-          paddingTop: "calc(env(safe-area-inset-top) + 130px)",
-          paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)",
+          paddingTop: "calc(env(safe-area-inset-top) + 135px)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 90px)",
         }}
       >
         <div className="space-y-2">
@@ -382,8 +382,8 @@ export default function Dashboard() {
 
           {/* Trail Fuel Card - Full Width */}
           <div className="calm-card">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 mb-2">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2 mb-1.5">
                 <Utensils className="w-5 h-5 text-white" />
                 <h3 className="text-lg font-semibold text-white/60">Trail Fuel</h3>
               </div>
@@ -398,7 +398,7 @@ export default function Dashboard() {
               </div>
               
               {/* Macros Below with Progress Bars */}
-              <div className="mb-2">
+              <div className="mb-1">
                 <MacroTrackerCard
                   protein={dashboardData.macros.protein}
                   carbs={dashboardData.macros.carbs}
@@ -409,7 +409,7 @@ export default function Dashboard() {
           </div>
 
           {/* Workout Card (Left) and Wellness Card (Right) */}
-          <div className="flex gap-3">
+          <div className="flex gap-2.5">
             {/* Left: Workout Card */}
             <div className="calm-card w-1/2">
               <WorkoutCard

@@ -93,7 +93,7 @@ export function TrekNavigationCard() {
           </p>
         </div>
       ) : (
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           {/* Top Priority Insight */}
           {topInsight && (
             <div className="bg-white/5 rounded-lg p-1.5 border border-white/10">
