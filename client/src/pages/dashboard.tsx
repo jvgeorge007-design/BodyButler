@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Dumbbell, Utensils, TrendingUp, Calendar } from "lucide-react";
+import { Dumbbell, UtensilsCrossed, TrendingUp, Calendar } from "lucide-react";
 
 // Import our new dashboard components
 import CircularCalorieTracker from "@/components/dashboard/circular-calorie-tracker";
@@ -384,7 +384,7 @@ export default function Dashboard() {
           <div className="calm-card">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2 mb-1.5">
-                <Utensils className="w-5 h-5 text-white" />
+                <UtensilsCrossed className="w-5 h-5 text-white" />
                 <h3 className="text-lg font-semibold text-white/60">Trail Fuel</h3>
               </div>
               
