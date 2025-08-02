@@ -15,6 +15,7 @@ import { Dumbbell, Utensils, TrendingUp, Calendar, User, Mountain } from "lucide
 import CircularCalorieTracker from "@/components/dashboard/circular-calorie-tracker";
 import WorkoutCard from "@/components/dashboard/workout-card";
 import MacroTrackerCard from "@/components/dashboard/macro-tracker-card";
+import WellnessCard from "@/components/dashboard/wellness-card";
 import DateNavigator from "@/components/dashboard/date-navigator";
 import WeeklyCalendarModal from "@/components/dashboard/weekly-calendar-modal";
 import { ProgressCard } from "@/components/dashboard/progress-card";
@@ -497,15 +498,23 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Workout Card */}
-          <div className="calm-card">
-            <WorkoutCard
-              workoutType={dashboardData.workout.type}
-              focus={dashboardData.workout.focus}
-              duration={dashboardData.workout.duration}
-              exerciseCount={dashboardData.workout.exerciseCount}
-              onLogWorkout={() => setLocation("/workout")}
-            />
+          {/* Workout Card (Left) and Wellness Card (Right) */}
+          <div className="flex gap-4">
+            {/* Left: Workout Card */}
+            <div className="calm-card w-1/2">
+              <WorkoutCard
+                workoutType={dashboardData.workout.type}
+                focus={dashboardData.workout.focus}
+                duration={dashboardData.workout.duration}
+                exerciseCount={dashboardData.workout.exerciseCount}
+                onLogWorkout={() => setLocation("/workout")}
+              />
+            </div>
+            
+            {/* Right: Wellness Card */}
+            <div className="calm-card w-1/2">
+              <WellnessCard />
+            </div>
           </div>
         </div>
       </main>
