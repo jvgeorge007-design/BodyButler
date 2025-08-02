@@ -90,14 +90,14 @@ export default function WellnessCard({}: WellnessCardProps) {
             <span className="text-2xl text-white/60">/100</span>
           </div>
           
-          <div className="flex items-center justify-center gap-2">
-            <span className="text-sm text-white/80">
-              {averageHealthScore > 0 ? getHealthGrade(averageHealthScore) : 'No data'}
-            </span>
-            {averageHealthScore > 0 && (
+          {averageHealthScore > 0 && (
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-sm text-white/80">
+                {getHealthGrade(averageHealthScore)}
+              </span>
               <TrendingUp className="w-4 h-4 text-green-400" />
-            )}
-          </div>
+            </div>
+          )}
         </div>
         
         {averageHealthScore > 0 && (
