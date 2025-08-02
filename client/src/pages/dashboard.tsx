@@ -20,20 +20,43 @@ import WeeklyCalendarModal from "@/components/dashboard/weekly-calendar-modal";
 import { ProgressCard } from "@/components/dashboard/progress-card";
 import BottomNav from "@/components/navigation/bottom-nav";
 
-// Banner component for date and goal progress
-const DateBanner = ({ selectedDate, onProfileClick, dailyNutrition, macroTargets }: { 
+// Banner component for date and summit progress
+const DateBanner = ({ selectedDate, onProfileClick, profile }: { 
   selectedDate: Date; 
   onProfileClick: () => void;
-  dailyNutrition: any;
-  macroTargets: any;
+  profile: any;
 }) => {
   const today = new Date();
   const isToday = selectedDate.toDateString() === today.toDateString();
   
-  // Calculate overall goal progress
-  const caloriesConsumed = dailyNutrition?.totals?.calories || 0;
-  const caloriesTarget = macroTargets?.dailyCalories || 2500;
-  const progressPercentage = Math.min((caloriesConsumed / caloriesTarget) * 100, 100);
+  // Calculate Summit Progress based on goal timeline
+  const calculateSummitProgress = () => {
+    if (!profile?.onboardingData?.timeline || !profile?.createdAt) {
+      return 0; // No timeline data available
+    }
+    
+    const timeline = profile.onboardingData.timeline.toLowerCase();
+    const startDate = new Date(profile.createdAt);
+    const currentDate = new Date();
+    const daysSinceStart = Math.floor((currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    // Map timeline strings to days
+    let totalDays = 90; // Default 3 months
+    if (timeline.includes('month')) {
+      const months = parseInt(timeline.match(/\d+/)?.[0] || '3');
+      totalDays = months * 30;
+    } else if (timeline.includes('week')) {
+      const weeks = parseInt(timeline.match(/\d+/)?.[0] || '12');
+      totalDays = weeks * 7;
+    } else if (timeline.includes('year')) {
+      const years = parseInt(timeline.match(/\d+/)?.[0] || '1');
+      totalDays = years * 365;
+    }
+    
+    return Math.min((daysSinceStart / totalDays) * 100, 100);
+  };
+  
+  const summitProgressPercentage = calculateSummitProgress();
   
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { 
@@ -61,20 +84,20 @@ const DateBanner = ({ selectedDate, onProfileClick, dailyNutrition, macroTargets
             </button>
           </div>
           
-          {/* Goal Progress Tracker */}
+          {/* Summit Progress Tracker */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-white/80 text-sm font-medium">Daily Goal Progress</span>
-              <span className="text-white/60 text-sm">{Math.round(progressPercentage)}%</span>
+              <span className="text-white/80 text-sm font-medium">Summit Progress</span>
+              <span className="text-white/60 text-sm">{Math.round(summitProgressPercentage)}%</span>
             </div>
             <div className="w-full bg-white/20 rounded-full h-2">
               <div 
                 className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${progressPercentage}%` }}
+                style={{ width: `${summitProgressPercentage}%` }}
               />
             </div>
             <p className="text-white/50 text-xs">
-              {caloriesConsumed} / {caloriesTarget} calories
+              {profile?.onboardingData?.goals || 'Your fitness journey'} • {profile?.onboardingData?.timeline || 'Goal timeline'}
             </p>
           </div>
         </div>
@@ -427,8 +450,7 @@ export default function Dashboard() {
           <DateBanner 
             selectedDate={selectedDate}
             onProfileClick={() => setLocation("/settings")}
-            dailyNutrition={{ totals: { calories: dashboardData.calories.consumed } }}
-            macroTargets={(personalizedPlan as any)?.macroTargets}
+            profile={profile}
           />
 
 
