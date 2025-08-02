@@ -93,7 +93,7 @@ const DateBanner = ({ selectedDate, onProfileClick, profile, activityStreak }: {
                 {activityStreak > 0 && (
                   <div className="flex items-center gap-1 ml-2">
                     <Mountain className="w-3 h-3 text-green-400" />
-                    <span className="text-green-400 text-xs font-medium">{activityStreak}</span>
+                    <span className="text-green-400 text-xs font-medium">{activityStreak} day trek</span>
                   </div>
                 )}
               </div>
@@ -466,7 +466,7 @@ export default function Dashboard() {
             selectedDate={selectedDate}
             onProfileClick={() => setLocation("/settings")}
             profile={profile}
-            activityStreak={3}
+            activityStreak={activityStreakData?.streak || 0}
           />
 
 
