@@ -75,7 +75,7 @@ export default function BottomNav() {
       borderTop: '1px solid rgba(255, 255, 255, 0.08)',
       paddingBottom: 'env(safe-area-inset-bottom)'
     }}>
-      <div className="flex items-center justify-around py-2 px-3 max-w-md mx-auto">
+      <div className="flex items-center justify-around py-1 px-3 max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive = location === item.path;
           const IconComponent = item.icon;
@@ -85,7 +85,7 @@ export default function BottomNav() {
             <button
               key={item.id}
               onClick={() => handleNavClick(item.path, item.id)}
-              className={`flex flex-col items-center justify-center ios-haptic-medium ios-spring-fast min-h-[50px] ${
+              className={`flex flex-col items-center justify-center ios-haptic-medium ios-spring-fast min-h-[44px] ${
                 isMainAction 
                   ? 'ios-touch-target-large relative' 
                   : 'ios-padding-small ios-touch-target'
@@ -100,7 +100,7 @@ export default function BottomNav() {
               {isMainAction ? (
                 <>
                   {/* Main action button with elevated design */}
-                  <div className="w-11 h-11 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95"
+                  <div className="w-10 h-10 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95"
                     style={{
                       backgroundColor: 'rgb(59, 130, 246)'
                     }}
@@ -108,7 +108,7 @@ export default function BottomNav() {
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(59, 130, 246)'}
                   >
                     <IconComponent 
-                      className="w-5 h-5 text-white"
+                      className="w-4 h-4 text-white"
                       strokeWidth={2.5}
                     />
                   </div>
