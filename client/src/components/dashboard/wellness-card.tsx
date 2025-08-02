@@ -100,38 +100,38 @@ export default function WellnessCard({}: WellnessCardProps) {
           </div>
         </div>
         
-        {/* Stats */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-white/60">Meals Logged</span>
-            <span className="text-sm font-medium text-white">
-              {totalMeals}
-            </span>
-          </div>
-          
-          {averageHealthScore > 0 && (
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-white/60">Avg Score</span>
-              <span className={`text-sm font-medium ${getScoreColor(averageHealthScore)}`}>
-                {averageHealthScore}/100
-              </span>
+        {averageHealthScore > 0 && (
+          <>
+            {/* Stats */}
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-white/60">Meals Logged</span>
+                <span className="text-sm font-medium text-white">
+                  {totalMeals}
+                </span>
+              </div>
+              
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-white/60">Avg Score</span>
+                <span className={`text-sm font-medium ${getScoreColor(averageHealthScore)}`}>
+                  {averageHealthScore}/100
+                </span>
+              </div>
             </div>
-          )}
-        </div>
-        
-        {/* Motivational Message */}
-        <div className="text-center">
-          <p className="text-xs text-white/60">
-            {averageHealthScore === 0 
-              ? "Start logging meals to track your wellness score!"
-              : averageHealthScore >= 80
-              ? "Excellent nutrition choices! 🌟"
-              : averageHealthScore >= 60
-              ? "Good progress! Keep it up!"
-              : "Room for improvement - you've got this!"
-            }
-          </p>
-        </div>
+            
+            {/* Motivational Message */}
+            <div className="text-center">
+              <p className="text-xs text-white/60">
+                {averageHealthScore >= 80
+                  ? "Excellent nutrition choices! 🌟"
+                  : averageHealthScore >= 60
+                  ? "Good progress! Keep it up!"
+                  : "Room for improvement - you've got this!"
+                }
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
