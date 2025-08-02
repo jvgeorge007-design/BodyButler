@@ -45,13 +45,20 @@ const DateBanner = ({ selectedDate, onProfileClick, dailyNutrition, macroTargets
 
   return (
     <div className="calm-card mb-6">
-      <div className="flex items-start justify-between">
+      <div className="flex justify-between">
         {/* Left side - Date and Goal Progress */}
         <div className="flex-1">
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold text-white mb-1">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-white">
               {formatDate(selectedDate)}
             </h2>
+            {/* Profile Button - aligned with heading */}
+            <button
+              onClick={onProfileClick}
+              className="flex items-center justify-center w-12 h-12 bg-white/10 hover:bg-white/20 rounded-2xl transition-all"
+            >
+              <User className="w-6 h-6 text-white/80" />
+            </button>
           </div>
           
           {/* Goal Progress Tracker */}
@@ -71,14 +78,6 @@ const DateBanner = ({ selectedDate, onProfileClick, dailyNutrition, macroTargets
             </p>
           </div>
         </div>
-        
-        {/* Right side - Profile Button */}
-        <button
-          onClick={onProfileClick}
-          className="flex items-center justify-center w-12 h-12 bg-white/10 hover:bg-white/20 rounded-2xl transition-all ml-4"
-        >
-          <User className="w-6 h-6 text-white/80" />
-        </button>
       </div>
     </div>
   );
