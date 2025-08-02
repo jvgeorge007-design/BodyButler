@@ -83,8 +83,8 @@ export default function MacroTrackerCard({
                 <span className="text-sm font-medium body-sans" style={{color: 'rgb(235, 235, 240)'}}>
                   {macroNames[index]}
                 </span>
-                <span className="text-sm font-semibold body-sans" style={{color: 'rgb(235, 235, 240)'}}>
-                  {macro.current}g / {macro.target}g
+                <span className="text-xs font-medium body-sans" style={{color: 'rgb(180, 180, 190)'}}>
+                  {macro.target - macro.current}g remaining
                 </span>
               </div>
               
@@ -98,12 +98,6 @@ export default function MacroTrackerCard({
                     background: barColors[index].gradient
                   } as React.CSSProperties & { '--target-width': string }}
                 />
-              </div>
-              
-              <div className="flex justify-between items-center mt-2">
-                <span className="text-xs font-medium body-sans" style={{color: 'rgb(180, 180, 190)'}}>
-                  {macro.target - macro.current}g remaining
-                </span>
               </div>
             </div>
           );
