@@ -21,6 +21,7 @@ import DateNavigator from "@/components/dashboard/date-navigator";
 import WeeklyCalendarModal from "@/components/dashboard/weekly-calendar-modal";
 import { ProgressCard } from "@/components/dashboard/progress-card";
 import BottomNav from "@/components/navigation/bottom-nav";
+import FloatingChatButton from "@/components/ui/floating-chat-button";
 
 
 
@@ -438,6 +439,9 @@ export default function Dashboard() {
           setIsCalendarOpen(false);
         }}
       />
+
+      {/* Floating Chat Button */}
+      <FloatingChatButton />
 
       {/* Bottom Navigation */}
       <BottomNav />
