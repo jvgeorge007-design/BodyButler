@@ -89,7 +89,6 @@ const DateBanner = ({ selectedDate, onProfileClick, profile, activityStreak }: {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Mountain className="w-4 h-4 text-white/80" />
                 <span className="text-white/80 text-sm font-medium">Summit Progress</span>
                 {activityStreak > 0 && (
                   <div className="flex items-center gap-1 ml-2">
