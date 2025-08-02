@@ -50,22 +50,7 @@ export default function MacroTrackerCard({
 
   return (
     <div ref={containerRef} className="bg-transparent relative">
-      {/* Fork and knife icon in upper left corner */}
-      <div className="absolute top-0 left-0">
-        <Utensils className="w-5 h-5" style={{color: 'rgb(180, 180, 190)'}} />
-      </div>
-      
-      {/* Book icon in upper right corner */}
-      <div className="absolute top-0 right-0">
-        <button 
-          onClick={() => setShowFoodLog(true)}
-          className="p-1 hover:bg-white/10 rounded-system-sm haptic-light"
-        >
-          <BookOpen className="w-5 h-5" strokeWidth={2.5} style={{color: 'rgb(180, 180, 190)'}} />
-        </button>
-      </div>
-      
-      <div className="space-y-5 pt-8">
+      <div className="space-y-5">
         {macros.map((macro, index) => {
           const percentage = Math.min((macro.current / macro.target) * 100, 100);
           const macroNames = ['Protein', 'Carbs', 'Fat'];

@@ -474,10 +474,7 @@ export default function Dashboard() {
           {/* Trail Fuel Card - Full Width */}
           <div className="calm-card">
             <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Utensils className="w-5 h-5 text-white" />
-                <h3 className="text-lg font-semibold text-white">Trail Fuel</h3>
-              </div>
+              <h3 className="text-lg font-semibold text-white text-left">Trail Fuel</h3>
               
               {/* Centered Calorie Tracker */}
               <div className="flex justify-center">
