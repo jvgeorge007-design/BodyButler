@@ -75,7 +75,7 @@ export default function BottomNav() {
       borderTop: '1px solid rgba(255, 255, 255, 0.08)',
       paddingBottom: 'env(safe-area-inset-bottom)'
     }}>
-      <div className="flex items-center justify-around py-1 px-4 max-w-md mx-auto">
+      <div className="flex items-center justify-around py-0.5 px-3 max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive = location === item.path;
           const IconComponent = item.icon;
@@ -100,7 +100,7 @@ export default function BottomNav() {
               {isMainAction ? (
                 <>
                   {/* Main action button with elevated design */}
-                  <div className="w-14 h-14 mb-1 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95"
+                  <div className="w-11 h-11 mb-0.5 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95"
                     style={{
                       backgroundColor: 'rgb(59, 130, 246)'
                     }}
@@ -108,7 +108,7 @@ export default function BottomNav() {
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(59, 130, 246)'}
                   >
                     <IconComponent 
-                      className="w-7 h-7 text-white"
+                      className="w-5 h-5 text-white"
                       strokeWidth={2.5}
                     />
                   </div>
@@ -116,9 +116,9 @@ export default function BottomNav() {
                 </>
               ) : (
                 <>
-                  <div className="w-6 h-6 mb-1 flex items-center justify-center">
+                  <div className="w-5 h-5 mb-0.5 flex items-center justify-center">
                     <IconComponent 
-                      className="w-6 h-6"
+                      className="w-4 h-4"
                       strokeWidth={isActive ? 2.5 : 2}
                     />
                   </div>
