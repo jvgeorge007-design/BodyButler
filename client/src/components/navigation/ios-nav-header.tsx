@@ -82,16 +82,8 @@ export default function IOSNavHeader({
       <div className="max-w-md mx-auto px-4 py-4">
         {selectedDate ? (
           <div className="space-y-3">
-            {/* Top Row: Date centered with Profile Button */}
+            {/* Top Row: Date aligned with Summit Progress */}
             <div className="flex items-center justify-between">
-              {showBackButton ? (
-                <button onClick={handleBack} className="p-2 -ml-2">
-                  <ArrowLeft className="w-6 h-6 text-white" />
-                </button>
-              ) : (
-                <div className="w-10" />
-              )}
-              
               <h2 className="text-xl font-bold text-white flex-1">
                 {formatDate(selectedDate)}
               </h2>
