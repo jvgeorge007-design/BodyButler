@@ -471,8 +471,6 @@ export default function Dashboard() {
             activityStreak={activityStreakData?.streak || 0}
           />
 
-
-
           {/* Trek Navigation Card - Full Width */}
           <TrekNavigationCard />
 
