@@ -80,14 +80,14 @@ export default function WellnessCard({}: WellnessCardProps) {
         </div>
       </div>
       
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Health Score Display */}
         <div className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <span className={`text-4xl font-bold ${getScoreColor(averageHealthScore)}`}>
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <span className={`text-3xl font-bold ${getScoreColor(averageHealthScore)}`}>
               {averageHealthScore > 0 ? averageHealthScore : '--'}
             </span>
-            <span className="text-2xl text-white/60">/100</span>
+            <span className="text-xl text-white/60">/100</span>
           </div>
           
           {averageHealthScore > 0 && (
@@ -103,7 +103,7 @@ export default function WellnessCard({}: WellnessCardProps) {
         {averageHealthScore > 0 && (
           <>
             {/* Stats */}
-            <div className="space-y-2">
+            <div className="space-y-1">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-white/60">Meals Logged</span>
                 <span className="text-sm font-medium text-white">
