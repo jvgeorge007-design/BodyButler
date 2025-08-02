@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Camera, Plus, TrendingUp, Calendar, Flame, Target, ChevronRight } from "lucide-react";
+import { Camera, Plus, TrendingUp, Calendar, Flame, Target, ChevronRight, User, Settings } from "lucide-react";
 import BottomNav from "@/components/navigation/bottom-nav";
 import CircularProgress from "@/components/ui/circular-progress";
 
@@ -155,42 +155,68 @@ const RecentlyLogged = ({ items }: { items: any[] }) => (
   </div>
 );
 
-const WeeklyCalendar = ({ selectedDate, onDateSelect }: { selectedDate: Date; onDateSelect: (date: Date) => void }) => {
-  const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const DateBanner = ({ selectedDate, onProfileClick, macroTargets, consumedMacros }: { 
+  selectedDate: Date; 
+  onProfileClick: () => void;
+  macroTargets: any;
+  consumedMacros: any;
+}) => {
   const today = new Date();
-  const currentWeek = Array.from({ length: 7 }, (_, i) => {
-    const date = new Date(today);
-    date.setDate(today.getDate() - today.getDay() + i);
-    return date;
-  });
+  const isToday = selectedDate.toDateString() === today.toDateString();
+  
+  // Calculate overall goal progress (example: calories consumed vs target)
+  const caloriesConsumed = consumedMacros?.calories || 0;
+  const caloriesTarget = macroTargets?.dailyCalories || 2500;
+  const progressPercentage = Math.min((caloriesConsumed / caloriesTarget) * 100, 100);
+  
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'long',
+      month: 'long', 
+      day: 'numeric'
+    });
+  };
 
   return (
-    <div className="flex justify-between items-center mb-6">
-      {currentWeek.map((date, index) => {
-        const isSelected = date.toDateString() === selectedDate.toDateString();
-        const isToday = date.toDateString() === today.toDateString();
+    <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10 mb-6">
+      <div className="flex items-start justify-between">
+        {/* Left side - Date and Goal Progress */}
+        <div className="flex-1">
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold text-white mb-1">
+              {isToday ? 'Today' : formatDate(selectedDate)}
+            </h2>
+            <p className="text-white/60 text-sm">
+              {isToday ? formatDate(selectedDate) : 'Selected date'}
+            </p>
+          </div>
+          
+          {/* Goal Progress Tracker */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-white/80 text-sm font-medium">Daily Goal Progress</span>
+              <span className="text-white/60 text-sm">{Math.round(progressPercentage)}%</span>
+            </div>
+            <div className="w-full bg-white/20 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${progressPercentage}%` }}
+              />
+            </div>
+            <p className="text-white/50 text-xs">
+              {caloriesConsumed} / {caloriesTarget} calories
+            </p>
+          </div>
+        </div>
         
-        return (
-          <button
-            key={index}
-            onClick={() => onDateSelect(date)}
-            className={`flex flex-col items-center p-2 rounded-xl transition-all ${
-              isSelected 
-                ? 'bg-blue-500 text-white' 
-                : 'text-white/70 hover:bg-white/10'
-            }`}
-          >
-            <span className="text-xs mb-1">{days[index]}</span>
-            <span className={`text-lg font-medium ${isToday && !isSelected ? 'text-blue-400' : ''}`}>
-              {date.getDate()}
-            </span>
-            {/* Logged indicator dot */}
-            <div className={`w-1 h-1 rounded-full mt-1 ${
-              Math.random() > 0.3 ? 'bg-green-400' : 'bg-transparent'
-            }`} />
-          </button>
-        );
-      })}
+        {/* Right side - Profile Button */}
+        <button
+          onClick={onProfileClick}
+          className="flex items-center justify-center w-12 h-12 bg-white/10 hover:bg-white/20 rounded-2xl transition-all ml-4"
+        >
+          <User className="w-6 h-6 text-white/80" />
+        </button>
+      </div>
     </div>
   );
 };
@@ -535,10 +561,15 @@ export default function DashboardV2() {
 
       {/* Main Content */}
       <main className="max-w-md mx-auto px-6 pb-32">
-        {/* Weekly Calendar */}
-        <WeeklyCalendar 
+        {/* Date Banner with Goal Progress */}
+        <DateBanner 
           selectedDate={selectedDate}
-          onDateSelect={setSelectedDate}
+          onProfileClick={() => setLocation("/settings")}
+          macroTargets={macroTargets}
+          consumedMacros={{
+            calories: dashboardData.calories.consumed,
+            ...consumedMacros
+          }}
         />
 
         {/* Main Calorie Display - Single screen dashboard as suggested */}
