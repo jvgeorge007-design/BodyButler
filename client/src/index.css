@@ -317,19 +317,6 @@
     margin: 24px;
   }
   
-  /* iOS Standard Spacing */
-  .ios-spacing-small {
-    margin-bottom: 16px;
-  }
-  
-  .ios-spacing-medium {
-    margin-bottom: 24px;
-  }
-  
-  .ios-spacing-large {
-    margin-bottom: 32px;
-  }
-  
   /* iOS Standard Touch Targets */
   .ios-touch-target {
     min-height: 44px;
