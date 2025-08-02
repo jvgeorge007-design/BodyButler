@@ -59,7 +59,7 @@
     0 8px 24px rgba(0, 0, 0, 0.16),
     0 16px 48px rgba(0, 0, 0, 0.24),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  --glass-card-backdrop: blur(8px);
+  --glass-card-backdrop: blur(24px);
   
   /* Consistent Corner Radius System */
   --radius-xs: 8px;
@@ -485,14 +485,10 @@
   
   /* Premium Card for Dashboard */
   .calm-card {
-    background: var(--glass-card-bg);
-    backdrop-filter: var(--glass-card-backdrop);
-    border: 1px solid var(--glass-card-border);
+    position: relative;
     border-radius: var(--radius-xl);
     padding: 24px;
-    box-shadow: var(--glass-card-shadow);
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    position: relative;
     overflow: hidden;
     transform: translateZ(0);
   }
@@ -503,12 +499,28 @@
     top: 0;
     left: 0;
     right: 0;
+    bottom: 0;
+    background: var(--glass-card-bg);
+    backdrop-filter: var(--glass-card-backdrop);
+    border: 1px solid var(--glass-card-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--glass-card-shadow);
+    z-index: -1;
+  }
+  
+  .calm-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    z-index: 1;
   }
   
   /* Enhanced Card Interactions */
-  .calm-card:hover {
+  .calm-card:hover::before {
     background: rgba(50, 50, 60, 0.6);
     border-color: rgba(255, 255, 255, 0.16);
     box-shadow: 
@@ -516,6 +528,9 @@
       0 12px 32px rgba(0, 0, 0, 0.2),
       0 24px 64px rgba(0, 0, 0, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  
+  .calm-card:hover {
     transform: translateY(-2px) translateZ(0);
   }
 
@@ -526,12 +541,7 @@
     transform: translateY(-4px);
   }
   
-  .calm-card:hover {
-    background: rgba(40, 40, 45, 0.5);
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7), 0 8px 24px rgba(0, 0, 0, 0.5);
-    transform: translateY(-2px);
-  }
+
 
   /* Elevated Glass Cards */
   .glass-card-elevated {
