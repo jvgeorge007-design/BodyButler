@@ -21,10 +21,11 @@ import { ProgressCard } from "@/components/dashboard/progress-card";
 import BottomNav from "@/components/navigation/bottom-nav";
 
 // Banner component for date and summit progress
-const DateBanner = ({ selectedDate, onProfileClick, profile }: { 
+const DateBanner = ({ selectedDate, onProfileClick, profile, activityStreak }: { 
   selectedDate: Date; 
   onProfileClick: () => void;
   profile: any;
+  activityStreak: number;
 }) => {
   const today = new Date();
   const isToday = selectedDate.toDateString() === today.toDateString();
@@ -56,20 +57,7 @@ const DateBanner = ({ selectedDate, onProfileClick, profile }: {
     return Math.min((daysSinceStart / totalDays) * 100, 100);
   };
   
-  // Calculate 5-day trek streak (simulated based on profile age for now)
-  const calculateTrekStreak = () => {
-    if (!profile?.createdAt) return 0;
-    
-    const startDate = new Date(profile.createdAt);
-    const currentDate = new Date();
-    const daysSinceStart = Math.floor((currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    
-    // Simulate streak based on days since profile creation (max 5 days)
-    return Math.min(daysSinceStart + 1, 5);
-  };
-  
   const summitProgressPercentage = calculateSummitProgress();
-  const trekStreak = calculateTrekStreak();
   
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { 
@@ -108,13 +96,13 @@ const DateBanner = ({ selectedDate, onProfileClick, profile }: {
                     <div
                       key={i}
                       className={`w-2 h-2 rounded-full ${
-                        i < trekStreak 
+                        i < activityStreak 
                           ? 'bg-green-400' 
                           : 'bg-white/20'
                       }`}
                     />
                   ))}
-                  <span className="text-white/60 text-xs ml-1">{trekStreak} day trek</span>
+                  <span className="text-white/60 text-xs ml-1">{activityStreak} day trek</span>
                 </div>
               </div>
               <span className="text-white/60 text-sm">{Math.round(summitProgressPercentage)}%</span>
@@ -166,6 +154,15 @@ export default function Dashboard() {
     error: planError,
   } = useQuery({
     queryKey: ["/api/personalized-plan"],
+    enabled: isAuthenticated && !isLoading,
+    retry: false,
+  });
+
+  const {
+    data: activityStreakData,
+    isLoading: streakLoading,
+  } = useQuery({
+    queryKey: ["/api/activity-streak"],
     enabled: isAuthenticated && !isLoading,
     retry: false,
   });
@@ -477,6 +474,7 @@ export default function Dashboard() {
             selectedDate={selectedDate}
             onProfileClick={() => setLocation("/settings")}
             profile={profile}
+            activityStreak={activityStreakData?.streak || 0}
           />
 
 

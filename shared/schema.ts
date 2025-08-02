@@ -178,6 +178,22 @@ export const foodLogEntries = pgTable("food_log_entries", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Workout log entries for tracking user workout activity
+export const workoutLogEntries = pgTable("workout_log_entries", {
+  id: varchar("id").primaryKey().notNull(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  workoutType: varchar("workout_type").notNull(), // 'Push Day', 'Pull Day', 'Leg Day', 'Cardio', etc.
+  exerciseName: varchar("exercise_name").notNull(),
+  sets: integer("sets"),
+  reps: integer("reps"),
+  weight: decimal("weight", { precision: 8, scale: 2 }),
+  duration: integer("duration"), // in minutes
+  notes: text("notes"),
+  loggedAt: timestamp("logged_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
 export type ParsedFoodLog = typeof parsedFoodLogs.$inferSelect;
@@ -188,6 +204,8 @@ export type CustomNutrition = typeof customNutritionDatabase.$inferSelect;
 export type InsertCustomNutrition = typeof customNutritionDatabase.$inferInsert;
 export type UserFoodPattern = typeof userFoodPatterns.$inferSelect;
 export type InsertUserFoodPattern = typeof userFoodPatterns.$inferInsert;
+export type WorkoutLogEntry = typeof workoutLogEntries.$inferSelect;
+export type InsertWorkoutLogEntry = typeof workoutLogEntries.$inferInsert;
 
 // Schema for the onboarding data JSON structure
 export const onboardingDataSchema = z.object({

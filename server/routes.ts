@@ -205,6 +205,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Activity streak calculation endpoint
+  app.get('/api/activity-streak', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      
+      // Get meal logs from last 7 days to calculate streak
+      const meals = (global.mealLogs || []).filter((meal: any) => meal.userId === userId);
+      
+      // Calculate consecutive days with activity (meals logged)
+      const today = new Date();
+      let streakDays = 0;
+      
+      for (let i = 0; i < 5; i++) { // Check last 5 days
+        const checkDate = new Date(today);
+        checkDate.setDate(today.getDate() - i);
+        const dateString = checkDate.toISOString().split('T')[0];
+        
+        const hasActivity = meals.some((meal: any) => meal.date === dateString);
+        
+        if (hasActivity) {
+          if (i === 0) streakDays++; // Today counts
+          else if (streakDays > 0) streakDays++; // Continue streak
+        } else {
+          if (i === 0) break; // No activity today, streak is 0
+          else break; // Gap in streak
+        }
+      }
+      
+      res.json({ streak: Math.min(streakDays, 5) });
+    } catch (error) {
+      console.error("Error calculating activity streak:", error);
+      res.status(500).json({ message: "Failed to calculate streak", streak: 0 });
+    }
+  });
+
   // Register receipt/food logging routes
   app.use('/api/receipt', isAuthenticated, receiptRoutes);
 
