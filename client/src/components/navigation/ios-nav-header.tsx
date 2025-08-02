@@ -80,46 +80,36 @@ export default function IOSNavHeader({
       borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
     }}>
       <div className="max-w-md mx-auto px-4 py-4">
-        {/* Top Row: Back Button / Title / Profile Button */}
-        <div className="flex items-center justify-between mb-3">
-          {showBackButton ? (
-            <button onClick={handleBack} className="p-2 -ml-2">
-              <ArrowLeft className="w-6 h-6 text-white" />
-            </button>
-          ) : (
-            <div className="w-10" />
-          )}
-          
-          <div className="text-center flex-1">
-            <h1 className={`font-bold text-white ${largeTitle ? 'text-2xl' : 'text-lg'}`}>
-              {title}
-            </h1>
-            {subtitle && (
-              <p className="text-sm text-white/60 mt-1">{subtitle}</p>
-            )}
-          </div>
-
-          {onProfileClick ? (
-            <button
-              onClick={onProfileClick}
-              className="flex items-center justify-center w-10 h-10 bg-white/10 hover:bg-white/20 rounded-2xl transition-all"
-            >
-              <User className="w-5 h-5 text-white/80" />
-            </button>
-          ) : rightButton ? (
-            rightButton
-          ) : (
-            <div className="w-10" />
-          )}
-        </div>
-
-        {/* Date and Summit Progress (only show if selectedDate is provided) */}
-        {selectedDate && (
+        {selectedDate ? (
           <div className="space-y-3">
-            <h2 className="text-xl font-bold text-white">
-              {formatDate(selectedDate)}
-            </h2>
-            
+            {/* Top Row: Date centered with Profile Button */}
+            <div className="flex items-center justify-between">
+              {showBackButton ? (
+                <button onClick={handleBack} className="p-2 -ml-2">
+                  <ArrowLeft className="w-6 h-6 text-white" />
+                </button>
+              ) : (
+                <div className="w-10" />
+              )}
+              
+              <h2 className="text-xl font-bold text-white text-center flex-1">
+                {formatDate(selectedDate)}
+              </h2>
+
+              {onProfileClick ? (
+                <button
+                  onClick={onProfileClick}
+                  className="flex items-center justify-center w-10 h-10 bg-white/10 hover:bg-white/20 rounded-2xl transition-all"
+                >
+                  <User className="w-5 h-5 text-white/80" />
+                </button>
+              ) : rightButton ? (
+                rightButton
+              ) : (
+                <div className="w-10" />
+              )}
+            </div>
+
             {/* Summit Progress Tracker */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -141,6 +131,38 @@ export default function IOSNavHeader({
                 />
               </div>
             </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            {showBackButton ? (
+              <button onClick={handleBack} className="p-2 -ml-2">
+                <ArrowLeft className="w-6 h-6 text-white" />
+              </button>
+            ) : (
+              <div className="w-10" />
+            )}
+            
+            <div className="text-center flex-1">
+              <h1 className={`font-bold text-white ${largeTitle ? 'text-2xl' : 'text-lg'}`}>
+                {title}
+              </h1>
+              {subtitle && (
+                <p className="text-sm text-white/60 mt-1">{subtitle}</p>
+              )}
+            </div>
+
+            {onProfileClick ? (
+              <button
+                onClick={onProfileClick}
+                className="flex items-center justify-center w-10 h-10 bg-white/10 hover:bg-white/20 rounded-2xl transition-all"
+              >
+                <User className="w-5 h-5 text-white/80" />
+              </button>
+            ) : rightButton ? (
+              rightButton
+            ) : (
+              <div className="w-10" />
+            )}
           </div>
         )}
       </div>
