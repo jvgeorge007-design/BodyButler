@@ -63,13 +63,12 @@ export function TrekNavigationCard() {
   if (isLoading) {
     return (
       <div className="calm-card">
-        <div className="flex items-center gap-2 mb-2">
-          <Compass className="w-5 h-5 text-white" />
+        <div className="mb-2">
           <h3 className="text-lg font-semibold text-white/60">Trek Navigation</h3>
         </div>
         
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/40"></div>
+        <div className="flex items-center justify-center py-4">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white/40"></div>
         </div>
       </div>
     );
@@ -81,28 +80,27 @@ export function TrekNavigationCard() {
 
   return (
     <div className="calm-card">
-      <div className="flex items-center gap-2 mb-2">
-        <Compass className="w-5 h-5 text-white" />
+      <div className="mb-2">
         <h3 className="text-lg font-semibold text-white/60">Trek Navigation</h3>
       </div>
       
       {insights.length === 0 ? (
-        <div className="text-center py-6">
-          <div className="text-4xl mb-2">🧭</div>
+        <div className="text-center py-3">
+          <div className="text-2xl mb-1">🧭</div>
           <p className="text-white/60 text-sm">
             Log more activities to unlock personalized insights
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {/* Top Priority Insight */}
           {topInsight && (
-            <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-              <div className="flex items-start gap-3">
+            <div className="bg-white/5 rounded-lg p-2 border border-white/10">
+              <div className="flex items-start gap-2">
                 <div className="flex-shrink-0 mt-0.5">
                   <div className={`flex items-center gap-1 ${getPriorityColor(topInsight.priority)}`}>
                     {getPriorityIcon(topInsight.priority)}
-                    <span className="text-lg">{getTypeEmoji(topInsight.type)}</span>
+                    <span className="text-sm">{getTypeEmoji(topInsight.type)}</span>
                   </div>
                 </div>
                 
@@ -110,10 +108,10 @@ export function TrekNavigationCard() {
                   <h4 className="font-medium text-white text-sm mb-1">
                     {topInsight.title}
                   </h4>
-                  <p className="text-white/70 text-xs mb-2 leading-relaxed">
+                  <p className="text-white/70 text-xs mb-1 leading-relaxed">
                     {topInsight.description}
                   </p>
-                  <div className="bg-white/10 rounded px-2 py-1">
+                  <div className="bg-white/10 rounded px-2 py-0.5">
                     <p className="text-xs font-medium text-white/90">
                       💡 {topInsight.action}
                     </p>
@@ -122,7 +120,7 @@ export function TrekNavigationCard() {
               </div>
               
               {/* Confidence Bar */}
-              <div className="mt-3 flex items-center gap-2">
+              <div className="mt-2 flex items-center gap-2">
                 <span className="text-xs text-white/50">Confidence</span>
                 <div className="flex-1 bg-white/10 rounded-full h-1">
                   <div 
