@@ -75,7 +75,7 @@ export default function BottomNav() {
       borderTop: '1px solid rgba(255, 255, 255, 0.08)',
       paddingBottom: 'env(safe-area-inset-bottom)'
     }}>
-      <div className="flex items-center justify-around py-1 px-3 max-w-md mx-auto">
+      <div className="flex items-center justify-around py-2 px-3 max-w-md mx-auto h-16">
         {navItems.map((item) => {
           const isActive = location === item.path;
           const IconComponent = item.icon;
@@ -85,10 +85,10 @@ export default function BottomNav() {
             <button
               key={item.id}
               onClick={() => handleNavClick(item.path, item.id)}
-              className={`flex flex-col items-center justify-center ios-haptic-medium ios-spring-fast min-h-[50px] ${
+              className={`flex items-center justify-center ios-haptic-medium ios-spring-fast h-full ${
                 isMainAction 
                   ? 'ios-touch-target-large relative' 
-                  : 'ios-padding-small ios-touch-target'
+                  : 'ios-padding-small ios-touch-target flex-col'
               } ${
                 isActive 
                   ? 'ios-blue' 
