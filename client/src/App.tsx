@@ -11,7 +11,7 @@ import { ModalProvider } from "@/contexts/modal-context";
 import Login from "@/pages/login";
 import Onboarding from "@/pages/onboarding";
 import Home from "@/pages/home";
-import Dashboard from "@/pages/dashboard";
+
 import Progress from "@/pages/progress";
 import AIChat from "@/pages/ai-chat";
 import Settings from "@/pages/settings";
@@ -21,7 +21,7 @@ import WorkoutCalendar from "@/pages/workout-calendar";
 import AddFood from "@/pages/add-food";
 import ScanReceipt from "@/pages/scan-receipt";
 import DashboardV2 from "@/pages/dashboard-v2";
-import DashboardNew from "@/pages/dashboard-new";
+
 import PhotoFoodLogger from "@/pages/photo-food-logger";
 import NotFound from "@/pages/not-found";
 
@@ -37,10 +37,10 @@ function Router() {
         </>
       ) : (
         <>
-          <Route path="/" component={Dashboard} />
-          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/" component={DashboardV2} />
+          <Route path="/dashboard" component={DashboardV2} />
         <Route path="/dashboard-v2" component={DashboardV2} />
-          <Route path="/dashboard-new" component={DashboardNew} />
+
           <Route path="/progress" component={Progress} />
           <Route path="/ai-chat" component={AIChat} />
           <Route path="/settings" component={Settings} />
