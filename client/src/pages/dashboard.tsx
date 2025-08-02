@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Dumbbell, Utensils, TrendingUp, Calendar, User } from "lucide-react";
+import { Dumbbell, Utensils, TrendingUp, Calendar, User, Mountain } from "lucide-react";
 
 // Import our new dashboard components
 import CircularCalorieTracker from "@/components/dashboard/circular-calorie-tracker";
@@ -56,7 +56,20 @@ const DateBanner = ({ selectedDate, onProfileClick, profile }: {
     return Math.min((daysSinceStart / totalDays) * 100, 100);
   };
   
+  // Calculate 5-day trek streak (simulated based on profile age for now)
+  const calculateTrekStreak = () => {
+    if (!profile?.createdAt) return 0;
+    
+    const startDate = new Date(profile.createdAt);
+    const currentDate = new Date();
+    const daysSinceStart = Math.floor((currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    // Simulate streak based on days since profile creation (max 5 days)
+    return Math.min(daysSinceStart + 1, 5);
+  };
+  
   const summitProgressPercentage = calculateSummitProgress();
+  const trekStreak = calculateTrekStreak();
   
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { 
@@ -87,7 +100,23 @@ const DateBanner = ({ selectedDate, onProfileClick, profile }: {
           {/* Summit Progress Tracker */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-white/80 text-sm font-medium">Summit Progress</span>
+              <div className="flex items-center gap-2">
+                <Mountain className="w-4 h-4 text-white/80" />
+                <span className="text-white/80 text-sm font-medium">Summit Progress</span>
+                <div className="flex items-center gap-1 ml-2">
+                  {[...Array(5)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-2 h-2 rounded-full ${
+                        i < trekStreak 
+                          ? 'bg-green-400' 
+                          : 'bg-white/20'
+                      }`}
+                    />
+                  ))}
+                  <span className="text-white/60 text-xs ml-1">{trekStreak} day trek</span>
+                </div>
+              </div>
               <span className="text-white/60 text-sm">{Math.round(summitProgressPercentage)}%</span>
             </div>
             <div className="w-full bg-white/20 rounded-full h-2">
