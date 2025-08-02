@@ -31,16 +31,14 @@ export default function WorkoutCard({
         </div>
       </div>
       
-      <div className="mb-5">
-        <div className="flex items-center justify-center">
-          <button 
-            onClick={() => setShowExercises(true)}
-            className="text-2xl font-light hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif text-center"
-            style={{color: 'rgb(235, 235, 240)'}}
-          >
-            {workoutType}
-          </button>
-        </div>
+      <div className="flex items-center justify-center mb-2">
+        <button 
+          onClick={() => setShowExercises(true)}
+          className="text-2xl font-light hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif text-center"
+          style={{color: 'rgb(235, 235, 240)'}}
+        >
+          {workoutType}
+        </button>
       </div>
 
 

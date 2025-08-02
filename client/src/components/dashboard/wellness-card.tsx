@@ -80,7 +80,7 @@ export default function WellnessCard({}: WellnessCardProps) {
         </div>
       </div>
       
-      <div className="mb-5">
+      <div className="mb-2">
         {/* Health Score Display */}
         <div className="text-center">
           <div className="flex items-center justify-center gap-2">
