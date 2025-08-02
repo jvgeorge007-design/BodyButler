@@ -91,19 +91,12 @@ const DateBanner = ({ selectedDate, onProfileClick, profile, activityStreak }: {
               <div className="flex items-center gap-2">
                 <Mountain className="w-4 h-4 text-white/80" />
                 <span className="text-white/80 text-sm font-medium">Summit Progress</span>
-                <div className="flex items-center gap-1 ml-2">
-                  {[...Array(5)].map((_, i) => (
-                    <div
-                      key={i}
-                      className={`w-2 h-2 rounded-full ${
-                        i < activityStreak 
-                          ? 'bg-green-400' 
-                          : 'bg-white/20'
-                      }`}
-                    />
-                  ))}
-                  <span className="text-white/60 text-xs ml-1">{activityStreak} day trek</span>
-                </div>
+                {activityStreak > 0 && (
+                  <div className="flex items-center gap-1 ml-2">
+                    <Mountain className="w-3 h-3 text-green-400" />
+                    <span className="text-green-400 text-xs font-medium">{activityStreak}</span>
+                  </div>
+                )}
               </div>
               <span className="text-white/60 text-sm">{Math.round(summitProgressPercentage)}%</span>
             </div>
