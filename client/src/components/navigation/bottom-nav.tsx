@@ -100,16 +100,23 @@ export default function BottomNav() {
               {isMainAction ? (
                 <>
                   {/* Main action button with elevated design */}
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95"
+                  <div className="w-12 h-12 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95 shadow-lg"
                     style={{
-                      backgroundColor: 'rgb(59, 130, 246)'
+                      background: 'linear-gradient(135deg, rgb(59, 130, 246), rgb(37, 99, 235))',
+                      boxShadow: '0 4px 12px rgba(59, 130, 246, 0.4)'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(37, 99, 235)'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(59, 130, 246)'}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, rgb(37, 99, 235), rgb(29, 78, 216))';
+                      e.currentTarget.style.boxShadow = '0 6px 16px rgba(59, 130, 246, 0.5)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, rgb(59, 130, 246), rgb(37, 99, 235))';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.4)';
+                    }}
                   >
                     <IconComponent 
-                      className="w-4 h-4 text-white"
-                      strokeWidth={2.5}
+                      className="w-5 h-5 text-white"
+                      strokeWidth={3}
                     />
                   </div>
                 </>
