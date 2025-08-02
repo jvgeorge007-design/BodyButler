@@ -16,6 +16,7 @@ import CircularCalorieTracker from "@/components/dashboard/circular-calorie-trac
 import WorkoutCard from "@/components/dashboard/workout-card";
 import MacroTrackerCard from "@/components/dashboard/macro-tracker-card";
 import WellnessCard from "@/components/dashboard/wellness-card";
+import { TrekNavigationCard } from "@/components/dashboard/trek-navigation-card";
 import DateNavigator from "@/components/dashboard/date-navigator";
 import WeeklyCalendarModal from "@/components/dashboard/weekly-calendar-modal";
 import { ProgressCard } from "@/components/dashboard/progress-card";
@@ -499,6 +500,9 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+
+          {/* Trek Navigation Card - Full Width */}
+          <TrekNavigationCard />
 
           {/* Workout Card (Left) and Wellness Card (Right) */}
           <div className="flex gap-4">

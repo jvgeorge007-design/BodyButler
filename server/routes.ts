@@ -336,6 +336,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get daily recap with AI-generated insights
+  app.get('/api/daily-recap/:date', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { date } = req.params;
+      
+      // Get food logs for the date from memory storage
+      const foodLogs = (global.mealLogs || []).filter(
+        (meal: any) => meal.userId === userId && meal.date === date
+      );
+      
+      // Get workout logs (placeholder for now)
+      const workoutLogs: any[] = [];
+      
+      // Get user feedback (placeholder for now)
+      const userFeedback: any[] = [];
+      
+      // Generate AI insights based on available data
+      let insights: any[] = [];
+      
+      if (foodLogs.length > 0) {
+        // Calculate nutrition patterns
+        const totalCalories = foodLogs.reduce((sum, log) => sum + (log.totalCalories || 0), 0);
+        const avgHealthScore = foodLogs.reduce((sum, log) => sum + (log.healthScore || 0), 0) / foodLogs.length;
+        
+        // Generate insights based on patterns
+        if (avgHealthScore < 60) {
+          insights.push({
+            type: 'nutrition',
+            priority: 'high',
+            title: 'Nutrition Quality Opportunity',
+            description: `Yesterday's average health score was ${Math.round(avgHealthScore)}/100. Focus on whole foods and balanced meals.`,
+            action: 'Try adding more vegetables and lean proteins to your next meal',
+            confidence: 85
+          });
+        }
+        
+        if (totalCalories < 1200) {
+          insights.push({
+            type: 'nutrition',
+            priority: 'medium',
+            title: 'Low Calorie Intake Detected',
+            description: `Only ${totalCalories} calories logged yesterday. This may be too low for your goals.`,
+            action: 'Consider adding a healthy snack or larger portions to meet your targets',
+            confidence: 90
+          });
+        }
+        
+        if (foodLogs.length < 3) {
+          insights.push({
+            type: 'habit',
+            priority: 'low',
+            title: 'Meal Frequency Pattern',
+            description: `Only ${foodLogs.length} meals logged yesterday. Regular eating can help maintain energy.`,
+            action: 'Try to log at least 3 meals per day for better tracking',
+            confidence: 75
+          });
+        }
+      } else {
+        insights.push({
+          type: 'habit',
+          priority: 'medium',
+          title: 'No Nutrition Data',
+          description: 'No meals were logged yesterday. Consistent tracking helps optimize your results.',
+          action: 'Start your day by logging breakfast to build the habit',
+          confidence: 95
+        });
+      }
+      
+      const dailyRecap = {
+        date,
+        foodLogs,
+        workoutLogs,
+        userFeedback,
+        insights: insights.slice(0, 3) // Limit to top 3 insights
+      };
+      
+      res.json(dailyRecap);
+    } catch (error) {
+      console.error("Error generating daily recap:", error);
+      res.status(500).json({ error: "Failed to generate daily recap" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
