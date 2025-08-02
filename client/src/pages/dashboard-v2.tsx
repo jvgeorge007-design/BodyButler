@@ -522,11 +522,14 @@ export default function DashboardV2() {
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
       {/* Main Content */}
-      <main className="max-w-md mx-auto px-6 pt-16 pb-32">
+      <main className="max-w-md mx-auto ios-padding min-h-screen" style={{ 
+        paddingTop: 'calc(env(safe-area-inset-top) + 60px)',
+        paddingBottom: 'calc(env(safe-area-inset-bottom) + 100px)'
+      }}>
         {/* Top Row: Cal AI Style Cards */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-2 gap-4 ios-spacing-medium">
           {/* Calories Card */}
-          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10">
+          <div className="calm-card">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-medium text-white/80">Cal.</h3>
             </div>
@@ -552,7 +555,7 @@ export default function DashboardV2() {
           </div>
 
           {/* Workout Card */}
-          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10">
+          <div className="calm-card">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="w-1 h-6 bg-white/60 rounded-full"></div>
@@ -565,59 +568,59 @@ export default function DashboardV2() {
               <h3 className="text-xl font-bold text-white mb-2">Pull Day</h3>
             </div>
             
-            <button 
+            <Button 
               onClick={() => setLocation("/workout")}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-2xl transition-all"
+              className="w-full gradient-button ios-touch-target"
             >
               Let's go!
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Macro Card - Full Width */}
-        <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10 mb-6">
+        <div className="calm-card ios-spacing-medium">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <div className="w-1 h-6 bg-white/60 rounded-full"></div>
               <div className="w-1 h-4 bg-white/40 rounded-full"></div>
             </div>
-            <div className="w-6 h-6 border-2 border-white/40 rounded"></div>
+            <div className="w-6 h-6 border-2 border-white/40 ios-corner-radius"></div>
           </div>
 
           {/* Protein */}
-          <div className="mb-6">
+          <div className="ios-spacing-small">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-white font-medium">Protein</span>
-              <span className="text-white font-bold">
+              <span className="text-white font-medium body-sans">Protein</span>
+              <span className="text-white font-bold body-sans">
                 {dashboardData.macros.protein.current}g / {dashboardData.macros.protein.target}g
               </span>
             </div>
             <div className="w-full bg-white/20 rounded-full h-2 mb-1">
               <div 
-                className="bg-orange-500 h-2 rounded-full" 
+                className="ios-bg-orange h-2 rounded-full transition-all duration-300" 
                 style={{ width: `${Math.min((dashboardData.macros.protein.current / dashboardData.macros.protein.target) * 100, 100)}%` }}
               />
             </div>
-            <div className="text-xs text-white/60">
+            <div className="text-xs text-white/60 body-sans">
               {Math.max(dashboardData.macros.protein.target - dashboardData.macros.protein.current, 0)}g remaining
             </div>
           </div>
 
           {/* Carbs */}
-          <div className="mb-6">
+          <div className="ios-spacing-small">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-white font-medium">Carbs</span>
-              <span className="text-white font-bold">
+              <span className="text-white font-medium body-sans">Carbs</span>
+              <span className="text-white font-bold body-sans">
                 {dashboardData.macros.carbs.current}g / {dashboardData.macros.carbs.target}g
               </span>
             </div>
             <div className="w-full bg-white/20 rounded-full h-2 mb-1">
               <div 
-                className="bg-green-500 h-2 rounded-full" 
+                className="ios-bg-green h-2 rounded-full transition-all duration-300" 
                 style={{ width: `${Math.min((dashboardData.macros.carbs.current / dashboardData.macros.carbs.target) * 100, 100)}%` }}
               />
             </div>
-            <div className="text-xs text-white/60">
+            <div className="text-xs text-white/60 body-sans">
               {Math.max(dashboardData.macros.carbs.target - dashboardData.macros.carbs.current, 0)}g remaining
             </div>
           </div>
@@ -625,18 +628,18 @@ export default function DashboardV2() {
           {/* Fat */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-white font-medium">Fat</span>
-              <span className="text-white font-bold">
+              <span className="text-white font-medium body-sans">Fat</span>
+              <span className="text-white font-bold body-sans">
                 {dashboardData.macros.fat.current}g / {dashboardData.macros.fat.target}g
               </span>
             </div>
             <div className="w-full bg-white/20 rounded-full h-2 mb-1">
               <div 
-                className="bg-purple-500 h-2 rounded-full" 
+                className="ios-bg-purple h-2 rounded-full transition-all duration-300" 
                 style={{ width: `${Math.min((dashboardData.macros.fat.current / dashboardData.macros.fat.target) * 100, 100)}%` }}
               />
             </div>
-            <div className="text-xs text-white/60">
+            <div className="text-xs text-white/60 body-sans">
               {Math.max(dashboardData.macros.fat.target - dashboardData.macros.fat.current, 0)}g remaining
             </div>
           </div>
@@ -650,7 +653,7 @@ export default function DashboardV2() {
       {/* Floating Add Button (Cal AI style) */}
       <button 
         onClick={() => setLocation("/photo-food-logger")}
-        className="fixed bottom-24 right-6 w-14 h-14 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg z-50 transition-all"
+        className="fixed bottom-24 right-6 w-14 h-14 ios-bg-blue ios-corner-radius-large flex items-center justify-center shadow-lg z-50 transition-all ios-touch-target"
       >
         <Plus className="w-6 h-6 text-white" />
       </button>
