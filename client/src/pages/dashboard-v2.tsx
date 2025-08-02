@@ -539,7 +539,8 @@ export default function DashboardV2() {
                 percentage={((dashboardData.calories.target - dashboardData.calories.remaining) / dashboardData.calories.target) * 100}
                 size={80}
                 strokeWidth={6}
-                color="#3B82F6"
+                color="#06B6D4"
+                color="#06B6D4"
                 backgroundColor="rgba(255,255,255,0.2)"
               />
             </div>
