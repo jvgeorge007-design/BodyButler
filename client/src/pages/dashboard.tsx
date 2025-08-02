@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Dumbbell, Utensils, TrendingUp, Calendar } from "lucide-react";
+import { Dumbbell, Utensils, TrendingUp, Calendar, User } from "lucide-react";
 
 // Import our new dashboard components
 import CircularCalorieTracker from "@/components/dashboard/circular-calorie-tracker";
@@ -19,6 +19,73 @@ import DateNavigator from "@/components/dashboard/date-navigator";
 import WeeklyCalendarModal from "@/components/dashboard/weekly-calendar-modal";
 import { ProgressCard } from "@/components/dashboard/progress-card";
 import BottomNav from "@/components/navigation/bottom-nav";
+
+// Banner component for date and goal progress
+const DateBanner = ({ selectedDate, onProfileClick, dailyNutrition, macroTargets }: { 
+  selectedDate: Date; 
+  onProfileClick: () => void;
+  dailyNutrition: any;
+  macroTargets: any;
+}) => {
+  const today = new Date();
+  const isToday = selectedDate.toDateString() === today.toDateString();
+  
+  // Calculate overall goal progress
+  const caloriesConsumed = dailyNutrition?.totals?.calories || 0;
+  const caloriesTarget = macroTargets?.dailyCalories || 2500;
+  const progressPercentage = Math.min((caloriesConsumed / caloriesTarget) * 100, 100);
+  
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'long',
+      month: 'long', 
+      day: 'numeric'
+    });
+  };
+
+  return (
+    <div className="calm-card mb-6">
+      <div className="flex items-start justify-between">
+        {/* Left side - Date and Goal Progress */}
+        <div className="flex-1">
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold text-white mb-1">
+              {isToday ? 'Today' : formatDate(selectedDate)}
+            </h2>
+            <p className="text-white/60 text-sm">
+              {isToday ? formatDate(selectedDate) : 'Selected date'}
+            </p>
+          </div>
+          
+          {/* Goal Progress Tracker */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-white/80 text-sm font-medium">Daily Goal Progress</span>
+              <span className="text-white/60 text-sm">{Math.round(progressPercentage)}%</span>
+            </div>
+            <div className="w-full bg-white/20 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${progressPercentage}%` }}
+              />
+            </div>
+            <p className="text-white/50 text-xs">
+              {caloriesConsumed} / {caloriesTarget} calories
+            </p>
+          </div>
+        </div>
+        
+        {/* Right side - Profile Button */}
+        <button
+          onClick={onProfileClick}
+          className="flex items-center justify-center w-12 h-12 bg-white/10 hover:bg-white/20 rounded-2xl transition-all ml-4"
+        >
+          <User className="w-6 h-6 text-white/80" />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -361,13 +428,12 @@ export default function Dashboard() {
       >
         <div className="ios-spacing-large">
           {/* Calendar Card */}
-          <div className="calm-card">
-            <DateNavigator
-              selectedDate={selectedDate}
-              onDateSelect={setSelectedDate}
-              onCalendarOpen={() => setIsCalendarOpen(true)}
-            />
-          </div>
+          <DateBanner 
+            selectedDate={selectedDate}
+            onProfileClick={() => setLocation("/settings")}
+            dailyNutrition={dailyNutrition}
+            macroTargets={(personalizedPlan as any)?.macroTargets}
+          />
 
 
 
