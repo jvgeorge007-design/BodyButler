@@ -43,17 +43,7 @@ export default function WorkoutCard({
         </div>
       </div>
 
-      <button 
-        onClick={onLogWorkout}
-        className="w-full text-white font-medium py-3 rounded-system-md haptic-medium flex items-center justify-center transition-colors duration-300"
-        style={{
-          backgroundColor: 'rgb(59, 130, 246)'
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(37, 99, 235)'}
-        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(59, 130, 246)'}
-      >
-        Let's go!
-      </button>
+
 
       {/* Exercises Popup */}
       <ExercisesPopup 
