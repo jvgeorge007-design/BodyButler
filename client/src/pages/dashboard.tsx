@@ -70,7 +70,7 @@ const DateBanner = ({ selectedDate, onProfileClick, profile, activityStreak }: {
   };
 
   return (
-    <div className="calm-card mb-6">
+    <div className="calm-card">
       <div className="flex justify-between">
         {/* Left side - Date and Goal Progress */}
         <div className="flex-1">
