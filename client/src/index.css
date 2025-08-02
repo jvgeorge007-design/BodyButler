@@ -519,20 +519,7 @@
     z-index: 1;
   }
   
-  /* Enhanced Card Interactions */
-  .calm-card:hover::before {
-    background: rgba(50, 50, 60, 0.6);
-    border-color: rgba(255, 255, 255, 0.16);
-    box-shadow: 
-      0 4px 12px rgba(0, 0, 0, 0.15),
-      0 12px 32px rgba(0, 0, 0, 0.2),
-      0 24px 64px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  }
-  
-  .calm-card:hover {
-    transform: translateY(-2px) translateZ(0);
-  }
+
 
   .glass-card:hover {
     background: rgba(40, 40, 45, 0.5);
