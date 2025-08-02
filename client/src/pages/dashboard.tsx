@@ -411,7 +411,7 @@ export default function Dashboard() {
           </div>
 
           {/* Workout Card (Left) and Wellness Card (Right) */}
-          <div className="flex gap-6">
+          <div className="flex gap-2.5">
             {/* Left: Workout Card */}
             <div className="calm-card w-1/2">
               <WorkoutCard
