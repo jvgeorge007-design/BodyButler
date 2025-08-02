@@ -17,7 +17,9 @@ export default function FloatingChatButton({ className = "" }: FloatingChatButto
       onClick={handleChatClick}
       className={`fixed bottom-20 right-4 z-40 w-12 h-12 rounded-full shadow-lg ${className}`}
       style={{
-        background: 'linear-gradient(135deg, rgb(59, 130, 246), rgb(37, 99, 235))'
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255, 255, 255, 0.2)'
       }}
     >
       <div className="flex items-center justify-center w-full h-full">
