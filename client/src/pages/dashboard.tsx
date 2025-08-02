@@ -369,15 +369,16 @@ export default function Dashboard() {
         activityStreak={activityStreakData?.streak || 0}
       />
 
-      {/* Main Content with iOS-style spacing */}
+      {/* Main Content with optimized equal spacing */}
       <main
-        className="relative z-10 max-w-md mx-auto ios-padding flex-1"
+        className="relative z-10 max-w-md mx-auto ios-padding"
         style={{
           paddingTop: "calc(env(safe-area-inset-top) + 130px)",
           paddingBottom: "calc(env(safe-area-inset-bottom) + 75px)",
+          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 205px)",
         }}
       >
-        <div className="flex flex-col h-full justify-between space-y-4">
+        <div className="h-full flex flex-col justify-between gap-6">
           {/* Trek Navigation Card - Full Width */}
           <TrekNavigationCard />
 
@@ -410,7 +411,7 @@ export default function Dashboard() {
           </div>
 
           {/* Workout Card (Left) and Wellness Card (Right) */}
-          <div className="flex gap-2.5">
+          <div className="flex gap-6">
             {/* Left: Workout Card */}
             <div className="calm-card w-1/2">
               <WorkoutCard
