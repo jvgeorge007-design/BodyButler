@@ -485,29 +485,12 @@ export default function Dashboard() {
                 />
               </div>
               
-              {/* Macros Below */}
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Protein</span>
-                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                    {dashboardData.macros.protein.consumed}g / {dashboardData.macros.protein.target}g
-                  </span>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Carbs</span>
-                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                    {dashboardData.macros.carbs.consumed}g / {dashboardData.macros.carbs.target}g
-                  </span>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Fat</span>
-                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                    {dashboardData.macros.fat.consumed}g / {dashboardData.macros.fat.target}g
-                  </span>
-                </div>
-              </div>
+              {/* Macros Below with Progress Bars */}
+              <MacroTrackerCard
+                protein={dashboardData.macros.protein}
+                carbs={dashboardData.macros.carbs}
+                fat={dashboardData.macros.fat}
+              />
             </div>
           </div>
 
