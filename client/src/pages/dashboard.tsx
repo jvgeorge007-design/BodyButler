@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Dumbbell, Utensils, TrendingUp, Calendar, User, Mountain } from "lucide-react";
+import { Dumbbell, Utensils, TrendingUp, Calendar } from "lucide-react";
 
 // Import our new dashboard components
 import CircularCalorieTracker from "@/components/dashboard/circular-calorie-tracker";
@@ -22,97 +22,7 @@ import WeeklyCalendarModal from "@/components/dashboard/weekly-calendar-modal";
 import { ProgressCard } from "@/components/dashboard/progress-card";
 import BottomNav from "@/components/navigation/bottom-nav";
 
-// Banner component for date and summit progress
-const DateBanner = ({ selectedDate, onProfileClick, profile, activityStreak }: { 
-  selectedDate: Date; 
-  onProfileClick: () => void;
-  profile: any;
-  activityStreak: number;
-}) => {
-  const today = new Date();
-  const isToday = selectedDate.toDateString() === today.toDateString();
-  
-  // Calculate Summit Progress based on goal timeline
-  const calculateSummitProgress = () => {
-    if (!profile?.onboardingData?.timeline || !profile?.createdAt) {
-      return 0; // No timeline data available
-    }
-    
-    const timeline = profile.onboardingData.timeline.toLowerCase();
-    const startDate = new Date(profile.createdAt);
-    const currentDate = new Date();
-    const daysSinceStart = Math.floor((currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    
-    // Map timeline strings to days
-    let totalDays = 90; // Default 3 months
-    if (timeline.includes('month')) {
-      const months = parseInt(timeline.match(/\d+/)?.[0] || '3');
-      totalDays = months * 30;
-    } else if (timeline.includes('week')) {
-      const weeks = parseInt(timeline.match(/\d+/)?.[0] || '12');
-      totalDays = weeks * 7;
-    } else if (timeline.includes('year')) {
-      const years = parseInt(timeline.match(/\d+/)?.[0] || '1');
-      totalDays = years * 365;
-    }
-    
-    return Math.min((daysSinceStart / totalDays) * 100, 100);
-  };
-  
-  const summitProgressPercentage = calculateSummitProgress();
-  
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'long',
-      month: 'long', 
-      day: 'numeric'
-    });
-  };
 
-  return (
-    <div className="calm-card">
-      <div className="flex justify-between">
-        {/* Left side - Date and Goal Progress */}
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-white">
-              {formatDate(selectedDate)}
-            </h2>
-            {/* Profile Button - aligned with heading */}
-            <button
-              onClick={onProfileClick}
-              className="flex items-center justify-center w-12 h-12 bg-white/10 hover:bg-white/20 rounded-2xl transition-all"
-            >
-              <User className="w-6 h-6 text-white/80" />
-            </button>
-          </div>
-          
-          {/* Summit Progress Tracker */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-white text-sm font-medium">Summit Progress</span>
-                {activityStreak > 0 && (
-                  <div className="flex items-center gap-1 ml-2">
-                    <Mountain className="w-3 h-3 text-white" />
-                    <span className="text-white text-xs font-medium">{activityStreak} day trek</span>
-                  </div>
-                )}
-              </div>
-              <span className="text-white text-sm">{Math.round(summitProgressPercentage)}%</span>
-            </div>
-            <div className="w-full bg-white/20 rounded-full h-2">
-              <div 
-                className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${summitProgressPercentage}%` }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -447,11 +357,15 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
 
-      {/* iOS Navigation Header */}
+      {/* iOS Navigation Header with Date and Progress */}
       <IOSNavHeader
         title="Body Butler"
         subtitle="Your personal fitness companion"
         largeTitle={true}
+        selectedDate={selectedDate}
+        onProfileClick={() => setLocation("/settings")}
+        profile={profile}
+        activityStreak={activityStreakData?.streak || 0}
       />
 
       {/* Main Content with iOS-style spacing */}
@@ -463,14 +377,6 @@ export default function Dashboard() {
         }}
       >
         <div className="space-y-3">
-          {/* Calendar Card */}
-          <DateBanner 
-            selectedDate={selectedDate}
-            onProfileClick={() => setLocation("/settings")}
-            profile={profile}
-            activityStreak={activityStreakData?.streak || 0}
-          />
-
           {/* Trek Navigation Card - Full Width */}
           <TrekNavigationCard />
 
