@@ -23,13 +23,8 @@ export default function CircularCalorieTracker({
 
   return (
     <div className="relative">
-      {/* Cal. text in upper left corner - same size as other card icons */}
-      <div className="absolute top-0 left-0 z-20">
-        <span className="text-lg font-medium body-sans w-5 h-5 flex items-center" style={{color: 'rgb(180, 180, 190)'}}>Cal.</span>
-      </div>
-      
       {/* Card content without background - parent has glassmorphism */}
-      <div className="relative z-10 pt-6">
+      <div className="relative z-10">
       <div className="flex items-center justify-center">
         <div className="relative">
           <svg width={size} height={size} className="transform -rotate-90">
