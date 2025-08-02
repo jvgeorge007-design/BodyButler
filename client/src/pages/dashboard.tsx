@@ -96,9 +96,6 @@ const DateBanner = ({ selectedDate, onProfileClick, profile }: {
                 style={{ width: `${summitProgressPercentage}%` }}
               />
             </div>
-            <p className="text-white/50 text-xs">
-              {profile?.onboardingData?.goals || 'Your fitness journey'} • {profile?.onboardingData?.timeline || 'Goal timeline'}
-            </p>
           </div>
         </div>
       </div>
