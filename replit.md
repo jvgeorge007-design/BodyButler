@@ -3,6 +3,14 @@
 ## Overview
 Body Butler is a full-stack web application designed to provide personalized fitness and nutrition guidance. It features a comprehensive onboarding process to gather user information and preferences, leading to a personalized dashboard experience. The project aims to enhance user engagement ("stickiness") through a polished UI and refined AI interactions. Key capabilities include personalized plan generation via AI, workout tracking, meal logging, and receipt OCR for food analysis.
 
+## Recent Changes (August 2025)
+- **Dashboard Layout Redesign**: Updated dashboard-v2 with new fitness-focused card layout:
+  - Top progress card with date and summit progress tracking
+  - Today's Trail Guide card with actionable workout insights  
+  - Trail Fuel card featuring calories remaining circle and macro progress bars
+  - Bottom row with Wellness card (avg health score) and Workout card (planned minutes)
+  - Maintained existing UI components and dark gradient styling while restructuring layout
+
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 Focus areas for improvement: UI polish and master prompt refinement for better user engagement ("stickiness").

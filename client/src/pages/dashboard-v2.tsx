@@ -519,91 +519,178 @@ export default function DashboardV2() {
     );
   }
 
+  // Get current date info for the top card
+  const now = new Date();
+  const dayName = now.toLocaleDateString('en-US', { weekday: 'short' });
+  const monthDay = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+
+  // Calculate health score average (based on recent meal logs)
+  const averageHealthScore = dailyNutrition?.meals?.length > 0 
+    ? dailyNutrition.meals.reduce((sum: number, meal: any) => sum + (meal.healthScore || 7), 0) / dailyNutrition.meals.length
+    : 7.8;
+
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
-      {/* Header with App Name and Streak */}
-      <div className="flex items-center justify-between p-6 pt-12">
-        <div className="flex items-center gap-3">
-          <KettlebellLogo className="w-8 h-8 text-white" />
-          <h1 className="text-2xl font-bold text-white">Body Butler</h1>
-        </div>
-        <div className="flex items-center gap-2 bg-orange-500/20 px-3 py-1 rounded-full">
-          <Flame className="w-4 h-4 text-orange-400" />
-          <span className="text-orange-400 font-medium">15</span>
-        </div>
-      </div>
-
       {/* Main Content */}
       <main className="max-w-md mx-auto px-6 pb-32">
-        {/* Weekly Calendar */}
-        <WeeklyCalendar 
-          selectedDate={selectedDate}
-          onDateSelect={setSelectedDate}
-        />
-
-        {/* Main Calorie Display - Single screen dashboard as suggested */}
-        <div className="mb-6">
-          <CalorieDisplay
-            consumed={dashboardData.calories.consumed}
-            target={dashboardData.calories.target}
-            remaining={dashboardData.calories.remaining}
-          />
-        </div>
-
-        {/* Macro Cards - Separate cards with individual progress rings */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          <MacroCard {...dashboardData.macros.protein} name="Protein" />
-          <MacroCard {...dashboardData.macros.carbs} name="Carbs" />
-          <MacroCard {...dashboardData.macros.fat} name="Fat" />
-        </div>
-
-        {/* Photo-first logging as primary interaction */}
-        <div className="mb-6">
-          <PhotoFoodLogger onScanPhoto={() => setLocation("/photo-food-logger")} />
-        </div>
-
-        {/* Recently logged with visual meal history */}
-        {dashboardData.recentItems.length > 0 && (
-          <div className="mb-6">
-            <RecentlyLogged items={dashboardData.recentItems} />
+        {/* Top Progress Card */}
+        <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-6 mb-6 text-white">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <User className="w-6 h-6" />
+              <span className="text-lg font-medium">{dayName}, {monthDay}</span>
+            </div>
+            <div className="bg-white/20 backdrop-blur-md rounded-full px-3 py-1 flex items-center gap-2">
+              <Zap className="w-4 h-4" />
+              <span className="text-sm font-medium">5 day trek</span>
+            </div>
           </div>
-        )}
+          
+          <div className="mb-3">
+            <div className="text-sm text-white/80 mb-1">Summit Progress</div>
+            <div className="text-right text-2xl font-bold text-white/90">2,100m</div>
+          </div>
+          
+          <div className="bg-gradient-to-r from-cyan-400 to-blue-400 h-2 rounded-full mb-4"></div>
+          
+          <p className="text-white/90 text-sm leading-relaxed">
+            Great momentum - the vista ahead is spectacular
+          </p>
+        </div>
 
-        {/* Daily AI Insights */}
-        {dashboardData.insights.length > 0 && (
-          <div className="mb-6">
-            <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10">
-              <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                <Target className="w-5 h-5 text-blue-400" />
-                Today's Insights
-              </h3>
-              <div className="space-y-3">
-                {dashboardData.insights.map((insight: string, index: number) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
-                    <p className="text-white/90 text-sm leading-relaxed">{insight}</p>
-                  </div>
-                ))}
+        {/* Today's Trail Guide Card */}
+        <div className="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-3xl p-6 mb-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
+              <Target className="w-5 h-5 text-white" />
+            </div>
+            <h3 className="text-lg font-bold text-orange-800">Today's Trail Guide</h3>
+          </div>
+          
+          <p className="text-orange-700 text-sm leading-relaxed">
+            Perfect conditions for your ascent today. Your energy peaks after morning protein - 
+            since yesterday was a rest day, this afternoon's 45-minute trek will feel 
+            energizing rather than draining.
+          </p>
+        </div>
+
+        {/* Trail Fuel Card - using existing CalorieDisplay component with new styling */}
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-blue-800">Trail Fuel</h3>
+            <div className="flex gap-1">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <div className="w-2 h-2 bg-blue-300 rounded-full"></div>
+            </div>
+          </div>
+          
+          {/* Calories Remaining Circle - reusing CalorieDisplay logic */}
+          <div className="flex justify-center mb-6">
+            <div className="relative">
+              <div className="w-32 h-32">
+                <CircularProgress 
+                  percentage={((dashboardData.calories.target - dashboardData.calories.remaining) / dashboardData.calories.target) * 100}
+                  size={128}
+                  strokeWidth={12}
+                  color="#3B82F6"
+                  backgroundColor="#E5E7EB"
+                />
+              </div>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <div className="text-3xl font-bold text-blue-600">{dashboardData.calories.remaining}</div>
+                <div className="text-xs text-blue-500">cal remaining</div>
               </div>
             </div>
           </div>
-        )}
-
-        {/* Quick Actions */}
-        <div className="space-y-3">
-          <QuickActionButton
-            icon={<TrendingUp className="w-5 h-5 text-white/80" />}
-            label="Progress"
-            description="View your fitness journey"
-            onClick={() => setLocation("/progress")}
-          />
-          <QuickActionButton
-            icon={<Target className="w-5 h-5 text-white/80" />}
-            label="Workouts"
-            description="Today's training plan"
-            onClick={() => setLocation("/workout")}
-          />
+          
+          {/* Macro Bars - using existing macro data */}
+          <div className="space-y-3">
+            {/* Protein */}
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-blue-800">Protein</span>
+              <span className="text-sm font-bold text-blue-800">{dashboardData.macros.protein.current}g</span>
+            </div>
+            <div className="w-full bg-blue-200 rounded-full h-2">
+              <div 
+                className="bg-red-500 h-2 rounded-full" 
+                style={{ width: `${Math.min((dashboardData.macros.protein.current / dashboardData.macros.protein.target) * 100, 100)}%` }}
+              />
+            </div>
+            
+            {/* Carbs */}
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-blue-800">Carbs</span>
+              <span className="text-sm font-bold text-blue-800">{dashboardData.macros.carbs.current}g</span>
+            </div>
+            <div className="w-full bg-blue-200 rounded-full h-2">
+              <div 
+                className="bg-orange-500 h-2 rounded-full" 
+                style={{ width: `${Math.min((dashboardData.macros.carbs.current / dashboardData.macros.carbs.target) * 100, 100)}%` }}
+              />
+            </div>
+            
+            {/* Fat */}
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-blue-800">Fat</span>
+              <span className="text-sm font-bold text-blue-800">{dashboardData.macros.fat.current}g</span>
+            </div>
+            <div className="w-full bg-blue-200 rounded-full h-2">
+              <div 
+                className="bg-yellow-500 h-2 rounded-full" 
+                style={{ width: `${Math.min((dashboardData.macros.fat.current / dashboardData.macros.fat.target) * 100, 100)}%` }}
+              />
+            </div>
+          </div>
         </div>
+
+        {/* Bottom Row: Wellness + Workout Cards */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          {/* Wellness Card */}
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Heart className="w-5 h-5 text-green-600" />
+              <h4 className="text-sm font-bold text-green-800">Wellness</h4>
+            </div>
+            
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600 mb-1">
+                {averageHealthScore.toFixed(1)}
+              </div>
+              <div className="text-xs text-green-600">avg health score</div>
+            </div>
+            
+            <div className="mt-3">
+              <div className="w-full bg-green-200 rounded-full h-1.5">
+                <div 
+                  className="bg-green-500 h-1.5 rounded-full" 
+                  style={{ width: `${(averageHealthScore / 10) * 100}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Workout Card */}
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Activity className="w-5 h-5 text-purple-600" />
+              <h4 className="text-sm font-bold text-purple-800">Workout</h4>
+            </div>
+            
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600 mb-1">
+                45
+              </div>
+              <div className="text-xs text-purple-600">min planned</div>
+            </div>
+            
+            <div className="mt-3">
+              <div className="w-full bg-purple-200 rounded-full h-1.5">
+                <div className="bg-purple-500 h-1.5 rounded-full w-3/4" />
+              </div>
+            </div>
+          </div>
+        </div>
+
       </main>
 
       {/* Bottom Navigation */}
@@ -614,7 +701,7 @@ export default function DashboardV2() {
         onClick={() => setLocation("/photo-food-logger")}
         className="fixed bottom-24 right-6 w-14 h-14 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg z-50 transition-all"
       >
-        <Plus className="w-6 h-6 text-white" />
+        <Camera className="w-6 h-6 text-white" />
       </button>
     </div>
   );
