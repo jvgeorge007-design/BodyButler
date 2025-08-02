@@ -21,6 +21,7 @@ import WorkoutCalendar from "@/pages/workout-calendar";
 import AddFood from "@/pages/add-food";
 import ScanReceipt from "@/pages/scan-receipt";
 import DashboardV2 from "@/pages/dashboard-v2";
+import DashboardNew from "@/pages/dashboard-new";
 import PhotoFoodLogger from "@/pages/photo-food-logger";
 import NotFound from "@/pages/not-found";
 
@@ -39,6 +40,7 @@ function Router() {
           <Route path="/" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />
         <Route path="/dashboard-v2" component={DashboardV2} />
+          <Route path="/dashboard-new" component={DashboardNew} />
           <Route path="/progress" component={Progress} />
           <Route path="/ai-chat" component={AIChat} />
           <Route path="/settings" component={Settings} />

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Camera, Plus, TrendingUp, Calendar, Flame, Target, ChevronRight } from "lucide-react";
+import { Camera, Plus, TrendingUp, Calendar, Flame, Target, ChevronRight, User, Zap, Activity, Heart } from "lucide-react";
 import BottomNav from "@/components/navigation/bottom-nav";
 import CircularProgress from "@/components/ui/circular-progress";
 
