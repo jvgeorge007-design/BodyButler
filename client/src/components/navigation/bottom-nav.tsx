@@ -99,8 +99,8 @@ export default function BottomNav() {
             >
               {isMainAction ? (
                 <>
-                  {/* Main action button with elevated design */}
-                  <div className="w-11 h-11 mb-0.5 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95"
+                  {/* Main action button with elevated design that spills over top border */}
+                  <div className="w-11 h-11 -mt-4 mb-0.5 flex items-center justify-center rounded-full transform transition-all duration-200 active:scale-95"
                     style={{
                       backgroundColor: 'rgb(59, 130, 246)'
                     }}
@@ -112,7 +112,6 @@ export default function BottomNav() {
                       strokeWidth={2.5}
                     />
                   </div>
-                  <span className="text-caption-2 font-medium" style={{ color: 'rgb(59, 130, 246)' }}>{item.label}</span>
                 </>
               ) : (
                 <>
