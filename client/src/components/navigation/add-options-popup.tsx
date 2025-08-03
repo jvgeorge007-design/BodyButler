@@ -65,62 +65,42 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={onClose}>
-      {/* Background overlay that blurs the page content */}
+      {/* Background overlay that mutes the page content */}
       <div 
-        className="absolute inset-0 bg-black/60 transition-all duration-300"
+        className="absolute inset-0 bg-gray-500/40 transition-all duration-300"
         style={{
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)'
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)'
         }}
       />
       
-      {/* Floating Options Grid */}
-      <div className="relative w-full max-w-md mx-auto px-6 pb-32" onClick={(e) => e.stopPropagation()}>
-        <div className="grid grid-cols-2 gap-6">
-          {options.map((option, index) => {
+      {/* Simple Options Grid - Cal.ai style */}
+      <div className="relative w-full max-w-sm mx-auto px-4 pb-32" onClick={(e) => e.stopPropagation()}>
+        <div className="grid grid-cols-2 gap-4">
+          {options.map((option) => {
             const IconComponent = option.icon;
             return (
               <button
                 key={option.id}
                 onClick={() => handleOptionClick(option.path)}
-                className="group relative flex flex-col items-center justify-center p-6 rounded-3xl
-                         transition-all duration-300 active:scale-95 hover:scale-105 
-                         focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="flex flex-col items-center justify-center p-6 rounded-2xl bg-white
+                         transition-all duration-200 active:scale-95 hover:scale-105 
+                         focus:outline-none shadow-lg"
                 style={{
-                  background: 'rgba(20, 20, 25, 0.98)',
-                  border: '2px solid rgba(255, 255, 255, 0.15)',
-                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                  transform: `translateY(${index % 2 === 0 ? '0px' : '10px'})`,
-                  animationDelay: `${index * 100}ms`,
-                  animationDuration: '300ms',
-                  animationFillMode: 'both'
+                  minHeight: '120px'
                 }}
               >
-                {/* Icon container */}
-                <div 
-                  className="flex items-center justify-center w-16 h-16 rounded-2xl mb-4
-                           transition-all duration-200 group-hover:scale-110"
-                  style={{
-                    background: `linear-gradient(135deg, ${getOptionGradient(option.id)})`,
-                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)'
-                  }}
-                >
-                  <IconComponent size={28} className="text-white" strokeWidth={2} />
-                </div>
+                {/* Simple icon */}
+                <IconComponent 
+                  size={24} 
+                  className="text-gray-800 mb-3" 
+                  strokeWidth={2} 
+                />
                 
-                {/* Text */}
-                <div className="text-center">
-                  <h3 className="text-sm font-semibold text-white mb-1">
-                    {option.label}
-                  </h3>
-                  <p className="text-xs text-white/70">
-                    {option.description}
-                  </p>
-                </div>
-                
-                {/* Hover glow effect */}
-                <div className="absolute inset-0 rounded-3xl bg-white/5 opacity-0 group-hover:opacity-100 
-                               transition-opacity duration-200" />
+                {/* Simple text */}
+                <span className="text-sm font-medium text-gray-800 text-center leading-tight">
+                  {option.label}
+                </span>
               </button>
             );
           })}
