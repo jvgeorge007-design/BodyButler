@@ -24,7 +24,7 @@ export default function BottomNav() {
       id: "add",
       icon: Plus,
       label: "Add Food",
-      path: "/add-food",
+      path: "/meal-log",
       isMainAction: true
     },
     {
