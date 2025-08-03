@@ -54,72 +54,70 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
   if (!isOpen) return null;
 
   return (
-    <>
-      {/* Background overlay */}
+    <div className="fixed inset-0 z-50 flex items-end justify-center">
+      {/* Background overlay that blurs the page content */}
       <div 
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-200"
+        className="absolute inset-0 bg-black/50 backdrop-blur-md transition-all duration-300"
         onClick={onClose}
       />
       
       {/* Popup container */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-24">
-        <div className="max-w-md mx-auto">
-          <div 
-            className="bg-black/80 backdrop-blur-xl rounded-2xl p-6 border border-white/10 
-                       transform transition-all duration-200 ease-out"
-            style={{
-              background: 'linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
-              backdropFilter: 'blur(20px)',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)'
-            }}
-          >
-            {/* Options grid */}
-            <div className="grid grid-cols-2 gap-4">
-              {options.map((option) => {
-                const IconComponent = option.icon;
-                return (
-                  <button
-                    key={option.id}
-                    onClick={() => handleOptionClick(option.path)}
-                    className="group relative overflow-hidden rounded-xl p-4 text-left
-                             transition-all duration-200 active:scale-95
-                             hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/30"
-                    style={{
-                      background: option.bgColor,
-                      border: '1px solid rgba(255,255,255,0.1)'
-                    }}
-                  >
-                    {/* Icon */}
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg mb-3
-                                   bg-white/10 group-hover:bg-white/20 transition-colors duration-200">
-                      <IconComponent size={20} className="text-white" />
-                    </div>
-                    
-                    {/* Text */}
-                    <div>
-                      <h3 className="text-sm font-semibold text-white mb-1">
-                        {option.label}
-                      </h3>
-                      <p className="text-xs text-white/60">
-                        {option.description}
-                      </p>
-                    </div>
-                    
-                    {/* Hover effect */}
-                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 
-                                   transition-opacity duration-200 rounded-xl" />
-                  </button>
-                );
-              })}
-            </div>
-            
-            {/* Handle indicator */}
-            <div className="flex justify-center mt-4">
-              <div className="w-8 h-1 bg-white/30 rounded-full" />
-            </div>
+      <div className="relative w-full max-w-md mx-auto px-4 pb-32">
+        <div 
+          className="bg-black/90 backdrop-blur-xl rounded-2xl p-6 border border-white/10 
+                     transform transition-all duration-300 ease-out translate-y-0"
+          style={{
+            background: 'linear-gradient(145deg, rgba(30,30,35,0.95) 0%, rgba(20,20,25,0.95) 100%)',
+            backdropFilter: 'blur(40px)',
+            boxShadow: '0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)'
+          }}
+        >
+          {/* Options grid */}
+          <div className="grid grid-cols-2 gap-4">
+            {options.map((option) => {
+              const IconComponent = option.icon;
+              return (
+                <button
+                  key={option.id}
+                  onClick={() => handleOptionClick(option.path)}
+                  className="group relative overflow-hidden rounded-xl p-4 text-left
+                           transition-all duration-200 active:scale-95
+                           hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/30"
+                  style={{
+                    background: option.bgColor,
+                    border: '1px solid rgba(255,255,255,0.1)'
+                  }}
+                >
+                  {/* Icon */}
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg mb-3
+                                 bg-white/10 group-hover:bg-white/20 transition-colors duration-200">
+                    <IconComponent size={20} className="text-white" />
+                  </div>
+                  
+                  {/* Text */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-white mb-1">
+                      {option.label}
+                    </h3>
+                    <p className="text-xs text-white/60">
+                      {option.description}
+                    </p>
+                  </div>
+                  
+                  {/* Hover effect */}
+                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 
+                                 transition-opacity duration-200 rounded-xl" />
+                </button>
+              );
+            })}
+          </div>
+          
+          {/* Handle indicator */}
+          <div className="flex justify-center mt-4">
+            <div className="w-8 h-1 bg-white/30 rounded-full" />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
