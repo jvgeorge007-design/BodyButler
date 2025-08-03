@@ -410,9 +410,8 @@ export default function Dashboard() {
         }`}
         style={{
           paddingTop: "calc(env(safe-area-inset-top) + 70px)",
-          paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)",
-          height: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 150px)",
-          overflow: "hidden",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 20px)",
+          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 90px)",
         }}
       >
         {/* Date, Streak, and Progress Card */}
