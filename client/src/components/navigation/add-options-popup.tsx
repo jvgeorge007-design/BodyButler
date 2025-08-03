@@ -55,11 +55,23 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
 
   return (
     <>
-      {/* Click capture overlay - full screen */}
+      {/* Click capture overlay - full screen - DEBUG */}
       <div 
-        className="fixed inset-0 bg-transparent"
-        style={{ zIndex: 9999 }}
-        onClick={onClose}
+        className="fixed inset-0"
+        style={{ 
+          zIndex: 9998,
+          background: 'rgba(255, 0, 0, 0.1)', // Temporary red tint to see if overlay is working
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100vw',
+          height: '100vh'
+        }}
+        onClick={(e) => {
+          console.log('Overlay clicked!', e.target);
+          onClose();
+        }}
       />
       
       {/* Simple Options Grid - Cal.ai style */}
