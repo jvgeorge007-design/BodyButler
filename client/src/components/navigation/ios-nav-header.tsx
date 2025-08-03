@@ -86,11 +86,11 @@ export default function IOSNavHeader({
             {/* Top Row: Logo, Date, and Profile Icon */}
             <div className="flex items-center justify-between">
               {/* PeakU Logo */}
-              <div className="flex items-center justify-center w-16 h-10">
+              <div className="flex items-center justify-center w-24 h-10">
                 <img 
                   src={peakuLogo} 
                   alt="PeakU Logo" 
-                  className="w-12 h-6 object-contain"
+                  className="w-24 h-12 object-contain"
                 />
               </div>
 
