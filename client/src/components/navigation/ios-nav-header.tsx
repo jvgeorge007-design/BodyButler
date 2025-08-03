@@ -82,65 +82,32 @@ export default function IOSNavHeader({
     }}>
       <div className="max-w-md mx-auto px-4 py-4 space-y-3">
         {selectedDate ? (
-          <>
-            {/* Top Nav: Logo and Profile Icon Only */}
-            <div className="flex items-center justify-between">
-              {/* PeakU Logo */}
-              <div className="flex items-center justify-start">
-                <img 
-                  src={peakuLogo} 
-                  alt="PeakU Logo" 
-                  className="w-24 h-12 object-contain"
-                />
-              </div>
-
-              <div className="flex items-center justify-end">
-                {onProfileClick ? (
-                  <button
-                    onClick={onProfileClick}
-                    className="flex items-center justify-center w-10 h-10 bg-white/10 hover:bg-white/20 rounded-2xl transition-all"
-                  >
-                    <User className="w-5 h-5 text-white/80" />
-                  </button>
-                ) : rightButton ? (
-                  rightButton
-                ) : (
-                  <div className="w-10" />
-                )}
-              </div>
+          /* Top Nav: Logo and Profile Icon Only */
+          <div className="flex items-center justify-between">
+            {/* PeakU Logo */}
+            <div className="flex items-center justify-start">
+              <img 
+                src={peakuLogo} 
+                alt="PeakU Logo" 
+                className="w-24 h-12 object-contain"
+              />
             </div>
 
-            {/* Date, Streak, and Progress Card */}
-            <div className="calm-card p-4 space-y-3">
-              {/* Date and Streak Row */}
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-white">
-                  {formatDate(selectedDate)}
-                </h2>
-
-                {activityStreak > 0 && (
-                  <div className="flex items-center gap-1">
-                    <Mountain className="w-4 h-4 text-white" />
-                    <span className="text-white text-sm font-medium">{activityStreak} day trek</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Summit Progress Tracker */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-white text-sm font-medium">Summit Progress</span>
-                  <span className="text-white text-sm">{Math.round(summitProgressPercentage)}%</span>
-                </div>
-                <div className="w-full bg-white/20 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${summitProgressPercentage}%` }}
-                  />
-                </div>
-              </div>
+            <div className="flex items-center justify-end">
+              {onProfileClick ? (
+                <button
+                  onClick={onProfileClick}
+                  className="flex items-center justify-center w-10 h-10 bg-white/10 hover:bg-white/20 rounded-2xl transition-all"
+                >
+                  <User className="w-5 h-5 text-white/80" />
+                </button>
+              ) : rightButton ? (
+                rightButton
+              ) : (
+                <div className="w-10" />
+              )}
             </div>
-          </>
+          </div>
         ) : (
           <div className="flex items-center justify-between">
             {showBackButton ? (
