@@ -44,6 +44,16 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
     }
   ];
 
+  const getOptionGradient = (optionId: string) => {
+    switch (optionId) {
+      case 'workout': return '#f97316, #ea580c'; // Orange gradient
+      case 'eating-out': return '#3b82f6, #2563eb'; // Blue gradient  
+      case 'eating-in': return '#22c55e, #16a34a'; // Green gradient
+      case 'recent': return '#a855f7, #9333ea'; // Purple gradient
+      default: return '#6b7280, #4b5563'; // Gray fallback
+    }
+  };
+
   const handleOptionClick = (path: string) => {
     onClose();
     setTimeout(() => {
@@ -61,61 +71,56 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
         onClick={onClose}
       />
       
-      {/* Popup container */}
-      <div className="relative w-full max-w-md mx-auto px-4 pb-32">
-        <div 
-          className="bg-black/90 backdrop-blur-xl rounded-2xl p-6 border border-white/10 
-                     transform transition-all duration-300 ease-out translate-y-0"
-          style={{
-            background: 'linear-gradient(145deg, rgba(30,30,35,0.95) 0%, rgba(20,20,25,0.95) 100%)',
-            backdropFilter: 'blur(40px)',
-            boxShadow: '0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)'
-          }}
-        >
-          {/* Options grid */}
-          <div className="grid grid-cols-2 gap-4">
-            {options.map((option) => {
-              const IconComponent = option.icon;
-              return (
-                <button
-                  key={option.id}
-                  onClick={() => handleOptionClick(option.path)}
-                  className="group relative overflow-hidden rounded-xl p-4 text-left
-                           transition-all duration-200 active:scale-95
-                           hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/30"
+      {/* Floating Options Grid */}
+      <div className="relative w-full max-w-md mx-auto px-6 pb-32">
+        <div className="grid grid-cols-2 gap-6">
+          {options.map((option, index) => {
+            const IconComponent = option.icon;
+            return (
+              <button
+                key={option.id}
+                onClick={() => handleOptionClick(option.path)}
+                className="group relative flex flex-col items-center justify-center p-6 rounded-3xl
+                         transition-all duration-300 active:scale-95 hover:scale-105 
+                         focus:outline-none focus:ring-2 focus:ring-white/50"
+                style={{
+                  background: 'rgba(20, 20, 25, 0.98)',
+                  border: '2px solid rgba(255, 255, 255, 0.15)',
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                  transform: `translateY(${index % 2 === 0 ? '0px' : '10px'})`,
+                  animationDelay: `${index * 100}ms`,
+                  animationDuration: '300ms',
+                  animationFillMode: 'both'
+                }}
+              >
+                {/* Icon container */}
+                <div 
+                  className="flex items-center justify-center w-16 h-16 rounded-2xl mb-4
+                           transition-all duration-200 group-hover:scale-110"
                   style={{
-                    background: option.bgColor,
-                    border: '1px solid rgba(255,255,255,0.1)'
+                    background: `linear-gradient(135deg, ${getOptionGradient(option.id)})`,
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)'
                   }}
                 >
-                  {/* Icon */}
-                  <div className="flex items-center justify-center w-10 h-10 rounded-lg mb-3
-                                 bg-white/10 group-hover:bg-white/20 transition-colors duration-200">
-                    <IconComponent size={20} className="text-white" />
-                  </div>
-                  
-                  {/* Text */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-white mb-1">
-                      {option.label}
-                    </h3>
-                    <p className="text-xs text-white/60">
-                      {option.description}
-                    </p>
-                  </div>
-                  
-                  {/* Hover effect */}
-                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 
-                                 transition-opacity duration-200 rounded-xl" />
-                </button>
-              );
-            })}
-          </div>
-          
-          {/* Handle indicator */}
-          <div className="flex justify-center mt-4">
-            <div className="w-8 h-1 bg-white/30 rounded-full" />
-          </div>
+                  <IconComponent size={28} className="text-white" strokeWidth={2} />
+                </div>
+                
+                {/* Text */}
+                <div className="text-center">
+                  <h3 className="text-sm font-semibold text-white mb-1">
+                    {option.label}
+                  </h3>
+                  <p className="text-xs text-white/70">
+                    {option.description}
+                  </p>
+                </div>
+                
+                {/* Hover glow effect */}
+                <div className="absolute inset-0 rounded-3xl bg-white/5 opacity-0 group-hover:opacity-100 
+                               transition-opacity duration-200" />
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
