@@ -64,49 +64,52 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={onClose}>
+    <>
       {/* Background overlay that mutes the page content but excludes bottom nav */}
       <div 
-        className="absolute inset-0 bg-gray-600/60 transition-all duration-300"
+        className="fixed inset-0 bg-gray-600/60 transition-all duration-300 z-40"
         style={{
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           bottom: '80px' // Exclude bottom nav area from blur
         }}
+        onClick={onClose}
       />
       
       {/* Simple Options Grid - Cal.ai style */}
-      <div className="relative w-full max-w-sm mx-auto px-4 pb-32" onClick={(e) => e.stopPropagation()}>
-        <div className="grid grid-cols-2 gap-4">
-          {options.map((option) => {
-            const IconComponent = option.icon;
-            return (
-              <button
-                key={option.id}
-                onClick={() => handleOptionClick(option.path)}
-                className="flex flex-col items-center justify-center p-6 rounded-2xl bg-white
-                         transition-all duration-200 active:scale-95 hover:scale-105 
-                         focus:outline-none shadow-lg"
-                style={{
-                  minHeight: '120px'
-                }}
-              >
-                {/* Simple icon */}
-                <IconComponent 
-                  size={24} 
-                  className="text-gray-800 mb-3" 
-                  strokeWidth={2} 
-                />
-                
-                {/* Simple text */}
-                <span className="text-sm font-medium text-gray-800 text-center leading-tight">
-                  {option.label}
-                </span>
-              </button>
-            );
-          })}
+      <div className="fixed bottom-24 left-0 right-0 z-50 px-4" onClick={(e) => e.stopPropagation()}>
+        <div className="w-full max-w-sm mx-auto">
+          <div className="grid grid-cols-2 gap-4">
+            {options.map((option) => {
+              const IconComponent = option.icon;
+              return (
+                <button
+                  key={option.id}
+                  onClick={() => handleOptionClick(option.path)}
+                  className="flex flex-col items-center justify-center p-6 rounded-2xl bg-white
+                           transition-all duration-200 active:scale-95 hover:scale-105 
+                           focus:outline-none shadow-lg"
+                  style={{
+                    minHeight: '120px'
+                  }}
+                >
+                  {/* Simple icon */}
+                  <IconComponent 
+                    size={24} 
+                    className="text-gray-800 mb-3" 
+                    strokeWidth={2} 
+                  />
+                  
+                  {/* Simple text */}
+                  <span className="text-sm font-medium text-gray-800 text-center leading-tight">
+                    {option.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
