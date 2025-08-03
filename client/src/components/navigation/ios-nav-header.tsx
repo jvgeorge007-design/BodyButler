@@ -82,9 +82,18 @@ export default function IOSNavHeader({
       <div className="max-w-md mx-auto px-4 py-4">
         {selectedDate ? (
           <div className="space-y-3">
-            {/* Top Row: Date aligned with Summit Progress */}
+            {/* Top Row: Logo, Date, and Profile Icon */}
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-white flex-1">
+              {/* PeakU Logo */}
+              <div className="flex items-center justify-center w-10 h-10">
+                <img 
+                  src="/attached_assets/image (1)_1754253433189.png" 
+                  alt="PeakU Logo" 
+                  className="w-8 h-8 object-contain"
+                />
+              </div>
+
+              <h2 className="text-xl font-bold text-white flex-1 text-center">
                 {formatDate(selectedDate)}
               </h2>
 
