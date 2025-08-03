@@ -57,13 +57,17 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
     <>
       {/* Click capture overlay - full screen */}
       <div 
-        className="fixed inset-0 z-40"
+        className="fixed inset-0 bg-transparent"
+        style={{ zIndex: 9999 }}
         onClick={onClose}
       />
       
       {/* Simple Options Grid - Cal.ai style */}
-      <div className="fixed bottom-20 left-0 right-0 z-50 px-4" 
-           onClick={(e) => e.stopPropagation()}>
+      <div 
+        className="fixed bottom-20 left-0 right-0 px-4" 
+        style={{ zIndex: 10000 }}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="w-full max-w-sm mx-auto">
           <div className="grid grid-cols-2 gap-6">
             {options.map((option) => {
