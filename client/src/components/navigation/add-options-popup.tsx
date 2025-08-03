@@ -16,7 +16,7 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
       label: "Quick Workout",
       description: "Log exercise",
       path: "/workout",
-      color: "from-orange-500 to-red-500"
+      bgColor: "rgba(249, 115, 22, 0.2)"
     },
     {
       id: "eating-out",
@@ -24,7 +24,7 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
       label: "Eating Out",
       description: "Scan receipt",
       path: "/add-food?context=eating-out",
-      color: "from-blue-500 to-purple-500"
+      bgColor: "rgba(59, 130, 246, 0.2)"
     },
     {
       id: "eating-in",
@@ -32,7 +32,7 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
       label: "Eating In",
       description: "Photo food",
       path: "/add-food?context=eating-in",
-      color: "from-green-500 to-emerald-500"
+      bgColor: "rgba(34, 197, 94, 0.2)"
     },
     {
       id: "recent",
@@ -40,7 +40,7 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
       label: "Recent Foods",
       description: "Quick add",
       path: "/meal-log?tab=recent",
-      color: "from-purple-500 to-pink-500"
+      bgColor: "rgba(168, 85, 247, 0.2)"
     }
   ];
 
@@ -85,7 +85,7 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
                              transition-all duration-200 active:scale-95
                              hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/30"
                     style={{
-                      background: `linear-gradient(135deg, ${option.color.split(' ')[0].replace('from-', 'rgba(')}20, ${option.color.split(' ')[2].replace('to-', 'rgba(')}10)`,
+                      background: option.bgColor,
                       border: '1px solid rgba(255,255,255,0.1)'
                     }}
                   >
