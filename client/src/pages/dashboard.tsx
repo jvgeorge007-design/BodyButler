@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Dumbbell, UtensilsCrossed, TrendingUp, Calendar } from "lucide-react";
+import { Dumbbell, UtensilsCrossed, TrendingUp, Calendar, Mountain } from "lucide-react";
 
 // Import our new dashboard components
 import CircularCalorieTracker from "@/components/dashboard/circular-calorie-tracker";
@@ -204,6 +204,35 @@ export default function Dashboard() {
   // Get user's first name for personalized greeting
   const userName = user?.firstName || user?.email?.split("@")[0] || "there";
 
+  // Calculate Summit Progress based on goal timeline
+  const calculateSummitProgress = () => {
+    if (!profile?.onboardingData?.timeline || !profile?.createdAt) {
+      return 0; // No timeline data available
+    }
+    
+    const timeline = profile.onboardingData.timeline.toLowerCase();
+    const startDate = new Date(profile.createdAt);
+    const currentDate = new Date();
+    const daysSinceStart = Math.floor((currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    // Map timeline strings to days
+    let totalDays = 90; // Default 3 months
+    if (timeline.includes('month')) {
+      const months = parseInt(timeline.match(/\d+/)?.[0] || '3');
+      totalDays = months * 30;
+    } else if (timeline.includes('week')) {
+      const weeks = parseInt(timeline.match(/\d+/)?.[0] || '12');
+      totalDays = weeks * 7;
+    } else if (timeline.includes('year')) {
+      const years = parseInt(timeline.match(/\d+/)?.[0] || '1');
+      totalDays = years * 365;
+    }
+    
+    return Math.min((daysSinceStart / totalDays) * 100, 100);
+  };
+
+  const summitProgressPercentage = calculateSummitProgress();
+
   // Calculate data for dashboard components based on selected date
   const todaysWorkout = personalizedPlan?.workoutPlan?.days?.[0];
   const macroTargets = personalizedPlan?.macroTargets || {};
@@ -385,6 +414,41 @@ export default function Dashboard() {
           minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 205px)",
         }}
       >
+        {/* Date, Streak, and Progress Card */}
+        <div className="calm-card p-4 space-y-3 mb-4">
+          {/* Date and Streak Row */}
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-white">
+              {selectedDate.toLocaleDateString('en-US', { 
+                weekday: 'long',
+                month: 'long', 
+                day: 'numeric'
+              })}
+            </h2>
+
+            {(activityStreakData?.streak || 0) > 0 && (
+              <div className="flex items-center gap-1">
+                <Mountain className="w-4 h-4 text-white" />
+                <span className="text-white text-sm font-medium">{activityStreakData?.streak || 0} day trek</span>
+              </div>
+            )}
+          </div>
+
+          {/* Summit Progress Tracker */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-white text-sm font-medium">Summit Progress</span>
+              <span className="text-white text-sm">{Math.round(summitProgressPercentage)}%</span>
+            </div>
+            <div className="w-full bg-white/20 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${summitProgressPercentage}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
         <div className="flex flex-col justify-between gap-4" style={{ minHeight: "calc(100vh - 280px)" }}>
           {/* Trek Navigation Card - Full Width */}
           <TrekNavigationCard />
