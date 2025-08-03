@@ -410,8 +410,8 @@ export default function Dashboard() {
         }`}
         style={{
           paddingTop: "calc(env(safe-area-inset-top) + 95px)",
-          paddingBottom: "calc(env(safe-area-inset-bottom) + 85px)",
-          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 180px)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 95px)",
+          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 190px)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
