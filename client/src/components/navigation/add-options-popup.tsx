@@ -1,5 +1,6 @@
 import { UtensilsCrossed, Receipt, Clock, Dumbbell } from "lucide-react";
 import { useLocation } from "wouter";
+import { useEffect, useCallback } from "react";
 
 interface AddOptionsPopupProps {
   isOpen: boolean;
@@ -53,28 +54,29 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
 
   if (!isOpen) return null;
 
+  // Handle clicks outside the popup by adding event listener to document
+  const handleDocumentClick = useCallback((e: Event) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClose();
+  }, [onClose]);
+
+  // Add event listener when popup opens
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener('click', handleDocumentClick, true);
+      return () => {
+        document.removeEventListener('click', handleDocumentClick, true);
+      };
+    }
+  }, [isOpen, handleDocumentClick]);
+
   return (
     <>
-      {/* Click capture overlay - full screen */}
-      <div 
-        className="fixed inset-0 bg-transparent"
-        style={{ 
-          zIndex: 999999, // Much higher z-index to ensure it's above everything
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          width: '100vw',
-          height: '100vh'
-        }}
-        onClick={onClose}
-      />
-      
       {/* Simple Options Grid - Cal.ai style */}
       <div 
         className="fixed bottom-20 left-0 right-0 px-4" 
-        style={{ zIndex: 1000000 }} // Even higher to stay above the overlay
+        style={{ zIndex: 1000000 }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full max-w-sm mx-auto">
