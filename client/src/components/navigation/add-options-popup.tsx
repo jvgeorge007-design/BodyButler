@@ -62,14 +62,19 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
   };
 
   if (!isOpen) return null;
+  
+  console.log('AddOptionsPopup rendered, isOpen:', isOpen);
 
   return (
     <>
       {/* Full screen overlay for click-outside handling */}
       <div 
-        className="fixed inset-0"
+        className="fixed inset-0 bg-red-500/10"
         style={{ zIndex: 9999 }}
-        onClick={onClose}
+        onClick={(e) => {
+          console.log('Overlay clicked!', e);
+          onClose();
+        }}
       />
       
       {/* Background blur overlay that excludes bottom nav */}
