@@ -83,10 +83,10 @@ export default function IOSNavHeader({
       <div className="max-w-md mx-auto px-4 py-4">
         {selectedDate ? (
           <div className="space-y-3">
-            {/* Top Row: Logo, Date, and Profile Icon */}
+            {/* Top Row: Logo and Profile Icon */}
             <div className="flex items-center justify-between">
               {/* PeakU Logo */}
-              <div className="flex items-center justify-start w-24 h-10">
+              <div className="flex items-center justify-start">
                 <img 
                   src={peakuLogo} 
                   alt="PeakU Logo" 
@@ -94,11 +94,7 @@ export default function IOSNavHeader({
                 />
               </div>
 
-              <h2 className="text-xl font-bold text-white flex-1 text-center">
-                {formatDate(selectedDate)}
-              </h2>
-
-              <div className="flex items-center justify-end w-24 h-10">
+              <div className="flex items-center justify-end">
                 {onProfileClick ? (
                   <button
                     onClick={onProfileClick}
@@ -114,18 +110,26 @@ export default function IOSNavHeader({
               </div>
             </div>
 
+            {/* Second Row: Date and Streak */}
+            <div className="flex items-center justify-between">
+              {/* Date - Left Aligned */}
+              <h2 className="text-xl font-bold text-white">
+                {formatDate(selectedDate)}
+              </h2>
+
+              {/* Streak - Right Aligned */}
+              {activityStreak > 0 && (
+                <div className="flex items-center gap-1">
+                  <Mountain className="w-4 h-4 text-white" />
+                  <span className="text-white text-sm font-medium">{activityStreak} day trek</span>
+                </div>
+              )}
+            </div>
+
             {/* Summit Progress Tracker */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-white text-sm font-medium">Summit Progress</span>
-                  {activityStreak > 0 && (
-                    <div className="flex items-center gap-1 ml-2">
-                      <Mountain className="w-3 h-3 text-white" />
-                      <span className="text-white text-xs font-medium">{activityStreak} day trek</span>
-                    </div>
-                  )}
-                </div>
+                <span className="text-white text-sm font-medium">Summit Progress</span>
                 <span className="text-white text-sm">{Math.round(summitProgressPercentage)}%</span>
               </div>
               <div className="w-full bg-white/20 rounded-full h-2">
