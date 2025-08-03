@@ -67,7 +67,8 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
     <>
       {/* Full screen overlay for click-outside handling */}
       <div 
-        className="fixed inset-0 z-40"
+        className="fixed inset-0"
+        style={{ zIndex: 9999 }}
         onClick={onClose}
       />
       
@@ -78,12 +79,16 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           bottom: '80px', // Exclude bottom nav area from blur
-          zIndex: 45
+          zIndex: 9998
         }}
       />
       
       {/* Simple Options Grid - Cal.ai style */}
-      <div className="fixed bottom-24 left-0 right-0 z-50 px-4" onClick={(e) => e.stopPropagation()}>
+      <div 
+        className="fixed bottom-24 left-0 right-0 px-4" 
+        style={{ zIndex: 10000 }}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="w-full max-w-sm mx-auto">
           <div className="grid grid-cols-2 gap-4">
             {options.map((option) => {
