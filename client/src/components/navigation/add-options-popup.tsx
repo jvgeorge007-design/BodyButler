@@ -64,15 +64,18 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={onClose}>
       {/* Background overlay that blurs the page content */}
       <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-md transition-all duration-300"
-        onClick={onClose}
+        className="absolute inset-0 bg-black/60 transition-all duration-300"
+        style={{
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)'
+        }}
       />
       
       {/* Floating Options Grid */}
-      <div className="relative w-full max-w-md mx-auto px-6 pb-32">
+      <div className="relative w-full max-w-md mx-auto px-6 pb-32" onClick={(e) => e.stopPropagation()}>
         <div className="grid grid-cols-2 gap-6">
           {options.map((option, index) => {
             const IconComponent = option.icon;
