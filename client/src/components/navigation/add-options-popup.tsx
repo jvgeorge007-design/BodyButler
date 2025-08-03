@@ -67,10 +67,10 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
     <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={onClose}>
       {/* Background overlay that mutes the page content but excludes bottom nav */}
       <div 
-        className="absolute inset-0 bg-gray-500/40 transition-all duration-300"
+        className="absolute inset-0 bg-gray-600/60 transition-all duration-300"
         style={{
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           bottom: '80px' // Exclude bottom nav area from blur
         }}
       />
