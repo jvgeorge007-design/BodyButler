@@ -73,7 +73,7 @@ export default function CircularCalorieTracker({
                 {remaining}
               </div>
               <div className="text-sm uppercase font-medium tracking-widest body-sans" style={{color: 'rgb(180, 180, 190)'}}>
-                REMAINING
+                CALORIES LEFT
               </div>
             </div>
           </div>
