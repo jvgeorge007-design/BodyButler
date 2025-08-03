@@ -360,15 +360,19 @@ export default function Dashboard() {
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
 
       {/* iOS Navigation Header with Date and Progress */}
-      <IOSNavHeader
-        title="Body Butler"
-        subtitle="Your personal fitness companion"
-        largeTitle={true}
-        selectedDate={selectedDate}
-        onProfileClick={() => setLocation("/settings")}
-        profile={profile}
-        activityStreak={activityStreakData?.streak || 0}
-      />
+      <div className={`transition-opacity duration-300 ${
+        isPopupOpen ? 'opacity-50' : 'opacity-100'
+      }`}>
+        <IOSNavHeader
+          title="Body Butler"
+          subtitle="Your personal fitness companion"
+          largeTitle={true}
+          selectedDate={selectedDate}
+          onProfileClick={() => setLocation("/settings")}
+          profile={profile}
+          activityStreak={activityStreakData?.streak || 0}
+        />
+      </div>
 
       {/* Main Content with optimized equal spacing */}
       <main
@@ -445,7 +449,11 @@ export default function Dashboard() {
       />
 
       {/* Floating Chat Button */}
-      <FloatingChatButton />
+      <div className={`transition-opacity duration-300 ${
+        isPopupOpen ? 'opacity-50' : 'opacity-100'
+      }`}>
+        <FloatingChatButton />
+      </div>
 
       {/* Bottom Navigation */}
       <BottomNav onPopupStateChange={setIsPopupOpen} />
