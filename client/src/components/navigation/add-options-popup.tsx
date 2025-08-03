@@ -55,12 +55,12 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
 
   return (
     <>
-      {/* Click capture overlay - full screen - DEBUG */}
+      {/* Click capture overlay - full screen */}
       <div 
-        className="fixed inset-0"
+        className="fixed inset-0 bg-transparent"
         style={{ 
-          zIndex: 9998,
-          background: 'rgba(255, 0, 0, 0.1)', // Temporary red tint to see if overlay is working
+          zIndex: 999999, // Much higher z-index to ensure it's above everything
+          position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
@@ -68,16 +68,13 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
           width: '100vw',
           height: '100vh'
         }}
-        onClick={(e) => {
-          console.log('Overlay clicked!', e.target);
-          onClose();
-        }}
+        onClick={onClose}
       />
       
       {/* Simple Options Grid - Cal.ai style */}
       <div 
         className="fixed bottom-20 left-0 right-0 px-4" 
-        style={{ zIndex: 10000 }}
+        style={{ zIndex: 1000000 }} // Even higher to stay above the overlay
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full max-w-sm mx-auto">
