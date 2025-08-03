@@ -409,47 +409,51 @@ export default function Dashboard() {
           isPopupOpen ? 'opacity-50' : 'opacity-100'
         }`}
         style={{
-          paddingTop: "calc(env(safe-area-inset-top) + 70px)",
-          paddingBottom: "calc(env(safe-area-inset-bottom) + 20px)",
-          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 90px)",
+          paddingTop: "calc(env(safe-area-inset-top) + 80px)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 85px)",
+          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 165px)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
       >
-        {/* Date, Streak, and Progress Card */}
-        <div className="calm-card p-2.5 space-y-1.5 mb-2">
-          {/* Date and Streak Row */}
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-white">
-              {selectedDate.toLocaleDateString('en-US', { 
-                weekday: 'long',
-                month: 'long', 
-                day: 'numeric'
-              })}
-            </h2>
-
-            {(activityStreakData?.streak || 0) > 0 && (
-              <div className="flex items-center gap-1">
-                <Mountain className="w-4 h-4 text-white" />
-                <span className="text-white text-sm font-medium">{activityStreakData?.streak || 0} day trek</span>
-              </div>
-            )}
-          </div>
-
-          {/* Summit Progress Tracker */}
-          <div className="space-y-2">
+        <div className="flex flex-col justify-between h-full gap-4">
+          {/* Date, Streak, and Progress Card */}
+          <div className="calm-card p-3 space-y-2">
+            {/* Date and Streak Row */}
             <div className="flex items-center justify-between">
-              <span className="text-white text-sm font-medium">Summit Progress</span>
-              <span className="text-white text-sm">{Math.round(summitProgressPercentage)}%</span>
+              <h2 className="text-lg font-bold text-white">
+                {selectedDate.toLocaleDateString('en-US', { 
+                  weekday: 'long',
+                  month: 'long', 
+                  day: 'numeric'
+                })}
+              </h2>
+
+              {(activityStreakData?.streak || 0) > 0 && (
+                <div className="flex items-center gap-1">
+                  <Mountain className="w-4 h-4 text-white" />
+                  <span className="text-white text-sm font-medium">{activityStreakData?.streak || 0} day trek</span>
+                </div>
+              )}
             </div>
-            <div className="w-full bg-white/20 rounded-full h-2">
-              <div 
-                className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${summitProgressPercentage}%` }}
-              />
+
+            {/* Summit Progress Tracker */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-white text-sm font-medium">Summit Progress</span>
+                <span className="text-white text-sm">{Math.round(summitProgressPercentage)}%</span>
+              </div>
+              <div className="w-full bg-white/20 rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${summitProgressPercentage}%` }}
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex flex-col gap-2" style={{ height: "auto" }}>
+          <div className="flex flex-col gap-4 flex-1 justify-between">
           {/* Trek Navigation Card - Full Width */}
           <TrekNavigationCard />
 
@@ -481,22 +485,23 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Workout Card (Left) and Wellness Card (Right) */}
-          <div className="flex gap-1.5">
-            {/* Left: Workout Card */}
-            <div className="calm-card w-1/2">
-              <WorkoutCard
-                workoutType={dashboardData.workout.type}
-                focus={dashboardData.workout.focus}
-                duration={dashboardData.workout.duration}
-                exerciseCount={dashboardData.workout.exerciseCount}
-                onLogWorkout={() => setLocation("/workout")}
-              />
-            </div>
-            
-            {/* Right: Wellness Card */}
-            <div className="calm-card w-1/2">
-              <WellnessCard />
+            {/* Workout Card (Left) and Wellness Card (Right) */}
+            <div className="flex gap-2.5">
+              {/* Left: Workout Card */}
+              <div className="calm-card w-1/2">
+                <WorkoutCard
+                  workoutType={dashboardData.workout.type}
+                  focus={dashboardData.workout.focus}
+                  duration={dashboardData.workout.duration}
+                  exerciseCount={dashboardData.workout.exerciseCount}
+                  onLogWorkout={() => setLocation("/workout")}
+                />
+              </div>
+              
+              {/* Right: Wellness Card */}
+              <div className="calm-card w-1/2">
+                <WellnessCard />
+              </div>
             </div>
           </div>
         </div>
