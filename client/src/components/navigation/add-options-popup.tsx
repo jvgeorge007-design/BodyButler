@@ -61,18 +61,6 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
         onClick={onClose}
       />
       
-      {/* Visual blur overlay - excludes bottom nav */}
-      <div 
-        className="fixed inset-0 bg-black/40 transition-all duration-300"
-        style={{
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
-          bottom: '80px', // Don't blur bottom nav
-          pointerEvents: 'none', // Let clicks pass through to the click capture layer
-          zIndex: 45
-        }}
-      />
-      
       {/* Simple Options Grid - Cal.ai style */}
       <div className="fixed bottom-20 left-0 right-0 z-50 px-4" 
            onClick={(e) => e.stopPropagation()}>

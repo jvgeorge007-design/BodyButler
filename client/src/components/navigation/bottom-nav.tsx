@@ -5,7 +5,11 @@ import { useState } from "react";
 import BBAIIcon from "@/components/icons/bb-ai-icon";
 import AddOptionsPopup from "./add-options-popup";
 
-export default function BottomNav() {
+interface BottomNavProps {
+  onPopupStateChange?: (isOpen: boolean) => void;
+}
+
+export default function BottomNav({ onPopupStateChange }: BottomNavProps = {}) {
   const [location, setLocation] = useLocation();
   const { closeAllModals } = useModal();
   const [showAddOptions, setShowAddOptions] = useState(false);
@@ -48,6 +52,7 @@ export default function BottomNav() {
     // Handle add button special case - show popup instead of navigate
     if (itemId === 'add') {
       setShowAddOptions(true);
+      onPopupStateChange?.(true);
       return;
     }
     
@@ -145,7 +150,10 @@ export default function BottomNav() {
       {/* Add Options Popup */}
       <AddOptionsPopup 
         isOpen={showAddOptions} 
-        onClose={() => setShowAddOptions(false)} 
+        onClose={() => {
+          setShowAddOptions(false);
+          onPopupStateChange?.(false);
+        }} 
       />
     </div>
   );

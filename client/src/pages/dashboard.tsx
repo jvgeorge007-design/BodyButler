@@ -32,6 +32,7 @@ export default function Dashboard() {
   const [processingOnboarding, setProcessingOnboarding] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // Reset to current day when home tab is clicked
   useEffect(() => {
@@ -371,7 +372,9 @@ export default function Dashboard() {
 
       {/* Main Content with optimized equal spacing */}
       <main
-        className="relative z-10 max-w-md mx-auto ios-padding"
+        className={`relative z-10 max-w-md mx-auto ios-padding transition-opacity duration-300 ${
+          isPopupOpen ? 'opacity-50' : 'opacity-100'
+        }`}
         style={{
           paddingTop: "calc(env(safe-area-inset-top) + 130px)",
           paddingBottom: "calc(env(safe-area-inset-bottom) + 75px)",
@@ -445,7 +448,7 @@ export default function Dashboard() {
       <FloatingChatButton />
 
       {/* Bottom Navigation */}
-      <BottomNav />
+      <BottomNav onPopupStateChange={setIsPopupOpen} />
     </div>
   );
 }
