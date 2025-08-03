@@ -1,0 +1,125 @@
+import { Camera, Receipt, Utensils, Clock, Dumbbell } from "lucide-react";
+import { useLocation } from "wouter";
+
+interface AddOptionsPopupProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProps) {
+  const [, setLocation] = useLocation();
+
+  const options = [
+    {
+      id: "workout",
+      icon: Dumbbell,
+      label: "Quick Workout",
+      description: "Log exercise",
+      path: "/workout",
+      color: "from-orange-500 to-red-500"
+    },
+    {
+      id: "eating-out",
+      icon: Receipt,
+      label: "Eating Out",
+      description: "Scan receipt",
+      path: "/add-food?context=eating-out",
+      color: "from-blue-500 to-purple-500"
+    },
+    {
+      id: "eating-in",
+      icon: Camera,
+      label: "Eating In",
+      description: "Photo food",
+      path: "/add-food?context=eating-in",
+      color: "from-green-500 to-emerald-500"
+    },
+    {
+      id: "recent",
+      icon: Clock,
+      label: "Recent Foods",
+      description: "Quick add",
+      path: "/meal-log?tab=recent",
+      color: "from-purple-500 to-pink-500"
+    }
+  ];
+
+  const handleOptionClick = (path: string) => {
+    onClose();
+    setTimeout(() => {
+      setLocation(path);
+    }, 100);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      {/* Background overlay */}
+      <div 
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-200"
+        onClick={onClose}
+      />
+      
+      {/* Popup container */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-24">
+        <div className="max-w-md mx-auto">
+          <div 
+            className="bg-black/80 backdrop-blur-xl rounded-2xl p-6 border border-white/10 
+                       transform transition-all duration-200 ease-out"
+            style={{
+              background: 'linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+              backdropFilter: 'blur(20px)',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)'
+            }}
+          >
+            {/* Options grid */}
+            <div className="grid grid-cols-2 gap-4">
+              {options.map((option) => {
+                const IconComponent = option.icon;
+                return (
+                  <button
+                    key={option.id}
+                    onClick={() => handleOptionClick(option.path)}
+                    className="group relative overflow-hidden rounded-xl p-4 text-left
+                             transition-all duration-200 active:scale-95
+                             hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/30"
+                    style={{
+                      background: `linear-gradient(135deg, ${option.color.split(' ')[0].replace('from-', 'rgba(')}20, ${option.color.split(' ')[2].replace('to-', 'rgba(')}10)`,
+                      border: '1px solid rgba(255,255,255,0.1)'
+                    }}
+                  >
+                    {/* Icon */}
+                    <div className="flex items-center justify-center w-10 h-10 rounded-lg mb-3
+                                   bg-white/10 group-hover:bg-white/20 transition-colors duration-200">
+                      <IconComponent size={20} className="text-white" />
+                    </div>
+                    
+                    {/* Text */}
+                    <div>
+                      <h3 className="text-sm font-semibold text-white mb-1">
+                        {option.label}
+                      </h3>
+                      <p className="text-xs text-white/60">
+                        {option.description}
+                      </p>
+                    </div>
+                    
+                    {/* Hover effect */}
+                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 
+                                   transition-opacity duration-200 rounded-xl" />
+                  </button>
+                );
+              })}
+            </div>
+            
+            {/* Handle indicator */}
+            <div className="flex justify-center mt-4">
+              <div className="w-8 h-1 bg-white/30 rounded-full" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

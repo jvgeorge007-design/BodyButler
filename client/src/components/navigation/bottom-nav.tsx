@@ -1,11 +1,14 @@
 import { Home, TrendingUp, Settings, Plus, UtensilsCrossed, Dumbbell } from "lucide-react";
 import { useLocation } from "wouter";
 import { useModal } from "@/contexts/modal-context";
+import { useState } from "react";
 import BBAIIcon from "@/components/icons/bb-ai-icon";
+import AddOptionsPopup from "./add-options-popup";
 
 export default function BottomNav() {
   const [location, setLocation] = useLocation();
   const { closeAllModals } = useModal();
+  const [showAddOptions, setShowAddOptions] = useState(false);
 
   const navItems = [
     {
@@ -42,6 +45,12 @@ export default function BottomNav() {
   ];
 
   const handleNavClick = (path: string, itemId: string) => {
+    // Handle add button special case - show popup instead of navigate
+    if (itemId === 'add') {
+      setShowAddOptions(true);
+      return;
+    }
+    
     // Always navigate to the specified path, regardless of current state
     // This ensures navigation works even when modals/popups are open
     
@@ -132,6 +141,12 @@ export default function BottomNav() {
           );
         })}
       </div>
+      
+      {/* Add Options Popup */}
+      <AddOptionsPopup 
+        isOpen={showAddOptions} 
+        onClose={() => setShowAddOptions(false)} 
+      />
     </div>
   );
 }
