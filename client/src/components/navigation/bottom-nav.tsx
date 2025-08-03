@@ -31,7 +31,7 @@ export default function BottomNav() {
       id: "food",
       icon: UtensilsCrossed,
       label: "Food",
-      path: "/meal-log"
+      path: "/add-food"
     },
     {
       id: "workout",
