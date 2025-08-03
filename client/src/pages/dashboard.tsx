@@ -409,13 +409,13 @@ export default function Dashboard() {
           isPopupOpen ? 'opacity-50' : 'opacity-100'
         }`}
         style={{
-          paddingTop: "calc(env(safe-area-inset-top) + 130px)",
+          paddingTop: "calc(env(safe-area-inset-top) + 90px)",
           paddingBottom: "calc(env(safe-area-inset-bottom) + 75px)",
-          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 205px)",
+          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 165px)",
         }}
       >
         {/* Date, Streak, and Progress Card */}
-        <div className="calm-card p-4 space-y-3 mb-4">
+        <div className="calm-card p-3 space-y-2 mb-3">
           {/* Date and Streak Row */}
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-white">
@@ -449,7 +449,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between gap-4" style={{ minHeight: "calc(100vh - 280px)" }}>
+        <div className="flex flex-col gap-3" style={{ height: "auto" }}>
           {/* Trek Navigation Card - Full Width */}
           <TrekNavigationCard />
 
@@ -482,7 +482,7 @@ export default function Dashboard() {
           </div>
 
           {/* Workout Card (Left) and Wellness Card (Right) */}
-          <div className="flex gap-2.5">
+          <div className="flex gap-2">
             {/* Left: Workout Card */}
             <div className="calm-card w-1/2">
               <WorkoutCard
