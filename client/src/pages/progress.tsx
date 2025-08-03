@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { TrendingUp, Calendar, Award, Target, ChevronRight, Trophy, Flame, Star, TrendingDown, Zap } from "lucide-react";
-import IOSNavHeader from "@/components/navigation/ios-nav-header";
+
 import { IOSButton } from "@/components/ui/ios-button";
 import { IOSList, IOSListItem } from "@/components/ui/ios-list";
 import BottomNav from "@/components/navigation/bottom-nav";
@@ -55,23 +55,11 @@ export default function Progress() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
 
-      {/* iOS Navigation Header */}
-      <IOSNavHeader 
-        title="Progress" 
-        subtitle="Track your fitness journey"
-        rightButton={
-          <IOSButton 
-            variant="plain" 
-            size="small"
-            onClick={() => {/* TODO: Export progress */}}
-            icon={<TrendingUp className="w-5 h-5" />}
-          />
-        }
-      />
+
 
       {/* Main Content */}
       <main className="relative z-10 max-w-md mx-auto ios-padding min-h-screen" style={{ 
-        paddingTop: 'calc(env(safe-area-inset-top) + 120px)',
+        paddingTop: 'calc(env(safe-area-inset-top) + 20px)',
         paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)'
       }}>
         <div className="ios-spacing-large">

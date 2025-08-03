@@ -5,7 +5,7 @@ import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { Play, CheckCircle2, Circle, Dumbbell, Pause, Clock } from "lucide-react";
-import IOSNavHeader from "@/components/navigation/ios-nav-header";
+
 import BottomNav from "@/components/navigation/bottom-nav";
 
 interface ExerciseSet {
@@ -207,12 +207,8 @@ export default function Workout() {
   if (!todaysWorkout) {
     return (
       <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
-        <IOSNavHeader 
-          title="Workout"
-          showBackButton
-          onBack={() => setLocation('/')}
-        />
-        <div className="px-6 py-8">
+
+        <div className="px-6 pt-8 pb-24">
           <div className="calm-card text-center">
             <h2 className="text-title2 text-white/90 mb-2">No Workout Available</h2>
             <p className="text-body text-white/60">Please complete your onboarding to get a personalized workout plan.</p>
@@ -233,13 +229,9 @@ export default function Workout() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
-      <IOSNavHeader 
-        title={`${todaysWorkout.focus}`}
-        showBackButton
-        onBack={() => setLocation('/')}
-      />
 
-      <div className="px-6 py-8 pb-24 max-w-md mx-auto">
+
+      <div className="px-6 pt-8 pb-24 max-w-md mx-auto">
         {/* Workout Header Card */}
         <div className="calm-card mb-6">
           <div className="flex items-start justify-between mb-6">

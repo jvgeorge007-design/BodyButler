@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Clock, Star, Utensils, Camera } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
-import IOSNavHeader from '@/components/navigation/ios-nav-header';
+
 import BottomNav from '@/components/navigation/bottom-nav';
 import FoodLogSummary from '@/components/food-log-summary';
 
@@ -135,13 +135,9 @@ export default function AddFood() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
 
-      {/* Header */}
-      <IOSNavHeader 
-        title="Add Food"
-        onBackClick={() => setLocation('/')}
-      />
 
-      <div className="relative z-10 px-6 pt-4 pb-24">
+
+      <div className="relative z-10 px-6 pt-8 pb-24">
         {/* Daily Progress */}
         <div className="calm-card mb-6">
           <h3 className="text-body font-medium text-white mb-3">
