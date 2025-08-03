@@ -409,15 +409,15 @@ export default function Dashboard() {
           isPopupOpen ? 'opacity-50' : 'opacity-100'
         }`}
         style={{
-          paddingTop: "calc(env(safe-area-inset-top) + 80px)",
+          paddingTop: "calc(env(safe-area-inset-top) + 75px)",
           paddingBottom: "calc(env(safe-area-inset-bottom) + 85px)",
-          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 165px)",
+          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 160px)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
         }}
       >
-        <div className="flex flex-col justify-between h-full gap-4">
+        <div className="flex flex-col justify-between h-full gap-3">
           {/* Date, Streak, and Progress Card */}
           <div className="calm-card p-3 space-y-2">
             {/* Date and Streak Row */}

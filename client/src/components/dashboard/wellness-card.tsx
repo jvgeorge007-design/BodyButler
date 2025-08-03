@@ -73,64 +73,32 @@ export default function WellnessCard({}: WellnessCardProps) {
   return (
     <div className="bg-transparent relative">
       {/* Wellness title with heart icon */}
-      <div className="mb-2">
+      <div className="mb-1">
         <div className="flex items-center gap-2">
-          <Heart className="w-5 h-5 text-white" />
-          <h3 className="text-lg font-semibold text-white/60">Wellness</h3>
+          <Heart className="w-4 h-4 text-white" />
+          <h3 className="text-sm font-semibold text-white/60">Wellness</h3>
         </div>
       </div>
       
       {/* Health Score Display */}
       <div className="text-center">
-        <div className="flex items-center justify-center gap-2">
-          <span className={`text-3xl font-bold ${getScoreColor(averageHealthScore)}`}>
+        <div className="flex items-center justify-center gap-1">
+          <span className={`text-xl font-bold ${getScoreColor(averageHealthScore)}`}>
             {averageHealthScore > 0 ? averageHealthScore : '--'}
           </span>
-          <span className="text-xl text-white/60">/100</span>
+          <span className="text-sm text-white/60">/100</span>
         </div>
         
         {averageHealthScore > 0 && (
-          <div className="flex items-center justify-center gap-2 mt-1">
-            <span className="text-sm text-white/80">
+          <div className="flex items-center justify-center gap-1 mt-0.5">
+            <span className="text-xs text-white/80">
               {getHealthGrade(averageHealthScore)}
             </span>
-            <TrendingUp className="w-4 h-4 text-green-400" />
+            <TrendingUp className="w-3 h-3 text-green-400" />
           </div>
         )}
       </div>
-      
-      {averageHealthScore > 0 && (
-        <>
-          {/* Stats */}
-          <div className="space-y-1 mt-2">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-white/60">Meals Logged</span>
-              <span className="text-sm font-medium text-white">
-                {totalMeals}
-              </span>
-            </div>
-            
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-white/60">Avg Score</span>
-              <span className={`text-sm font-medium ${getScoreColor(averageHealthScore)}`}>
-                {averageHealthScore}/100
-              </span>
-            </div>
-          </div>
-          
-          {/* Motivational Message */}
-          <div className="text-center mt-2">
-            <p className="text-xs text-white/60">
-              {averageHealthScore >= 80
-                ? "Excellent nutrition choices! 🌟"
-                : averageHealthScore >= 60
-                ? "Good progress! Keep it up!"
-                : "Room for improvement - you've got this!"
-              }
-            </p>
-          </div>
-        </>
-      )}
+
     </div>
   );
 }
