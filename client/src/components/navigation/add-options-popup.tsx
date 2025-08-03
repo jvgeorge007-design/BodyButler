@@ -1,4 +1,4 @@
-import { Camera, Receipt, Utensils, Clock, Dumbbell } from "lucide-react";
+import { UtensilsCrossed, Receipt, Clock, Dumbbell } from "lucide-react";
 import { useLocation } from "wouter";
 
 interface AddOptionsPopupProps {
@@ -28,7 +28,7 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
     },
     {
       id: "eating-in",
-      icon: Camera,
+      icon: UtensilsCrossed,
       label: "Eating In",
       description: "Photo food",
       path: "/add-food?context=eating-in",
@@ -65,12 +65,13 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={onClose}>
-      {/* Background overlay that mutes the page content */}
+      {/* Background overlay that mutes the page content but excludes bottom nav */}
       <div 
         className="absolute inset-0 bg-gray-500/40 transition-all duration-300"
         style={{
           backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)'
+          WebkitBackdropFilter: 'blur(8px)',
+          bottom: '80px' // Exclude bottom nav area from blur
         }}
       />
       
