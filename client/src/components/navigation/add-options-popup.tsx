@@ -44,16 +44,6 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
     }
   ];
 
-  const getOptionGradient = (optionId: string) => {
-    switch (optionId) {
-      case 'workout': return '#f97316, #ea580c'; // Orange gradient
-      case 'eating-out': return '#3b82f6, #2563eb'; // Blue gradient  
-      case 'eating-in': return '#22c55e, #16a34a'; // Green gradient
-      case 'recent': return '#a855f7, #9333ea'; // Purple gradient
-      default: return '#6b7280, #4b5563'; // Gray fallback
-    }
-  };
-
   const handleOptionClick = (path: string) => {
     onClose();
     setTimeout(() => {
@@ -62,38 +52,22 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
   };
 
   if (!isOpen) return null;
-  
-  console.log('AddOptionsPopup rendered, isOpen:', isOpen);
 
   return (
-    <div 
-      className="fixed inset-0 bg-red-500/10" 
-      style={{ zIndex: 99999 }}
-      onClick={(e) => {
-        console.log('Overlay clicked!', e);
-        e.preventDefault();
-        e.stopPropagation();
-        onClose();
-      }}
-    >
-      {/* Background blur overlay that excludes bottom nav */}
+    <>
+      {/* Background overlay that mutes the page content but excludes bottom nav */}
       <div 
-        className="absolute inset-0 bg-gray-600/60 transition-all duration-300 pointer-events-none"
+        className="fixed inset-0 bg-gray-600/60 transition-all duration-300 z-40"
         style={{
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          bottom: '80px', // Exclude bottom nav area from blur
+          bottom: '80px' // Exclude bottom nav area from blur
         }}
+        onClick={onClose}
       />
       
       {/* Simple Options Grid - Cal.ai style */}
-      <div 
-        className="absolute bottom-24 left-0 right-0 px-4" 
-        onClick={(e) => {
-          console.log('Options container clicked - stopping propagation');
-          e.stopPropagation();
-        }}
-      >
+      <div className="fixed bottom-24 left-0 right-0 z-50 px-4" onClick={(e) => e.stopPropagation()}>
         <div className="w-full max-w-sm mx-auto">
           <div className="grid grid-cols-2 gap-4">
             {options.map((option) => {
@@ -126,6 +100,6 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
