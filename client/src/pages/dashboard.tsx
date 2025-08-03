@@ -378,7 +378,7 @@ export default function Dashboard() {
           minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 205px)",
         }}
       >
-        <div className="h-full flex flex-col justify-between gap-6">
+        <div className="h-full flex flex-col gap-6">
           {/* Trek Navigation Card - Full Width */}
           <TrekNavigationCard />
 
