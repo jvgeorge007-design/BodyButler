@@ -98,18 +98,20 @@ export default function IOSNavHeader({
                 {formatDate(selectedDate)}
               </h2>
 
-              {onProfileClick ? (
-                <button
-                  onClick={onProfileClick}
-                  className="flex items-center justify-center w-10 h-10 bg-white/10 hover:bg-white/20 rounded-2xl transition-all"
-                >
-                  <User className="w-5 h-5 text-white/80" />
-                </button>
-              ) : rightButton ? (
-                rightButton
-              ) : (
-                <div className="w-10" />
-              )}
+              <div className="flex items-center justify-end w-24 h-10">
+                {onProfileClick ? (
+                  <button
+                    onClick={onProfileClick}
+                    className="flex items-center justify-center w-10 h-10 bg-white/10 hover:bg-white/20 rounded-2xl transition-all"
+                  >
+                    <User className="w-5 h-5 text-white/80" />
+                  </button>
+                ) : rightButton ? (
+                  rightButton
+                ) : (
+                  <div className="w-10" />
+                )}
+              </div>
             </div>
 
             {/* Summit Progress Tracker */}
