@@ -52,8 +52,6 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
     }, 100);
   };
 
-  if (!isOpen) return null;
-
   // Handle clicks outside the popup by adding event listener to document
   const handleDocumentClick = useCallback((e: Event) => {
     e.preventDefault();
@@ -70,6 +68,8 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
       };
     }
   }, [isOpen, handleDocumentClick]);
+
+  if (!isOpen) return null;
 
   return (
     <>
