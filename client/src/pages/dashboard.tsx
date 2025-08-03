@@ -409,9 +409,9 @@ export default function Dashboard() {
           isPopupOpen ? 'opacity-50' : 'opacity-100'
         }`}
         style={{
-          paddingTop: "calc(env(safe-area-inset-top) + 75px)",
+          paddingTop: "calc(env(safe-area-inset-top) + 95px)",
           paddingBottom: "calc(env(safe-area-inset-bottom) + 85px)",
-          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 160px)",
+          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 180px)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
