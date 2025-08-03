@@ -1,6 +1,6 @@
 import { ArrowLeft, User, Mountain } from "lucide-react";
 import { useLocation } from "wouter";
-import peakuLogo from "@assets/image (1)_1754253433189.png";
+import peakuLogo from "@assets/image (1)_1754253759487.png";
 
 interface IOSNavHeaderProps {
   title: string;
