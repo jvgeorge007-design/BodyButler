@@ -67,8 +67,7 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
       />
       
       {/* Simple Options Grid - Cal.ai style */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center px-4" 
-           style={{ paddingBottom: '100px', paddingTop: '100px' }}
+      <div className="fixed bottom-20 left-0 right-0 z-50 px-4" 
            onClick={(e) => e.stopPropagation()}>
         <div className="w-full max-w-sm mx-auto">
           <div className="grid grid-cols-2 gap-6">
