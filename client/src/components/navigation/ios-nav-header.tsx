@@ -80,10 +80,10 @@ export default function IOSNavHeader({
       backdropFilter: 'blur(24px)',
       borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
     }}>
-      <div className="max-w-md mx-auto px-4 py-4">
+      <div className="max-w-md mx-auto px-4 py-4 space-y-3">
         {selectedDate ? (
-          <div className="space-y-3">
-            {/* Top Row: Logo and Profile Icon */}
+          <>
+            {/* Top Nav: Logo and Profile Icon Only */}
             <div className="flex items-center justify-between">
               {/* PeakU Logo */}
               <div className="flex items-center justify-start">
@@ -110,36 +110,37 @@ export default function IOSNavHeader({
               </div>
             </div>
 
-            {/* Second Row: Date and Streak */}
-            <div className="flex items-center justify-between">
-              {/* Date - Left Aligned */}
-              <h2 className="text-xl font-bold text-white">
-                {formatDate(selectedDate)}
-              </h2>
-
-              {/* Streak - Right Aligned */}
-              {activityStreak > 0 && (
-                <div className="flex items-center gap-1">
-                  <Mountain className="w-4 h-4 text-white" />
-                  <span className="text-white text-sm font-medium">{activityStreak} day trek</span>
-                </div>
-              )}
-            </div>
-
-            {/* Summit Progress Tracker */}
-            <div className="space-y-2">
+            {/* Date, Streak, and Progress Card */}
+            <div className="calm-card p-4 space-y-3">
+              {/* Date and Streak Row */}
               <div className="flex items-center justify-between">
-                <span className="text-white text-sm font-medium">Summit Progress</span>
-                <span className="text-white text-sm">{Math.round(summitProgressPercentage)}%</span>
+                <h2 className="text-xl font-bold text-white">
+                  {formatDate(selectedDate)}
+                </h2>
+
+                {activityStreak > 0 && (
+                  <div className="flex items-center gap-1">
+                    <Mountain className="w-4 h-4 text-white" />
+                    <span className="text-white text-sm font-medium">{activityStreak} day trek</span>
+                  </div>
+                )}
               </div>
-              <div className="w-full bg-white/20 rounded-full h-2">
-                <div 
-                  className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${summitProgressPercentage}%` }}
-                />
+
+              {/* Summit Progress Tracker */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-white text-sm font-medium">Summit Progress</span>
+                  <span className="text-white text-sm">{Math.round(summitProgressPercentage)}%</span>
+                </div>
+                <div className="w-full bg-white/20 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${summitProgressPercentage}%` }}
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          </>
         ) : (
           <div className="flex items-center justify-between">
             {showBackButton ? (
