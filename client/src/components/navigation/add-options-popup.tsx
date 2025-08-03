@@ -66,33 +66,33 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
   console.log('AddOptionsPopup rendered, isOpen:', isOpen);
 
   return (
-    <>
-      {/* Full screen overlay for click-outside handling */}
-      <div 
-        className="fixed inset-0 bg-red-500/10"
-        style={{ zIndex: 9999 }}
-        onClick={(e) => {
-          console.log('Overlay clicked!', e);
-          onClose();
-        }}
-      />
-      
+    <div 
+      className="fixed inset-0 bg-red-500/10" 
+      style={{ zIndex: 99999 }}
+      onClick={(e) => {
+        console.log('Overlay clicked!', e);
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+      }}
+    >
       {/* Background blur overlay that excludes bottom nav */}
       <div 
-        className="fixed inset-0 bg-gray-600/60 transition-all duration-300 pointer-events-none"
+        className="absolute inset-0 bg-gray-600/60 transition-all duration-300 pointer-events-none"
         style={{
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           bottom: '80px', // Exclude bottom nav area from blur
-          zIndex: 9998
         }}
       />
       
       {/* Simple Options Grid - Cal.ai style */}
       <div 
-        className="fixed bottom-24 left-0 right-0 px-4" 
-        style={{ zIndex: 10000 }}
-        onClick={(e) => e.stopPropagation()}
+        className="absolute bottom-24 left-0 right-0 px-4" 
+        onClick={(e) => {
+          console.log('Options container clicked - stopping propagation');
+          e.stopPropagation();
+        }}
       >
         <div className="w-full max-w-sm mx-auto">
           <div className="grid grid-cols-2 gap-4">
@@ -126,6 +126,6 @@ export default function AddOptionsPopup({ isOpen, onClose }: AddOptionsPopupProp
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
