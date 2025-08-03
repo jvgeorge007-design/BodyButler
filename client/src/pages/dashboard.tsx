@@ -409,16 +409,17 @@ export default function Dashboard() {
           isPopupOpen ? 'opacity-50' : 'opacity-100'
         }`}
         style={{
-          paddingTop: "calc(env(safe-area-inset-top) + 90px)",
-          paddingBottom: "calc(env(safe-area-inset-bottom) + 75px)",
-          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 165px)",
+          paddingTop: "calc(env(safe-area-inset-top) + 70px)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)",
+          height: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 150px)",
+          overflow: "hidden",
         }}
       >
         {/* Date, Streak, and Progress Card */}
-        <div className="calm-card p-3 space-y-2 mb-3">
+        <div className="calm-card p-2.5 space-y-1.5 mb-2">
           {/* Date and Streak Row */}
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-white">
+            <h2 className="text-lg font-bold text-white">
               {selectedDate.toLocaleDateString('en-US', { 
                 weekday: 'long',
                 month: 'long', 
@@ -449,7 +450,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3" style={{ height: "auto" }}>
+        <div className="flex flex-col gap-2" style={{ height: "auto" }}>
           {/* Trek Navigation Card - Full Width */}
           <TrekNavigationCard />
 
@@ -482,7 +483,7 @@ export default function Dashboard() {
           </div>
 
           {/* Workout Card (Left) and Wellness Card (Right) */}
-          <div className="flex gap-2">
+          <div className="flex gap-1.5">
             {/* Left: Workout Card */}
             <div className="calm-card w-1/2">
               <WorkoutCard
