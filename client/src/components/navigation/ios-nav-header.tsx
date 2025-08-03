@@ -1,5 +1,6 @@
 import { ArrowLeft, User, Mountain } from "lucide-react";
 import { useLocation } from "wouter";
+import peakuLogo from "@assets/image (1)_1754253433189.png";
 
 interface IOSNavHeaderProps {
   title: string;
@@ -87,7 +88,7 @@ export default function IOSNavHeader({
               {/* PeakU Logo */}
               <div className="flex items-center justify-center w-10 h-10">
                 <img 
-                  src="/attached_assets/image (1)_1754253433189.png" 
+                  src={peakuLogo} 
                   alt="PeakU Logo" 
                   className="w-8 h-8 object-contain"
                 />
