@@ -420,36 +420,29 @@ export default function Dashboard() {
         <div className="flex flex-col justify-between h-full gap-3">
           {/* Date, Streak, and Progress Card */}
           <div className="calm-card p-3 space-y-2">
-            {/* Date and Streak Row */}
+            {/* Summit Progress and Streak Row */}
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-white">
-                {selectedDate.toLocaleDateString('en-US', { 
-                  weekday: 'long',
-                  month: 'long', 
-                  day: 'numeric'
-                })}
+                Summit Progress
               </h2>
 
-              {(activityStreakData?.streak || 0) > 0 && (
-                <div className="flex items-center gap-1">
-                  <Mountain className="w-4 h-4 text-white" />
-                  <span className="text-white text-sm font-medium">{activityStreakData?.streak || 0} day trek</span>
-                </div>
-              )}
+              <div className="flex items-center gap-3">
+                <span className="text-white text-sm font-medium">{Math.round(summitProgressPercentage)}%</span>
+                {(activityStreakData?.streak || 0) > 0 && (
+                  <div className="flex items-center gap-1">
+                    <Mountain className="w-4 h-4 text-white" />
+                    <span className="text-white text-sm font-medium">{activityStreakData?.streak || 0} day trek</span>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Summit Progress Tracker */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-white text-sm font-medium">Summit Progress</span>
-                <span className="text-white text-sm">{Math.round(summitProgressPercentage)}%</span>
-              </div>
-              <div className="w-full bg-white/20 rounded-full h-2">
-                <div 
-                  className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${summitProgressPercentage}%` }}
-                />
-              </div>
+            {/* Progress Bar */}
+            <div className="w-full bg-white/20 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${summitProgressPercentage}%` }}
+              />
             </div>
           </div>
 
