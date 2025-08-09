@@ -506,15 +506,32 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Macronutrients Card - Full Width */}
-            <div className="calm-card">
-              <div className="space-y-1.5">
-                <div className="mb-1 pt-1">
-                  <MacroTrackerCard
-                    protein={dashboardData.macros.protein}
-                    carbs={dashboardData.macros.carbs}
-                    fat={dashboardData.macros.fat}
-                  />
+            {/* Macronutrients Card (Left) and Placeholder Card (Right) */}
+            <div className="flex gap-2.5">
+              {/* Left: Macronutrients Card */}
+              <div className="calm-card w-1/2">
+                <div className="space-y-1.5">
+                  <div className="mb-1 pt-1">
+                    <MacroTrackerCard
+                      protein={dashboardData.macros.protein}
+                      carbs={dashboardData.macros.carbs}
+                      fat={dashboardData.macros.fat}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Empty Card for Future Feature */}
+              <div className="calm-card w-1/2">
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-center pt-3">
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-white/40">
+                        --
+                      </div>
+                      <div className="text-xs text-white/40">coming soon</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
