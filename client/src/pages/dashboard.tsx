@@ -474,12 +474,12 @@ export default function Dashboard() {
             <TrekNavigationCard />
 
             {/* Stacked Calories/Water (Left) and Macros (Right) */}
-            <div className="flex gap-2.5 h-32">
+            <div className="flex gap-2.5">
               {/* Left: Stacked Calories and Water Cards */}
-              <div className="flex flex-col gap-2.5 w-1/2 h-full">
+              <div className="flex flex-col gap-2.5 w-1/2">
                 {/* Calories Card */}
-                <div className="calm-card flex-1">
-                  <div className="flex gap-2 items-center h-full px-4">
+                <div className="calm-card">
+                  <div className="flex gap-2 py-2">
                     <div className="flex flex-col items-center justify-center w-6">
                       <Flame className="w-4 h-4 text-orange-400" />
                     </div>
@@ -493,8 +493,8 @@ export default function Dashboard() {
                 </div>
 
                 {/* Water Card */}
-                <div className="calm-card flex-1">
-                  <div className="flex gap-2 items-center h-full px-4">
+                <div className="calm-card">
+                  <div className="flex gap-2 py-2">
                     <div className="flex flex-col items-center justify-center w-6">
                       <Coffee className="w-4 h-4 text-blue-400" />
                     </div>
