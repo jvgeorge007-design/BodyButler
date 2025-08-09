@@ -1,0 +1,152 @@
+import math
+from datetime import datetime
+
+# ---------------------------
+# Sleep Duration (0–35 pts)
+# ---------------------------
+def sleep_duration_score(episodes, sleep_goal_min=450, last_score=None):
+    """
+    episodes: list of dicts within the last 'sleep day' (e.g., noon→noon), each:
+      {
+        "start": datetime,          # local
+        "end":   datetime,          # local
+        "source": "wearable"|"manual",
+        "type":   "core"|"nap"      # optional; default "core"
+      }
+    sleep_goal_min: minutes (default 7.5h)
+    last_score: prior score for sparse fallback (optional)
+
+    Returns: (score_0_to_35: float, confidence: "LOW"|"MEDIUM"|"HIGH")
+    """
+    HARD_FLOOR = 300     # ≤5h → 0 pts
+    FULL_BAND  = 60      # mins above goal that still award full points
+    OVER_SOFT  = 180     # taper 35→25 across this band
+    MAX_NAP_CREDIT = 90  # cap total nap minutes counted
+    NAP_WEIGHT = 0.5     # naps count at 50%
+
+    if not episodes:
+        if last_score is not None:
+            return (max(0.0, min(35.0, 0.8 * last_score)), "LOW")
+        return (17.5, "LOW")  # neutral half-credit
+
+    total_core = 0
+    total_nap  = 0
+    confs = []
+    for e in episodes:
+        mins = max(0, int((e["end"] - e["start"]).total_seconds() // 60))
+        if e.get("type", "core") == "nap":
+            total_nap += mins
+        else:
+            total_core += mins
+        confs.append(1.0 if e.get("source") == "wearable" else 0.9)
+
+    nap_credit  = min(total_nap, MAX_NAP_CREDIT) * NAP_WEIGHT
+    total_sleep = total_core + nap_credit
+
+    # piecewise mapping
+    if total_sleep <= HARD_FLOOR:
+        base = 0.0
+    elif total_sleep < sleep_goal_min:
+        base = 35.0 * (total_sleep - HARD_FLOOR) / (sleep_goal_min - HARD_FLOOR)
+    elif total_sleep <= sleep_goal_min + FULL_BAND:
+        base = 35.0
+    elif total_sleep <= sleep_goal_min + FULL_BAND + OVER_SOFT:
+        base = 35.0 - 10.0 * ((total_sleep - (sleep_goal_min + FULL_BAND)) / OVER_SOFT)
+    else:
+        base = 25.0  # oversleep: mild deduction
+
+    avg_conf = sum(confs) / len(confs)
+    adj = min(1.0, 0.95 + 0.05 * avg_conf)   # ~0.955..1.0
+    score = max(0.0, min(35.0, base * adj))
+    conf  = "HIGH" if avg_conf >= 0.98 else ("MEDIUM" if avg_conf >= 0.92 else "LOW")
+    return (score, conf)
+
+
+# ---------------------------
+# Sleep Regularity (0–25 pts)
+# ---------------------------
+def sleep_regularity_score(entries, last_window_score=None):
+    """
+    entries: list of dicts for the last 7 calendar days (newest last). Each item may be partial:
+      {
+        "bed": datetime | None,            # local bedtime
+        "wake": datetime | None,           # local wake time (kept for future)
+        "source": "wearable"|"manual"|None,
+        "quick": "yes"|"no"|None           # optional quick-mode if no exact times
+      }
+    last_window_score: optional prior 0–25 value for sparse fallback.
+
+    Returns: (score_0_to_25: float, confidence: "LOW"|"MEDIUM"|"HIGH")
+    """
+    TARGET_VAR, MAX_VAR = 60.0, 180.0     # minutes
+    times_min, confs = [], []
+
+    # collect up to last 7 days
+    for e in entries[-7:]:
+        bed = e.get("bed")
+        src = e.get("source")
+        q   = e.get("quick")
+        if bed:
+            m = bed.hour * 60 + bed.minute              # 0..1439
+            if m < 180: m += 1440                       # unwrap small post-midnight bedtimes
+            times_min.append(m % 1440)
+            confs.append(1.00 if src == "wearable" else 0.85)
+        elif q in ("yes", "no"):
+            # quick mode proxy: "yes" ≈ consistent (23:00), "no" ≈ late (01:00)
+            m = 23 * 60 if q == "yes" else 1 * 60
+            times_min.append(m)
+            confs.append(0.85)
+
+    N = len(times_min)
+
+    # Onboarding / sparse catch
+    if N < 3:
+        if last_window_score is not None:
+            return (max(0.0, min(25.0, 0.8 * last_window_score)), "LOW")
+        return (12.5, "LOW")
+
+    # circular variance (robust around midnight)
+    theta = [2 * math.pi * (t / 1440.0) for t in times_min]
+    C = sum(math.cos(a) for a in theta) / N
+    S = sum(math.sin(a) for a in theta) / N
+    R = math.sqrt(C * C + S * S)                 # 0..1; 1 = perfectly regular
+    var_minutes = 720.0 * math.sqrt(max(0.0, 2 * (1 - R)))  # ~0..≥180
+
+    if var_minutes <= TARGET_VAR:
+        base = 25.0
+    elif var_minutes >= MAX_VAR:
+        base = 0.0
+    else:
+        base = 25.0 * (1 - (var_minutes - TARGET_VAR) / (MAX_VAR - TARGET_VAR))
+
+    avg_conf = sum(confs) / N
+    completeness = N / 7.0
+    # light adjustment; reaches 1.0 when 7 wearable days are present
+    adj = min(1.0, 0.85 + 0.10 * completeness + 0.05 * avg_conf)
+    score = max(0.0, min(25.0, base * adj))
+    conf  = "HIGH" if (N >= 7 and avg_conf >= 0.95) else ("MEDIUM" if N >= 5 else "LOW")
+    return (score, conf)
+
+
+# ---------------------------
+# Combined Sleep (0–60 pts)
+# ---------------------------
+def combined_sleep_score(duration_eps, regularity_entries,
+                         sleep_goal_min=450,
+                         last_duration=None, last_regularity=None):
+    """
+    Returns combined Sleep score (0–60) + high-level confidence.
+    Internally: Duration (0–35) at 60%, Regularity (0–25) at 40% → 35 + 25 = 60.
+    """
+    dur_score, dur_conf = sleep_duration_score(duration_eps, sleep_goal_min, last_duration)
+    reg_score, reg_conf = sleep_regularity_score(regularity_entries, last_regularity)
+
+    # 60/40 blend by point ceilings (no re-scaling needed)
+    sleep_score = max(0.0, min(60.0, dur_score + reg_score))
+
+    # aggregate confidence (conservative)
+    conf_rank = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
+    min_rank = min(conf_rank[dur_conf], conf_rank[reg_conf])
+    inv = {v: k for k, v in conf_rank.items()}
+    combined_conf = inv[min_rank]
+    return (sleep_score, combined_conf)

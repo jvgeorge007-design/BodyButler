@@ -181,12 +181,65 @@ export function usePeakScore() {
 
     // Calculate Base Camp Score
     const calculateBaseCampScore = (): number => {
-      // Sleep Duration (0-35): Placeholder - awaiting formula
-      const sleepDuration = 30;
-      
-      // Sleep Regularity (0-25): Your exact algorithm
+      // Combined Sleep Score (0-60): Your exact algorithms
+      const sleepEpisodes = (dailyRecap as any)?.sleep?.episodes || [];
       const sleepEntries = (dailyRecap as any)?.sleep?.last7Days || [];
-      const lastWindowScore = (dailyRecap as any)?.sleep?.lastWindowScore || null;
+      const sleepGoalMin = (profile as any)?.onboardingData?.personal?.sleepGoal || 450; // 7.5h default
+      const lastDurationScore = (dailyRecap as any)?.sleep?.lastDurationScore || null;
+      const lastRegularityScore = (dailyRecap as any)?.sleep?.lastRegularityScore || null;
+      
+      const calculateSleepDuration = (): number => {
+        const HARD_FLOOR = 300; // ≤5h → 0 pts
+        const FULL_BAND = 60; // mins above goal that still award full points
+        const OVER_SOFT = 180; // taper 35→25 across this band
+        const MAX_NAP_CREDIT = 90; // cap total nap minutes counted
+        const NAP_WEIGHT = 0.5; // naps count at 50%
+        
+        if (!sleepEpisodes.length) {
+          if (lastDurationScore !== null) {
+            return Math.max(0.0, Math.min(35.0, 0.8 * lastDurationScore));
+          }
+          return 17.5; // neutral half-credit
+        }
+        
+        let totalCore = 0;
+        let totalNap = 0;
+        const confs: number[] = [];
+        
+        for (const episode of sleepEpisodes) {
+          const start = new Date(episode.start);
+          const end = new Date(episode.end);
+          const mins = Math.max(0, Math.floor((end.getTime() - start.getTime()) / (1000 * 60)));
+          
+          if (episode.type === 'nap') {
+            totalNap += mins;
+          } else {
+            totalCore += mins;
+          }
+          confs.push(episode.source === 'wearable' ? 1.0 : 0.9);
+        }
+        
+        const napCredit = Math.min(totalNap, MAX_NAP_CREDIT) * NAP_WEIGHT;
+        const totalSleep = totalCore + napCredit;
+        
+        // Piecewise mapping
+        let base: number;
+        if (totalSleep <= HARD_FLOOR) {
+          base = 0.0;
+        } else if (totalSleep < sleepGoalMin) {
+          base = 35.0 * (totalSleep - HARD_FLOOR) / (sleepGoalMin - HARD_FLOOR);
+        } else if (totalSleep <= sleepGoalMin + FULL_BAND) {
+          base = 35.0;
+        } else if (totalSleep <= sleepGoalMin + FULL_BAND + OVER_SOFT) {
+          base = 35.0 - 10.0 * ((totalSleep - (sleepGoalMin + FULL_BAND)) / OVER_SOFT);
+        } else {
+          base = 25.0; // oversleep: mild deduction
+        }
+        
+        const avgConf = confs.reduce((sum, c) => sum + c, 0) / confs.length;
+        const adj = Math.min(1.0, 0.95 + 0.05 * avgConf); // ~0.955..1.0
+        return Math.max(0.0, Math.min(35.0, base * adj));
+      };
       
       const calculateSleepRegularity = (): number => {
         const TARGET_VAR = 60.0;
@@ -206,7 +259,7 @@ export function usePeakScore() {
             timesMin.push(m % 1440);
             confs.push(source === 'wearable' ? 1.00 : 0.85);
           } else if (quick === 'yes' || quick === 'no') {
-            // quick mode proxy: "yes" ≈ regular (23:00), "no" ≈ late (01:00)
+            // quick mode proxy: "yes" ≈ consistent (23:00), "no" ≈ late (01:00)
             const m = quick === 'yes' ? 23 * 60 : 1 * 60;
             timesMin.push(m);
             confs.push(0.85);
@@ -215,22 +268,21 @@ export function usePeakScore() {
         
         const N = timesMin.length;
         
-        // Onboarding catch
+        // Onboarding / sparse catch
         if (N < 3) {
-          if (lastWindowScore !== null) {
-            return Math.max(0, Math.min(25, 0.8 * lastWindowScore));
+          if (lastRegularityScore !== null) {
+            return Math.max(0.0, Math.min(25.0, 0.8 * lastRegularityScore));
           }
           return 12.5;
         }
         
-        // Circular variance (robust near midnight)
+        // Circular variance (robust around midnight)
         const theta = timesMin.map(t => 2 * Math.PI * (t / 1440.0));
         const C = theta.reduce((sum, a) => sum + Math.cos(a), 0) / N;
         const S = theta.reduce((sum, a) => sum + Math.sin(a), 0) / N;
         const R = Math.sqrt(C * C + S * S); // 0..1; 1 = perfectly regular
-        const varMinutes = 720.0 * Math.sqrt(Math.max(0.0, 2 * (1 - R))); // ~0..≥180 min
+        const varMinutes = 720.0 * Math.sqrt(Math.max(0.0, 2 * (1 - R))); // ~0..≥180
         
-        // Base score from variance
         let base: number;
         if (varMinutes <= TARGET_VAR) {
           base = 25.0;
@@ -240,15 +292,17 @@ export function usePeakScore() {
           base = 25.0 * (1 - (varMinutes - TARGET_VAR) / (MAX_VAR - TARGET_VAR));
         }
         
-        // Confidence & completeness adjustment
         const avgConf = confs.reduce((sum, c) => sum + c, 0) / N;
         const completeness = N / 7.0;
-        const adj = Math.min(1.0, 0.85 + 0.10 * completeness + 0.05 * avgConf); // ~0.85..1.0
-        
+        // Light adjustment; reaches 1.0 when 7 wearable days are present
+        const adj = Math.min(1.0, 0.85 + 0.10 * completeness + 0.05 * avgConf);
         return Math.max(0.0, Math.min(25.0, base * adj));
       };
       
+      // Combined Sleep (0-60): Duration (0-35) + Regularity (0-25)
+      const sleepDuration = calculateSleepDuration();
       const sleepRegularity = calculateSleepRegularity();
+      const combinedSleep = Math.max(0.0, Math.min(60.0, sleepDuration + sleepRegularity));
       
       // NEAT Steps (0-25): Placeholder - awaiting formula
       const neatSteps = 20;
@@ -256,7 +310,7 @@ export function usePeakScore() {
       // Stress/Mood (0-15): Placeholder - awaiting formula
       const stressMood = 12;
       
-      return sleepDuration + sleepRegularity + neatSteps + stressMood;
+      return combinedSleep + neatSteps + stressMood;
     };
 
     // Calculate Consistency Bonus
