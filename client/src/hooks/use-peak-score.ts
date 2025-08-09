@@ -164,8 +164,9 @@ export function usePeakScore() {
         progression = 20;
       }
       
-      // Warmup/Mobility (0-10): Placeholder - awaiting formula
-      const warmupMobility = 8;
+      // Warmup/Mobility (0-10): Your exact formula
+      const warmupOrMobilityLogged = (dailyRecap as any)?.workout?.warmupOrMobilityLogged || false;
+      const warmupMobility = warmupOrMobilityLogged ? 10 : 0;
       
       return completion + intensity + progression + warmupMobility;
     };
