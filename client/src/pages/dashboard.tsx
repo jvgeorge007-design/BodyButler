@@ -494,11 +494,11 @@ export default function Dashboard() {
 
                 {/* Water Card */}
                 <div className="calm-card">
-                  <div className="flex py-2 items-center relative">
+                  <div className="flex gap-2 py-2 justify-center items-center relative">
                     <div className="absolute left-3">
                       <GlassWater className="w-10 h-10 text-blue-400" />
                     </div>
-                    <div className="flex-1 text-center">
+                    <div className="text-center">
                       <div className="text-lg font-bold text-white">
                         {dashboardData.water.target - dashboardData.water.consumed}
                       </div>
