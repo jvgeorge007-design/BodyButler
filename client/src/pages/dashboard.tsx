@@ -479,30 +479,26 @@ export default function Dashboard() {
               <div className="flex flex-col gap-2.5 w-1/2">
                 {/* Calories Card */}
                 <div className="calm-card">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-center gap-2 pt-2">
-                      <Flame className="w-4 h-4 text-orange-400" />
-                      <div className="text-center">
-                        <div className="text-lg font-bold text-white">
-                          {dashboardData.calories.consumed.toLocaleString()}/{dashboardData.calories.target.toLocaleString()}
-                        </div>
-                        <div className="text-xs text-white/60">kcal</div>
+                  <div className="flex items-center justify-center gap-2 py-3">
+                    <Flame className="w-4 h-4 text-orange-400" />
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-white">
+                        {dashboardData.calories.consumed.toLocaleString()}/{dashboardData.calories.target.toLocaleString()}
                       </div>
+                      <div className="text-xs text-white/60">kcal</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Water Card */}
                 <div className="calm-card">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-center gap-2 pt-2">
-                      <Coffee className="w-4 h-4 text-blue-400" />
-                      <div className="text-center">
-                        <div className="text-lg font-bold text-white">
-                          {dashboardData.water.consumed}/{dashboardData.water.target}
-                        </div>
-                        <div className="text-xs text-white/60">cups</div>
+                  <div className="flex items-center justify-center gap-2 py-3">
+                    <Coffee className="w-4 h-4 text-blue-400" />
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-white">
+                        {dashboardData.water.consumed}/{dashboardData.water.target}
                       </div>
+                      <div className="text-xs text-white/60">cups</div>
                     </div>
                   </div>
                 </div>
