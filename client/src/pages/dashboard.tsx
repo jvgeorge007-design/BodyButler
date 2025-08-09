@@ -494,15 +494,17 @@ export default function Dashboard() {
 
                 {/* Water Card */}
                 <div className="calm-card">
-                  <div className="flex gap-2 py-2 justify-center items-center relative">
-                    <div className="absolute left-3">
+                  <div className="py-2 relative">
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
                       <GlassWater className="w-10 h-10 text-blue-400" />
                     </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-white">
-                        {dashboardData.water.target - dashboardData.water.consumed}
+                    <div className="flex justify-center items-center">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-white">
+                          {dashboardData.water.target - dashboardData.water.consumed}
+                        </div>
+                        <div className="text-xs text-white/60">cups left</div>
                       </div>
-                      <div className="text-xs text-white/60">cups left</div>
                     </div>
                   </div>
                 </div>
