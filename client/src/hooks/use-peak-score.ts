@@ -100,8 +100,13 @@ export function usePeakScore() {
         fiberVeg = Math.min((fiberGrams / fiberGoal) * 20, 20);
       }
 
-      // Hydration (0-10): Simplified for now
-      const hydration = 8; // Placeholder - would need hydration tracking
+      // Hydration (0-10): Your exact formula
+      const bodyweightKg = (profile as any)?.onboardingData?.personal?.weight || 70; // Default if not available
+      const hydrationGoal = bodyweightKg * 35; // in ml
+      const actualHydrationMl = (dailyRecap as any)?.hydration?.consumed || 0;
+      const hydrationRatio = actualHydrationMl / hydrationGoal;
+      
+      const hydration = Math.min(hydrationRatio, 1.0) * 10;
 
       // Confidence decay based on meal logging
       const totalMeals = Object.values((foodLog as any)?.meals || {}).reduce((sum: number, mealEntries: any) => {
