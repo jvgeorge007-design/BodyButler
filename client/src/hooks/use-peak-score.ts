@@ -327,11 +327,18 @@ export function usePeakScore() {
 
     // Calculate Consistency Bonus
     const calculateConsistencyBonus = (): number => {
-      // Placeholder - would need historical data
-      const daysOverThreshold = 5; // out of 7
-      if (daysOverThreshold >= 6) return 5;
-      if (daysOverThreshold >= 4) return 2;
-      return 0;
+      // Your exact formula
+      const historicalScores = (dailyRecap as any)?.peakScores?.last7Days || [];
+      const daysAboveThreshold = historicalScores.filter((dayScore: number) => dayScore > 70).length;
+      
+      let bonus = 0;
+      if (daysAboveThreshold >= 6) {
+        bonus = 5;
+      } else if (daysAboveThreshold >= 4) {
+        bonus = 2;
+      }
+      
+      return bonus;
     };
 
     // Determine goal type from profile
