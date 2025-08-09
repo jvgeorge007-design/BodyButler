@@ -108,15 +108,20 @@ export function usePeakScore() {
       
       const hydration = Math.min(hydrationRatio, 1.0) * 10;
 
-      // Confidence decay based on meal logging
+      // Anti-Cheat: Your exact formula
       const totalMeals = Object.values((foodLog as any)?.meals || {}).reduce((sum: number, mealEntries: any) => {
         return sum + (Array.isArray(mealEntries) ? mealEntries.length : 0);
       }, 0);
       const expectedMeals = 9; // 3 meals + 6 snacks per day roughly
-      const loggingRatio = totalMeals / expectedMeals;
-      const confidenceDecay = loggingRatio < 0.7 ? 0.8 : 1.0;
+      const mealsLoggedRatio = totalMeals / expectedMeals;
+      
+      let dietScore = calorieWindow + proteinScore + fiberVeg + hydration;
+      
+      if (mealsLoggedRatio < 0.70) {
+        dietScore *= 0.85; // reduce by 15%
+      }
 
-      return (calorieWindow + proteinScore + fiberVeg + hydration) * confidenceDecay;
+      return dietScore;
     };
 
     // Calculate Climb Score
