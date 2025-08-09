@@ -524,18 +524,22 @@ export default function Dashboard() {
             <div className="flex gap-2.5">
               {/* Left: Workout Card */}
               <div className="calm-card w-1/2">
-                <WorkoutCard
-                  workoutType={dashboardData.workout.type}
-                  focus={dashboardData.workout.focus}
-                  duration={dashboardData.workout.duration}
-                  exerciseCount={dashboardData.workout.exerciseCount}
-                  onLogWorkout={() => setLocation("/workout")}
-                />
+                <div className="py-2">
+                  <WorkoutCard
+                    workoutType={dashboardData.workout.type}
+                    focus={dashboardData.workout.focus}
+                    duration={dashboardData.workout.duration}
+                    exerciseCount={dashboardData.workout.exerciseCount}
+                    onLogWorkout={() => setLocation("/workout")}
+                  />
+                </div>
               </div>
 
               {/* Right: Wellness Card */}
               <div className="calm-card w-1/2">
-                <WellnessCard />
+                <div className="py-2">
+                  <WellnessCard />
+                </div>
               </div>
             </div>
           </div>
