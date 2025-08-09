@@ -51,23 +51,18 @@ export default function MacroTrackerCard({
   return (
     <div ref={containerRef} className="bg-transparent relative h-full flex flex-col">
       <div className="flex flex-col h-full">
-        {/* Protein and Carbs */}
-        <div className="space-y-3">
-          {macros.slice(0, 2).map((macro, index) => {
+        {/* Protein at top */}
+        <div>
+          {(() => {
+            const macro = macros[0]; // Protein
             const percentage = Math.min((macro.current / macro.target) * 100, 100);
-            const macroNames = ['Protein', 'Carbs'];
-            
-            // Reduced saturation color scheme (200-500 tone range) for macro bars
-            const barColors = [
-              { gradient: 'linear-gradient(90deg, #FCD34D, #F59E0B)', shadow: '#FCD34D' }, // Protein - Less saturated amber
-              { gradient: 'linear-gradient(90deg, #6EE7B7, #34D399)', shadow: '#6EE7B7' }, // Carbs - Less saturated emerald
-            ];
+            const barColor = { gradient: 'linear-gradient(90deg, #FCD34D, #F59E0B)', shadow: '#FCD34D' }; // Protein - Less saturated amber
             
             return (
-              <div key={index}>
+              <div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-medium body-sans" style={{color: 'rgb(235, 235, 240)'}}>
-                    {macroNames[index]}
+                    Protein
                   </span>
                   <span className="text-xs font-medium body-sans whitespace-nowrap" style={{color: 'rgb(180, 180, 190)'}}>
                     {macro.target - macro.current}g left
@@ -81,13 +76,47 @@ export default function MacroTrackerCard({
                     style={{ 
                       '--target-width': `${percentage}%`,
                       width: isVisible ? undefined : '0%',
-                      background: barColors[index].gradient
+                      background: barColor.gradient
                     } as React.CSSProperties & { '--target-width': string }}
                   />
                 </div>
               </div>
             );
-          })}
+          })()}
+        </div>
+        
+        {/* Carbs in middle */}
+        <div className="pt-6">
+          {(() => {
+            const macro = macros[1]; // Carbs
+            const percentage = Math.min((macro.current / macro.target) * 100, 100);
+            const barColor = { gradient: 'linear-gradient(90deg, #6EE7B7, #34D399)', shadow: '#6EE7B7' }; // Carbs - Less saturated emerald
+            
+            return (
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium body-sans" style={{color: 'rgb(235, 235, 240)'}}>
+                    Carbs
+                  </span>
+                  <span className="text-xs font-medium body-sans whitespace-nowrap" style={{color: 'rgb(180, 180, 190)'}}>
+                    {macro.target - macro.current}g left
+                  </span>
+                </div>
+                
+                {/* Progress Bar */}
+                <div className="w-full bg-muted rounded-system-xs h-1 overflow-hidden">
+                  <div 
+                    className={`h-1 rounded-full transition-all duration-2000 ease-out ${isVisible ? 'animate-fill-bar' : ''}`}
+                    style={{ 
+                      '--target-width': `${percentage}%`,
+                      width: isVisible ? undefined : '0%',
+                      background: barColor.gradient
+                    } as React.CSSProperties & { '--target-width': string }}
+                  />
+                </div>
+              </div>
+            );
+          })()}
         </div>
         
         {/* Fat - Pushed much further down */}
