@@ -68,8 +68,8 @@ export default function MacroTrackerCard({
                 <span className="text-sm font-medium body-sans" style={{color: 'rgb(235, 235, 240)'}}>
                   {macroNames[index]}
                 </span>
-                <span className="text-xs font-medium body-sans" style={{color: 'rgb(180, 180, 190)'}}>
-                  {macro.target - macro.current}g remaining
+                <span className="text-xs font-medium body-sans whitespace-nowrap" style={{color: 'rgb(180, 180, 190)'}}>
+                  {macro.target - macro.current}g left
                 </span>
               </div>
               
