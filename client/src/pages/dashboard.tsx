@@ -9,7 +9,13 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Dumbbell, UtensilsCrossed, TrendingUp, Calendar, Mountain } from "lucide-react";
+import {
+  Dumbbell,
+  UtensilsCrossed,
+  TrendingUp,
+  Calendar,
+  Mountain,
+} from "lucide-react";
 
 // Import our new dashboard components
 import CircularCalorieTracker from "@/components/dashboard/circular-calorie-tracker";
@@ -22,8 +28,6 @@ import WeeklyCalendarModal from "@/components/dashboard/weekly-calendar-modal";
 import { ProgressCard } from "@/components/dashboard/progress-card";
 import BottomNav from "@/components/navigation/bottom-nav";
 import FloatingChatButton from "@/components/ui/floating-chat-button";
-
-
 
 export default function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -64,10 +68,7 @@ export default function Dashboard() {
     retry: false,
   });
 
-  const {
-    data: activityStreakData,
-    isLoading: streakLoading,
-  } = useQuery({
+  const { data: activityStreakData, isLoading: streakLoading } = useQuery({
     queryKey: ["/api/activity-streak"],
     enabled: isAuthenticated && !isLoading,
     retry: false,
@@ -209,25 +210,27 @@ export default function Dashboard() {
     if (!profile?.onboardingData?.timeline || !profile?.createdAt) {
       return 0; // No timeline data available
     }
-    
+
     const timeline = profile.onboardingData.timeline.toLowerCase();
     const startDate = new Date(profile.createdAt);
     const currentDate = new Date();
-    const daysSinceStart = Math.floor((currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    
+    const daysSinceStart = Math.floor(
+      (currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+    );
+
     // Map timeline strings to days
     let totalDays = 90; // Default 3 months
-    if (timeline.includes('month')) {
-      const months = parseInt(timeline.match(/\d+/)?.[0] || '3');
+    if (timeline.includes("month")) {
+      const months = parseInt(timeline.match(/\d+/)?.[0] || "3");
       totalDays = months * 30;
-    } else if (timeline.includes('week')) {
-      const weeks = parseInt(timeline.match(/\d+/)?.[0] || '12');
+    } else if (timeline.includes("week")) {
+      const weeks = parseInt(timeline.match(/\d+/)?.[0] || "12");
       totalDays = weeks * 7;
-    } else if (timeline.includes('year')) {
-      const years = parseInt(timeline.match(/\d+/)?.[0] || '1');
+    } else if (timeline.includes("year")) {
+      const years = parseInt(timeline.match(/\d+/)?.[0] || "1");
       totalDays = years * 365;
     }
-    
+
     return Math.min((daysSinceStart / totalDays) * 100, 100);
   };
 
@@ -311,7 +314,10 @@ export default function Dashboard() {
     createProfileMutation.isPending
   ) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "var(--bg-primary)" }}
+      >
         <div className="text-center space-y-6 fade-in">
           <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
             <KettlebellLogo className="w-8 h-8 text-white" />
@@ -320,13 +326,15 @@ export default function Dashboard() {
             <h2 className="text-title1 text-white">
               Setting up your experience
             </h2>
-            <p className="text-body text-white/70">
-              This may take a moment...
-            </p>
+            <p className="text-body text-white/70">This may take a moment...</p>
           </div>
           <div className="w-64 h-1 bg-white/20 rounded-full mx-auto overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full" 
-                 style={{animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'}} />
+            <div
+              className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
+              style={{
+                animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+              }}
+            />
           </div>
         </div>
       </div>
@@ -335,7 +343,10 @@ export default function Dashboard() {
 
   if (needsOnboarding) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--bg-primary)' }}>
+      <div
+        className="min-h-screen flex items-center justify-center p-6"
+        style={{ background: "var(--bg-primary)" }}
+      >
         <div className="max-w-md w-full text-center space-y-8 fade-in">
           <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
             <KettlebellLogo className="w-10 h-10 text-white" />
@@ -361,15 +372,16 @@ export default function Dashboard() {
 
   if (needsPlanGeneration) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--bg-primary)' }}>
+      <div
+        className="min-h-screen flex items-center justify-center p-6"
+        style={{ background: "var(--bg-primary)" }}
+      >
         <div className="max-w-md w-full text-center space-y-8 fade-in">
           <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
             <KettlebellLogo className="w-10 h-10 text-white" />
           </div>
           <div className="space-y-3">
-            <h2 className="text-largeTitle text-white">
-              Generating Your Plan
-            </h2>
+            <h2 className="text-largeTitle text-white">Generating Your Plan</h2>
             <p className="text-body text-white/70">
               Our AI is creating your personalized workout and nutrition plan...
             </p>
@@ -387,11 +399,12 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
-
       {/* iOS Navigation Header with Date and Progress */}
-      <div className={`transition-opacity duration-300 ${
-        isPopupOpen ? 'opacity-50' : 'opacity-100'
-      }`}>
+      <div
+        className={`transition-opacity duration-300 ${
+          isPopupOpen ? "opacity-50" : "opacity-100"
+        }`}
+      >
         <IOSNavHeader
           title="Body Butler"
           subtitle="Your personal fitness companion"
@@ -406,12 +419,13 @@ export default function Dashboard() {
       {/* Main Content with optimized equal spacing */}
       <main
         className={`relative z-10 max-w-md mx-auto ios-padding transition-opacity duration-300 ${
-          isPopupOpen ? 'opacity-50' : 'opacity-100'
+          isPopupOpen ? "opacity-50" : "opacity-100"
         }`}
         style={{
           paddingTop: "calc(env(safe-area-inset-top) + 85px)",
           paddingBottom: "calc(env(safe-area-inset-bottom) + 130px)",
-          minHeight: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 215px)",
+          minHeight:
+            "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 215px)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -422,16 +436,18 @@ export default function Dashboard() {
           <div className="calm-card p-3 space-y-2">
             {/* Summit Progress and Streak Row */}
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">
-                Summit Progress
-              </h2>
+              <h2 className="text-lg font-bold text-white">Summit Progress</h2>
 
               <div className="flex items-center gap-3">
-                <span className="text-white text-sm font-medium">{Math.round(summitProgressPercentage)}%</span>
+                <span className="text-white text-sm font-medium">
+                  {Math.round(summitProgressPercentage)}%
+                </span>
                 {(activityStreakData?.streak || 0) > 0 && (
                   <div className="flex items-center gap-1">
                     <Mountain className="w-4 h-4 text-white" />
-                    <span className="text-white text-sm font-medium">{activityStreakData?.streak || 0} day trek</span>
+                    <span className="text-white text-sm font-medium">
+                      {activityStreakData?.streak || 0} day trek
+                    </span>
                   </div>
                 )}
               </div>
@@ -439,7 +455,7 @@ export default function Dashboard() {
 
             {/* Progress Bar */}
             <div className="w-full bg-white/20 rounded-full h-2">
-              <div 
+              <div
                 className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${summitProgressPercentage}%` }}
               />
@@ -447,36 +463,38 @@ export default function Dashboard() {
           </div>
 
           <div className="flex flex-col gap-4 flex-1 justify-between">
-          {/* Trek Navigation Card - Full Width */}
-          <TrekNavigationCard />
+            {/* Trek Navigation Card - Full Width */}
+            <TrekNavigationCard />
 
-          {/* Trail Fuel Card - Full Width */}
-          <div className="calm-card">
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2 mb-1.5">
-                <UtensilsCrossed className="w-5 h-5 text-white" />
-                <h3 className="text-lg font-semibold text-white/60">Trail Fuel</h3>
-              </div>
-              
-              {/* Centered Calorie Tracker */}
-              <div className="flex justify-center">
-                <CircularCalorieTracker
-                  consumed={dashboardData.calories.consumed}
-                  target={dashboardData.calories.target}
-                  remaining={dashboardData.calories.remaining}
-                />
-              </div>
-              
-              {/* Macros Below with Progress Bars */}
-              <div className="mb-1">
-                <MacroTrackerCard
-                  protein={dashboardData.macros.protein}
-                  carbs={dashboardData.macros.carbs}
-                  fat={dashboardData.macros.fat}
-                />
+            {/* Trail Fuel Card - Full Width */}
+            <div className="calm-card">
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <UtensilsCrossed className="w-5 h-5 text-white" />
+                  <h3 className="text-lg font-semibold text-white/60">
+                    Trail Fuel
+                  </h3>
+                </div>
+
+                {/* Centered Calorie Tracker */}
+                <div className="flex justify-center">
+                  <CircularCalorieTracker
+                    consumed={dashboardData.calories.consumed}
+                    target={dashboardData.calories.target}
+                    remaining={dashboardData.calories.remaining}
+                  />
+                </div>
+
+                {/* Macros Below with Progress Bars */}
+                <div className="mb-1">
+                  <MacroTrackerCard
+                    protein={dashboardData.macros.protein}
+                    carbs={dashboardData.macros.carbs}
+                    fat={dashboardData.macros.fat}
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
             {/* Workout Card (Left) and Wellness Card (Right) */}
             <div className="flex gap-2.5">
@@ -490,7 +508,7 @@ export default function Dashboard() {
                   onLogWorkout={() => setLocation("/workout")}
                 />
               </div>
-              
+
               {/* Right: Wellness Card */}
               <div className="calm-card w-1/2">
                 <WellnessCard />
@@ -511,9 +529,11 @@ export default function Dashboard() {
       />
 
       {/* Floating Chat Button */}
-      <div className={`transition-opacity duration-300 ${
-        isPopupOpen ? 'opacity-50' : 'opacity-100'
-      }`}>
+      <div
+        className={`transition-opacity duration-300 ${
+          isPopupOpen ? "opacity-50" : "opacity-100"
+        }`}
+      >
         <FloatingChatButton />
       </div>
 
