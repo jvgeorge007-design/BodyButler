@@ -539,9 +539,7 @@ export default function Dashboard() {
 
               {/* Right: Wellness Card */}
               <div className="calm-card w-1/2">
-                <div className="py-2">
-                  <WellnessCard />
-                </div>
+                <WellnessCard />
               </div>
             </div>
           </div>
