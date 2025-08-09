@@ -304,8 +304,11 @@ export function usePeakScore() {
       const sleepRegularity = calculateSleepRegularity();
       const combinedSleep = Math.max(0.0, Math.min(60.0, sleepDuration + sleepRegularity));
       
-      // NEAT Steps (0-25): Placeholder - awaiting formula
-      const neatSteps = 20;
+      // NEAT Steps (0-25): Your exact formula
+      const actualSteps = (dailyRecap as any)?.steps?.actual || 0;
+      const stepsGoal = (dailyRecap as any)?.steps?.goal || (profile as any)?.onboardingData?.personal?.stepsGoal || 10000; // Default 10k steps
+      const stepsRatio = actualSteps / stepsGoal;
+      const neatSteps = Math.min(stepsRatio, 1.0) * 25;
       
       // Stress/Mood (0-15): Placeholder - awaiting formula
       const stressMood = 12;
