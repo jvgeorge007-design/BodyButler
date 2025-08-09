@@ -124,7 +124,7 @@ export function usePeakScore() {
       return dietScore;
     };
 
-    // Calculate Climb Score - Goal-aware dynamic implementation
+    // Calculate Climb Score - Goal-aware dynamic implementation with individual sublevers
     const calculateClimbScore = (): number => {
       const goalType = getGoalType();
       const phase = (profile as any)?.onboardingData?.program?.phase || 'build';
@@ -202,126 +202,138 @@ export function usePeakScore() {
       
       const targets = buildClimbTargets();
       
-      // Rest day override
+      // Rest day override: Full points if planned rest day with no unplanned training
       if (targets.rest_day) {
         const didAny = (session.completed_sets || 0) > 0 || (session.active_minutes || 0) > 0;
         if (!didAny) {
-          return 100.0; // Full points for proper rest
+          return 100.0; // climb_score = 100
         }
       }
       
-      // Completion (0-40)
-      const planned = Math.max(1, targets.completion.planned);
-      const done = Math.max(0, targets.completion.type === 'sets' 
-        ? (session.completed_sets || 0)
-        : (session.active_minutes || 0));
-      const completionRatio = Math.min(1.0, done / planned);
-      const completionPoints = 40.0 * completionRatio;
-      const compLogged = done > 0;
+      // Completion Sublever (0-40): Goal-aware planned targets
+      const calculateCompletion = (): number => {
+        const planned = Math.max(1, targets.completion.planned);
+        const done = Math.max(0, targets.completion.type === 'sets' 
+          ? (session.completed_sets || 0)
+          : (session.active_minutes || 0));
+        const completionRatio = Math.min(1.0, done / planned);
+        return 40.0 * completionRatio;
+      };
       
-      // Progression (0-40)
-      let progressionPoints = 0.0;
-      let progressionLogged = false;
-      
-      if (targets.modality === 'strength' && targets.progression.rule === 'strength_load') {
-        const curVol = session.total_volume;
-        const lastVol = lastWeekSession.total_volume;
-        let delta: number | null = null;
-        
-        if (curVol && lastVol && lastVol > 0) {
-          delta = (curVol - lastVol) / lastVol;
-          progressionLogged = true;
-        } else {
-          const curTop = session.top_set_load;
-          const lastTop = lastWeekSession.top_set_load;
-          if (curTop && lastTop && lastTop > 0) {
-            delta = (curTop - lastTop) / lastTop;
-            progressionLogged = true;
-          }
-        }
-        
-        if (delta !== null && delta > 0) {
-          progressionPoints = 40.0 * Math.min(delta, 0.10) / 0.05; // +5%→40 (cap at +10%)
-          progressionPoints = Math.max(0.0, Math.min(40.0, progressionPoints));
-        }
-      } else if (targets.modality === 'endurance' && targets.progression.rule === 'endurance_zone_time') {
-        const curZone = session.zone_minutes;
-        const lastZone = lastWeekSession.zone_minutes;
-        
-        if (curZone && lastZone && lastZone > 0) {
-          const delta = (curZone - lastZone) / lastZone;
-          progressionLogged = true;
-          progressionPoints = 40.0 * Math.min(Math.max(delta, 0.0), 0.20) / 0.10; // +10%→40 (cap +20%)
-          progressionPoints = Math.max(0.0, Math.min(40.0, progressionPoints));
-        }
-      }
-      
-      // Warmup/Mobility (0-10)
-      const warmupPoints = session.warmup_done ? 10.0 : 0.0;
-      const warmLogged = Boolean(session.warmup_done);
-      
-      // Intensity BONUS (0-10 with dynamic base credit)
-      const baseCredit = targets.intensity.base_credit;
-      let intensityBonus = 0.0;
-      let intensityLogged = false;
-      
-      if (targets.intensity.type === 'RPE') {
-        const avgRPE = session.avg_rpe;
-        intensityLogged = avgRPE !== undefined && avgRPE !== null;
-        
-        if (intensityLogged && completionRatio > 0) {
-          const compScale = 0.3 + 0.7 * Math.max(0.0, Math.min(1.0, completionRatio));
-          const targetLow = targets.intensity.low;
-          const targetHigh = targets.intensity.high;
-          const bandSoft = 0.5;
-          const maxBonus = 10.0;
+      // Progression Sublever (0-40): Modality-specific rules
+      const calculateProgression = (): number => {
+        if (targets.modality === 'strength' && targets.progression.rule === 'strength_load') {
+          const curVol = session.total_volume;
+          const lastVol = lastWeekSession.total_volume;
+          let delta: number | null = null;
           
-          let prox: number;
-          if (targetLow <= avgRPE && avgRPE <= targetHigh) {
-            prox = maxBonus - baseCredit;
-          } else if ((targetLow - bandSoft) <= avgRPE && avgRPE < targetLow) {
-            prox = (maxBonus - baseCredit) * (1 - (targetLow - avgRPE) / bandSoft) * 0.7;
-          } else if (targetHigh < avgRPE && avgRPE <= (targetHigh + bandSoft)) {
-            prox = (maxBonus - baseCredit) * (1 - (avgRPE - targetHigh) / bandSoft) * 0.7;
+          if (curVol && lastVol && lastVol > 0) {
+            delta = (curVol - lastVol) / lastVol;
           } else {
-            prox = (maxBonus - baseCredit) * 0.2;
+            const curTop = session.top_set_load;
+            const lastTop = lastWeekSession.top_set_load;
+            if (curTop && lastTop && lastTop > 0) {
+              delta = (curTop - lastTop) / lastTop;
+            }
           }
           
-          intensityBonus = Math.max(0.0, Math.min(maxBonus, (baseCredit + prox) * compScale));
-        }
-      } else { // HR
-        const avgHRRatio = session.avg_hr_ratio;
-        intensityLogged = avgHRRatio !== undefined && avgHRRatio !== null;
-        
-        if (intensityLogged && completionRatio > 0) {
-          const compScale = 0.3 + 0.7 * Math.max(0.0, Math.min(1.0, completionRatio));
-          const targetLow = targets.intensity.low;
-          const targetHigh = targets.intensity.high;
-          const bandSoft = 0.03;
-          const maxBonus = 10.0;
-          
-          let prox: number;
-          if (targetLow <= avgHRRatio && avgHRRatio <= targetHigh) {
-            prox = maxBonus - baseCredit;
-          } else if ((targetLow - bandSoft) <= avgHRRatio && avgHRRatio < targetLow) {
-            prox = (maxBonus - baseCredit) * (1 - (targetLow - avgHRRatio) / bandSoft) * 0.7;
-          } else if (targetHigh < avgHRRatio && avgHRRatio <= (targetHigh + bandSoft)) {
-            prox = (maxBonus - baseCredit) * (1 - (avgHRRatio - targetHigh) / bandSoft) * 0.7;
-          } else {
-            prox = (maxBonus - baseCredit) * 0.2;
+          if (delta !== null && delta > 0) {
+            const progressionPoints = 40.0 * Math.min(delta, 0.10) / 0.05; // +5%→40 (cap at +10%)
+            return Math.max(0.0, Math.min(40.0, progressionPoints));
           }
+        } else if (targets.modality === 'endurance' && targets.progression.rule === 'endurance_zone_time') {
+          const curZone = session.zone_minutes;
+          const lastZone = lastWeekSession.zone_minutes;
           
-          intensityBonus = Math.max(0.0, Math.min(maxBonus, (baseCredit + prox) * compScale));
+          if (curZone && lastZone && lastZone > 0) {
+            const delta = (curZone - lastZone) / lastZone;
+            const progressionPoints = 40.0 * Math.min(Math.max(delta, 0.0), 0.20) / 0.10; // +10%→40 (cap +20%)
+            return Math.max(0.0, Math.min(40.0, progressionPoints));
+          }
         }
-      }
+        return 0.0;
+      };
       
-      // Confidence calculation
-      const sublevers = [compLogged, intensityLogged, progressionLogged, warmLogged];
+      // Warmup/Mobility Sublever (0-10): Binary logging
+      const calculateWarmup = (): number => {
+        return session.warmup_done ? 10.0 : 0.0;
+      };
+      
+      // Intensity Bonus Sublever (0-10): Dynamic base credit with goal-aware targets
+      const calculateIntensityBonus = (): number => {
+        const completion = calculateCompletion();
+        const completionRatio = completion / 40.0;
+        const baseCredit = targets.intensity.base_credit;
+        
+        if (targets.intensity.type === 'RPE') {
+          const avgRPE = session.avg_rpe;
+          
+          if (avgRPE !== undefined && avgRPE !== null && completionRatio > 0) {
+            const compScale = 0.3 + 0.7 * Math.max(0.0, Math.min(1.0, completionRatio));
+            const targetLow = targets.intensity.low;
+            const targetHigh = targets.intensity.high;
+            const bandSoft = 0.5;
+            const maxBonus = 10.0;
+            
+            let prox: number;
+            if (targetLow <= avgRPE && avgRPE <= targetHigh) {
+              prox = maxBonus - baseCredit;
+            } else if ((targetLow - bandSoft) <= avgRPE && avgRPE < targetLow) {
+              prox = (maxBonus - baseCredit) * (1 - (targetLow - avgRPE) / bandSoft) * 0.7;
+            } else if (targetHigh < avgRPE && avgRPE <= (targetHigh + bandSoft)) {
+              prox = (maxBonus - baseCredit) * (1 - (avgRPE - targetHigh) / bandSoft) * 0.7;
+            } else {
+              prox = (maxBonus - baseCredit) * 0.2;
+            }
+            
+            return Math.max(0.0, Math.min(maxBonus, (baseCredit + prox) * compScale));
+          }
+        } else { // HR
+          const avgHRRatio = session.avg_hr_ratio;
+          
+          if (avgHRRatio !== undefined && avgHRRatio !== null && completionRatio > 0) {
+            const compScale = 0.3 + 0.7 * Math.max(0.0, Math.min(1.0, completionRatio));
+            const targetLow = targets.intensity.low;
+            const targetHigh = targets.intensity.high;
+            const bandSoft = 0.03;
+            const maxBonus = 10.0;
+            
+            let prox: number;
+            if (targetLow <= avgHRRatio && avgHRRatio <= targetHigh) {
+              prox = maxBonus - baseCredit;
+            } else if ((targetLow - bandSoft) <= avgHRRatio && avgHRRatio < targetLow) {
+              prox = (maxBonus - baseCredit) * (1 - (targetLow - avgHRRatio) / bandSoft) * 0.7;
+            } else if (targetHigh < avgHRRatio && avgHRRatio <= (targetHigh + bandSoft)) {
+              prox = (maxBonus - baseCredit) * (1 - (avgHRRatio - targetHigh) / bandSoft) * 0.7;
+            } else {
+              prox = (maxBonus - baseCredit) * 0.2;
+            }
+            
+            return Math.max(0.0, Math.min(maxBonus, (baseCredit + prox) * compScale));
+          }
+        }
+        return 0.0;
+      };
+      
+      // Calculate individual sublever scores
+      const completion = calculateCompletion();
+      const progression = calculateProgression();
+      const warmup = calculateWarmup();
+      const intensityBonus = calculateIntensityBonus();
+      
+      // Climb Confidence: Sublever completeness (wearable-neutral)
+      const compLogged = (session.completed_sets || 0) > 0 || (session.active_minutes || 0) > 0;
+      const intensityLogged = (session.avg_rpe !== undefined && session.avg_rpe !== null) || 
+                             (session.avg_hr_ratio !== undefined && session.avg_hr_ratio !== null);
+      const progressionLogged = Boolean(session.total_volume || session.top_set_load || session.zone_minutes);
+      const warmupLogged = Boolean(session.warmup_done);
+      
+      const sublevers = [compLogged, intensityLogged, progressionLogged, warmupLogged];
       const loggedRatio = sublevers.filter(s => s).length / sublevers.length;
       const confidence = 0.70 + 0.30 * loggedRatio;
       
       // Sum and apply confidence
-      const subtotal = completionPoints + progressionPoints + warmupPoints + intensityBonus;
+      const subtotal = completion + progression + warmup + intensityBonus;
       const total = Math.max(0.0, Math.min(100.0, subtotal * confidence));
       
       return Math.round(total * 100) / 100;
