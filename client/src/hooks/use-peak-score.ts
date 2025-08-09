@@ -126,6 +126,14 @@ export function usePeakScore() {
 
     // Calculate Climb Score
     const calculateClimbScore = (): number => {
+      // Rest Day Override: Your exact formula
+      const plannedRestDay = (dailyRecap as any)?.workout?.plannedRestDay || false;
+      const noUnplannedTraining = !(dailyRecap as any)?.workout?.unplannedTraining || false;
+      
+      if (plannedRestDay && noUnplannedTraining) {
+        return 100;
+      }
+      
       // Completion (0-40): Your exact formula
       const completedSetsOrMinutes = (dailyRecap as any)?.workout?.completed || 0;
       const plannedSetsOrMinutes = (dailyRecap as any)?.workout?.planned || 1; // Avoid division by zero
