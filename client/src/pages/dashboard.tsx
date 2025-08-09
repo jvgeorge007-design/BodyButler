@@ -467,31 +467,46 @@ export default function Dashboard() {
             {/* Trek Navigation Card - Full Width */}
             <TrekNavigationCard />
 
-            {/* Macronutrients Card - Full Width */}
-            <div className="calm-card">
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <UtensilsCrossed className="w-5 h-5 text-white" />
-                  <h3 className="text-lg font-semibold text-white/60">
-                    Macronutrients
-                  </h3>
-                </div>
+            {/* Calories Card (Left) and Macronutrients Card (Right) */}
+            <div className="flex gap-2.5">
+              {/* Left: Calories Card */}
+              <div className="calm-card w-1/2">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <UtensilsCrossed className="w-5 h-5 text-white" />
+                    <h3 className="text-lg font-semibold text-white/60">
+                      Calories
+                    </h3>
+                  </div>
 
-                {/* Simple Calorie Counter */}
-                <div className="text-center mb-3">
-                  <div className="text-2xl font-bold text-white">
-                    {dashboardData.calories.remaining.toLocaleString()}
-                    <span className="text-lg text-white/60 ml-1">kcal remaining</span>
+                  {/* Simple Calorie Counter */}
+                  <div className="text-center">
+                    <div className="text-xl font-bold text-white">
+                      {dashboardData.calories.remaining.toLocaleString()}
+                    </div>
+                    <div className="text-sm text-white/60">remaining</div>
                   </div>
                 </div>
+              </div>
 
-                {/* Macros Below with Progress Bars */}
-                <div className="mb-1">
-                  <MacroTrackerCard
-                    protein={dashboardData.macros.protein}
-                    carbs={dashboardData.macros.carbs}
-                    fat={dashboardData.macros.fat}
-                  />
+              {/* Right: Macronutrients Card */}
+              <div className="calm-card w-1/2">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <TrendingUp className="w-5 h-5 text-white" />
+                    <h3 className="text-lg font-semibold text-white/60">
+                      Macros
+                    </h3>
+                  </div>
+
+                  {/* Macros with Progress Bars */}
+                  <div className="mb-1">
+                    <MacroTrackerCard
+                      protein={dashboardData.macros.protein}
+                      carbs={dashboardData.macros.carbs}
+                      fat={dashboardData.macros.fat}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
