@@ -1,4 +1,4 @@
-import { Heart, TrendingUp } from "lucide-react";
+import { Heart, TrendingUp, Footprints } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 interface WellnessCardProps {}
@@ -72,12 +72,17 @@ export default function WellnessCard({}: WellnessCardProps) {
 
   return (
     <div className="bg-transparent relative">
-      <div className="flex justify-center items-center">
-        <div className="text-center">
-          <div className="text-lg font-bold text-white">
-            {averageHealthScore > 0 ? averageHealthScore : '--'}
+      <div className="py-2 relative">
+        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+          <Footprints className="w-10 h-10 text-green-400" />
+        </div>
+        <div className="flex justify-center items-center pr-4">
+          <div className="text-center ml-14">
+            <div className="text-lg font-bold text-white">
+              {averageHealthScore > 0 ? averageHealthScore : '--'}
+            </div>
+            <div className="text-xs text-white/60">health score</div>
           </div>
-          <div className="text-xs text-white/60">health score</div>
         </div>
       </div>
     </div>
