@@ -88,8 +88,17 @@ export function usePeakScore() {
         proteinScore = 0;
       }
 
-      // Fiber/Veg (0-20): Simplified for now - give partial credit
-      const fiberVeg = 15; // Placeholder - would need fiber tracking
+      // Fiber/Veg (0-20): Your exact formula
+      const fiberGrams = (dailyRecap as any)?.fiber?.consumed || 0;
+      const fiberGoal = (dailyRecap as any)?.fiber?.target || 25; // Default adult fiber goal
+      const vegServings = (dailyRecap as any)?.vegetables?.servings || 0;
+      
+      let fiberVeg = 0;
+      if (fiberGrams >= fiberGoal || vegServings >= 2) {
+        fiberVeg = 20;
+      } else {
+        fiberVeg = Math.min((fiberGrams / fiberGoal) * 20, 20);
+      }
 
       // Hydration (0-10): Simplified for now
       const hydration = 8; // Placeholder - would need hydration tracking
