@@ -64,13 +64,16 @@ export function usePeakScore() {
       const calories = (dailyRecap as any)?.calories || { consumed: 0, target: 2000 };
       const protein = (dailyRecap as any)?.protein || { consumed: 0, target: 150 };
       
-      // Calorie Window (0-40): Full if within ±5%; drop linearly to 0 at ±20%
-      const calorieVariance = Math.abs(calories.consumed - calories.target) / calories.target;
+      // Calorie Window (0-40): Your exact formula
+      const calorieRatio = calories.consumed / calories.target;
       let calorieWindow = 0;
-      if (calorieVariance <= 0.05) {
+      
+      if (Math.abs(calorieRatio - 1) <= 0.05) {
         calorieWindow = 40;
-      } else if (calorieVariance <= 0.20) {
-        calorieWindow = 40 * (1 - ((calorieVariance - 0.05) / 0.15));
+      } else if (Math.abs(calorieRatio - 1) >= 0.20) {
+        calorieWindow = 0;
+      } else {
+        calorieWindow = 40 * (1 - ((Math.abs(calorieRatio - 1) - 0.05) / 0.15));
       }
 
       // Protein (0-30): Full at ≥ target; 50% at ≥80% of target
