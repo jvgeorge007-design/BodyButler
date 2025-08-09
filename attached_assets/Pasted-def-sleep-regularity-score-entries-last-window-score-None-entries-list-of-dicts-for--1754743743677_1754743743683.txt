@@ -1,0 +1,65 @@
+def sleep_regularity_score(entries, last_window_score=None):
+    """
+    entries: list of dicts for the last 7 calendar days (newest last), each:
+      {
+        "bed": datetime | None,          # local bedtime
+        "wake": datetime | None,         # local wake time (unused here but kept for future)
+        "source": "wearable"|"manual"|None,
+        "quick": "yes"|"no"|None         # optional quick-mode response if no exact times
+      }
+    Returns: (score_0_to_25, confidence: "LOW"|"MEDIUM"|"HIGH")
+    """
+    TARGET_VAR, MAX_VAR = 60.0, 180.0   # minutes
+    times_min = []      # bedtime minutes (normalized)
+    confs = []          # per-day confidence weights
+
+    # collect up to last 7 days
+    for e in entries[-7:]:
+        bed = e.get("bed")
+        src = e.get("source")
+        q   = e.get("quick")
+
+        if bed:
+            m = bed.hour*60 + bed.minute              # 0..1439
+            if m < 180: m += 1440                    # unwrap small post-midnight bedtimes
+            times_min.append(m % 1440)
+            confs.append(1.00 if src == "wearable" else 0.85)
+        elif q in ("yes","no"):
+            # quick mode proxy: "yes" ≈ regular (23:00), "no" ≈ late (01:00)
+            m = 23*60 if q == "yes" else 1*60
+            times_min.append(m)
+            confs.append(0.85)
+
+    N = len(times_min)
+
+    # Onboarding catch
+    if N < 3:
+        # use prior (if any) lightly decayed; else neutral half-credit
+        if last_window_score is not None:
+            return (max(0, min(25, 0.8*last_window_score)), "LOW")
+        return (12.5, "LOW")
+
+    # Circular variance (robust near midnight)
+    import math
+    theta = [2*math.pi*(t/1440.0) for t in times_min]
+    C = sum(math.cos(a) for a in theta)/N
+    S = sum(math.sin(a) for a in theta)/N
+    R = (C*C + S*S) ** 0.5          # 0..1; 1 = perfectly regular
+    var_minutes = 720.0 * (max(0.0, 2*(1 - R)) ** 0.5)   # ~0..≥180 min
+
+    # Base score from variance
+    if var_minutes <= TARGET_VAR:
+        base = 25.0
+    elif var_minutes >= MAX_VAR:
+        base = 0.0
+    else:
+        base = 25.0 * (1 - (var_minutes - TARGET_VAR) / (MAX_VAR - TARGET_VAR))
+
+    # Confidence & completeness (light touch)
+    avg_conf = sum(confs)/N
+    completeness = N/7.0
+    adj = min(1.0, 0.85 + 0.10*(completeness) + 0.05*avg_conf)  # ~0.85..1.0
+
+    score = max(0.0, min(25.0, base * adj))
+    conf  = "HIGH" if N >= 7 and avg_conf >= 0.95 else ("MEDIUM" if N >= 5 else "LOW")
+    return (score, conf)

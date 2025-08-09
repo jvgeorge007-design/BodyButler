@@ -181,11 +181,80 @@ export function usePeakScore() {
 
     // Calculate Base Camp Score
     const calculateBaseCampScore = (): number => {
-      // Placeholder calculations - would need sleep/wellness tracking
-      const sleepDuration = 30; // 0-35
-      const sleepRegularity = 20; // 0-25
-      const neatSteps = 20; // 0-25
-      const stressMood = 12; // 0-15
+      // Sleep Duration (0-35): Placeholder - awaiting formula
+      const sleepDuration = 30;
+      
+      // Sleep Regularity (0-25): Your exact algorithm
+      const sleepEntries = (dailyRecap as any)?.sleep?.last7Days || [];
+      const lastWindowScore = (dailyRecap as any)?.sleep?.lastWindowScore || null;
+      
+      const calculateSleepRegularity = (): number => {
+        const TARGET_VAR = 60.0;
+        const MAX_VAR = 180.0;
+        const timesMin: number[] = [];
+        const confs: number[] = [];
+        
+        // Collect up to last 7 days
+        for (const entry of sleepEntries.slice(-7)) {
+          const bed = entry.bed ? new Date(entry.bed) : null;
+          const source = entry.source;
+          const quick = entry.quick;
+          
+          if (bed) {
+            let m = bed.getHours() * 60 + bed.getMinutes(); // 0..1439
+            if (m < 180) m += 1440; // unwrap small post-midnight bedtimes
+            timesMin.push(m % 1440);
+            confs.push(source === 'wearable' ? 1.00 : 0.85);
+          } else if (quick === 'yes' || quick === 'no') {
+            // quick mode proxy: "yes" ≈ regular (23:00), "no" ≈ late (01:00)
+            const m = quick === 'yes' ? 23 * 60 : 1 * 60;
+            timesMin.push(m);
+            confs.push(0.85);
+          }
+        }
+        
+        const N = timesMin.length;
+        
+        // Onboarding catch
+        if (N < 3) {
+          if (lastWindowScore !== null) {
+            return Math.max(0, Math.min(25, 0.8 * lastWindowScore));
+          }
+          return 12.5;
+        }
+        
+        // Circular variance (robust near midnight)
+        const theta = timesMin.map(t => 2 * Math.PI * (t / 1440.0));
+        const C = theta.reduce((sum, a) => sum + Math.cos(a), 0) / N;
+        const S = theta.reduce((sum, a) => sum + Math.sin(a), 0) / N;
+        const R = Math.sqrt(C * C + S * S); // 0..1; 1 = perfectly regular
+        const varMinutes = 720.0 * Math.sqrt(Math.max(0.0, 2 * (1 - R))); // ~0..≥180 min
+        
+        // Base score from variance
+        let base: number;
+        if (varMinutes <= TARGET_VAR) {
+          base = 25.0;
+        } else if (varMinutes >= MAX_VAR) {
+          base = 0.0;
+        } else {
+          base = 25.0 * (1 - (varMinutes - TARGET_VAR) / (MAX_VAR - TARGET_VAR));
+        }
+        
+        // Confidence & completeness adjustment
+        const avgConf = confs.reduce((sum, c) => sum + c, 0) / N;
+        const completeness = N / 7.0;
+        const adj = Math.min(1.0, 0.85 + 0.10 * completeness + 0.05 * avgConf); // ~0.85..1.0
+        
+        return Math.max(0.0, Math.min(25.0, base * adj));
+      };
+      
+      const sleepRegularity = calculateSleepRegularity();
+      
+      // NEAT Steps (0-25): Placeholder - awaiting formula
+      const neatSteps = 20;
+      
+      // Stress/Mood (0-15): Placeholder - awaiting formula
+      const stressMood = 12;
       
       return sleepDuration + sleepRegularity + neatSteps + stressMood;
     };
