@@ -90,11 +90,8 @@ export default function MacroTrackerCard({
           })}
         </div>
         
-        {/* Spacer to push Fat further down */}
-        <div className="flex-1"></div>
-        
-        {/* Fat - Pushed to bottom */}
-        <div>
+        {/* Fat - Aligned with water card text */}
+        <div className="mt-auto">
           {(() => {
             const macro = macros[2]; // Fat
             const percentage = Math.min((macro.current / macro.target) * 100, 100);
