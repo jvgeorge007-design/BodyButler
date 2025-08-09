@@ -20,7 +20,7 @@ export default function WorkoutCard({
 
   return (
     <div className="bg-transparent relative">
-      <div className="flex gap-2 justify-center items-center">
+      <div className="flex gap-2 py-2 justify-center items-center">
         <div className="flex flex-col items-center justify-center">
           <Dumbbell className="w-10 h-10 text-purple-400" />
         </div>
