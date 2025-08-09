@@ -475,163 +475,80 @@ export function usePeakScore() {
       return Math.round(total * 100) / 100;
     };
 
-    // Calculate Base Camp Score
+    // Calculate Base Camp Score - Goal/phase-aware comprehensive implementation
     const calculateBaseCampScore = (): number => {
-      // Combined Sleep Score (0-60): Your exact algorithms
-      const sleepEpisodes = (dailyRecap as any)?.sleep?.episodes || [];
-      const sleepEntries = (dailyRecap as any)?.sleep?.last7Days || [];
-      const sleepGoalMin = (profile as any)?.onboardingData?.personal?.sleepGoal || 450; // 7.5h default
-      const lastDurationScore = (dailyRecap as any)?.sleep?.lastDurationScore || null;
-      const lastRegularityScore = (dailyRecap as any)?.sleep?.lastRegularityScore || null;
+      const goalType = getGoalType();
+      const phase = (profile as any)?.onboardingData?.program?.phase || 'build';
       
-      const calculateSleepDuration = (): number => {
-        const HARD_FLOOR = 300; // ≤5h → 0 pts
-        const FULL_BAND = 60; // mins above goal that still award full points
-        const OVER_SOFT = 180; // taper 35→25 across this band
-        const MAX_NAP_CREDIT = 90; // cap total nap minutes counted
-        const NAP_WEIGHT = 0.5; // naps count at 50%
+      // Helper functions
+      const clamp = (x: number, lo: number, hi: number): number => Math.max(lo, Math.min(hi, x));
+      
+      // One-call convenience wrapper for comprehensive base camp scoring
+      const baseCampScoreForUser = (
+        user: any,
+        sleepEpisodes: any[],
+        sleepEntries: any[],
+        stepsToday: number,
+        daysWithStepsData: number = 7,
+        lastSleepDurationScore: number | null = null,
+        lastSleepRegularityScore: number | null = null,
+        lastNeatScore: number | null = null,
+        recentTraining: any = null
+      ): { totalScore: number; breakdown: any } => {
         
-        // Onboarding/sparse fallback
-        if (!sleepEpisodes.length) {
-          if (lastDurationScore !== null) {
-            return Math.max(0.0, Math.min(35.0, 0.8 * lastDurationScore));
-          }
-          return 17.5; // neutral half-credit
-        }
-        
-        // Aggregate durations
-        let totalCore = 0;
-        let totalNap = 0;
-        
-        for (const episode of sleepEpisodes) {
-          const start = new Date(episode.start);
-          const end = new Date(episode.end);
-          const mins = Math.max(0, Math.floor((end.getTime() - start.getTime()) / (1000 * 60)));
+        // Compute sleep target minutes adapted to goal/phase and load
+        const computeSleepTargetMinutes = (): number => {
+          const base = 7.5 * 60; // 450 min
+          const plan = user?.onboardingData?.program?.plan || {};
+          const loadSessions = plan.freq_per_week || recentTraining?.sessions_per_week || 0;
+          const loadMinutes = plan.weekly_minutes || recentTraining?.weekly_minutes || 0;
           
-          if (episode.type === 'nap') {
-            totalNap += mins;
-          } else {
-            totalCore += mins;
+          let add = 0;
+          if (['endurance', 'lean_bulk'].includes(goalType) && ['build', 'peak'].includes(phase)) {
+            add += 30;
           }
-        }
-        
-        const napCredit = Math.min(totalNap, MAX_NAP_CREDIT) * NAP_WEIGHT;
-        const totalSleep = totalCore + napCredit;
-        
-        // Piecewise mapping
-        let base: number;
-        if (totalSleep <= HARD_FLOOR) {
-          base = 0.0;
-        } else if (totalSleep < sleepGoalMin) {
-          base = 35.0 * (totalSleep - HARD_FLOOR) / (sleepGoalMin - HARD_FLOOR);
-        } else if (totalSleep <= sleepGoalMin + FULL_BAND) {
-          base = 35.0;
-        } else if (totalSleep <= sleepGoalMin + FULL_BAND + OVER_SOFT) {
-          base = 35.0 - 10.0 * ((totalSleep - (sleepGoalMin + FULL_BAND)) / OVER_SOFT);
-        } else {
-          base = 25.0; // oversleep: mild deduction
-        }
-        
-        return Math.max(0.0, Math.min(35.0, base));
-      };
-      
-      const calculateSleepRegularity = (): number => {
-        const TARGET_VAR = 60.0;
-        const MAX_VAR = 180.0;
-        const timesMin: number[] = [];
-        
-        // Collect up to last 7 days
-        for (const entry of sleepEntries.slice(-7)) {
-          const bed = entry.bed ? new Date(entry.bed) : null;
-          const quick = entry.quick;
+          if (loadSessions >= 5 || loadMinutes >= 300) {
+            add += 30;
+          }
+          if (goalType === 'cut' && ['build', 'peak'].includes(phase)) {
+            add += 15;
+          }
           
-          if (bed) {
-            let m = bed.getHours() * 60 + bed.getMinutes(); // 0..1439
-            if (m < 180) m += 1440; // unwrap small post-midnight bedtimes
-            timesMin.push(m % 1440);
-          } else if (quick === 'yes' || quick === 'no') {
-            // quick mode proxy: "yes" ≈ consistent (23:00), "no" ≈ late (01:00)
-            const m = quick === 'yes' ? 23 * 60 : 1 * 60;
-            timesMin.push(m);
-          }
-        }
+          return Math.round(clamp(base + add, 420, 540)); // 7-9h range
+        };
         
-        const N = timesMin.length;
-        
-        // Onboarding / sparse catch
-        if (N < 3) {
-          if (lastRegularityScore !== null) {
-            return Math.max(0.0, Math.min(25.0, 0.8 * lastRegularityScore));
-          }
-          return 12.5;
-        }
-        
-        // Circular variance (robust around midnight)
-        const theta = timesMin.map(t => 2 * Math.PI * (t / 1440.0));
-        const C = theta.reduce((sum, a) => sum + Math.cos(a), 0) / N;
-        const S = theta.reduce((sum, a) => sum + Math.sin(a), 0) / N;
-        const R = Math.sqrt(C * C + S * S); // 0..1; 1 = perfectly regular
-        const varMinutes = 720.0 * Math.sqrt(Math.max(0.0, 2 * (1 - R))); // ~0..≥180
-        
-        // Base score from variance
-        let base: number;
-        if (varMinutes <= TARGET_VAR) {
-          base = 25.0;
-        } else if (varMinutes >= MAX_VAR) {
-          base = 0.0;
-        } else {
-          base = 25.0 * (1 - (varMinutes - TARGET_VAR) / (MAX_VAR - TARGET_VAR));
-        }
-        
-        // Completeness-only adjustment (no wearable/source effects)
-        const completeness = N / 7.0;
-        const adj = Math.min(1.0, 0.85 + 0.15 * completeness); // 0.85..1.0 based solely on coverage
-        return Math.max(0.0, Math.min(25.0, base * adj));
-      };
-      
-      // Combined Sleep (0-60): Duration (0-35) + Regularity (0-25)
-      const sleepDuration = calculateSleepDuration();
-      const sleepRegularity = calculateSleepRegularity();
-      const combinedSleep = Math.max(0.0, Math.min(60.0, sleepDuration + sleepRegularity));
-      
-      // NEAT Steps (0-40): Goal-aware + size/activity adjustments
-      const todaySteps = (dailyRecap as any)?.steps?.count || 0;
-      const daysWithStepsData = (dailyRecap as any)?.steps?.daysWithData || 0;
-      const lastStepsScore = (dailyRecap as any)?.steps?.lastScore || null;
-      
-      const calculateNeatSteps = (): number => {
-        // Compute personalized goals based on user profile
-        const computeNeatGoals = (): [number, number] => {
-          const goalType = getGoalType();
-          const base: Record<string, [number, number]> = {
+        // Compute personalized NEAT goals based on goal + frame + baseline activity
+        const computeNeatGoalsForUser = (): [number, number] => {
+          const baseRanges: Record<string, [number, number]> = {
             cut: [8000, 12000],
             recomp: [7000, 10000],
             lean_bulk: [6000, 8000],
             endurance: [9000, 13000],
             wellness: [6000, 9000],
           };
-          let [low, high] = base[goalType] || base.recomp;
+          let [low, high] = baseRanges[goalType] || baseRanges.recomp;
           
-          // Frame adjustments
-          const heightCm = (profile as any)?.onboardingData?.personal?.height || 170;
-          const weightKg = (profile as any)?.onboardingData?.personal?.weight || 70;
+          const heightCm = user?.onboardingData?.personal?.height || 170;
+          const weightKg = user?.onboardingData?.personal?.weight || 75;
+          const activity = user?.onboardingData?.personal?.activityLevel || 'moderate';
+          
+          // Frame factor
           let frameFactor = 0.0;
           frameFactor += (heightCm - 170.0) * 0.004;
           frameFactor += (weightKg - 70.0) * 0.003;
-          frameFactor = Math.max(-0.15, Math.min(0.15, frameFactor));
+          frameFactor = clamp(frameFactor, -0.15, 0.15);
           
-          // Activity level adjustments
-          const activityLevel = (profile as any)?.onboardingData?.activity?.currentLevel || 'moderate';
+          // Activity nudge
           const activityNudge: Record<string, number> = {
             sedentary: -0.10, light: -0.05, moderate: 0.00, active: 0.05, very_active: 0.10
           };
-          const nudge = activityNudge[activityLevel] || 0.00;
+          const nudge = activityNudge[activity.toLowerCase()] || 0.0;
           
           const adj = 1.0 + frameFactor + nudge;
           let lowAdj = Math.round(low * adj);
           let highAdj = Math.round(high * adj);
           
-          // Ensure minimum range
+          // Ensure minimum spread
           if (highAdj - lowAdj < 1500) {
             const mid = Math.floor((lowAdj + highAdj) / 2);
             lowAdj = mid - 750;
@@ -645,39 +562,171 @@ export function usePeakScore() {
           return [lowAdj, highAdj];
         };
         
-        const [lowGoal, highGoal] = computeNeatGoals();
+        const sleepGoalMin = computeSleepTargetMinutes();
         
-        // Onboarding / sparse history catch
-        if (daysWithStepsData < 3) {
-          if (lastStepsScore !== null) {
-            return Math.max(0.0, Math.min(40.0, 0.8 * lastStepsScore));
+        // Sleep Duration Score (0-35)
+        const sleepDurationScore = (): number => {
+          const HARD_FLOOR = 300, FULL_BAND = 60, OVER_SOFT = 180;
+          const MAX_NAP_CREDIT = 90, NAP_WEIGHT = 0.5;
+          
+          if (!sleepEpisodes.length) {
+            if (lastSleepDurationScore !== null) {
+              return Math.max(0.0, Math.min(35.0, 0.8 * lastSleepDurationScore));
+            }
+            return 17.5;
           }
-          return 20.0; // neutral half-credit for 0-40 scale
-        }
+          
+          let totalCore = 0, totalNap = 0;
+          for (const episode of sleepEpisodes) {
+            const start = new Date(episode.start);
+            const end = new Date(episode.end);
+            const mins = Math.max(0, Math.floor((end.getTime() - start.getTime()) / (1000 * 60)));
+            
+            if (episode.type === 'nap') {
+              totalNap += mins;
+            } else {
+              totalCore += mins;
+            }
+          }
+          
+          const napCredit = Math.min(totalNap, MAX_NAP_CREDIT) * NAP_WEIGHT;
+          const totalSleep = totalCore + napCredit;
+          
+          let base: number;
+          if (totalSleep <= HARD_FLOOR) {
+            base = 0.0;
+          } else if (totalSleep < sleepGoalMin) {
+            base = 35.0 * (totalSleep - HARD_FLOOR) / (sleepGoalMin - HARD_FLOOR);
+          } else if (totalSleep <= sleepGoalMin + FULL_BAND) {
+            base = 35.0;
+          } else if (totalSleep <= sleepGoalMin + FULL_BAND + OVER_SOFT) {
+            base = 35.0 - 10.0 * ((totalSleep - (sleepGoalMin + FULL_BAND)) / OVER_SOFT);
+          } else {
+            base = 25.0;
+          }
+          
+          return Math.max(0.0, Math.min(35.0, base));
+        };
         
-        const MAX_COUNTED = 25000;
-        const steps = Math.max(0, Math.min(todaySteps, MAX_COUNTED));
+        // Sleep Regularity Score (0-25)
+        const sleepRegularityScore = (): number => {
+          const TARGET_VAR = 60.0, MAX_VAR = 180.0;
+          const timesMin: number[] = [];
+          
+          for (const entry of sleepEntries.slice(-7)) {
+            const bed = entry.bed ? new Date(entry.bed) : null;
+            const quick = entry.quick;
+            
+            if (bed) {
+              let m = bed.getHours() * 60 + bed.getMinutes();
+              if (m < 180) m += 1440;
+              timesMin.push(m % 1440);
+            } else if (quick === 'yes' || quick === 'no') {
+              const m = quick === 'yes' ? 23 * 60 : 1 * 60;
+              timesMin.push(m);
+            }
+          }
+          
+          const N = timesMin.length;
+          if (N < 3) {
+            if (lastSleepRegularityScore !== null) {
+              return Math.max(0.0, Math.min(25.0, 0.8 * lastSleepRegularityScore));
+            }
+            return 12.5;
+          }
+          
+          // Circular variance calculation
+          const theta = timesMin.map(t => 2 * Math.PI * (t / 1440.0));
+          const C = theta.reduce((sum, a) => sum + Math.cos(a), 0) / N;
+          const S = theta.reduce((sum, a) => sum + Math.sin(a), 0) / N;
+          const R = Math.sqrt(C * C + S * S);
+          const varMinutes = 720.0 * Math.sqrt(Math.max(0.0, 2 * (1 - R)));
+          
+          let base: number;
+          if (varMinutes <= TARGET_VAR) {
+            base = 25.0;
+          } else if (varMinutes >= MAX_VAR) {
+            base = 0.0;
+          } else {
+            base = 25.0 * (1 - (varMinutes - TARGET_VAR) / (MAX_VAR - TARGET_VAR));
+          }
+          
+          const completeness = N / 7.0;
+          const adj = Math.min(1.0, 0.85 + 0.15 * completeness);
+          return Math.max(0.0, Math.min(25.0, base * adj));
+        };
         
-        // Piecewise scoring
-        let base: number;
-        if (steps <= lowGoal) {
-          base = 40.0 * (steps / lowGoal);
-        } else if (steps >= highGoal) {
-          base = 40.0;
-        } else {
-          base = 40.0 * ((steps - lowGoal) / (highGoal - lowGoal));
-        }
+        // NEAT Steps Score (0-40)
+        const neatStepsScore = (): number => {
+          const [lowGoal, highGoal] = computeNeatGoalsForUser();
+          
+          if (daysWithStepsData < 3) {
+            if (lastNeatScore !== null) {
+              return Math.max(0.0, Math.min(40.0, 0.8 * lastNeatScore));
+            }
+            return 20.0;
+          }
+          
+          const MAX_COUNTED = 25000;
+          const steps = Math.max(0, Math.min(stepsToday, MAX_COUNTED));
+          
+          let base: number;
+          if (steps <= lowGoal) {
+            base = 40.0 * (steps / lowGoal);
+          } else if (steps >= highGoal) {
+            base = 40.0;
+          } else {
+            base = 40.0 * ((steps - lowGoal) / (highGoal - lowGoal));
+          }
+          
+          const coverage = Math.min(1.0, daysWithStepsData / 7.0);
+          const adj = 0.85 + 0.15 * coverage;
+          return Math.max(0.0, Math.min(40.0, base * adj));
+        };
         
-        // Coverage-only adjustment (0.85..1.00)
-        const coverage = Math.min(1.0, daysWithStepsData / 7.0);
-        const adj = 0.85 + 0.15 * coverage;
-        return Math.max(0.0, Math.min(40.0, base * adj));
+        // Calculate individual scores
+        const sleepDur = sleepDurationScore();
+        const sleepReg = sleepRegularityScore();
+        const neatScore = neatStepsScore();
+        
+        const combinedSleep = Math.max(0.0, Math.min(60.0, sleepDur + sleepReg));
+        const total = clamp(combinedSleep + neatScore, 0.0, 100.0);
+        
+        return {
+          totalScore: Math.round(total * 100) / 100,
+          breakdown: {
+            sleep_score_0_60: Math.round(combinedSleep * 100) / 100,
+            sleep_target_minutes: sleepGoalMin,
+            neat_score_0_40: Math.round(neatScore * 100) / 100,
+            neat_targets_steps: { low: computeNeatGoalsForUser()[0], high: computeNeatGoalsForUser()[1] }
+          }
+        };
       };
       
-      const neatSteps = calculateNeatSteps();
+      // Get actual data for scoring
+      const sleepEpisodes = (dailyRecap as any)?.sleep?.episodes || [];
+      const sleepEntries = (dailyRecap as any)?.sleep?.last7Days || [];
+      const todaySteps = (dailyRecap as any)?.steps?.count || 0;
+      const daysWithStepsData = (dailyRecap as any)?.steps?.daysWithData || 7;
+      const lastSleepDurationScore = (dailyRecap as any)?.sleep?.lastDurationScore || null;
+      const lastSleepRegularityScore = (dailyRecap as any)?.sleep?.lastRegularityScore || null;
+      const lastNeatScore = (dailyRecap as any)?.steps?.lastScore || null;
+      const recentTraining = (dailyRecap as any)?.workout?.recentHistory || {};
       
-      // Base Camp: Sleep (60) + NEAT (40) = 100 total
-      return combinedSleep + neatSteps;
+      // Calculate comprehensive Base Camp score
+      const result = baseCampScoreForUser(
+        profile,
+        sleepEpisodes,
+        sleepEntries,
+        todaySteps,
+        daysWithStepsData,
+        lastSleepDurationScore,
+        lastSleepRegularityScore,
+        lastNeatScore,
+        recentTraining
+      );
+      
+      return result.totalScore;
     };
 
     // Calculate Consistency Bonus

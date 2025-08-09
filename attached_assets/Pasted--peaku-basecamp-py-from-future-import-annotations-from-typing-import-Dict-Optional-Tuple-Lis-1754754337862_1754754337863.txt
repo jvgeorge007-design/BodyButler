@@ -1,0 +1,315 @@
+# peaku_basecamp.py
+from __future__ import annotations
+from typing import Dict, Optional, Tuple, List
+from datetime import datetime
+import math
+
+# =========================================================
+# Utils
+# =========================================================
+def _clamp(x: float, lo: float, hi: float) -> float:
+    return max(lo, min(hi, x))
+
+def _get(d: Dict, path: str, default=None):
+    cur = d
+    for k in path.split("."):
+        if not isinstance(cur, dict) or k not in cur:
+            return default
+        cur = cur[k]
+    return cur
+
+# =========================================================
+# Autosync Targets (Recovery)
+# =========================================================
+def compute_sleep_target_minutes(user: Dict, recent_training: Optional[Dict] = None) -> int:
+    """
+    Sleep target minutes adapted to goal/phase and load. Wearable-neutral.
+    Clamp to 7–9 h.
+    """
+    base = 7.5 * 60  # 450 min
+    goal  = (_get(user, "program.goal_type", "recomp") or "recomp").lower()
+    phase = (_get(user, "program.phase", _get(user, "program.block", "build")) or "build").lower()
+    plan  = _get(user, "program.plan", {}) or {}
+    load_sessions = plan.get("freq_per_week") or _get(recent_training or {}, "sessions_per_week", 0)
+    load_minutes  = plan.get("weekly_minutes") or _get(recent_training or {}, "weekly_minutes", 0)
+
+    add = 0
+    if goal in ("endurance","lean_bulk") and phase in ("build","peak"):
+        add += 30
+    if (load_sessions or 0) >= 5 or (load_minutes or 0) >= 300:
+        add += 30
+    if goal == "cut" and phase in ("build","peak"):
+        add += 15
+
+    return int(round(_clamp(base + add, 420, 540)))  # 420=7h, 540=9h
+
+def compute_neat_goals_for_user(user: Dict) -> Tuple[int, int]:
+    """
+    Personalized NEAT (steps) goal band low/high based on goal + frame + baseline activity.
+    Wearable-neutral. Conservative bounds & minimum spread.
+    """
+    goal = (_get(user, "program.goal_type", "recomp") or "recomp").lower()
+    height_cm = _get(user, "profile.height_cm")
+    weight_kg = _get(user, "profile.weight_kg", 75.0)
+    activity  = (_get(user, "profile.activity_level", "moderate") or "moderate").lower()
+
+    base_ranges = {
+        "cut":        (8000, 12000),
+        "recomp":     (7000, 10000),
+        "lean_bulk":  (6000,  8000),
+        "endurance":  (9000, 13000),
+        "wellness":   (6000,  9000),
+    }
+    low, high = base_ranges.get(goal, base_ranges["recomp"])
+
+    frame_factor = 0.0
+    if height_cm is not None: frame_factor += (height_cm - 170.0) * 0.004
+    if weight_kg is not None: frame_factor += (weight_kg - 70.0)  * 0.003
+    frame_factor = _clamp(frame_factor, -0.15, 0.15)
+
+    activity_nudge = {
+        "sedentary": -0.10, "light": -0.05, "moderate": 0.00, "active": 0.05, "very_active": 0.10
+    }.get(activity, 0.0)
+
+    adj = 1.0 + frame_factor + activity_nudge
+    low_adj, high_adj = int(round(low*adj)), int(round(high*adj))
+    if high_adj - low_adj < 1500:
+        mid = (low_adj + high_adj)//2
+        low_adj, high_adj = mid - 750, mid + 750
+
+    low_adj  = max(4000, min(low_adj, 18000))
+    high_adj = max(low_adj + 1500, min(high_adj, 20000))
+    return low_adj, high_adj
+
+# =========================================================
+# Sleep Sub-Levers (source-agnostic)
+# =========================================================
+def sleep_duration_score(episodes: List[Dict],
+                         sleep_goal_min: int = 450,
+                         last_score: Optional[float] = None) -> Tuple[float, str]:
+    """
+    episodes: list of dicts within the last 'sleep day' (e.g., noon→noon), each:
+      {"start": datetime, "end": datetime, "type": "core"|"nap"(opt)}
+    Returns: (score 0–35, confidence LOW/MEDIUM/HIGH)
+    """
+    HARD_FLOOR = 300
+    FULL_BAND  = 60
+    OVER_SOFT  = 180
+    MAX_NAP_CREDIT = 90
+    NAP_WEIGHT = 0.5
+
+    if not episodes:
+        if last_score is not None:
+            return (max(0.0, min(35.0, 0.8 * last_score)), "LOW")
+        return (17.5, "LOW")
+
+    total_core = 0
+    total_nap  = 0
+    for e in episodes:
+        mins = max(0, int((e["end"] - e["start"]).total_seconds() // 60))
+        if e.get("type", "core") == "nap":
+            total_nap += mins
+        else:
+            total_core += mins
+
+    nap_credit  = min(total_nap, MAX_NAP_CREDIT) * NAP_WEIGHT
+    total_sleep = total_core + nap_credit
+
+    if total_sleep <= HARD_FLOOR:
+        base = 0.0
+    elif total_sleep < sleep_goal_min:
+        base = 35.0 * (total_sleep - HARD_FLOOR) / (sleep_goal_min - HARD_FLOOR)
+    elif total_sleep <= sleep_goal_min + FULL_BAND:
+        base = 35.0
+    elif total_sleep <= sleep_goal_min + FULL_BAND + OVER_SOFT:
+        base = 35.0 - 10.0 * ((total_sleep - (sleep_goal_min + FULL_BAND)) / OVER_SOFT)
+    else:
+        base = 25.0
+
+    conf = "HIGH" if (total_core > 0 or total_nap > 0) else "LOW"
+    return (max(0.0, min(35.0, base)), conf)
+
+def sleep_regularity_score(entries: List[Dict],
+                           last_window_score: Optional[float] = None) -> Tuple[float, str]:
+    """
+    entries: up to last 7 calendar days (newest last). Each:
+      {"bed": datetime|None, "wake": datetime|None, "quick": "yes"|"no"|None}
+    Returns: (score 0–25, confidence LOW/MEDIUM/HIGH)
+    """
+    TARGET_VAR, MAX_VAR = 60.0, 180.0
+    times_min = []
+    for e in entries[-7:]:
+        bed = e.get("bed")
+        q   = e.get("quick")
+        if bed:
+            m = bed.hour * 60 + bed.minute
+            if m < 180: m += 1440  # unwrap small post-midnight bedtimes
+            times_min.append(m % 1440)
+        elif q in ("yes", "no"):
+            m = 23*60 if q == "yes" else 1*60
+            times_min.append(m)
+
+    N = len(times_min)
+    if N < 3:
+        if last_window_score is not None:
+            return (max(0.0, min(25.0, 0.8 * last_window_score)), "LOW")
+        return (12.5, "LOW")
+
+    theta = [2 * math.pi * (t / 1440.0) for t in times_min]
+    C = sum(math.cos(a) for a in theta) / N
+    S = sum(math.sin(a) for a in theta) / N
+    R = math.sqrt(C*C + S*S)
+    var_minutes = 720.0 * math.sqrt(max(0.0, 2*(1 - R)))
+
+    if var_minutes <= TARGET_VAR:
+        base = 25.0
+    elif var_minutes >= MAX_VAR:
+        base = 0.0
+    else:
+        base = 25.0 * (1 - (var_minutes - TARGET_VAR) / (MAX_VAR - TARGET_VAR))
+
+    completeness = N / 7.0
+    adj = min(1.0, 0.85 + 0.15 * completeness)  # coverage-only
+    score = max(0.0, min(25.0, base * adj))
+    conf  = "HIGH" if N >= 7 else ("MEDIUM" if N >= 5 else "LOW")
+    return (score, conf)
+
+def combined_sleep_score(duration_eps: List[Dict],
+                         regularity_entries: List[Dict],
+                         sleep_goal_min: int = 450,
+                         last_duration: Optional[float] = None,
+                         last_regularity: Optional[float] = None) -> Tuple[float, str]:
+    """
+    Returns combined Sleep score (0–60) + conservative confidence label.
+    """
+    dur_score, dur_conf = sleep_duration_score(duration_eps, sleep_goal_min, last_duration)
+    reg_score, reg_conf = sleep_regularity_score(regularity_entries, last_regularity)
+    sleep_score = max(0.0, min(60.0, dur_score + reg_score))
+
+    conf_rank = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
+    min_rank = min(conf_rank[dur_conf], conf_rank[reg_conf])
+    inv = {v: k for k, v in conf_rank.items()}
+    combined_conf = inv[min_rank]
+    return (sleep_score, combined_conf)
+
+# =========================================================
+# NEAT / Steps Sub-Lever (0–40) — autosynced + coverage
+# =========================================================
+def neat_steps_score_for_user(user: Dict,
+                              steps_today: int,
+                              days_with_steps_data: int = 7,
+                              last_score: Optional[float] = None) -> Tuple[float, str, Tuple[int,int]]:
+    """
+    Returns (score_0_40, confidence_label, (low_goal, high_goal))
+    """
+    low_goal, high_goal = compute_neat_goals_for_user(user)
+
+    if days_with_steps_data < 3:
+        if last_score is not None:
+            return (max(0.0, min(40.0, 0.8 * last_score)), "LOW", (low_goal, high_goal))
+        return (20.0, "LOW", (low_goal, high_goal))
+
+    MAX_COUNTED = 25_000
+    steps = max(0, min(int(steps_today), MAX_COUNTED))
+
+    if steps <= low_goal:
+        base = 40.0 * (steps / float(low_goal))
+    elif steps >= high_goal:
+        base = 40.0
+    else:
+        base = 40.0 * ((steps - low_goal) / float(high_goal - low_goal))
+
+    coverage = min(1.0, days_with_steps_data / 7.0)
+    adj = 0.85 + 0.15 * coverage
+    score = max(0.0, min(40.0, base * adj))
+
+    conf = "HIGH" if days_with_steps_data == 7 else ("MEDIUM" if days_with_steps_data >= 5 else "LOW")
+    return (round(score, 2), conf, (low_goal, high_goal))
+
+# =========================================================
+# Base Camp (Recovery) Combiner (0–100)
+# =========================================================
+def base_camp_score(user: Dict,
+                    *,
+                    # Sleep inputs
+                    sleep_episodes: List[Dict],
+                    sleep_entries: List[Dict],
+                    last_sleep_duration_score: Optional[float] = None,
+                    last_sleep_regularity_score: Optional[float] = None,
+                    # NEAT inputs
+                    steps_today: int,
+                    days_with_steps_data: int = 7,
+                    last_neat_score: Optional[float] = None,
+                    recent_training: Optional[Dict] = None) -> Tuple[float, Dict]:
+    """
+    Compute Base Camp (Recovery) score: Sleep(0–60) + NEAT(0–40) = 0–100
+    Autosyncs sleep target and NEAT band from user profile.
+    Returns (total_0_100, breakdown_dict)
+    """
+    sleep_goal_min = compute_sleep_target_minutes(user, recent_training)
+    sleep_score, sleep_conf = combined_sleep_score(
+        sleep_episodes, sleep_entries, sleep_goal_min,
+        last_duration=last_sleep_duration_score,
+        last_regularity=last_sleep_regularity_score
+    )
+
+    neat_score, neat_conf, (neat_low, neat_high) = neat_steps_score_for_user(
+        user, steps_today, days_with_steps_data, last_neat_score
+    )
+
+    total = _clamp(sleep_score + neat_score, 0.0, 100.0)
+
+    breakdown = {
+        "sleep_score_0_60": round(sleep_score, 2),
+        "sleep_confidence": sleep_conf,
+        "sleep_target_minutes": sleep_goal_min,
+        "neat_score_0_40": round(neat_score, 2),
+        "neat_confidence": neat_conf,
+        "neat_targets_steps": {"low": neat_low, "high": neat_high},
+        "total_0_100": round(total, 2)
+    }
+    return round(total, 2), breakdown
+
+# =========================================================
+# One-call convenience
+# =========================================================
+def base_camp_score_for_user(user: Dict,
+                             *,
+                             # Sleep data
+                             sleep_episodes: List[Dict],
+                             sleep_entries: List[Dict],
+                             # NEAT data
+                             steps_today: int,
+                             days_with_steps_data: int = 7,
+                             # Optional history
+                             last_sleep_duration_score: Optional[float] = None,
+                             last_sleep_regularity_score: Optional[float] = None,
+                             last_neat_score: Optional[float] = None,
+                             recent_training: Optional[Dict] = None) -> Dict:
+    """
+    One-call wrapper: autosyncs targets and returns a dict ready for UI.
+    """
+    total, br = base_camp_score(
+        user,
+        sleep_episodes=sleep_episodes,
+        sleep_entries=sleep_entries,
+        last_sleep_duration_score=last_sleep_duration_score,
+        last_sleep_regularity_score=last_sleep_regularity_score,
+        steps_today=steps_today,
+        days_with_steps_data=days_with_steps_data,
+        last_neat_score=last_neat_score,
+        recent_training=recent_training
+    )
+    return {
+        "total_recovery_score": total,
+        "sleep": {
+            "score_0_60": br["sleep_score_0_60"],
+            "confidence": br["sleep_confidence"],
+            "target_minutes": br["sleep_target_minutes"]
+        },
+        "neat": {
+            "score_0_40": br["neat_score_0_40"],
+            "confidence": br["neat_confidence"],
+            "targets_steps": br["neat_targets_steps"]
+        }
+    }
