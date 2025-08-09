@@ -1,0 +1,295 @@
+# peaku_climb.py
+from __future__ import annotations
+from typing import Dict, Optional, Tuple
+
+# ---------------------------
+# Intensity base-credit (dynamic by goal × phase)
+# ---------------------------
+def _intensity_base_credit(goal: str, phase: str) -> float:
+    """
+    Returns base credit (points) for logging intensity, scaled by goal/phase.
+    Users always get at least this much if they logged RPE/HR and did some work.
+    """
+    g = (goal or "recomp").lower()
+    ph = (phase or "build").lower()
+
+    # Phase weighting: more credit during Build/Peak, less in Base/Deload
+    phase_bonus = {
+        "base":   0.0,
+        "build":  0.5,
+        "peak":   1.0,
+        "deload": -0.5,
+    }.get(ph, 0.0)
+
+    # Goal weighting: encourage honest logging when intensity regulation matters most
+    goal_bonus = {
+        "cut":        0.5,   # tight dosing helps preserve strength on deficit
+        "recomp":     0.0,
+        "lean_bulk":  0.0,
+        "endurance":  0.5,   # pacing/zone discipline matters
+        "wellness":   0.0,
+    }.get(g, 0.0)
+
+    base = 3.0 + phase_bonus + goal_bonus
+    return float(max(2.0, min(4.0, base)))  # clamp to 2–4 pts
+
+
+# ---------------------------
+# Intensity bonus helpers (bonus-only; no penalties)
+# ---------------------------
+def _intensity_bonus_rpe(avg_rpe: Optional[float],
+                         completion_ratio: float,
+                         target_low: float, target_high: float,
+                         base_credit: float,
+                         band_soft: float = 0.5,
+                         max_bonus: float = 10.0) -> float:
+    if avg_rpe is None or completion_ratio <= 0:
+        return 0.0
+    comp_scale = 0.3 + 0.7 * max(0.0, min(1.0, completion_ratio))
+
+    if target_low <= avg_rpe <= target_high:
+        prox = max_bonus - base_credit
+    elif (target_low - band_soft) <= avg_rpe < target_low:
+        prox = (max_bonus - base_credit) * (1 - (target_low - avg_rpe) / band_soft) * 0.7
+    elif target_high < avg_rpe <= (target_high + band_soft):
+        prox = (max_bonus - base_credit) * (1 - (avg_rpe - target_high) / band_soft) * 0.7
+    else:
+        prox = (max_bonus - base_credit) * 0.2
+
+    return max(0.0, min(max_bonus, (base_credit + prox) * comp_scale))
+
+
+def _intensity_bonus_hr(avg_hr_ratio: Optional[float],   # avg HR / HRmax (0..1)
+                        completion_ratio: float,
+                        target_low: float, target_high: float,
+                        base_credit: float,
+                        band_soft: float = 0.03,
+                        max_bonus: float = 10.0) -> float:
+    if avg_hr_ratio is None or completion_ratio <= 0:
+        return 0.0
+    comp_scale = 0.3 + 0.7 * max(0.0, min(1.0, completion_ratio))
+
+    if target_low <= avg_hr_ratio <= target_high:
+        prox = max_bonus - base_credit
+    elif (target_low - band_soft) <= avg_hr_ratio < target_low:
+        prox = (max_bonus - base_credit) * (1 - (target_low - avg_hr_ratio) / band_soft) * 0.7
+    elif target_high < avg_hr_ratio <= (target_high + band_soft):
+        prox = (max_bonus - base_credit) * (1 - (avg_hr_ratio - target_high) / band_soft) * 0.7
+    else:
+        prox = (max_bonus - base_credit) * 0.2
+
+    return max(0.0, min(max_bonus, (base_credit + prox) * comp_scale))
+
+
+# ---------------------------
+# Autosync targets (goal × phase, with optional plan/history)
+# ---------------------------
+def climb_targets_for_today(
+    program_goal: str,          # "cut" | "recomp" | "lean_bulk" | "endurance" | "wellness"
+    phase: str,                 # "base" | "build" | "peak" | "deload"
+    plan: Optional[Dict] = None,
+    recent: Optional[Dict] = None,
+    modality: Optional[str] = None  # "strength" | "endurance" | None (infer)
+) -> Dict:
+    """
+    Returns a targets dict the scorer consumes.
+    """
+    g = (program_goal or "recomp").lower()
+    ph = (phase or "build").lower()
+    plan = plan or {}
+    r = recent or {}
+
+    # Infer modality
+    if modality is None:
+        modality = "endurance" if g == "endurance" else "strength"
+
+    # Completion baseline
+    comp = plan.get("completion")
+    if not comp:
+        if modality == "endurance":
+            avg_min = r.get("avg_minutes_per_cardio", 40)
+            planned = int(round(avg_min * (1.05 if ph in ("build", "peak") else 1.00)))
+            comp = {"type": "minutes", "planned": max(30, planned), "freq_per_week": r.get("sessions_per_week", 4)}
+        else:
+            avg_sets = r.get("avg_sets_per_session", 20)
+            planned = int(round(avg_sets * (1.05 if ph in ("build", "peak") else 1.00)))
+            comp = {"type": "sets", "planned": max(12, planned), "freq_per_week": r.get("sessions_per_week", 4)}
+    else:
+        comp.setdefault("freq_per_week", plan.get("freq_per_week", 4))
+
+    # Intensity range (and base credit)
+    inten = plan.get("intensity")
+    if not inten:
+        if modality == "endurance":
+            inten = {"type": "HR", "low": (0.75 if ph in ("build","peak") else 0.65),
+                     "high": (0.85 if ph in ("build","peak") else 0.75),
+                     "zone": "Z3-Z4" if ph in ("build","peak") else "Z2-Z3"}
+        else:
+            if g in ("lean_bulk", "recomp"):
+                inten = {"type": "RPE",
+                         "low": (8.0 if ph in ("build","peak") else 7.0),
+                         "high": (9.0 if ph in ("build","peak") else 8.0)}
+            elif g == "cut":
+                inten = {"type": "RPE", "low": 7.5, "high": 8.5}
+            else:  # wellness
+                inten = {"type": "RPE", "low": 6.0, "high": 7.0}
+
+    inten["base_credit"] = _intensity_base_credit(g, ph)
+
+    # Progression rule
+    prog = plan.get("progression") or (
+        {"rule": "endurance_zone_time"} if modality == "endurance"
+        else {"rule": "strength_load"}
+    )
+
+    # Rest day flag
+    import datetime as _dt
+    weekday = ["mon","tue","wed","thu","fri","sat","sun"][_dt.datetime.now().weekday()]
+    rest_day = bool(plan.get("rest_days", {}).get(weekday, False))
+
+    # Deload adjustment (phase or plan)
+    deload = (ph == "deload") or plan.get("deload", False)
+    if deload:
+        if comp["type"] == "sets":
+            comp["planned"] = max(8, int(round(comp["planned"] * 0.75)))
+        else:
+            comp["planned"] = max(20, int(round(comp["planned"] * 0.80)))
+        if inten["type"] == "RPE":
+            inten["low"] = max(5.5, inten["low"] - 1.0)
+            inten["high"] = max(inten["low"] + 0.5, inten["high"] - 1.0)
+        else:
+            inten["low"] = max(0.60, inten["low"] - 0.05)
+            inten["high"] = max(inten["low"] + 0.05, inten["high"] - 0.05)
+            inten["zone"] = "Z2-Z3"
+
+    return {
+        "modality": modality,
+        "completion": comp,        # {"type":"sets"|"minutes","planned":int,"freq_per_week":int}
+        "intensity": inten,        # {"type":"RPE"/"HR","low","high","base_credit", ...}
+        "progression": prog,       # {"rule":"strength_load"|"endurance_zone_time"}
+        "rest_day": rest_day,
+        "goal": g, "phase": ph
+    }
+
+
+# ---------------------------
+# Confidence (wearable-neutral; based on what was logged)
+# ---------------------------
+def climb_confidence(completion_logged: bool,
+                     intensity_logged: bool,
+                     progression_logged: bool,
+                     warmup_logged: bool) -> Tuple[float, str]:
+    sublevers = [completion_logged, intensity_logged, progression_logged, warmup_logged]
+    logged_ratio = sum(1 for s in sublevers if s) / len(sublevers)
+    mult = 0.70 + 0.30 * logged_ratio       # 0.70..1.00
+    label = "HIGH" if logged_ratio >= 0.875 else ("MEDIUM" if logged_ratio >= 0.5 else "LOW")
+    return round(mult, 2), label
+
+
+# ---------------------------
+# Main scorer (Climb lever 0–100)
+# ---------------------------
+def climb_score(session: Dict,
+                targets: Dict,
+                last_week_session: Optional[Dict] = None,
+                apply_confidence: bool = True) -> Tuple[float, Dict]:
+    """
+    session: today's actuals (subset depends on modality), e.g.
+      Strength:
+        {"completed_sets": 21, "warmup_done": True, "avg_rpe": 8.2,
+         "total_volume": 16000.0, "top_set_load": 105.0}
+      Endurance:
+        {"active_minutes": 42, "warmup_done": True, "avg_hr_ratio": 0.77,
+         "zone_minutes": 28}
+
+    targets: output of climb_targets_for_today(...)
+    last_week_session: same-session reference for progression
+    """
+    last_week_session = last_week_session or {}
+    modality = targets.get("modality", "strength")
+
+    # Rest day override
+    if targets.get("rest_day", False):
+        did_any = (session.get("completed_sets", 0) > 0) or (session.get("active_minutes", 0) > 0)
+        if not did_any:
+            return 100.0, {
+                "completion": 40.0, "progression": 40.0, "warmup": 10.0, "intensity_bonus": 10.0,
+                "confidence_multiplier": 1.0, "confidence_label": "HIGH", "rest_day": True, "modality": modality
+            }
+
+    # Completion (0–40)
+    comp_t = targets["completion"]
+    planned = max(1, int(comp_t["planned"]))
+    done = max(0, int(session.get("completed_sets" if comp_t["type"] == "sets" else "active_minutes", 0)))
+    completion_ratio = min(1.0, done / planned)
+    completion_points = 40.0 * completion_ratio
+    comp_logged = done > 0
+
+    # Progression (0–40)
+    prog_rule = targets["progression"]["rule"]
+    progression_points = 0.0
+    progression_logged = False
+
+    if modality == "strength" and prog_rule == "strength_load":
+        cur_vol = session.get("total_volume")
+        last_vol = last_week_session.get("total_volume")
+        if cur_vol and last_vol and last_vol > 0:
+            delta = (cur_vol - last_vol) / last_vol
+            progression_logged = True
+        else:
+            cur_top = session.get("top_set_load")
+            last_top = last_week_session.get("top_set_load")
+            delta = ((cur_top - last_top) / last_top) if cur_top and last_top and last_top > 0 else None
+            progression_logged = cur_top is not None and last_top is not None
+        if delta is not None and delta > 0:
+            progression_points = 40.0 * min(delta, 0.10) / 0.05   # +5%→40 (cap at +10%)
+            progression_points = max(0.0, min(40.0, progression_points))
+
+    elif modality == "endurance" and prog_rule == "endurance_zone_time":
+        cur_zone = session.get("zone_minutes")
+        last_zone = last_week_session.get("zone_minutes")
+        if cur_zone and last_zone and last_zone > 0:
+            delta = (cur_zone - last_zone) / last_zone
+            progression_logged = True
+            progression_points = 40.0 * min(max(delta, 0.0), 0.20) / 0.10  # +10%→40 (cap +20%)
+            progression_points = max(0.0, min(40.0, progression_points))
+
+    # Warm-up / Mobility (0–10)
+    warmup_points = 10.0 if session.get("warmup_done") else 0.0
+    warm_logged = bool(session.get("warmup_done"))
+
+    # Intensity BONUS (0–10; with dynamic base credit)
+    inten = targets["intensity"]
+    base_credit = float(inten.get("base_credit", 3.0))
+    if inten["type"] == "RPE":
+        avg_rpe = session.get("avg_rpe")
+        intensity_bonus = _intensity_bonus_rpe(avg_rpe, completion_ratio, inten["low"], inten["high"], base_credit)
+        intensity_logged = avg_rpe is not None
+    else:  # HR
+        avg_hr = session.get("avg_hr_ratio")
+        intensity_bonus = _intensity_bonus_hr(avg_hr, completion_ratio, inten["low"], inten["high"], base_credit)
+        intensity_logged = avg_hr is not None
+
+    # Sum (before confidence)
+    subtotal = completion_points + progression_points + warmup_points + intensity_bonus
+    subtotal = max(0.0, min(100.0, subtotal))
+
+    # Confidence (wearable-neutral)
+    conf_mult, conf_label = climb_confidence(comp_logged, intensity_logged, progression_logged, warm_logged)
+    total = subtotal * (conf_mult if apply_confidence else 1.0)
+    total = max(0.0, min(100.0, total))
+
+    breakdown = {
+        "completion": round(completion_points, 2),
+        "progression": round(progression_points, 2),
+        "warmup": round(warmup_points, 2),
+        "intensity_bonus": round(intensity_bonus, 2),
+        "subtotal": round(subtotal, 2),
+        "confidence_multiplier": conf_mult if apply_confidence else 1.0,
+        "confidence_label": conf_label if apply_confidence else "HIGH",
+        "rest_day": bool(targets.get("rest_day", False)),
+        "modality": modality,
+        "intensity_base_credit": base_credit,
+        "intensity_target_range": (inten["low"], inten["high"])
+    }
+    return round(total, 2), breakdown

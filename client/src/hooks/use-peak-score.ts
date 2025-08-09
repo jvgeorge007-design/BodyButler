@@ -124,71 +124,207 @@ export function usePeakScore() {
       return dietScore;
     };
 
-    // Calculate Climb Score
+    // Calculate Climb Score - Goal-aware dynamic implementation
     const calculateClimbScore = (): number => {
-      // Rest Day Override: Your exact formula
-      const plannedRestDay = (dailyRecap as any)?.workout?.plannedRestDay || false;
-      const noUnplannedTraining = !(dailyRecap as any)?.workout?.unplannedTraining || false;
+      const goalType = getGoalType();
+      const phase = (profile as any)?.onboardingData?.program?.phase || 'build';
+      const session = (dailyRecap as any)?.workout || {};
+      const lastWeekSession = (dailyRecap as any)?.workout?.lastWeek || {};
       
-      if (plannedRestDay && noUnplannedTraining) {
-        return 100; // climb_score = 100
+      // Build dynamic targets based on goal and phase
+      const buildClimbTargets = () => {
+        const modality = goalType === 'endurance' ? 'endurance' : 'strength';
+        const plan = (profile as any)?.onboardingData?.program?.plan || {};
+        const recent = (dailyRecap as any)?.workout?.recentHistory || {};
+        
+        // Completion baseline
+        let comp: any;
+        if (modality === 'endurance') {
+          const avgMin = recent.avg_minutes_per_cardio || 40;
+          const planned = Math.round(avgMin * (['build', 'peak'].includes(phase) ? 1.05 : 1.00));
+          comp = { type: 'minutes', planned: Math.max(30, planned), freq_per_week: recent.sessions_per_week || 4 };
+        } else {
+          const avgSets = recent.avg_sets_per_session || 20;
+          const planned = Math.round(avgSets * (['build', 'peak'].includes(phase) ? 1.05 : 1.00));
+          comp = { type: 'sets', planned: Math.max(12, planned), freq_per_week: recent.sessions_per_week || 4 };
+        }
+        
+        // Intensity range with base credit
+        let inten: any;
+        if (modality === 'endurance') {
+          inten = {
+            type: 'HR',
+            low: ['build', 'peak'].includes(phase) ? 0.75 : 0.65,
+            high: ['build', 'peak'].includes(phase) ? 0.85 : 0.75,
+            zone: ['build', 'peak'].includes(phase) ? 'Z3-Z4' : 'Z2-Z3'
+          };
+        } else {
+          if (['lean_bulk', 'recomp'].includes(goalType)) {
+            inten = {
+              type: 'RPE',
+              low: ['build', 'peak'].includes(phase) ? 8.0 : 7.0,
+              high: ['build', 'peak'].includes(phase) ? 9.0 : 8.0
+            };
+          } else if (goalType === 'cut') {
+            inten = { type: 'RPE', low: 7.5, high: 8.5 };
+          } else {
+            inten = { type: 'RPE', low: 6.0, high: 7.0 };
+          }
+        }
+        
+        // Dynamic base credit
+        const phaseBonusMap: Record<string, number> = { base: 0.0, build: 0.5, peak: 1.0, deload: -0.5 };
+        const goalBonusMap: Record<string, number> = { cut: 0.5, recomp: 0.0, lean_bulk: 0.0, endurance: 0.5, wellness: 0.0 };
+        const phaseBonus = phaseBonusMap[phase] || 0.0;
+        const goalBonus = goalBonusMap[goalType] || 0.0;
+        inten.base_credit = Math.max(2.0, Math.min(4.0, 3.0 + phaseBonus + goalBonus));
+        
+        // Progression rule
+        const prog = modality === 'endurance' 
+          ? { rule: 'endurance_zone_time' }
+          : { rule: 'strength_load' };
+        
+        // Rest day check
+        const today = new Date();
+        const weekday = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'][today.getDay()];
+        const restDay = Boolean(plan.rest_days?.[weekday]);
+        
+        return {
+          modality,
+          completion: comp,
+          intensity: inten,
+          progression: prog,
+          rest_day: restDay,
+          goal: goalType,
+          phase
+        };
+      };
+      
+      const targets = buildClimbTargets();
+      
+      // Rest day override
+      if (targets.rest_day) {
+        const didAny = (session.completed_sets || 0) > 0 || (session.active_minutes || 0) > 0;
+        if (!didAny) {
+          return 100.0; // Full points for proper rest
+        }
       }
       
-      // Completion (0-40): Your exact formula
-      const completedSetsOrMinutes = (dailyRecap as any)?.workout?.completed || 0;
-      const plannedSetsOrMinutes = (dailyRecap as any)?.workout?.planned || 1; // Avoid division by zero
-      const completionRatio = completedSetsOrMinutes / plannedSetsOrMinutes;
-      const completion = Math.min(completionRatio, 1.0) * 40;
+      // Completion (0-40)
+      const planned = Math.max(1, targets.completion.planned);
+      const done = Math.max(0, targets.completion.type === 'sets' 
+        ? (session.completed_sets || 0)
+        : (session.active_minutes || 0));
+      const completionRatio = Math.min(1.0, done / planned);
+      const completionPoints = 40.0 * completionRatio;
+      const compLogged = done > 0;
       
-      // Intensity (0-30): Your exact formula
-      const usingRPE = (dailyRecap as any)?.workout?.intensityMethod === 'RPE';
-      const usingHeartRate = (dailyRecap as any)?.workout?.intensityMethod === 'heart_rate';
+      // Progression (0-40)
+      let progressionPoints = 0.0;
+      let progressionLogged = false;
       
-      let intensity = 0;
-      
-      if (usingRPE) {
-        const avgRPE = (dailyRecap as any)?.workout?.averageRPE || 0;
-        const targetRPE = (dailyRecap as any)?.workout?.targetRPE || 7; // Default RPE target
-        const deviation = Math.abs(avgRPE - targetRPE);
-        intensity = Math.max(0, 30 - (deviation / targetRPE) * 30);
-      } else if (usingHeartRate) {
-        const minutesInTargetZone = (dailyRecap as any)?.workout?.minutesInTargetZone || 0;
-        const totalActiveMinutes = (dailyRecap as any)?.workout?.totalActiveMinutes || 1; // Avoid division by zero
-        const zoneRatio = minutesInTargetZone / totalActiveMinutes;
-        intensity = Math.min(zoneRatio, 1.0) * 30;
+      if (targets.modality === 'strength' && targets.progression.rule === 'strength_load') {
+        const curVol = session.total_volume;
+        const lastVol = lastWeekSession.total_volume;
+        let delta: number | null = null;
+        
+        if (curVol && lastVol && lastVol > 0) {
+          delta = (curVol - lastVol) / lastVol;
+          progressionLogged = true;
+        } else {
+          const curTop = session.top_set_load;
+          const lastTop = lastWeekSession.top_set_load;
+          if (curTop && lastTop && lastTop > 0) {
+            delta = (curTop - lastTop) / lastTop;
+            progressionLogged = true;
+          }
+        }
+        
+        if (delta !== null && delta > 0) {
+          progressionPoints = 40.0 * Math.min(delta, 0.10) / 0.05; // +5%→40 (cap at +10%)
+          progressionPoints = Math.max(0.0, Math.min(40.0, progressionPoints));
+        }
+      } else if (targets.modality === 'endurance' && targets.progression.rule === 'endurance_zone_time') {
+        const curZone = session.zone_minutes;
+        const lastZone = lastWeekSession.zone_minutes;
+        
+        if (curZone && lastZone && lastZone > 0) {
+          const delta = (curZone - lastZone) / lastZone;
+          progressionLogged = true;
+          progressionPoints = 40.0 * Math.min(Math.max(delta, 0.0), 0.20) / 0.10; // +10%→40 (cap +20%)
+          progressionPoints = Math.max(0.0, Math.min(40.0, progressionPoints));
+        }
       }
       
-      // Progression (0-20): Your exact formula
-      const currentWeight = (dailyRecap as any)?.workout?.totalWeight || 0;
-      const currentReps = (dailyRecap as any)?.workout?.totalReps || 0;
-      const currentSets = (dailyRecap as any)?.workout?.totalSets || 0;
+      // Warmup/Mobility (0-10)
+      const warmupPoints = session.warmup_done ? 10.0 : 0.0;
+      const warmLogged = Boolean(session.warmup_done);
       
-      const lastWeekWeight = (dailyRecap as any)?.workout?.lastWeekWeight || 0;
-      const lastWeekReps = (dailyRecap as any)?.workout?.lastWeekReps || 0;
-      const lastWeekSets = (dailyRecap as any)?.workout?.lastWeekSets || 0;
+      // Intensity BONUS (0-10 with dynamic base credit)
+      const baseCredit = targets.intensity.base_credit;
+      let intensityBonus = 0.0;
+      let intensityLogged = false;
       
-      let progression = 0;
-      if (currentWeight > lastWeekWeight || currentReps > lastWeekReps || currentSets > lastWeekSets) {
-        progression = 20;
+      if (targets.intensity.type === 'RPE') {
+        const avgRPE = session.avg_rpe;
+        intensityLogged = avgRPE !== undefined && avgRPE !== null;
+        
+        if (intensityLogged && completionRatio > 0) {
+          const compScale = 0.3 + 0.7 * Math.max(0.0, Math.min(1.0, completionRatio));
+          const targetLow = targets.intensity.low;
+          const targetHigh = targets.intensity.high;
+          const bandSoft = 0.5;
+          const maxBonus = 10.0;
+          
+          let prox: number;
+          if (targetLow <= avgRPE && avgRPE <= targetHigh) {
+            prox = maxBonus - baseCredit;
+          } else if ((targetLow - bandSoft) <= avgRPE && avgRPE < targetLow) {
+            prox = (maxBonus - baseCredit) * (1 - (targetLow - avgRPE) / bandSoft) * 0.7;
+          } else if (targetHigh < avgRPE && avgRPE <= (targetHigh + bandSoft)) {
+            prox = (maxBonus - baseCredit) * (1 - (avgRPE - targetHigh) / bandSoft) * 0.7;
+          } else {
+            prox = (maxBonus - baseCredit) * 0.2;
+          }
+          
+          intensityBonus = Math.max(0.0, Math.min(maxBonus, (baseCredit + prox) * compScale));
+        }
+      } else { // HR
+        const avgHRRatio = session.avg_hr_ratio;
+        intensityLogged = avgHRRatio !== undefined && avgHRRatio !== null;
+        
+        if (intensityLogged && completionRatio > 0) {
+          const compScale = 0.3 + 0.7 * Math.max(0.0, Math.min(1.0, completionRatio));
+          const targetLow = targets.intensity.low;
+          const targetHigh = targets.intensity.high;
+          const bandSoft = 0.03;
+          const maxBonus = 10.0;
+          
+          let prox: number;
+          if (targetLow <= avgHRRatio && avgHRRatio <= targetHigh) {
+            prox = maxBonus - baseCredit;
+          } else if ((targetLow - bandSoft) <= avgHRRatio && avgHRRatio < targetLow) {
+            prox = (maxBonus - baseCredit) * (1 - (targetLow - avgHRRatio) / bandSoft) * 0.7;
+          } else if (targetHigh < avgHRRatio && avgHRRatio <= (targetHigh + bandSoft)) {
+            prox = (maxBonus - baseCredit) * (1 - (avgHRRatio - targetHigh) / bandSoft) * 0.7;
+          } else {
+            prox = (maxBonus - baseCredit) * 0.2;
+          }
+          
+          intensityBonus = Math.max(0.0, Math.min(maxBonus, (baseCredit + prox) * compScale));
+        }
       }
       
-      // Warmup/Mobility (0-10): Your exact formula
-      const warmupOrMobilityLogged = (dailyRecap as any)?.workout?.warmupOrMobilityLogged || false;
-      const warmupMobility = warmupOrMobilityLogged ? 10 : 0;
-      
-      // Climb Confidence: Your exact algorithm
-      const completionLogged = completedSetsOrMinutes > 0;
-      const intensityLogged = (usingRPE && (dailyRecap as any)?.workout?.averageRPE) || 
-                             (usingHeartRate && (dailyRecap as any)?.workout?.minutesInTargetZone);
-      const progressionLogged = currentWeight > 0 || currentReps > 0 || currentSets > 0;
-      const warmupLogged = warmupOrMobilityLogged;
-      
-      const sublevers = [completionLogged, intensityLogged, progressionLogged, warmupLogged];
+      // Confidence calculation
+      const sublevers = [compLogged, intensityLogged, progressionLogged, warmLogged];
       const loggedRatio = sublevers.filter(s => s).length / sublevers.length;
-      const confidence = 0.70 + (0.30 * loggedRatio);
+      const confidence = 0.70 + 0.30 * loggedRatio;
       
-      const rawClimbScore = completion + intensity + progression + warmupMobility;
-      return Math.round(rawClimbScore * confidence * 100) / 100;
+      // Sum and apply confidence
+      const subtotal = completionPoints + progressionPoints + warmupPoints + intensityBonus;
+      const total = Math.max(0.0, Math.min(100.0, subtotal * confidence));
+      
+      return Math.round(total * 100) / 100;
     };
 
     // Calculate Base Camp Score
