@@ -1,0 +1,56 @@
+# peaku_climb_onecall.py
+from typing import Dict, Optional, Tuple
+
+# Assumes these are imported from your climb module:
+# from peaku_climb import climb_targets_for_today, climb_score
+
+def climb_score_for_user(
+    user: Dict,
+    session: Dict,
+    last_week_session: Optional[Dict] = None,
+    apply_confidence: bool = True,
+    modality: Optional[str] = None
+) -> Tuple[float, Dict, Dict]:
+    """
+    One-call convenience for Climb (Training) lever.
+
+    Reads:
+      user.program.goal_type   -> "cut"|"recomp"|"lean_bulk"|"endurance"|"wellness"
+      user.program.phase|block -> "base"|"build"|"peak"|"deload"
+      user.program.plan        -> optional plan overrides (completion/intensity/progression/rest_days/deload)
+      user.history.training    -> recent averages (avg_sets_per_session, avg_minutes_per_cardio, sessions_per_week, weekly_minutes)
+
+    Args:
+      user: full user dict
+      session: today's actuals (strength OR endurance fields; see climb_score doc)
+      last_week_session: same-session reference for progression (optional)
+      apply_confidence: toggle confidence multiplier
+      modality: force "strength" or "endurance" (optional). If None, inferred from goal.
+
+    Returns:
+      (score_0_100, breakdown_dict, targets_used_dict)
+    """
+    program = user.get("program", {}) or {}
+    goal   = (program.get("goal_type") or "recomp").lower()
+    phase  = (program.get("phase") or program.get("block") or "build").lower()
+    plan   = program.get("plan") or {}
+    recent = (user.get("history", {}) or {}).get("training", {}) or {}
+
+    # Build autosynced targets for today
+    targets = climb_targets_for_today(
+        program_goal=goal,
+        phase=phase,
+        plan=plan,
+        recent=recent,
+        modality=modality
+    )
+
+    # Score today's session
+    score, breakdown = climb_score(
+        session=session,
+        targets=targets,
+        last_week_session=last_week_session,
+        apply_confidence=apply_confidence
+    )
+
+    return score, breakdown, targets
