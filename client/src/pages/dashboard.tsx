@@ -498,7 +498,7 @@ export default function Dashboard() {
                     <div className="flex flex-col items-center justify-center">
                       <GlassWater className="w-10 h-10 text-blue-400" />
                     </div>
-                    <div className="text-left">
+                    <div className="text-center">
                       <div className="text-lg font-bold text-white">
                         {dashboardData.water.target - dashboardData.water.consumed}
                       </div>
