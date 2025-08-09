@@ -207,6 +207,7 @@ export function usePeakScore() {
         const MAX_NAP_CREDIT = 90; // cap total nap minutes counted
         const NAP_WEIGHT = 0.5; // naps count at 50%
         
+        // Onboarding/sparse fallback
         if (!sleepEpisodes.length) {
           if (lastDurationScore !== null) {
             return Math.max(0.0, Math.min(35.0, 0.8 * lastDurationScore));
@@ -214,9 +215,9 @@ export function usePeakScore() {
           return 17.5; // neutral half-credit
         }
         
+        // Aggregate durations
         let totalCore = 0;
         let totalNap = 0;
-        const confs: number[] = [];
         
         for (const episode of sleepEpisodes) {
           const start = new Date(episode.start);
@@ -228,7 +229,6 @@ export function usePeakScore() {
           } else {
             totalCore += mins;
           }
-          confs.push(episode.source === 'wearable' ? 1.0 : 0.9);
         }
         
         const napCredit = Math.min(totalNap, MAX_NAP_CREDIT) * NAP_WEIGHT;
@@ -248,33 +248,27 @@ export function usePeakScore() {
           base = 25.0; // oversleep: mild deduction
         }
         
-        const avgConf = confs.reduce((sum, c) => sum + c, 0) / confs.length;
-        const adj = Math.min(1.0, 0.95 + 0.05 * avgConf); // ~0.955..1.0
-        return Math.max(0.0, Math.min(35.0, base * adj));
+        return Math.max(0.0, Math.min(35.0, base));
       };
       
       const calculateSleepRegularity = (): number => {
         const TARGET_VAR = 60.0;
         const MAX_VAR = 180.0;
         const timesMin: number[] = [];
-        const confs: number[] = [];
         
         // Collect up to last 7 days
         for (const entry of sleepEntries.slice(-7)) {
           const bed = entry.bed ? new Date(entry.bed) : null;
-          const source = entry.source;
           const quick = entry.quick;
           
           if (bed) {
             let m = bed.getHours() * 60 + bed.getMinutes(); // 0..1439
             if (m < 180) m += 1440; // unwrap small post-midnight bedtimes
             timesMin.push(m % 1440);
-            confs.push(source === 'wearable' ? 1.00 : 0.85);
           } else if (quick === 'yes' || quick === 'no') {
             // quick mode proxy: "yes" ≈ consistent (23:00), "no" ≈ late (01:00)
             const m = quick === 'yes' ? 23 * 60 : 1 * 60;
             timesMin.push(m);
-            confs.push(0.85);
           }
         }
         
@@ -295,6 +289,7 @@ export function usePeakScore() {
         const R = Math.sqrt(C * C + S * S); // 0..1; 1 = perfectly regular
         const varMinutes = 720.0 * Math.sqrt(Math.max(0.0, 2 * (1 - R))); // ~0..≥180
         
+        // Base score from variance
         let base: number;
         if (varMinutes <= TARGET_VAR) {
           base = 25.0;
@@ -304,10 +299,9 @@ export function usePeakScore() {
           base = 25.0 * (1 - (varMinutes - TARGET_VAR) / (MAX_VAR - TARGET_VAR));
         }
         
-        const avgConf = confs.reduce((sum, c) => sum + c, 0) / N;
+        // Completeness-only adjustment (no wearable/source effects)
         const completeness = N / 7.0;
-        // Light adjustment; reaches 1.0 when 7 wearable days are present
-        const adj = Math.min(1.0, 0.85 + 0.10 * completeness + 0.05 * avgConf);
+        const adj = Math.min(1.0, 0.85 + 0.15 * completeness); // 0.85..1.0 based solely on coverage
         return Math.max(0.0, Math.min(25.0, base * adj));
       };
       
