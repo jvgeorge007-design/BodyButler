@@ -28,7 +28,6 @@ export default function WorkoutCard({
           <div className="text-lg font-bold text-white">
             {workoutType}
           </div>
-          <div className="text-xs text-white/60">workout</div>
         </div>
       </div>
     </div>
