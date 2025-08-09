@@ -467,13 +467,13 @@ export default function Dashboard() {
             {/* Trek Navigation Card - Full Width */}
             <TrekNavigationCard />
 
-            {/* Trail Fuel Card - Full Width */}
+            {/* Macronutrients Card - Full Width */}
             <div className="calm-card">
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 mb-1.5">
                   <UtensilsCrossed className="w-5 h-5 text-white" />
                   <h3 className="text-lg font-semibold text-white/60">
-                    Trail Fuel
+                    Macronutrients
                   </h3>
                 </div>
 
