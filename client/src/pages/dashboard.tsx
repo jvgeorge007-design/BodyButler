@@ -473,49 +473,48 @@ export default function Dashboard() {
             {/* Trek Navigation Card - Full Width */}
             <TrekNavigationCard />
 
-            {/* Diet Card (Left) and Macronutrients Card (Right) */}
+            {/* Calories Card (Left) and Water Card (Right) */}
             <div className="flex gap-2.5">
-              {/* Left: Diet Card */}
+              {/* Left: Calories Card */}
               <div className="calm-card w-1/2">
                 <div className="space-y-1.5">
-                  {/* Calories and Water */}
-                  <div className="space-y-2 pt-1">
-                    {/* Calories */}
-                    <div className="flex items-center justify-center gap-2">
-                      <Flame className="w-4 h-4 text-orange-400" />
-                      <div className="text-center">
-                        <div className="text-lg font-bold text-white">
-                          {dashboardData.calories.consumed.toLocaleString()}/{dashboardData.calories.target.toLocaleString()}
-                        </div>
-                        <div className="text-xs text-white/60">kcal</div>
+                  <div className="flex items-center justify-center gap-2 pt-3">
+                    <Flame className="w-4 h-4 text-orange-400" />
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-white">
+                        {dashboardData.calories.consumed.toLocaleString()}/{dashboardData.calories.target.toLocaleString()}
                       </div>
-                    </div>
-                    
-                    {/* Water */}
-                    <div className="flex items-center justify-center gap-2">
-                      <Coffee className="w-4 h-4 text-blue-400" />
-                      <div className="text-center">
-                        <div className="text-lg font-bold text-white">
-                          {dashboardData.water.consumed}/{dashboardData.water.target}
-                        </div>
-                        <div className="text-xs text-white/60">cups</div>
-                      </div>
+                      <div className="text-xs text-white/60">kcal</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Right: Macronutrients Card */}
+              {/* Right: Water Card */}
               <div className="calm-card w-1/2">
                 <div className="space-y-1.5">
-                  {/* Macros with Progress Bars */}
-                  <div className="mb-1 pt-1">
-                    <MacroTrackerCard
-                      protein={dashboardData.macros.protein}
-                      carbs={dashboardData.macros.carbs}
-                      fat={dashboardData.macros.fat}
-                    />
+                  <div className="flex items-center justify-center gap-2 pt-3">
+                    <Coffee className="w-4 h-4 text-blue-400" />
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-white">
+                        {dashboardData.water.consumed}/{dashboardData.water.target}
+                      </div>
+                      <div className="text-xs text-white/60">cups</div>
+                    </div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Macronutrients Card - Full Width */}
+            <div className="calm-card">
+              <div className="space-y-1.5">
+                <div className="mb-1 pt-1">
+                  <MacroTrackerCard
+                    protein={dashboardData.macros.protein}
+                    carbs={dashboardData.macros.carbs}
+                    fat={dashboardData.macros.fat}
+                  />
                 </div>
               </div>
             </div>
