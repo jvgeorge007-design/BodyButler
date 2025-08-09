@@ -21,10 +21,10 @@ export default function WorkoutCard({
   return (
     <div className="bg-transparent relative">
       <div className="flex justify-center items-center">
-        <div 
-          className="text-lg font-bold text-white text-center"
-        >
-          {workoutType}
+        <div className="text-center">
+          <div className="text-lg font-bold text-white">
+            {workoutType}
+          </div>
         </div>
       </div>
     </div>
