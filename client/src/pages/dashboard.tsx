@@ -19,6 +19,8 @@ import {
 
 // Import our new dashboard components
 import CircularCalorieTracker from "@/components/dashboard/circular-calorie-tracker";
+import PeakScoreTracker from "@/components/dashboard/peak-score-tracker";
+import { usePeakScore } from "@/hooks/use-peak-score";
 import WorkoutCard from "@/components/dashboard/workout-card";
 import MacroTrackerCard from "@/components/dashboard/macro-tracker-card";
 import WellnessCard from "@/components/dashboard/wellness-card";
@@ -73,6 +75,8 @@ export default function Dashboard() {
     enabled: isAuthenticated && !isLoading,
     retry: false,
   });
+
+  const peakScoreData = usePeakScore();
 
   // Mutation to create profile from saved onboarding data
   const createProfileMutation = useMutation({
@@ -434,30 +438,27 @@ export default function Dashboard() {
         <div className="flex flex-col justify-between h-full gap-3">
           {/* Date, Streak, and Progress Card */}
           <div className="calm-card p-3 space-y-2">
-            {/* Peak Score and Streak Row */}
-            <div className="flex items-center justify-between">
+            {/* Peak Score Header */}
+            <div className="flex items-center justify-between mb-3">
               <h2 className="text-lg font-bold text-white">Peak Score</h2>
-
-              <div className="flex items-center gap-3">
-                <span className="text-white text-sm font-medium">
-                  {Math.round(summitProgressPercentage)}%
-                </span>
-                {(activityStreakData?.streak || 0) > 0 && (
-                  <div className="flex items-center gap-1">
-                    <Mountain className="w-4 h-4 text-white" />
-                    <span className="text-white text-sm font-medium">
-                      {activityStreakData?.streak || 0} day trek
-                    </span>
-                  </div>
-                )}
-              </div>
+              {(activityStreakData?.streak || 0) > 0 && (
+                <div className="flex items-center gap-1">
+                  <Mountain className="w-4 h-4 text-white" />
+                  <span className="text-white text-sm font-medium">
+                    {activityStreakData?.streak || 0} day trek
+                  </span>
+                </div>
+              )}
             </div>
 
-            {/* Progress Bar */}
-            <div className="w-full bg-white/20 rounded-full h-2">
-              <div
-                className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${summitProgressPercentage}%` }}
+            {/* Peak Score Circular Tracker */}
+            <div className="flex justify-center">
+              <PeakScoreTracker
+                trailFuelScore={peakScoreData.trailFuelScore}
+                climbScore={peakScoreData.climbScore}
+                baseCampScore={peakScoreData.baseCampScore}
+                consistencyBonus={peakScoreData.consistencyBonus}
+                goalType={peakScoreData.goalType}
               />
             </div>
           </div>
