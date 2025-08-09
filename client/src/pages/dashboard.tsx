@@ -16,7 +16,7 @@ import {
   Calendar,
   Mountain,
   Flame,
-  Coffee,
+  GlassWater,
 } from "lucide-react";
 
 // Import our new dashboard components
@@ -496,7 +496,7 @@ export default function Dashboard() {
                 <div className="calm-card">
                   <div className="flex gap-2 py-2 justify-center items-center">
                     <div className="flex flex-col items-center justify-center">
-                      <Coffee className="w-10 h-10 text-blue-400" />
+                      <GlassWater className="w-10 h-10 text-blue-400" />
                     </div>
                     <div className="text-center">
                       <div className="text-lg font-bold text-white">
