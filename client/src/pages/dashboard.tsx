@@ -481,7 +481,7 @@ export default function Dashboard() {
                 <div className="calm-card">
                   <div className="flex gap-2 py-2">
                     <div className="flex flex-col items-center justify-center w-6">
-                      <Flame className="w-7 h-7 text-orange-400" />
+                      <Flame className="w-10 h-10 text-orange-400" />
                     </div>
                     <div className="text-center flex-1">
                       <div className="text-lg font-bold text-white">
@@ -496,7 +496,7 @@ export default function Dashboard() {
                 <div className="calm-card">
                   <div className="flex gap-2 py-2">
                     <div className="flex flex-col items-center justify-center w-6">
-                      <Coffee className="w-7 h-7 text-blue-400" />
+                      <Coffee className="w-10 h-10 text-blue-400" />
                     </div>
                     <div className="text-center flex-1">
                       <div className="text-lg font-bold text-white">
