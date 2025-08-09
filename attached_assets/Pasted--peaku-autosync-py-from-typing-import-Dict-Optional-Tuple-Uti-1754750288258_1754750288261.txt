@@ -1,0 +1,199 @@
+# peaku_autosync.py
+from typing import Dict, Optional, Tuple
+
+# ------------------------------
+# Utilities
+# ------------------------------
+def _get(d, path, default=None):
+    cur = d
+    for key in path.split("."):
+        if not isinstance(cur, dict) or key not in cur:
+            return default
+        cur = cur[key]
+    return cur
+
+def _clamp(x, lo, hi): return max(lo, min(hi, x))
+
+# ------------------------------
+# Diet targets (calories, protein, fiber, hydration)
+# ------------------------------
+def autosync_diet_targets(user: Dict) -> Dict:
+    """
+    Returns diet targets tuned to goal & body:
+      calories_kcal, protein_g, fiber_g, hydration_ml
+    """
+    goal = (_get(user, "program.goal_type", "recomp") or "recomp").lower()
+    block = (_get(user, "program.block", "build") or "build").lower()
+
+    # Base energy: prefer provided TDEE if available
+    tdee = _get(user, "metrics.tdee_kcal")
+    if tdee is None:
+        # Rough fallback: BMR * activity_factor
+        sex = (_get(user, "profile.sex", "m") or "m").lower()
+        age = _get(user, "profile.age_years", 30)
+        ht  = _get(user, "profile.height_cm", 175.0)
+        wt  = _get(user, "profile.weight_kg", 75.0)
+        act = (_get(user, "profile.activity_level", "moderate") or "moderate").lower()
+        # Mifflin-St Jeor
+        bmr = 10*wt + 6.25*ht - 5*age + (5 if sex.startswith("m") else -161)
+        act_map = {"sedentary":1.2,"light":1.375,"moderate":1.55,"active":1.725,"very_active":1.9}
+        tdee = bmr * act_map.get(act, 1.55)
+
+    # Goal multipliers (tune later from data)
+    goal_mult = {
+        "cut":       0.82 if block in ("peak","build") else 0.85,   # ~15–18% deficit
+        "recomp":    0.97 if block == "base" else 1.00,             # ±0–3%
+        "lean_bulk": 1.10 if block in ("build","peak") else 1.06,   # ~6–10% surplus
+        "endurance": 1.00 if block == "base" else 1.03,             # small training-day bump
+        "wellness":  1.00,
+    }.get(goal, 1.00)
+
+    calories_kcal = round(tdee * goal_mult)
+
+    # Protein: prefer LBM; else use weight
+    lbm_kg = _get(user, "metrics.lbm_kg")
+    wt_kg  = _get(user, "profile.weight_kg", 75.0)
+    anchor = lbm_kg if lbm_kg is not None else wt_kg
+    # Goal-aware protein (g/kg)
+    g_per_kg = {
+        "cut":       1.9,
+        "recomp":    1.8,
+        "lean_bulk": 1.6,
+        "endurance": 1.6,
+        "wellness":  1.4,
+    }.get(goal, 1.8)
+    # Small bump in high-load blocks
+    if goal in ("endurance","cut") and block in ("build","peak"):
+        g_per_kg += 0.1
+    protein_g = round(anchor * g_per_kg)
+
+    # Fiber ≈ 14 g per 1000 kcal (clamped)
+    fiber_g = int(round(_clamp(calories_kcal / 1000.0 * 14.0, 18, 40)))
+
+    # Hydration ≈ 35 ml/kg, with modest bump on hot/high-load days
+    hydration_ml = int(round(wt_kg * 35.0))
+    climate = (_get(user, "profile.climate", "temperate") or "temperate").lower()
+    if climate in ("hot","humid") or (goal in ("endurance","lean_bulk") and block in ("build","peak")):
+        hydration_ml = int(round(hydration_ml * 1.10))
+
+    return {
+        "calories_kcal": calories_kcal,
+        "protein_g": protein_g,
+        "fiber_g": fiber_g,
+        "hydration_ml": hydration_ml
+    }
+
+# ------------------------------
+# Training baselines (completion, intensity, progression)
+# ------------------------------
+def autosync_training_targets(
+    user: Dict,
+    recent_history: Optional[Dict] = None
+) -> Dict:
+    """
+    Returns training baselines aligned to program:
+      completion: {"type":"sets"|"minutes","planned": int}
+      intensity:  {"type":"RPE"|"HR","target": float, "zone": Optional[str]}
+      progression: {"rule": "..."}  # informational for scoring/coaching
+    If the plan is missing, we infer from recent history.
+    """
+    goal  = (_get(user, "program.goal_type", "recomp") or "recomp").lower()
+    block = (_get(user, "program.block", "build") or "build").lower()
+
+    # Prefer explicit plan if present
+    plan = _get(user, "program.plan") or {}
+
+    # Completion baseline
+    comp = plan.get("completion")
+    if comp is None:
+        # Infer from recent history (last 2–3 weeks)
+        rh = recent_history or {}
+        avg_sets = rh.get("avg_sets_per_session")
+        avg_min  = rh.get("avg_minutes_per_cardio")
+        freq     = rh.get("sessions_per_week", 4)
+
+        if goal in ("endurance",):
+            planned_type = "minutes"
+            planned_val  = int(round((avg_min or 40) * 1.05))  # small progression
+        else:
+            planned_type = "sets"
+            planned_val  = int(round((avg_sets or 20) * 1.05))
+        comp = {"type": planned_type, "planned": planned_val, "freq_per_week": freq}
+    # Intensity baseline
+    inten = plan.get("intensity")
+    if inten is None:
+        if goal in ("endurance",):
+            inten = {"type":"HR", "target": 0.80, "zone":"Z3-Z4"}  # 75–85% max HR
+        elif goal in ("lean_bulk","recomp"):
+            inten = {"type":"RPE", "target": 8.5}
+        else:  # cut/wellness
+            inten = {"type":"RPE", "target": 7.5}
+
+    # Progression rule
+    prog = plan.get("progression") or (
+        {"rule":"time_in_zone↑ vs last week"} if goal=="endurance"
+        else {"rule":"reps_or_load↑ vs last week"}
+    )
+
+    return {"completion": comp, "intensity": inten, "progression": prog}
+
+# ------------------------------
+# Sleep target (minutes)
+# ------------------------------
+def autosync_sleep_target(user: Dict, recent_training: Optional[Dict]=None) -> int:
+    """
+    Returns sleep_minutes target adjusted to training load & goal.
+    """
+    base = 7.5 * 60  # 450 min default
+    goal  = (_get(user, "program.goal_type", "recomp") or "recomp").lower()
+    block = (_get(user, "program.block", "build") or "build").lower()
+
+    # Training load proxy: sessions/week or total minutes
+    load_sessions = _get(user, "program.plan.freq_per_week", None)
+    if load_sessions is None and recent_training:
+        load_sessions = recent_training.get("sessions_per_week")
+    load_minutes = _get(user, "program.plan.weekly_minutes", None)
+    if load_minutes is None and recent_training:
+        load_minutes = recent_training.get("weekly_minutes")
+
+    # Adjustments
+    add_min = 0
+    if goal in ("endurance","lean_bulk") and block in ("build","peak"):
+        add_min += 30
+    if (load_sessions or 0) >= 5 or (load_minutes or 0) >= 300:
+        add_min += 30
+    if goal == "cut" and block in ("build","peak"):
+        # dieting with training → more sleep support
+        add_min += 15
+
+    target = int(round(_clamp(base + add_min, 420, 540)))  # clamp 7–9h
+    return target
+
+# ------------------------------
+# Aggregator: daily targets object
+# ------------------------------
+def build_daily_targets(user: Dict, recent_history: Optional[Dict]=None) -> Dict:
+    """
+    Produces a consolidated targets dict your scoring engine can read.
+    """
+    diet = autosync_diet_targets(user)
+    train = autosync_training_targets(user, recent_history or _get(user, "history.training"))
+    sleep_min = autosync_sleep_target(user, recent_history or _get(user, "history.training"))
+    # NEAT is intentionally excluded here because you already autosynced it elsewhere.
+
+    return {
+        "goal_profile": _get(user, "program.goal_type", "recomp"),
+        "block": _get(user, "program.block", "build"),
+        "targets": {
+            "diet": diet,
+            "training": train,
+            "recovery": {
+                "sleep_minutes": sleep_min
+            }
+        },
+        "recompute_rules": {
+            "on_goal_change": True,
+            "on_block_change": True,
+            "diet_weekly_if_bw_delta_pct_gte": 1.5   # adjust calories/protein if BW shifts fast
+        }
+    }
