@@ -20,13 +20,15 @@ export default function WorkoutCard({
 
   return (
     <div className="bg-transparent relative">
-      <div className="flex gap-2 py-2 justify-center items-center">
-        <div className="flex flex-col items-center justify-center">
+      <div className="py-2 relative">
+        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
           <Dumbbell className="w-10 h-10 text-purple-400" />
         </div>
-        <div className="text-center">
-          <div className="text-lg font-bold text-white">
-            {workoutType}
+        <div className="flex justify-center items-center pr-4">
+          <div className="text-center ml-14">
+            <div className="text-lg font-bold text-white">
+              {workoutType}
+            </div>
           </div>
         </div>
       </div>
