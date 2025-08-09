@@ -485,9 +485,9 @@ export default function Dashboard() {
                     </div>
                     <div className="text-center flex-1">
                       <div className="text-lg font-bold text-white">
-                        {dashboardData.calories.consumed.toLocaleString()}/{dashboardData.calories.target.toLocaleString()}
+                        {dashboardData.calories.remaining.toLocaleString()}
                       </div>
-                      <div className="text-xs text-white/60">kcal</div>
+                      <div className="text-xs text-white/60">kcal left</div>
                     </div>
                   </div>
                 </div>
@@ -500,9 +500,9 @@ export default function Dashboard() {
                     </div>
                     <div className="text-center flex-1">
                       <div className="text-lg font-bold text-white">
-                        {dashboardData.water.consumed}/{dashboardData.water.target}
+                        {dashboardData.water.target - dashboardData.water.consumed}
                       </div>
-                      <div className="text-xs text-white/60">cups</div>
+                      <div className="text-xs text-white/60">cups left</div>
                     </div>
                   </div>
                 </div>
