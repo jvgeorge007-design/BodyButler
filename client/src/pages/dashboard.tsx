@@ -510,14 +510,12 @@ export default function Dashboard() {
 
               {/* Right: Macronutrients Card */}
               <div className="calm-card w-1/2">
-                <div className="space-y-1.5">
-                  <div className="mb-1 pt-1">
-                    <MacroTrackerCard
-                      protein={dashboardData.macros.protein}
-                      carbs={dashboardData.macros.carbs}
-                      fat={dashboardData.macros.fat}
-                    />
-                  </div>
+                <div className="py-2">
+                  <MacroTrackerCard
+                    protein={dashboardData.macros.protein}
+                    carbs={dashboardData.macros.carbs}
+                    fat={dashboardData.macros.fat}
+                  />
                 </div>
               </div>
             </div>
