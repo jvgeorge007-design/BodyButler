@@ -310,8 +310,17 @@ export function usePeakScore() {
       const stepsRatio = actualSteps / stepsGoal;
       const neatSteps = Math.min(stepsRatio, 1.0) * 25;
       
-      // Stress/Mood (0-15): Placeholder - awaiting formula
-      const stressMood = 12;
+      // Stress/Mood (0-15): Your exact formula
+      const stressHigh = (dailyRecap as any)?.wellness?.stressHigh || false;
+      const moodLow = (dailyRecap as any)?.wellness?.moodLow || false;
+      const recoveryActionLogged = (dailyRecap as any)?.wellness?.recoveryActionLogged || false;
+      
+      let stressMood = 0;
+      if (stressHigh || moodLow) {
+        stressMood = recoveryActionLogged ? 10 : 0;
+      } else {
+        stressMood = 15;
+      }
       
       return combinedSleep + neatSteps + stressMood;
     };
