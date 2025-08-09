@@ -49,8 +49,8 @@ export default function MacroTrackerCard({
 
 
   return (
-    <div ref={containerRef} className="bg-transparent relative">
-      <div className="space-y-3">
+    <div ref={containerRef} className="bg-transparent relative h-full flex flex-col">
+      <div className="flex flex-col justify-between h-full space-y-4">
         {macros.map((macro, index) => {
           const percentage = Math.min((macro.current / macro.target) * 100, 100);
           const macroNames = ['Protein', 'Carbs', 'Fat'];
@@ -63,8 +63,8 @@ export default function MacroTrackerCard({
           ];
           
           return (
-            <div key={index}>
-              <div className="flex justify-between items-center mb-2">
+            <div key={index} className="flex-1">
+              <div className="flex justify-between items-center mb-3">
                 <span className="text-sm font-medium body-sans" style={{color: 'rgb(235, 235, 240)'}}>
                   {macroNames[index]}
                 </span>
