@@ -220,8 +220,45 @@ export function usePeakScore() {
         return 40.0 * completionRatio;
       };
       
-      // Progression Sublever (0-40): Modality-specific rules
+      // Progression Sublever (0-40): Goal/phase-aware modality-specific rules
       const calculateProgression = (): number => {
+        // Goal-aware progression thresholds
+        const getProgressionThresholds = () => {
+          if (targets.modality === 'strength') {
+            // Different goals require different progression rates
+            if (['lean_bulk', 'recomp'].includes(goalType)) {
+              return { 
+                targetWeekly: ['build', 'peak'].includes(phase) ? 0.06 : 0.04, // 6% build/peak, 4% base
+                maxCap: 0.12 // 12% max
+              };
+            } else if (goalType === 'cut') {
+              return { 
+                targetWeekly: 0.03, // Maintenance during cut
+                maxCap: 0.08 
+              };
+            } else { // wellness
+              return { 
+                targetWeekly: 0.02, // Conservative progression
+                maxCap: 0.06 
+              };
+            }
+          } else { // endurance
+            if (goalType === 'endurance') {
+              return { 
+                targetWeekly: ['build', 'peak'].includes(phase) ? 0.12 : 0.08, // 12% build/peak, 8% base
+                maxCap: 0.25 // 25% max
+              };
+            } else {
+              return { 
+                targetWeekly: 0.06, // Moderate endurance gains for non-endurance goals
+                maxCap: 0.15 
+              };
+            }
+          }
+        };
+        
+        const thresholds = getProgressionThresholds();
+        
         if (targets.modality === 'strength' && targets.progression.rule === 'strength_load') {
           const curVol = session.total_volume;
           const lastVol = lastWeekSession.total_volume;
@@ -238,7 +275,8 @@ export function usePeakScore() {
           }
           
           if (delta !== null && delta > 0) {
-            const progressionPoints = 40.0 * Math.min(delta, 0.10) / 0.05; // +5%→40 (cap at +10%)
+            const cappedDelta = Math.min(delta, thresholds.maxCap);
+            const progressionPoints = 40.0 * (cappedDelta / thresholds.targetWeekly);
             return Math.max(0.0, Math.min(40.0, progressionPoints));
           }
         } else if (targets.modality === 'endurance' && targets.progression.rule === 'endurance_zone_time') {
@@ -247,8 +285,11 @@ export function usePeakScore() {
           
           if (curZone && lastZone && lastZone > 0) {
             const delta = (curZone - lastZone) / lastZone;
-            const progressionPoints = 40.0 * Math.min(Math.max(delta, 0.0), 0.20) / 0.10; // +10%→40 (cap +20%)
-            return Math.max(0.0, Math.min(40.0, progressionPoints));
+            if (delta > 0) {
+              const cappedDelta = Math.min(delta, thresholds.maxCap);
+              const progressionPoints = 40.0 * (cappedDelta / thresholds.targetWeekly);
+              return Math.max(0.0, Math.min(40.0, progressionPoints));
+            }
           }
         }
         return 0.0;
