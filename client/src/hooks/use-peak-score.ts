@@ -150,8 +150,19 @@ export function usePeakScore() {
         intensity = Math.min(zoneRatio, 1.0) * 30;
       }
       
-      // Progression (0-20): Placeholder - awaiting formula
-      const progression = 15;
+      // Progression (0-20): Your exact formula
+      const currentWeight = (dailyRecap as any)?.workout?.totalWeight || 0;
+      const currentReps = (dailyRecap as any)?.workout?.totalReps || 0;
+      const currentSets = (dailyRecap as any)?.workout?.totalSets || 0;
+      
+      const lastWeekWeight = (dailyRecap as any)?.workout?.lastWeekWeight || 0;
+      const lastWeekReps = (dailyRecap as any)?.workout?.lastWeekReps || 0;
+      const lastWeekSets = (dailyRecap as any)?.workout?.lastWeekSets || 0;
+      
+      let progression = 0;
+      if (currentWeight > lastWeekWeight || currentReps > lastWeekReps || currentSets > lastWeekSets) {
+        progression = 20;
+      }
       
       // Warmup/Mobility (0-10): Placeholder - awaiting formula
       const warmupMobility = 8;
