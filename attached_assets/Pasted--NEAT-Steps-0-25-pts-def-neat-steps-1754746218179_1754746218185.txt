@@ -1,0 +1,69 @@
+# ---------------------------
+# NEAT / Steps (0–25 pts)
+# ---------------------------
+def neat_steps_score(
+    day_steps: int,
+    goal_steps: int = 8000,
+    days_with_data: int = 7,   # 0..7 days with any steps data in the last 7
+    last_score: float | None = None
+) -> tuple[float, str]:
+    """
+    Returns (score_0_to_25, confidence_label)
+    - Score: linear to goal, capped; light coverage-based adjustment (no device/source bias)
+    - Onboarding catch: if <3 days of data, return neutral or decayed prior with LOW confidence
+    """
+    if goal_steps <= 0:
+        return (0.0, "LOW")
+
+    MAX_COUNTED = 25_000  # ignore outlier steps beyond this cap
+    steps = max(0, min(day_steps, MAX_COUNTED))
+
+    # Onboarding / sparse history catch
+    if days_with_data < 3:
+        if last_score is not None:
+            return (max(0.0, min(25.0, 0.8 * last_score)), "LOW")
+        return (12.5, "LOW")  # neutral half-credit
+
+    # Base mapping to goal
+    base = 25.0 * min(1.0, steps / float(goal_steps))
+
+    # Coverage-only adjustment (0.85..1.00)
+    coverage = min(1.0, days_with_data / 7.0)
+    adj = 0.85 + 0.15 * coverage
+    score = max(0.0, min(25.0, base * adj))
+
+    conf = "HIGH" if days_with_data == 7 else ("MEDIUM" if days_with_data >= 5 else "LOW")
+    return (score, conf)
+
+
+# ---------------------------
+# Stress / Mood (0–15 pts)
+# ---------------------------
+def stress_mood_score(
+    check_in: dict | None = None,
+    recovery_action: bool = False,
+    last7_checkins: int = 0
+) -> tuple[float, str]:
+    """
+    Returns (score_0_to_15, confidence_label)
+    - Neutral by default (15). If a bad check-in is reported, award 10 only if a recovery
+      action was logged; else 0. No multiplier; confidence is label-only based on check-in frequency.
+    check_in example: {"mood": 1..5, "stress": 1..5}  (1=worst mood, 5=best; 1=low stress, 5=high)
+    """
+
+    # Default neutral if no check-in
+    if check_in is None:
+        score = 15.0
+    else:
+        mood = check_in.get("mood")
+        stress = check_in.get("stress")
+        # Define "bad day": low mood (<=2) or high stress (>=4)
+        bad = (mood is not None and mood <= 2) or (stress is not None and stress >= 4)
+        if bad:
+            score = 10.0 if recovery_action else 0.0
+        else:
+            score = 15.0
+
+    # Confidence label based on check-in coverage only (no scaling)
+    conf = "HIGH" if last7_checkins >= 5 else ("MEDIUM" if last7_checkins >= 3 else "LOW")
+    return (score, conf)

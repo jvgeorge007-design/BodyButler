@@ -310,23 +310,64 @@ export function usePeakScore() {
       const sleepRegularity = calculateSleepRegularity();
       const combinedSleep = Math.max(0.0, Math.min(60.0, sleepDuration + sleepRegularity));
       
-      // NEAT Steps (0-25): Your exact formula
-      const actualSteps = (dailyRecap as any)?.steps?.actual || 0;
-      const stepsGoal = (dailyRecap as any)?.steps?.goal || (profile as any)?.onboardingData?.personal?.stepsGoal || 10000; // Default 10k steps
-      const stepsRatio = actualSteps / stepsGoal;
-      const neatSteps = Math.min(stepsRatio, 1.0) * 25;
+      // NEAT Steps (0-25): Your exact algorithm
+      const goalSteps = (profile as any)?.onboardingData?.activity?.dailyStepsGoal || 8000;
+      const todaySteps = (dailyRecap as any)?.steps?.count || 0;
+      const daysWithStepsData = (dailyRecap as any)?.steps?.daysWithData || 0;
+      const lastStepsScore = (dailyRecap as any)?.steps?.lastScore || null;
       
-      // Stress/Mood (0-15): Your exact formula
-      const stressHigh = (dailyRecap as any)?.wellness?.stressHigh || false;
-      const moodLow = (dailyRecap as any)?.wellness?.moodLow || false;
-      const recoveryActionLogged = (dailyRecap as any)?.wellness?.recoveryActionLogged || false;
+      const calculateNeatSteps = (): number => {
+        if (goalSteps <= 0) {
+          return 0.0;
+        }
+
+        const MAX_COUNTED = 25000; // ignore outlier steps beyond this cap
+        const steps = Math.max(0, Math.min(todaySteps, MAX_COUNTED));
+
+        // Onboarding / sparse history catch
+        if (daysWithStepsData < 3) {
+          if (lastStepsScore !== null) {
+            return Math.max(0.0, Math.min(25.0, 0.8 * lastStepsScore));
+          }
+          return 12.5; // neutral half-credit
+        }
+
+        // Base mapping to goal
+        const base = 25.0 * Math.min(1.0, steps / goalSteps);
+
+        // Coverage-only adjustment (0.85..1.00)
+        const coverage = Math.min(1.0, daysWithStepsData / 7.0);
+        const adj = 0.85 + 0.15 * coverage;
+        return Math.max(0.0, Math.min(25.0, base * adj));
+      };
       
-      let stressMood = 0;
-      if (stressHigh || moodLow) {
-        stressMood = recoveryActionLogged ? 10 : 0;
-      } else {
-        stressMood = 15;
-      }
+      const neatSteps = calculateNeatSteps();
+      
+      // Stress/Mood (0-15): Your exact algorithm
+      const checkIn = (dailyRecap as any)?.wellness?.checkIn || null;
+      const recoveryAction = (dailyRecap as any)?.wellness?.recoveryActionLogged || false;
+      const last7Checkins = (dailyRecap as any)?.wellness?.last7Checkins || 0;
+      
+      const calculateStressMood = (): number => {
+        // Default neutral if no check-in
+        if (checkIn === null) {
+          return 15.0;
+        }
+        
+        const mood = checkIn.mood;
+        const stress = checkIn.stress;
+        
+        // Define "bad day": low mood (<=2) or high stress (>=4)
+        const bad = (mood !== null && mood <= 2) || (stress !== null && stress >= 4);
+        
+        if (bad) {
+          return recoveryAction ? 10.0 : 0.0;
+        } else {
+          return 15.0;
+        }
+      };
+      
+      const stressMood = calculateStressMood();
       
       return combinedSleep + neatSteps + stressMood;
     };
