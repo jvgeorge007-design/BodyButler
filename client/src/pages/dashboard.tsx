@@ -434,9 +434,9 @@ export default function Dashboard() {
         <div className="flex flex-col justify-between h-full gap-3">
           {/* Date, Streak, and Progress Card */}
           <div className="calm-card p-3 space-y-2">
-            {/* Summit Progress and Streak Row */}
+            {/* Peak Score and Streak Row */}
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Summit Progress</h2>
+              <h2 className="text-lg font-bold text-white">Peak Score</h2>
 
               <div className="flex items-center gap-3">
                 <span className="text-white text-sm font-medium">
