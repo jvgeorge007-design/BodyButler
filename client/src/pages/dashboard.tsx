@@ -477,13 +477,20 @@ export default function Dashboard() {
                   </h3>
                 </div>
 
-                {/* Centered Calorie Tracker */}
-                <div className="flex justify-center">
-                  <CircularCalorieTracker
-                    consumed={dashboardData.calories.consumed}
-                    target={dashboardData.calories.target}
-                    remaining={dashboardData.calories.remaining}
-                  />
+                {/* Simple Calorie Counter */}
+                <div className="text-center mb-3">
+                  <div className="text-2xl font-bold text-white">
+                    {dashboardData.calories.consumed.toLocaleString()}
+                    <span className="text-lg text-white/60 ml-1">
+                      / {dashboardData.calories.target.toLocaleString()} kcal
+                    </span>
+                  </div>
+                  <div className="text-sm text-white/70">
+                    {dashboardData.calories.remaining > 0 
+                      ? `${dashboardData.calories.remaining.toLocaleString()} remaining`
+                      : `${Math.abs(dashboardData.calories.remaining).toLocaleString()} over`
+                    }
+                  </div>
                 </div>
 
                 {/* Macros Below with Progress Bars */}
