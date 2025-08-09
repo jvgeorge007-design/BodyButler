@@ -499,7 +499,7 @@ export default function Dashboard() {
                       <GlassWater className="w-10 h-10 text-blue-400" />
                     </div>
                     <div className="flex justify-center items-center pr-4">
-                      <div className="text-center ml-12">
+                      <div className="text-center ml-14">
                         <div className="text-lg font-bold text-white">
                           {dashboardData.water.target - dashboardData.water.consumed}
                         </div>
