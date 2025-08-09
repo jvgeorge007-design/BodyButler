@@ -126,11 +126,20 @@ export function usePeakScore() {
 
     // Calculate Climb Score
     const calculateClimbScore = (): number => {
-      // Placeholder calculations - would need workout tracking data
-      const completion = 35; // 0-40
-      const intensity = 25; // 0-30
-      const progression = 15; // 0-20
-      const warmupMobility = 8; // 0-10
+      // Completion (0-40): Your exact formula
+      const completedSetsOrMinutes = (dailyRecap as any)?.workout?.completed || 0;
+      const plannedSetsOrMinutes = (dailyRecap as any)?.workout?.planned || 1; // Avoid division by zero
+      const completionRatio = completedSetsOrMinutes / plannedSetsOrMinutes;
+      const completion = Math.min(completionRatio, 1.0) * 40;
+      
+      // Intensity (0-30): Placeholder - awaiting formula
+      const intensity = 25;
+      
+      // Progression (0-20): Placeholder - awaiting formula
+      const progression = 15;
+      
+      // Warmup/Mobility (0-10): Placeholder - awaiting formula
+      const warmupMobility = 8;
       
       return completion + intensity + progression + warmupMobility;
     };
