@@ -132,8 +132,23 @@ export function usePeakScore() {
       const completionRatio = completedSetsOrMinutes / plannedSetsOrMinutes;
       const completion = Math.min(completionRatio, 1.0) * 40;
       
-      // Intensity (0-30): Placeholder - awaiting formula
-      const intensity = 25;
+      // Intensity (0-30): Your exact formula
+      const usingRPE = (dailyRecap as any)?.workout?.intensityMethod === 'RPE';
+      const usingHeartRate = (dailyRecap as any)?.workout?.intensityMethod === 'heart_rate';
+      
+      let intensity = 0;
+      
+      if (usingRPE) {
+        const avgRPE = (dailyRecap as any)?.workout?.averageRPE || 0;
+        const targetRPE = (dailyRecap as any)?.workout?.targetRPE || 7; // Default RPE target
+        const deviation = Math.abs(avgRPE - targetRPE);
+        intensity = Math.max(0, 30 - (deviation / targetRPE) * 30);
+      } else if (usingHeartRate) {
+        const minutesInTargetZone = (dailyRecap as any)?.workout?.minutesInTargetZone || 0;
+        const totalActiveMinutes = (dailyRecap as any)?.workout?.totalActiveMinutes || 1; // Avoid division by zero
+        const zoneRatio = minutesInTargetZone / totalActiveMinutes;
+        intensity = Math.min(zoneRatio, 1.0) * 30;
+      }
       
       // Progression (0-20): Placeholder - awaiting formula
       const progression = 15;
