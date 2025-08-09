@@ -479,9 +479,11 @@ export default function Dashboard() {
               <div className="flex flex-col gap-2.5 w-1/2">
                 {/* Calories Card */}
                 <div className="calm-card">
-                  <div className="flex items-center justify-center gap-2 py-3">
-                    <Flame className="w-4 h-4 text-orange-400" />
-                    <div className="text-center">
+                  <div className="flex gap-2 py-3">
+                    <div className="flex flex-col items-center justify-center w-6">
+                      <Flame className="w-4 h-4 text-orange-400" />
+                    </div>
+                    <div className="text-center flex-1">
                       <div className="text-lg font-bold text-white">
                         {dashboardData.calories.consumed.toLocaleString()}/{dashboardData.calories.target.toLocaleString()}
                       </div>
@@ -492,9 +494,11 @@ export default function Dashboard() {
 
                 {/* Water Card */}
                 <div className="calm-card">
-                  <div className="flex items-center justify-center gap-2 py-3">
-                    <Coffee className="w-4 h-4 text-blue-400" />
-                    <div className="text-center">
+                  <div className="flex gap-2 py-3">
+                    <div className="flex flex-col items-center justify-center w-6">
+                      <Coffee className="w-4 h-4 text-blue-400" />
+                    </div>
+                    <div className="text-center flex-1">
                       <div className="text-lg font-bold text-white">
                         {dashboardData.water.consumed}/{dashboardData.water.target}
                       </div>
