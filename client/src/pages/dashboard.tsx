@@ -476,15 +476,8 @@ export default function Dashboard() {
               {/* Left: Diet Card */}
               <div className="calm-card w-1/2">
                 <div className="space-y-1.5">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <UtensilsCrossed className="w-5 h-5 text-white" />
-                    <h3 className="text-lg font-semibold text-white/60">
-                      Diet
-                    </h3>
-                  </div>
-
                   {/* Calories and Water */}
-                  <div className="space-y-2">
+                  <div className="space-y-2 pt-1">
                     {/* Calories */}
                     <div className="text-center">
                       <div className="text-lg font-bold text-white">
@@ -507,15 +500,8 @@ export default function Dashboard() {
               {/* Right: Macronutrients Card */}
               <div className="calm-card w-1/2">
                 <div className="space-y-1.5">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <TrendingUp className="w-5 h-5 text-white" />
-                    <h3 className="text-lg font-semibold text-white/60">
-                      Macros
-                    </h3>
-                  </div>
-
                   {/* Macros with Progress Bars */}
-                  <div className="mb-1">
+                  <div className="mb-1 pt-1">
                     <MacroTrackerCard
                       protein={dashboardData.macros.protein}
                       carbs={dashboardData.macros.carbs}

@@ -23,15 +23,7 @@ export default function WorkoutCard({
 
   return (
     <div className="bg-transparent relative">
-      {/* Workout title with barbell icon */}
-      <div className="mb-2">
-        <div className="flex items-center gap-2">
-          <Dumbbell className="w-5 h-5 text-white" />
-          <h3 className="text-lg font-semibold text-white/60">Workout</h3>
-        </div>
-      </div>
-      
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center pt-3">
         <button 
           onClick={() => setShowExercises(true)}
           className="text-2xl font-light hover:text-gray-300 transition-all duration-300 cursor-pointer heading-serif text-center"

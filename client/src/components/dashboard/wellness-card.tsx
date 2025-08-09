@@ -72,16 +72,8 @@ export default function WellnessCard({}: WellnessCardProps) {
 
   return (
     <div className="bg-transparent relative">
-      {/* Wellness title with heart icon */}
-      <div className="mb-2">
-        <div className="flex items-center gap-2">
-          <Heart className="w-5 h-5 text-white" />
-          <h3 className="text-lg font-semibold text-white/60">Wellness</h3>
-        </div>
-      </div>
-      
       {/* Health Score Display */}
-      <div className="text-center">
+      <div className="text-center pt-3">
         <div className="flex items-center justify-center gap-2">
           <span className={`text-2xl font-bold ${getScoreColor(averageHealthScore)}`}>
             {averageHealthScore > 0 ? averageHealthScore : '--'}
