@@ -88,7 +88,7 @@ export default function MacroTrackerCard({
           </div>
           
           {/* Carbs - pushed down */}
-          <div className="pt-7">
+          <div className="pt-8">
             {(() => {
               const macro = macros[1]; // Carbs
               const percentage = Math.min((macro.current / macro.target) * 100, 100);
