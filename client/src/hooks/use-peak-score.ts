@@ -131,7 +131,7 @@ export function usePeakScore() {
       const noUnplannedTraining = !(dailyRecap as any)?.workout?.unplannedTraining || false;
       
       if (plannedRestDay && noUnplannedTraining) {
-        return 100;
+        return 100; // climb_score = 100
       }
       
       // Completion (0-40): Your exact formula
