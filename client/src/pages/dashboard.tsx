@@ -479,15 +479,17 @@ export default function Dashboard() {
               <div className="flex flex-col gap-2.5 w-1/2">
                 {/* Calories Card */}
                 <div className="calm-card">
-                  <div className="flex gap-2 py-2 justify-center items-center">
-                    <div className="flex flex-col items-center justify-center">
+                  <div className="py-2 relative">
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
                       <Flame className="w-10 h-10 text-orange-400" />
                     </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-white">
-                        {dashboardData.calories.remaining.toLocaleString()}
+                    <div className="flex justify-center items-center pr-4">
+                      <div className="text-center ml-14">
+                        <div className="text-lg font-bold text-white">
+                          {dashboardData.calories.remaining.toLocaleString()}
+                        </div>
+                        <div className="text-xs text-white/60">kcal left</div>
                       </div>
-                      <div className="text-xs text-white/60">kcal left</div>
                     </div>
                   </div>
                 </div>
