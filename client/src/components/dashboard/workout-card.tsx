@@ -20,10 +20,9 @@ export default function WorkoutCard({
 
   return (
     <div className="bg-transparent relative">
-      <div className="flex items-center justify-center pt-3 pb-6">
+      <div className="flex justify-center items-center">
         <div 
-          className="text-2xl font-light heading-serif text-center w-full"
-          style={{color: 'rgb(235, 235, 240)'}}
+          className="text-lg font-bold text-white text-center"
         >
           {workoutType}
         </div>
