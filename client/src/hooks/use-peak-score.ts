@@ -59,69 +59,150 @@ export function usePeakScore() {
       };
     }
 
-    // Calculate Trail Fuel Score
+    // Calculate Trail Fuel Score - Goal/phase-aware comprehensive implementation
     const calculateTrailFuelScore = (): number => {
-      const calories = (dailyRecap as any)?.calories || { consumed: 0, target: 2000 };
-      const protein = (dailyRecap as any)?.protein || { consumed: 0, target: 150 };
+      const goalType = getGoalType();
+      const phase = (profile as any)?.onboardingData?.program?.phase || 'build';
       
-      // Calorie Window (0-40): Your exact formula
-      const calorieRatio = calories.consumed / calories.target;
-      let calorieWindow = 0;
+      // Helper functions
+      const clamp = (x: number, lo: number, hi: number): number => Math.max(lo, Math.min(hi, x));
       
-      if (Math.abs(calorieRatio - 1) <= 0.05) {
-        calorieWindow = 40;
-      } else if (Math.abs(calorieRatio - 1) >= 0.20) {
-        calorieWindow = 0;
-      } else {
-        calorieWindow = 40 * (1 - ((Math.abs(calorieRatio - 1) - 0.05) / 0.15));
-      }
-
-      // Protein (0-30): Your exact formula
-      let proteinScore = 0;
-      const proteinRatio = protein.consumed / protein.target;
+      // Build dynamic targets based on goal and phase
+      const computeTrailFuelTargets = () => {
+        // TDEE calculation (prefer stored; else Mifflin-St Jeor × activity)
+        let tdee = (profile as any)?.onboardingData?.metrics?.tdee_kcal;
+        if (!tdee) {
+          const sex = (profile as any)?.onboardingData?.personal?.sex || 'm';
+          const age = (profile as any)?.onboardingData?.personal?.age || 30;
+          const height = (profile as any)?.onboardingData?.personal?.height || 175;
+          const weight = (profile as any)?.onboardingData?.personal?.weight || 75;
+          const activity = (profile as any)?.onboardingData?.personal?.activityLevel || 'moderate';
+          
+          const bmr = 10 * weight + 6.25 * height - 5 * age + (sex.toLowerCase().startsWith('m') ? 5 : -161);
+          const activityMap: Record<string, number> = {
+            sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, very_active: 1.9
+          };
+          tdee = bmr * (activityMap[activity.toLowerCase()] || 1.55);
+        }
+        
+        // Goal × Phase multipliers
+        let goalMult = 1.0;
+        if (goalType === 'cut') {
+          goalMult = phase === 'base' ? 0.85 : 0.82; // ~15-18% deficit
+        } else if (goalType === 'lean_bulk') {
+          goalMult = phase === 'base' ? 1.06 : 1.10; // ~6-10% surplus
+        } else if (goalType === 'endurance') {
+          goalMult = phase === 'base' ? 1.00 : 1.03; // mild surplus on harder blocks
+        } else if (goalType === 'wellness') {
+          goalMult = 1.00;
+        } else { // recomp
+          goalMult = ['build', 'peak'].includes(phase) ? 1.00 : 0.97; // slight flexibility around maintenance
+        }
+        
+        const caloriesKcal = Math.round(tdee * goalMult);
+        
+        // Protein calculation (prefer LBM; else weight)
+        const lbmKg = (profile as any)?.onboardingData?.metrics?.lbm_kg;
+        const weightKg = (profile as any)?.onboardingData?.personal?.weight || 75;
+        const anchor = lbmKg || weightKg;
+        
+        let gPerKg = 1.6;
+        if (goalType === 'cut') {
+          gPerKg = ['build', 'peak'].includes(phase) ? 2.0 : 1.9;
+        } else if (['lean_bulk', 'recomp'].includes(goalType)) {
+          gPerKg = phase === 'base' ? 1.6 : 1.8;
+        } else if (goalType === 'endurance') {
+          gPerKg = ['build', 'peak'].includes(phase) ? 1.6 : 1.5;
+        } else { // wellness
+          gPerKg = 1.4;
+        }
+        const proteinG = Math.round(anchor * gPerKg);
+        
+        // Fiber from calories (IOM: 14g per 1000 kcal)
+        const fiberG = Math.round(clamp((caloriesKcal / 1000) * 14, 18, 40));
+        
+        // Hydration from weight (EFSA/IOM: 35ml/kg)
+        const hydrationLiters = Math.round(0.035 * weightKg * 100) / 100;
+        
+        return {
+          caloriesKcal,
+          proteinG,
+          fiberG,
+          hydrationLiters
+        };
+      };
       
-      if (proteinRatio >= 1.0) {
-        proteinScore = 30;
-      } else if (proteinRatio >= 0.8) {
-        proteinScore = 15 + (proteinRatio - 0.8) / 0.2 * 15;
-      } else {
-        proteinScore = 0;
-      }
-
-      // Fiber/Veg (0-20): Your exact formula
-      const fiberGrams = (dailyRecap as any)?.fiber?.consumed || 0;
-      const fiberGoal = (dailyRecap as any)?.fiber?.target || 25; // Default adult fiber goal
+      const targets = computeTrailFuelTargets();
+      
+      // Get actual consumption data
+      const actualCalories = (dailyRecap as any)?.calories?.consumed || 0;
+      const actualProtein = (dailyRecap as any)?.protein?.consumed || 0;
+      const actualFiber = (dailyRecap as any)?.fiber?.consumed || 0;
       const vegServings = (dailyRecap as any)?.vegetables?.servings || 0;
-      
-      let fiberVeg = 0;
-      if (fiberGrams >= fiberGoal || vegServings >= 2) {
-        fiberVeg = 20;
-      } else {
-        fiberVeg = Math.min((fiberGrams / fiberGoal) * 20, 20);
-      }
-
-      // Hydration (0-10): Your exact formula
-      const bodyweightKg = (profile as any)?.onboardingData?.personal?.weight || 70; // Default if not available
-      const hydrationGoal = bodyweightKg * 35; // in ml
       const actualHydrationMl = (dailyRecap as any)?.hydration?.consumed || 0;
-      const hydrationRatio = actualHydrationMl / hydrationGoal;
+      const actualHydrationL = actualHydrationMl / 1000;
       
-      const hydration = Math.min(hydrationRatio, 1.0) * 10;
-
-      // Anti-Cheat: Your exact formula
+      // Calculate meals logged percentage for anti-cheat
       const totalMeals = Object.values((foodLog as any)?.meals || {}).reduce((sum: number, mealEntries: any) => {
         return sum + (Array.isArray(mealEntries) ? mealEntries.length : 0);
       }, 0);
       const expectedMeals = 9; // 3 meals + 6 snacks per day roughly
-      const mealsLoggedRatio = totalMeals / expectedMeals;
+      const mealsLoggedPct = totalMeals / expectedMeals;
       
-      let dietScore = calorieWindow + proteinScore + fiberVeg + hydration;
-      
-      if (mealsLoggedRatio < 0.70) {
-        dietScore *= 0.85; // reduce by 15%
+      // A) Calorie Window (0-40): full at ±5%, linear to 0 at ±20%
+      const calTarget = Math.max(1e-6, targets.caloriesKcal);
+      const calDiffPct = Math.abs(actualCalories - calTarget) / calTarget;
+      let calPts = 0;
+      if (calDiffPct <= 0.05) {
+        calPts = 40.0;
+      } else if (calDiffPct >= 0.20) {
+        calPts = 0.0;
+      } else {
+        calPts = 40.0 * (1 - (calDiffPct - 0.05) / 0.15);
       }
-
-      return dietScore;
+      
+      // B) Protein Target (0-30): full at ≥100%; 50% at 80%; linear below
+      const protTarget = Math.max(1e-6, targets.proteinG);
+      const protRatio = actualProtein / protTarget;
+      let protPts = 0;
+      if (protRatio >= 1.0) {
+        protPts = 30.0;
+      } else if (protRatio >= 0.8) {
+        protPts = 15.0 + 15.0 * ((protRatio - 0.8) / 0.2); // 80%→50% pts; 100%→100% pts
+      } else {
+        protPts = 30.0 * (protRatio / 0.8);
+      }
+      
+      // C) Fiber/Veg (0-20): full if fiber goal met OR ≥2 veg servings; partial credit otherwise
+      const fiberGoal = 14.0 * (actualCalories / 1000.0);
+      let fiberPts = 0;
+      if (actualFiber >= fiberGoal || vegServings >= 2) {
+        fiberPts = 20.0;
+      } else {
+        fiberPts = 20.0 * Math.max(
+          clamp(actualFiber / Math.max(1e-6, fiberGoal), 0.0, 1.0),
+          clamp(vegServings / 2.0, 0.0, 1.0)
+        );
+      }
+      
+      // D) Hydration (0-10): 35ml/kg baseline; partial at ≥60%
+      const hydTarget = Math.max(1e-6, targets.hydrationLiters);
+      const hydRatio = actualHydrationL / hydTarget;
+      let hydPts = 0;
+      if (hydRatio >= 1.0) {
+        hydPts = 10.0;
+      } else if (hydRatio >= 0.6) {
+        hydPts = 5.0 + 5.0 * ((hydRatio - 0.6) / 0.4);
+      } else {
+        hydPts = 10.0 * (hydRatio / 0.6);
+      }
+      
+      // Anti-cheat decay & confidence
+      const decayFactor = mealsLoggedPct < 0.70 ? 0.85 : 1.00;
+      
+      // Final score
+      const total = (calPts + protPts + fiberPts + hydPts) * decayFactor;
+      return clamp(total, 0.0, 100.0);
     };
 
     // Calculate Climb Score - Goal-aware dynamic implementation with individual sublevers

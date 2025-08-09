@@ -1,0 +1,230 @@
+# peaku_trail_fuel.py
+from __future__ import annotations
+from typing import Dict, Optional
+
+
+# ---------------------------
+# Utilities
+# ---------------------------
+def _clamp(x: float, lo: float, hi: float) -> float:
+    return max(lo, min(hi, x))
+
+def _get(d: Dict, path: str, default=None):
+    cur = d
+    for k in path.split("."):
+        if not isinstance(cur, dict) or k not in cur:
+            return default
+        cur = cur[k]
+    return cur
+
+
+# ---------------------------
+# Target computation (autosync to goal × phase)
+# ---------------------------
+def compute_trail_fuel_targets(user: Dict) -> Dict:
+    """
+    Build calorie/protein/fiber/hydration targets from the user's profile,
+    goal, and phase. Safe fallbacks included.
+
+    Returns:
+      {
+        "calories_kcal": int,
+        "protein_g": int,
+        "fiber_g": int,            # computed from calories (14 g / 1000 kcal)
+        "hydration_liters": float  # 0.035 L per kg
+      }
+
+    Science anchors:
+      - Calorie adherence windows commonly ±5–10% in body comp trials (Helms et al., 2014)
+      - Protein 1.6–2.2 g/kg for trained individuals; higher end on a cut (Morton 2018; Phillips & Van Loon 2011)
+      - Fiber 14 g / 1000 kcal (Institute of Medicine, 2005)
+      - Hydration ~35 ml/kg/day (EFSA, 2010; IOM, 2004)
+    """
+    goal  = (_get(user, "program.goal_type", "recomp") or "recomp").lower()
+    phase = (_get(user, "program.phase", _get(user, "program.block", "build")) or "build").lower()
+
+    # --- TDEE (prefer stored; else Mifflin-St Jeor × activity) ---
+    tdee = _get(user, "metrics.tdee_kcal")
+    if tdee is None:
+        sex = (_get(user, "profile.sex", "m") or "m").lower()
+        age = _get(user, "profile.age_years", 30)
+        ht  = _get(user, "profile.height_cm", 175.0)
+        wt  = _get(user, "profile.weight_kg", 75.0)
+        act = (_get(user, "profile.activity_level", "moderate") or "moderate").lower()
+        bmr = 10*wt + 6.25*ht - 5*age + (5 if sex.startswith("m") else -161)  # Mifflin-St Jeor
+        act_map = {"sedentary":1.2,"light":1.375,"moderate":1.55,"active":1.725,"very_active":1.9}
+        tdee = bmr * act_map.get(act, 1.55)
+
+    # --- Goal × Phase multipliers (tunable) ---
+    # Keep conservative, evidence-aligned ranges; adjust with live data post-launch.
+    if goal == "cut":
+        goal_mult = 0.85 if phase in ("base",) else 0.82  # ~15–18% deficit
+    elif goal == "lean_bulk":
+        goal_mult = 1.06 if phase == "base" else 1.10      # ~6–10% surplus
+    elif goal == "endurance":
+        goal_mult = 1.00 if phase == "base" else 1.03      # mild surplus on harder blocks
+    elif goal == "wellness":
+        goal_mult = 1.00
+    else:  # recomp
+        goal_mult = 1.00 if phase in ("build","peak") else 0.97  # slight flexibility around maintenance
+
+    calories_kcal = int(round(tdee * goal_mult))
+
+    # --- Protein: prefer LBM; else weight ---
+    lbm_kg = _get(user, "metrics.lbm_kg")
+    wt_kg  = _get(user, "profile.weight_kg", 75.0)
+    anchor = lbm_kg if lbm_kg is not None else wt_kg
+
+    if goal == "cut":
+        g_per_kg = 2.0 if phase in ("build","peak") else 1.9
+    elif goal in ("lean_bulk", "recomp"):
+        g_per_kg = 1.6 if phase == "base" else 1.8
+    elif goal == "endurance":
+        g_per_kg = 1.6 if phase in ("build","peak") else 1.5
+    else:  # wellness
+        g_per_kg = 1.4
+    protein_g = int(round(anchor * g_per_kg))
+
+    # --- Fiber from calories (IOM) ---
+    fiber_g = int(round(_clamp((calories_kcal / 1000.0) * 14.0, 18, 40)))  # clamp for usability
+
+    # --- Hydration from weight (EFSA/IOM) ---
+    hydration_liters = round(0.035 * wt_kg, 2)
+
+    return {
+        "calories_kcal": calories_kcal,
+        "protein_g": protein_g,
+        "fiber_g": fiber_g,
+        "hydration_liters": hydration_liters
+    }
+
+
+# ---------------------------
+# Scoring (0–100) — Trail Fuel sub-levers
+# ---------------------------
+def trail_fuel_score(*,
+                     calories_kcal: float,
+                     target_calories_kcal: float,
+                     protein_g: float,
+                     target_protein_g: float,
+                     fiber_g: float,
+                     kcal_intake_for_fiber: float,
+                     veg_servings: float,
+                     water_liters: float,
+                     target_hydration_liters: float,
+                     meals_logged_pct: float) -> Dict:
+    """
+    Compute Trail Fuel (Diet) score and breakdown.
+
+    Sub-levers:
+      A) Calories (0–40): full at ±5%, linear to 0 at ±20%.
+      B) Protein  (0–30): full at ≥100%; 50% at 80%; linear below.
+      C) Fiber/Veg (0–20): full if fiber goal met OR ≥2 veg servings; partial credit otherwise.
+      D) Hydration (0–10): 35 ml/kg baseline; partial at ≥60%.
+
+    Anti-cheat:
+      -15% decay if meals_logged_pct < 0.70
+
+    Returns dict with totals and per-component points plus a confidence label.
+    """
+
+    # ---- A) Calorie Window (0–40) ----
+    cal_target = max(1e-6, target_calories_kcal)
+    cal_diff_pct = abs(calories_kcal - cal_target) / cal_target
+    if cal_diff_pct <= 0.05:
+        cal_pts = 40.0
+    elif cal_diff_pct >= 0.20:
+        cal_pts = 0.0
+    else:
+        cal_pts = 40.0 * (1 - (cal_diff_pct - 0.05) / 0.15)
+
+    # ---- B) Protein Target (0–30) ----
+    prot_target = max(1e-6, target_protein_g)
+    prot_ratio = protein_g / prot_target
+    if prot_ratio >= 1.0:
+        prot_pts = 30.0
+    elif prot_ratio >= 0.8:
+        prot_pts = 15.0 + 15.0 * ((prot_ratio - 0.8) / 0.2)   # 80%→50% pts; 100%→100% pts
+    else:
+        prot_pts = 30.0 * (prot_ratio / 0.8)
+
+    # ---- C) Fiber / Veg (0–20) ----
+    fiber_goal = 14.0 * (kcal_intake_for_fiber / 1000.0)
+    if fiber_g >= fiber_goal or veg_servings >= 2:
+        fiber_pts = 20.0
+    else:
+        fiber_pts = 20.0 * max(
+            _clamp(fiber_g / max(1e-6, fiber_goal), 0.0, 1.0),
+            _clamp(veg_servings / 2.0, 0.0, 1.0)
+        )
+
+    # ---- D) Hydration (0–10) ----
+    hyd_target = max(1e-6, target_hydration_liters)
+    hyd_ratio = water_liters / hyd_target
+    if hyd_ratio >= 1.0:
+        hyd_pts = 10.0
+    elif hyd_ratio >= 0.6:
+        hyd_pts = 5.0 + 5.0 * ((hyd_ratio - 0.6) / 0.4)
+    else:
+        hyd_pts = 10.0 * (hyd_ratio / 0.6)
+
+    # ---- Anti-cheat decay & confidence label ----
+    decay_factor = 0.85 if meals_logged_pct < 0.70 else 1.00
+    confidence_label = "HIGH" if meals_logged_pct >= 0.90 else ("MEDIUM" if meals_logged_pct >= 0.70 else "LOW")
+
+    # ---- Final Score ----
+    total = (cal_pts + prot_pts + fiber_pts + hyd_pts) * decay_factor
+    total = _clamp(total, 0.0, 100.0)
+
+    return {
+        "total_score": round(total, 2),
+        "calorie_points": round(cal_pts, 2),
+        "protein_points": round(prot_pts, 2),
+        "fiber_points": round(fiber_pts, 2),
+        "hydration_points": round(hyd_pts, 2),
+        "decay_factor": decay_factor,
+        "confidence_label": confidence_label,
+        "targets": {
+            "calories_kcal": int(round(target_calories_kcal)),
+            "protein_g": int(round(target_protein_g)),
+            "fiber_g": int(round(fiber_goal)),              # dynamic from intake
+            "hydration_liters": round(target_hydration_liters, 2)
+        }
+    }
+
+
+# ---------------------------
+# One-call convenience: autosync + score
+# ---------------------------
+def trail_fuel_score_for_user(user: Dict,
+                              *,
+                              calories_kcal: float,
+                              protein_g: float,
+                              fiber_g: float,
+                              veg_servings: float,
+                              water_liters: float,
+                              meals_logged_pct: float) -> Dict:
+    """
+    Convenience wrapper:
+      1) Computes targets from user profile (autosync)
+      2) Scores today's Trail Fuel with those targets
+      3) Returns breakdown + targets for UI
+
+    Example user fields read:
+      user.program.goal_type, user.program.phase|block,
+      user.metrics.tdee_kcal|lbm_kg, user.profile.{sex,age,height_cm,weight_kg,activity_level}
+    """
+    targets = compute_trail_fuel_targets(user)
+
+    return trail_fuel_score(
+        calories_kcal=calories_kcal,
+        target_calories_kcal=targets["calories_kcal"],
+        protein_g=protein_g,
+        target_protein_g=targets["protein_g"],
+        fiber_g=fiber_g,
+        kcal_intake_for_fiber=calories_kcal,   # per-day intake is appropriate for fiber goal calc
+        veg_servings=veg_servings,
+        water_liters=water_liters,
+        target_hydration_liters=targets["hydration_liters"],
+        meals_logged_pct=meals_logged_pct
+    )
