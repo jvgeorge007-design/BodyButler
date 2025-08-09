@@ -15,6 +15,8 @@ import {
   TrendingUp,
   Calendar,
   Mountain,
+  Flame,
+  Coffee,
 } from "lucide-react";
 
 // Import our new dashboard components
@@ -479,19 +481,25 @@ export default function Dashboard() {
                   {/* Calories and Water */}
                   <div className="space-y-2 pt-1">
                     {/* Calories */}
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-white">
-                        {dashboardData.calories.remaining.toLocaleString()}
+                    <div className="flex items-center justify-center gap-2">
+                      <Flame className="w-4 h-4 text-orange-400" />
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-white">
+                          {dashboardData.calories.consumed.toLocaleString()}/{dashboardData.calories.target.toLocaleString()}
+                        </div>
+                        <div className="text-xs text-white/60">kcal</div>
                       </div>
-                      <div className="text-xs text-white/60">kcal remaining</div>
                     </div>
                     
                     {/* Water */}
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-white">
-                        {dashboardData.water.consumed}
+                    <div className="flex items-center justify-center gap-2">
+                      <Coffee className="w-4 h-4 text-blue-400" />
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-white">
+                          {dashboardData.water.consumed}/{dashboardData.water.target}
+                        </div>
+                        <div className="text-xs text-white/60">cups</div>
                       </div>
-                      <div className="text-xs text-white/60">glasses water</div>
                     </div>
                   </div>
                 </div>
