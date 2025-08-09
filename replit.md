@@ -7,6 +7,7 @@ Body Butler is a full-stack web application designed to provide personalized fit
 Preferred communication style: Simple, everyday language.
 Focus areas for improvement: UI polish and master prompt refinement for better user engagement ("stickiness").
 Navigation behavior: Navigation bar tabs should always navigate to respective pages, even when pop-ups or modals are open.
+Peak Score Implementation: Goal-weighted scoring system with exact formulas for trail fuel (nutrition), climb (workouts), and base camp (recovery). Uses authentic data integration - placeholders only where features are still being built.
 
 ## System Architecture
 
@@ -33,6 +34,7 @@ Navigation behavior: Navigation bar tabs should always navigate to respective pa
 ### Core Features
 - **Comprehensive Onboarding**: Multi-step process (6 sections) collecting personal, activity, equipment, dietary, goal, availability, and coaching style information. Data is consolidated into a single JSON object for flexibility.
 - **Personalized Plan Generation**: Integrates with OpenAI API (GPT-4) to generate structured JSON responses for `workoutPlan`, `macroTargets`, and `mealPlan` based on user data.
+- **Peak Score System**: Advanced circular tracker with three weighted levers (Trail Fuel, Climb, Base Camp) using goal-specific weightings and detailed sub-scoring algorithms. Includes consistency bonus system for streak rewards.
 - **Dashboard System**: Comprehensive dashboard with workout logging, meal tracking, and rolling macro count functionality.
 - **Workout Tracking**: Dynamic exercise population, set/rep/weight tracking with suggested targets, and progress monitoring.
 - **Receipt OCR & Food Logging**: Utilizes OpenAI Vision for photo-first food analysis, contextual health scoring, and nutrition logging. Integrates with USDA FoodData Central and other sources for nutritional data.
