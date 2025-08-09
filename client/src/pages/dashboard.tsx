@@ -272,6 +272,10 @@ export default function Dashboard() {
         0,
       ),
     },
+    water: {
+      consumed: isPast ? 8 + Math.abs(dayOffset % 3) : isToday ? 6 : 0,
+      target: 8,
+    },
     workout: {
       type: selectedWorkoutType,
       focus:
