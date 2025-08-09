@@ -123,7 +123,7 @@ export default function MacroTrackerCard({
         </div>
         
         {/* Fat - Pushed much further down */}
-        <div className="mt-auto pt-12">
+        <div className="mt-auto pt-11">
           {(() => {
             const macro = macros[2]; // Fat
             const percentage = Math.min((macro.current / macro.target) * 100, 100);
