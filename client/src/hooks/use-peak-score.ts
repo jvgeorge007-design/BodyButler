@@ -176,7 +176,19 @@ export function usePeakScore() {
       const warmupOrMobilityLogged = (dailyRecap as any)?.workout?.warmupOrMobilityLogged || false;
       const warmupMobility = warmupOrMobilityLogged ? 10 : 0;
       
-      return completion + intensity + progression + warmupMobility;
+      // Climb Confidence: Your exact algorithm
+      const completionLogged = completedSetsOrMinutes > 0;
+      const intensityLogged = (usingRPE && (dailyRecap as any)?.workout?.averageRPE) || 
+                             (usingHeartRate && (dailyRecap as any)?.workout?.minutesInTargetZone);
+      const progressionLogged = currentWeight > 0 || currentReps > 0 || currentSets > 0;
+      const warmupLogged = warmupOrMobilityLogged;
+      
+      const sublevers = [completionLogged, intensityLogged, progressionLogged, warmupLogged];
+      const loggedRatio = sublevers.filter(s => s).length / sublevers.length;
+      const confidence = 0.70 + (0.30 * loggedRatio);
+      
+      const rawClimbScore = completion + intensity + progression + warmupMobility;
+      return Math.round(rawClimbScore * confidence * 100) / 100;
     };
 
     // Calculate Base Camp Score
