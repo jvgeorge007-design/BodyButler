@@ -310,66 +310,90 @@ export function usePeakScore() {
       const sleepRegularity = calculateSleepRegularity();
       const combinedSleep = Math.max(0.0, Math.min(60.0, sleepDuration + sleepRegularity));
       
-      // NEAT Steps (0-25): Your exact algorithm
-      const goalSteps = (profile as any)?.onboardingData?.activity?.dailyStepsGoal || 8000;
+      // NEAT Steps (0-40): Goal-aware + size/activity adjustments
       const todaySteps = (dailyRecap as any)?.steps?.count || 0;
       const daysWithStepsData = (dailyRecap as any)?.steps?.daysWithData || 0;
       const lastStepsScore = (dailyRecap as any)?.steps?.lastScore || null;
       
       const calculateNeatSteps = (): number => {
-        if (goalSteps <= 0) {
-          return 0.0;
-        }
-
-        const MAX_COUNTED = 25000; // ignore outlier steps beyond this cap
-        const steps = Math.max(0, Math.min(todaySteps, MAX_COUNTED));
-
+        // Compute personalized goals based on user profile
+        const computeNeatGoals = (): [number, number] => {
+          const goalType = getGoalType();
+          const base: Record<string, [number, number]> = {
+            cut: [8000, 12000],
+            recomp: [7000, 10000],
+            lean_bulk: [6000, 8000],
+            endurance: [9000, 13000],
+            wellness: [6000, 9000],
+          };
+          let [low, high] = base[goalType] || base.recomp;
+          
+          // Frame adjustments
+          const heightCm = (profile as any)?.onboardingData?.personal?.height || 170;
+          const weightKg = (profile as any)?.onboardingData?.personal?.weight || 70;
+          let frameFactor = 0.0;
+          frameFactor += (heightCm - 170.0) * 0.004;
+          frameFactor += (weightKg - 70.0) * 0.003;
+          frameFactor = Math.max(-0.15, Math.min(0.15, frameFactor));
+          
+          // Activity level adjustments
+          const activityLevel = (profile as any)?.onboardingData?.activity?.currentLevel || 'moderate';
+          const activityNudge: Record<string, number> = {
+            sedentary: -0.10, light: -0.05, moderate: 0.00, active: 0.05, very_active: 0.10
+          };
+          const nudge = activityNudge[activityLevel] || 0.00;
+          
+          const adj = 1.0 + frameFactor + nudge;
+          let lowAdj = Math.round(low * adj);
+          let highAdj = Math.round(high * adj);
+          
+          // Ensure minimum range
+          if (highAdj - lowAdj < 1500) {
+            const mid = Math.floor((lowAdj + highAdj) / 2);
+            lowAdj = mid - 750;
+            highAdj = mid + 750;
+          }
+          
+          // Apply bounds
+          lowAdj = Math.max(4000, Math.min(lowAdj, 18000));
+          highAdj = Math.max(lowAdj + 1500, Math.min(highAdj, 20000));
+          
+          return [lowAdj, highAdj];
+        };
+        
+        const [lowGoal, highGoal] = computeNeatGoals();
+        
         // Onboarding / sparse history catch
         if (daysWithStepsData < 3) {
           if (lastStepsScore !== null) {
-            return Math.max(0.0, Math.min(25.0, 0.8 * lastStepsScore));
+            return Math.max(0.0, Math.min(40.0, 0.8 * lastStepsScore));
           }
-          return 12.5; // neutral half-credit
+          return 20.0; // neutral half-credit for 0-40 scale
         }
-
-        // Base mapping to goal
-        const base = 25.0 * Math.min(1.0, steps / goalSteps);
-
+        
+        const MAX_COUNTED = 25000;
+        const steps = Math.max(0, Math.min(todaySteps, MAX_COUNTED));
+        
+        // Piecewise scoring
+        let base: number;
+        if (steps <= lowGoal) {
+          base = 40.0 * (steps / lowGoal);
+        } else if (steps >= highGoal) {
+          base = 40.0;
+        } else {
+          base = 40.0 * ((steps - lowGoal) / (highGoal - lowGoal));
+        }
+        
         // Coverage-only adjustment (0.85..1.00)
         const coverage = Math.min(1.0, daysWithStepsData / 7.0);
         const adj = 0.85 + 0.15 * coverage;
-        return Math.max(0.0, Math.min(25.0, base * adj));
+        return Math.max(0.0, Math.min(40.0, base * adj));
       };
       
       const neatSteps = calculateNeatSteps();
       
-      // Stress/Mood (0-15): Your exact algorithm
-      const checkIn = (dailyRecap as any)?.wellness?.checkIn || null;
-      const recoveryAction = (dailyRecap as any)?.wellness?.recoveryActionLogged || false;
-      const last7Checkins = (dailyRecap as any)?.wellness?.last7Checkins || 0;
-      
-      const calculateStressMood = (): number => {
-        // Default neutral if no check-in
-        if (checkIn === null) {
-          return 15.0;
-        }
-        
-        const mood = checkIn.mood;
-        const stress = checkIn.stress;
-        
-        // Define "bad day": low mood (<=2) or high stress (>=4)
-        const bad = (mood !== null && mood <= 2) || (stress !== null && stress >= 4);
-        
-        if (bad) {
-          return recoveryAction ? 10.0 : 0.0;
-        } else {
-          return 15.0;
-        }
-      };
-      
-      const stressMood = calculateStressMood();
-      
-      return combinedSleep + neatSteps + stressMood;
+      // Base Camp: Sleep (60) + NEAT (40) = 100 total
+      return combinedSleep + neatSteps;
     };
 
     // Calculate Consistency Bonus

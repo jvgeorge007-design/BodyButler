@@ -1,0 +1,82 @@
+# ---------------------------
+# NEAT / Steps (now 0–40 pts)
+# Goal-aware + size/activity adjustments; source-agnostic confidence
+# ---------------------------
+from typing import Dict, Optional, Tuple
+
+def _read_goal_type(user: Dict) -> str:
+    return (user.get("program", {}).get("goal_type") or "recomp").lower()
+
+def _read_frame(user: Dict) -> Tuple[Optional[float], Optional[float]]:
+    p = user.get("profile", {})
+    return p.get("height_cm"), p.get("weight_kg")
+
+def _read_activity_level(user: Dict) -> str:
+    return (user.get("profile", {}).get("activity_level") or "moderate").lower()
+
+def compute_neat_goals_for_user(user: Dict) -> Tuple[int, int]:
+    base = {
+        "cut":        (8000, 12000),
+        "recomp":     (7000, 10000),
+        "lean_bulk":  (6000,  8000),
+        "endurance":  (9000, 13000),
+        "wellness":   (6000,  9000),
+    }
+    low, high = base.get(_read_goal_type(user), base["recomp"])
+
+    height_cm, weight_kg = _read_frame(user)
+    frame_factor = 0.0
+    if height_cm is not None: frame_factor += (height_cm - 170.0) * 0.004
+    if weight_kg is not None: frame_factor += (weight_kg - 70.0)  * 0.003
+    frame_factor = max(-0.15, min(0.15, frame_factor))
+
+    activity_nudge = {
+        "sedentary": -0.10, "light": -0.05, "moderate": 0.00, "active": 0.05, "very_active": 0.10
+    }.get(_read_activity_level(user), 0.00)
+
+    adj = 1.0 + frame_factor + activity_nudge
+    low_adj, high_adj = int(round(low*adj)), int(round(high*adj))
+
+    if high_adj - low_adj < 1500:
+        mid = (low_adj + high_adj)//2
+        low_adj, high_adj = mid - 750, mid + 750
+
+    low_adj  = max(4000, min(low_adj, 18000))
+    high_adj = max(low_adj + 1500, min(high_adj, 20000))
+    return low_adj, high_adj
+
+def neat_steps_score_for_user(
+    user: Dict,
+    steps_today: int,
+    days_with_steps_data: int = 7,   # coverage in last 7 days (0..7)
+    last_score: Optional[float] = None
+) -> Tuple[float, str, Tuple[int, int]]:
+    """
+    Returns:
+      - score_0_to_40 (float)
+      - confidence_label ("LOW"|"MEDIUM"|"HIGH")  -- coverage-based only
+      - (low_goal, high_goal) used for today (int, int)
+    """
+    low_goal, high_goal = compute_neat_goals_for_user(user)
+
+    if days_with_steps_data < 3:
+        if last_score is not None:
+            return (max(0.0, min(40.0, 0.8 * last_score)), "LOW", (low_goal, high_goal))
+        return (20.0, "LOW", (low_goal, high_goal))  # neutral half-credit for 0–40 scale
+
+    MAX_COUNTED = 25_000
+    steps = max(0, min(int(steps_today), MAX_COUNTED))
+
+    if steps <= low_goal:
+        base = 40.0 * (steps / float(low_goal))
+    elif steps >= high_goal:
+        base = 40.0
+    else:
+        base = 40.0 * ((steps - low_goal) / float(high_goal - low_goal))
+
+    coverage = min(1.0, days_with_steps_data / 7.0)
+    adj = 0.85 + 0.15 * coverage                     # 0.85..1.00, no device/source bias
+    score = max(0.0, min(40.0, base * adj))
+
+    conf = "HIGH" if days_with_steps_data == 7 else ("MEDIUM" if days_with_steps_data >= 5 else "LOW")
+    return (round(score, 2), conf, (low_goal, high_goal))
