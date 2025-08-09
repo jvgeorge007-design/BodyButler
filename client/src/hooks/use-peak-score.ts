@@ -76,13 +76,16 @@ export function usePeakScore() {
         calorieWindow = 40 * (1 - ((Math.abs(calorieRatio - 1) - 0.05) / 0.15));
       }
 
-      // Protein (0-30): Full at ≥ target; 50% at ≥80% of target
+      // Protein (0-30): Your exact formula
       let proteinScore = 0;
       const proteinRatio = protein.consumed / protein.target;
+      
       if (proteinRatio >= 1.0) {
         proteinScore = 30;
       } else if (proteinRatio >= 0.8) {
-        proteinScore = 15;
+        proteinScore = 15 + (proteinRatio - 0.8) / 0.2 * 15;
+      } else {
+        proteinScore = 0;
       }
 
       // Fiber/Veg (0-20): Simplified for now - give partial credit
