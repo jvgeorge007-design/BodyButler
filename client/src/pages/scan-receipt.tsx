@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import BottomNav from "@/components/navigation/bottom-nav";
@@ -43,7 +44,7 @@ export default function ScanReceiptPage() {
   const [processingStatus, setProcessingStatus] = useState<string>('');
   const [parsedReceipt, setParsedReceipt] = useState<ParsedReceipt | null>(null);
   const [forMeOnly, setForMeOnly] = useState(true);
-  const [selectedItems, setSelectedItems] = useState<Record<number, { selected: boolean; quantity: number }>>({});
+  const [selectedItems, setSelectedItems] = useState<Record<number, { selected: boolean; quantity: number; selectedFoodId?: string }>>({});
   const [mealType, setMealType] = useState<'breakfast' | 'lunch' | 'dinner' | 'snacks'>('lunch');
 
   // Get current time-based meal suggestion
@@ -89,12 +90,13 @@ export default function ScanReceiptPage() {
       setIsProcessing(false);
       setProcessingStatus('');
       setParsedReceipt(data);
-      // Initialize all items as selected with their parsed quantities
-      const initialSelections: Record<number, { selected: boolean; quantity: number }> = {};
+      // Initialize all items as selected with their parsed quantities and default food selection
+      const initialSelections: Record<number, { selected: boolean; quantity: number; selectedFoodId?: string }> = {};
       data.items.forEach((match: FatSecretMatch, index: number) => {
         initialSelections[index] = {
           selected: true,
-          quantity: match.originalItem.quantity || 1
+          quantity: match.originalItem.quantity || 1,
+          selectedFoodId: match.fatSecretOptions?.[0]?.food_id // Default to first option
         };
       });
       setSelectedItems(initialSelections);
@@ -244,7 +246,7 @@ export default function ScanReceiptPage() {
           index: parseInt(index),
           quantity: config.quantity,
           selected: true,
-          selectedFoodId: selectedFoodId || undefined,
+          selectedFoodId: config.selectedFoodId || selectedFoodId,
         };
       });
 
@@ -272,6 +274,16 @@ export default function ScanReceiptPage() {
       [index]: {
         ...prev[index],
         quantity: Math.max(0.1, quantity)
+      }
+    }));
+  };
+
+  const updateItemFoodSelection = (index: number, foodId: string) => {
+    setSelectedItems(prev => ({
+      ...prev,
+      [index]: {
+        ...prev[index],
+        selectedFoodId: foodId
       }
     }));
   };
@@ -458,40 +470,76 @@ export default function ScanReceiptPage() {
                   {parsedReceipt.items.map((match, index) => {
                     const isSelected = selectedItems[index]?.selected || false;
                     const quantity = selectedItems[index]?.quantity || match.originalItem.quantity || 1;
+                    const selectedFoodId = selectedItems[index]?.selectedFoodId;
                     const hasNutritionData = match.fatSecretOptions && match.fatSecretOptions.length > 0;
 
+                    // Find the selected nutrition option for display
+                    const selectedOption = match.fatSecretOptions?.find(option => option.food_id === selectedFoodId) || match.fatSecretOptions?.[0];
+
                     return (
-                      <div key={index} className="flex items-center space-x-3 p-3 rounded-lg bg-black/20">
-                        <Checkbox
-                          checked={isSelected}
-                          onCheckedChange={() => toggleItemSelection(index)}
-                        />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-white">{match.originalItem.name}</h4>
-                          {!hasNutritionData && (
-                            <p className="text-sm text-yellow-400 flex items-center">
-                              <AlertCircle className="w-4 h-4 mr-1" />
-                              No nutrition data found
-                            </p>
-                          )}
-                          {hasNutritionData && (
-                            <p className="text-sm text-green-400">
-                              {match.fatSecretOptions.length} nutrition matches found
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Label className="text-white/80 text-sm">Qty:</Label>
-                          <Input
-                            type="number"
-                            value={quantity}
-                            onChange={(e) => updateItemQuantity(index, parseFloat(e.target.value) || 1)}
-                            className="w-20 bg-black/30 border-white/20 text-white"
-                            min="0.1"
-                            step="0.1"
-                            disabled={!isSelected}
+                      <div key={index} className="p-4 rounded-lg bg-black/20 space-y-3">
+                        {/* Top row: Checkbox, food name, quantity */}
+                        <div className="flex items-center space-x-3">
+                          <Checkbox
+                            checked={isSelected}
+                            onCheckedChange={() => toggleItemSelection(index)}
                           />
+                          <div className="flex-1">
+                            <h4 className="font-medium text-white">{match.originalItem.name}</h4>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Label className="text-white/80 text-sm">Qty:</Label>
+                            <Input
+                              type="number"
+                              value={quantity}
+                              onChange={(e) => updateItemQuantity(index, parseFloat(e.target.value) || 1)}
+                              className="w-20 bg-black/30 border-white/20 text-white"
+                              min="0.1"
+                              step="0.1"
+                              disabled={!isSelected}
+                            />
+                          </div>
                         </div>
+
+                        {/* Nutrition selection */}
+                        {isSelected && hasNutritionData && (
+                          <div className="space-y-2">
+                            <Label className="text-white/80 text-sm">Choose nutrition match:</Label>
+                            <Select
+                              value={selectedFoodId}
+                              onValueChange={(value) => updateItemFoodSelection(index, value)}
+                            >
+                              <SelectTrigger className="bg-black/30 border-white/20 text-white">
+                                <SelectValue placeholder="Select nutrition data..." />
+                              </SelectTrigger>
+                              <SelectContent className="bg-gray-900 border-white/20">
+                                {match.fatSecretOptions.map((option, optionIndex) => (
+                                  <SelectItem key={option.food_id} value={option.food_id}>
+                                    <div className="text-sm">
+                                      <div className="font-medium text-white">{option.food_name}</div>
+                                      <div className="text-white/60 text-xs">{option.food_description}</div>
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            
+                            {/* Show selected option details */}
+                            {selectedOption && (
+                              <div className="text-xs text-white/60 mt-1">
+                                Selected: {selectedOption.food_name} - {selectedOption.food_description}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Warning for no nutrition data */}
+                        {isSelected && !hasNutritionData && (
+                          <div className="flex items-center text-sm text-yellow-400">
+                            <AlertCircle className="w-4 h-4 mr-2" />
+                            No nutrition data found for this item
+                          </div>
+                        )}
                       </div>
                     );
                   })}
