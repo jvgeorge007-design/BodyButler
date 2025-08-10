@@ -159,8 +159,8 @@ export default function PeakScoreTracker({
       </div>
     </div>
       
-      {/* Activity Streak Badge - Left Side */}
-      <div className="absolute top-9 -left-20 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-bold px-3 py-2 rounded-full shadow-xl border-2 border-orange-300 z-50">
+      {/* Activity Streak Badge - Right Side */}
+      <div className="absolute top-9 left-48 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-bold px-3 py-2 rounded-full shadow-xl border-2 border-orange-300 z-50">
         🔥 {activityStreak}
       </div>
 
