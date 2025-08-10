@@ -75,12 +75,12 @@ export default function PeakScoreTracker({
           {/* Define gradients for contrast effect */}
           <defs>
             <linearGradient id="trailFuelGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#0891b2" />
-              <stop offset="100%" stopColor="#0e7490" />
+              <stop offset="0%" stopColor="#06b6d4" />
+              <stop offset="100%" stopColor="#0891b2" />
             </linearGradient>
             <linearGradient id="climbGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#7dd3fc" />
-              <stop offset="100%" stopColor="#38bdf8" />
+              <stop offset="0%" stopColor="#8b5cf6" />
+              <stop offset="100%" stopColor="#7c3aed" />
             </linearGradient>
             <linearGradient id="baseCampGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#4ade80" />
@@ -148,11 +148,11 @@ export default function PeakScoreTracker({
       {/* Goal-aware legend with current/max scores */}
       <div className="flex items-center gap-3 mt-3 text-xs">
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full" style={{ background: 'linear-gradient(90deg, #0891b2, #0e7490)' }} />
+          <div className="w-2 h-2 rounded-full" style={{ background: 'linear-gradient(90deg, #06b6d4, #0891b2)' }} />
           <span className="text-white/70">Trail Fuel ({Math.round((trailFuelScore/100) * weights.trailFuel)}/{weights.trailFuel})</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full" style={{ background: 'linear-gradient(90deg, #7dd3fc, #38bdf8)' }} />
+          <div className="w-2 h-2 rounded-full" style={{ background: 'linear-gradient(90deg, #8b5cf6, #7c3aed)' }} />
           <span className="text-white/70">Climb ({Math.round((climbScore/100) * weights.climb)}/{weights.climb})</span>
         </div>
         <div className="flex items-center gap-1">
