@@ -136,9 +136,6 @@ export default function PeakScoreTracker({
           <span className="text-2xl font-bold text-white">
             {Math.round(weightedScore)}
           </span>
-          <span className="text-xs text-white/60 uppercase tracking-wide">
-            PEAK
-          </span>
           {consistencyBonus > 0 && (
             <span className="text-xs text-green-400">+{consistencyBonus}</span>
           )}
