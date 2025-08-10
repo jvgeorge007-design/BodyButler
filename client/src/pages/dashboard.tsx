@@ -488,7 +488,7 @@ export default function Dashboard() {
                         <div className="text-lg font-bold text-white">
                           {dashboardData.calories.remaining.toLocaleString()}
                         </div>
-                        <div className="text-xs text-white/60">kcal left</div>
+                        <div className="text-sm text-white/70">kcal left</div>
                       </div>
                     </div>
                   </div>
@@ -505,7 +505,7 @@ export default function Dashboard() {
                         <div className="text-lg font-bold text-white">
                           {dashboardData.water.target - dashboardData.water.consumed}
                         </div>
-                        <div className="text-xs text-white/60">cups left</div>
+                        <div className="text-sm text-white/70">cups left</div>
                       </div>
                     </div>
                   </div>

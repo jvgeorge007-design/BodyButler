@@ -66,7 +66,7 @@ export function TrekNavigationCard() {
       <div className="calm-card">
         <div className="flex items-center gap-2 mb-2">
           <img src={altoImage} alt="Alto" className="w-8 h-8 rounded-full" />
-          <h3 className="text-lg font-semibold text-white/60">Alto's Daily Tip</h3>
+          <h3 className="text-lg font-bold text-white">Alto's Daily Tip</h3>
         </div>
         
         <div className="flex items-center justify-center py-4">
@@ -84,7 +84,7 @@ export function TrekNavigationCard() {
     <div className="calm-card">
       <div className="flex items-center gap-2 mb-2">
         <img src={altoImage} alt="Alto" className="w-8 h-8 rounded-full" />
-        <h3 className="text-lg font-semibold text-white/60">Alto's Daily Tip</h3>
+        <h3 className="text-lg font-bold text-white">Alto's Daily Tip</h3>
       </div>
       
       {insights.length === 0 ? (

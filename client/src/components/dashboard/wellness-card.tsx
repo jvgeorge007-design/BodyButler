@@ -28,7 +28,7 @@ export default function WellnessCard({}: WellnessCardProps) {
             <div className="text-lg font-bold text-white">
               {formatSteps(stepsRemaining)}
             </div>
-            <div className="text-xs text-white/60">steps left</div>
+            <div className="text-sm text-white/70">steps left</div>
           </div>
         </div>
       </div>
