@@ -136,8 +136,17 @@ export default function PeakScoreTracker({
           <span className="text-2xl font-bold text-white">
             {Math.round(weightedScore)}
           </span>
-          <span className="text-sm text-green-400 font-semibold">+{consistencyBonus}</span>
         </div>
+        
+        {/* Consistency Bonus Badge - Video Game Style */}
+        {consistencyBonus > 0 && (
+          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-green-400 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg border-2 border-green-300">
+            <div className="flex items-center gap-1">
+              <span className="text-[10px]">CONSISTENCY</span>
+              <span className="text-sm">+{consistencyBonus}</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Goal-aware legend with current/max scores */}
