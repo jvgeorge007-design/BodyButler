@@ -160,7 +160,7 @@ export default function PeakScoreTracker({
     </div>
       
       {/* Activity Trek Badge - Left Side */}
-      <div className="absolute top-9 left-5 bg-gradient-to-r from-amber-700 to-orange-700 text-white text-sm font-bold px-3 py-2 rounded-full shadow-xl border-2 border-amber-600 z-50">
+      <div className="absolute top-9 left-5 bg-gradient-to-r from-slate-500 to-slate-600 text-white text-sm font-bold px-3 py-2 rounded-full shadow-xl border-2 border-slate-400 z-50">
         🥾 {activityStreak}
       </div>
 
