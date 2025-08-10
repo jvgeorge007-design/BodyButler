@@ -75,8 +75,8 @@ export default function PeakScoreTracker({
           {/* Define gradients for contrast effect */}
           <defs>
             <linearGradient id="trailFuelGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#4dd4cc" />
-              <stop offset="100%" stopColor="#22d3ee" />
+              <stop offset="0%" stopColor="#0891b2" />
+              <stop offset="100%" stopColor="#0e7490" />
             </linearGradient>
             <linearGradient id="climbGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#7dd3fc" />
@@ -148,7 +148,7 @@ export default function PeakScoreTracker({
       {/* Goal-aware legend with current/max scores */}
       <div className="flex items-center gap-3 mt-3 text-xs">
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full" style={{ background: 'linear-gradient(90deg, #4dd4cc, #22d3ee)' }} />
+          <div className="w-2 h-2 rounded-full" style={{ background: 'linear-gradient(90deg, #0891b2, #0e7490)' }} />
           <span className="text-white/70">Trail Fuel ({Math.round((trailFuelScore/100) * weights.trailFuel)}/{weights.trailFuel})</span>
         </div>
         <div className="flex items-center gap-1">
