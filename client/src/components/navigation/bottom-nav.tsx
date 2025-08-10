@@ -41,9 +41,9 @@ export default function BottomNav({ onPopupStateChange }: BottomNavProps = {}) {
       path: "/add-food"
     },
     {
-      id: "workout",
+      id: "guide",
       icon: Dumbbell,
-      label: "Workout",
+      label: "Guide",
       path: "/workout"
     }
   ];
