@@ -59,7 +59,7 @@ export default function PeakScoreTracker({
   const baseCampOffset = ((weights.trailFuel + weights.climb) / 100) * circumference;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center relative">
       <div className="relative">
         <svg width={size} height={size} className="transform -rotate-90">
           {/* Background circle */}
@@ -137,17 +137,17 @@ export default function PeakScoreTracker({
             {Math.round(weightedScore)}
           </span>
         </div>
-        
-        {/* Consistency Bonus Badge - Video Game Style */}
-        {consistencyBonus > 0 && (
-          <div className="absolute top-1/2 -translate-y-1/2 -right-16 bg-gradient-to-r from-green-500 to-green-400 text-white text-xs font-bold px-3 py-2 rounded-full shadow-xl border-2 border-white z-10">
-            <div className="flex items-center gap-1">
-              <span className="text-[10px] uppercase tracking-wide">BONUS:</span>
-              <span className="text-sm">+{consistencyBonus}</span>
-            </div>
-          </div>
-        )}
       </div>
+      
+      {/* Consistency Bonus Badge - Video Game Style */}
+      {consistencyBonus > 0 && (
+        <div className="absolute top-8 right-0 transform translate-x-full bg-gradient-to-r from-green-500 to-green-400 text-white text-xs font-bold px-3 py-2 rounded-full shadow-xl border-2 border-white z-10 ml-4">
+          <div className="flex items-center gap-1">
+            <span className="text-[10px] uppercase tracking-wide">BONUS:</span>
+            <span className="text-sm">+{consistencyBonus}</span>
+          </div>
+        </div>
+      )}
 
       {/* Goal-aware legend with current/max scores */}
       <div className="flex items-center gap-3 mt-3 text-xs">
