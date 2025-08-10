@@ -471,9 +471,6 @@ export default function Dashboard() {
           </div>
 
           <div className="flex flex-col gap-4 flex-1 justify-between">
-            {/* Trek Navigation Card - Full Width */}
-            <TrekNavigationCard />
-
             {/* Stacked Calories/Water (Left) and Macros (Right) */}
             <div className="flex gap-2.5">
               {/* Left: Stacked Calories and Water Cards */}
