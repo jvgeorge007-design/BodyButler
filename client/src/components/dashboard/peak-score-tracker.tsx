@@ -158,7 +158,7 @@ export default function PeakScoreTracker({
     </div>
       
       {/* Consistency Bonus Badge - Video Game Style */}
-      <div className="absolute top-8 left-32 bg-red-500 text-white text-sm font-bold px-3 py-2 rounded shadow-xl z-50">
+      <div className="absolute top-9 left-36 bg-gradient-to-r from-amber-500 to-yellow-500 text-white text-sm font-bold px-3 py-2 rounded-full shadow-xl border-2 border-amber-300 z-50">
         BONUS: +{consistencyBonus}
       </div>
     </div>
