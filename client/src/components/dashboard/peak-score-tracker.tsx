@@ -133,7 +133,7 @@ export default function PeakScoreTracker({
       <div className="flex items-center gap-3 mt-3 text-xs">
         <div className="flex items-center gap-1">
           <div className="w-2 h-2 rounded-full bg-cyan-400" />
-          <span className="text-white/70">Fuel ({weights.trailFuel}%)</span>
+          <span className="text-white/70">Trail Fuel ({weights.trailFuel}%)</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="w-2 h-2 rounded-full bg-purple-400" />
@@ -141,7 +141,7 @@ export default function PeakScoreTracker({
         </div>
         <div className="flex items-center gap-1">
           <div className="w-2 h-2 rounded-full bg-emerald-400" />
-          <span className="text-white/70">Base ({weights.baseCamp}%)</span>
+          <span className="text-white/70">Base Camp ({weights.baseCamp}%)</span>
         </div>
       </div>
     </div>
