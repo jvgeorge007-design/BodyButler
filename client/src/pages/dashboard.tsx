@@ -458,7 +458,7 @@ export default function Dashboard() {
             </div>
 
             {/* Peak Score Circular Tracker */}
-            <div className="flex justify-center">
+            <div className="flex justify-center -mt-1">
               <PeakScoreTracker
                 trailFuelScore={peakScoreData.trailFuelScore}
                 climbScore={peakScoreData.climbScore}
