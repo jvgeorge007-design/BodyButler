@@ -731,18 +731,21 @@ export function usePeakScore() {
 
     // Calculate Consistency Bonus
     const calculateConsistencyBonus = (): number => {
-      // Your exact formula
-      const historicalScores = (dailyRecap as any)?.peakScores?.last7Days || [];
-      const daysAboveThreshold = historicalScores.filter((dayScore: number) => dayScore > 70).length;
+      // Demo value to show appearance
+      return 5;
       
-      let bonus = 0;
-      if (daysAboveThreshold >= 6) {
-        bonus = 5;
-      } else if (daysAboveThreshold >= 4) {
-        bonus = 2;
-      }
+      // Your exact formula (will be restored)
+      // const historicalScores = (dailyRecap as any)?.peakScores?.last7Days || [];
+      // const daysAboveThreshold = historicalScores.filter((dayScore: number) => dayScore > 70).length;
       
-      return bonus;
+      // let bonus = 0;
+      // if (daysAboveThreshold >= 6) {
+      //   bonus = 5;
+      // } else if (daysAboveThreshold >= 4) {
+      //   bonus = 2;
+      // }
+      
+      // return bonus;
     };
 
     // Determine goal type from profile
