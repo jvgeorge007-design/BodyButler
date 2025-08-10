@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { useModal } from "@/contexts/modal-context";
 import { useState } from "react";
 import BBAIIcon from "@/components/icons/bb-ai-icon";
+import GoatGuideIcon from "@/components/icons/goat-guide-icon";
 import AddOptionsPopup from "./add-options-popup";
 
 interface BottomNavProps {
@@ -42,7 +43,7 @@ export default function BottomNav({ onPopupStateChange }: BottomNavProps = {}) {
     },
     {
       id: "guide",
-      icon: Dumbbell,
+      icon: GoatGuideIcon,
       label: "Guide",
       path: "/workout"
     }
