@@ -22,15 +22,14 @@ interface ParsedItem {
 interface FatSecretMatch {
   originalItem: ParsedItem;
   fatSecretOptions: any[];
-  bestMatch: any;
+  selectedOption: any;
 }
 
 interface ParsedReceipt {
   receiptId: string;
   establishment: string;
-  items: ParsedItem[];
-  fatSecretMatches: FatSecretMatch[];
-  confidence: number;
+  items: FatSecretMatch[];
+  totalItems: number;
 }
 
 export default function ScanReceiptPage() {
@@ -92,10 +91,10 @@ export default function ScanReceiptPage() {
       setParsedReceipt(data);
       // Initialize all items as selected with their parsed quantities
       const initialSelections: Record<number, { selected: boolean; quantity: number }> = {};
-      data.items.forEach((item: ParsedItem, index: number) => {
+      data.items.forEach((match: FatSecretMatch, index: number) => {
         initialSelections[index] = {
           selected: true,
-          quantity: item.quantity || 1
+          quantity: match.originalItem.quantity || 1
         };
       });
       setSelectedItems(initialSelections);
@@ -236,11 +235,18 @@ export default function ScanReceiptPage() {
 
     const selectedItemsArray = Object.entries(selectedItems)
       .filter(([_, config]) => config.selected)
-      .map(([index, config]) => ({
-        index: parseInt(index),
-        quantity: config.quantity,
-        selected: true,
-      }));
+      .map(([index, config]) => {
+        const match = parsedReceipt.items[parseInt(index)];
+        // Use the first available food option if nutrition data exists
+        const selectedFoodId = match?.fatSecretOptions?.[0]?.food_id;
+        
+        return {
+          index: parseInt(index),
+          quantity: config.quantity,
+          selected: true,
+          selectedFoodId: selectedFoodId || undefined,
+        };
+      });
 
     confirmReceiptMutation.mutate({
       receiptId: parsedReceipt.receiptId,
@@ -403,7 +409,7 @@ export default function ScanReceiptPage() {
                   <div>
                     <h3 className="font-semibold text-white">{parsedReceipt.establishment}</h3>
                     <p className="text-sm text-white/70">
-                      Found {parsedReceipt.items.length} food items • {Math.round(parsedReceipt.confidence * 100)}% confidence
+                      Found {parsedReceipt.items.length} food items
                     </p>
                   </div>
                 </div>
@@ -449,10 +455,10 @@ export default function ScanReceiptPage() {
                   Select items to log ({selectedCount} selected)
                 </h3>
                 <div className="space-y-3">
-                  {parsedReceipt.items.map((item, index) => {
+                  {parsedReceipt.items.map((match, index) => {
                     const isSelected = selectedItems[index]?.selected || false;
-                    const quantity = selectedItems[index]?.quantity || item.quantity || 1;
-                    const fatSecretMatch = parsedReceipt.fatSecretMatches[index];
+                    const quantity = selectedItems[index]?.quantity || match.originalItem.quantity || 1;
+                    const hasNutritionData = match.fatSecretOptions && match.fatSecretOptions.length > 0;
 
                     return (
                       <div key={index} className="flex items-center space-x-3 p-3 rounded-lg bg-black/20">
@@ -461,11 +467,16 @@ export default function ScanReceiptPage() {
                           onCheckedChange={() => toggleItemSelection(index)}
                         />
                         <div className="flex-1">
-                          <h4 className="font-medium text-white">{item.name}</h4>
-                          {!fatSecretMatch?.bestMatch && (
+                          <h4 className="font-medium text-white">{match.originalItem.name}</h4>
+                          {!hasNutritionData && (
                             <p className="text-sm text-yellow-400 flex items-center">
                               <AlertCircle className="w-4 h-4 mr-1" />
                               No nutrition data found
+                            </p>
+                          )}
+                          {hasNutritionData && (
+                            <p className="text-sm text-green-400">
+                              {match.fatSecretOptions.length} nutrition matches found
                             </p>
                           )}
                         </div>
