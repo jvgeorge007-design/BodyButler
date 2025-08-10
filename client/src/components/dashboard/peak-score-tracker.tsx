@@ -72,13 +72,29 @@ export default function PeakScoreTracker({
             strokeWidth={strokeWidth}
           />
           
-          {/* Trail Fuel Segment (Bright Teal Peak) */}
+          {/* Define gradients for contrast effect */}
+          <defs>
+            <linearGradient id="trailFuelGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#4dd4cc" />
+              <stop offset="100%" stopColor="#22d3ee" />
+            </linearGradient>
+            <linearGradient id="climbGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#7dd3fc" />
+              <stop offset="100%" stopColor="#38bdf8" />
+            </linearGradient>
+            <linearGradient id="baseCampGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#4ade80" />
+              <stop offset="100%" stopColor="#16a34a" />
+            </linearGradient>
+          </defs>
+          
+          {/* Trail Fuel Segment (Bright Teal with Gradient) */}
           <circle
             cx={centerX}
             cy={centerY}
             r={radius}
             fill="none"
-            stroke="#4dd4cc"
+            stroke="url(#trailFuelGradient)"
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeDasharray={`${trailFuelLength} ${circumference - trailFuelLength}`}
@@ -86,13 +102,13 @@ export default function PeakScoreTracker({
             className="transition-all duration-500"
           />
           
-          {/* Climb Segment (Dark Slate Peak) */}
+          {/* Climb Segment (Baby Blue with Gradient) */}
           <circle
             cx={centerX}
             cy={centerY}
             r={radius}
             fill="none"
-            stroke="#334155"
+            stroke="url(#climbGradient)"
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeDasharray={`${climbLength} ${circumference - climbLength}`}
@@ -100,13 +116,13 @@ export default function PeakScoreTracker({
             className="transition-all duration-500"
           />
           
-          {/* Base Camp Segment (Medium Teal Peak) */}
+          {/* Base Camp Segment (Darker Green with Gradient) */}
           <circle
             cx={centerX}
             cy={centerY}
             r={radius}
             fill="none"
-            stroke="#5fb3aa"
+            stroke="url(#baseCampGradient)"
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeDasharray={`${baseCampLength} ${circumference - baseCampLength}`}
@@ -132,15 +148,15 @@ export default function PeakScoreTracker({
       {/* Goal-aware legend with current/max scores */}
       <div className="flex items-center gap-3 mt-3 text-xs">
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#4dd4cc' }} />
+          <div className="w-2 h-2 rounded-full" style={{ background: 'linear-gradient(90deg, #4dd4cc, #22d3ee)' }} />
           <span className="text-white/70">Trail Fuel ({Math.round((trailFuelScore/100) * weights.trailFuel)}/{weights.trailFuel})</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#334155' }} />
+          <div className="w-2 h-2 rounded-full" style={{ background: 'linear-gradient(90deg, #7dd3fc, #38bdf8)' }} />
           <span className="text-white/70">Climb ({Math.round((climbScore/100) * weights.climb)}/{weights.climb})</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#5fb3aa' }} />
+          <div className="w-2 h-2 rounded-full" style={{ background: 'linear-gradient(90deg, #4ade80, #16a34a)' }} />
           <span className="text-white/70">Base Camp ({Math.round((baseCampScore/100) * weights.baseCamp)}/{weights.baseCamp})</span>
         </div>
       </div>
