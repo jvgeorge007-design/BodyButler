@@ -72,13 +72,13 @@ export default function PeakScoreTracker({
             strokeWidth={strokeWidth}
           />
           
-          {/* Trail Fuel Segment (Cyan) */}
+          {/* Trail Fuel Segment (Bright Teal Peak) */}
           <circle
             cx={centerX}
             cy={centerY}
             r={radius}
             fill="none"
-            stroke="#22d3ee"
+            stroke="#4dd4cc"
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeDasharray={`${trailFuelLength} ${circumference - trailFuelLength}`}
@@ -86,13 +86,13 @@ export default function PeakScoreTracker({
             className="transition-all duration-500"
           />
           
-          {/* Climb Segment (Purple) */}
+          {/* Climb Segment (Dark Slate Peak) */}
           <circle
             cx={centerX}
             cy={centerY}
             r={radius}
             fill="none"
-            stroke="#a855f7"
+            stroke="#334155"
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeDasharray={`${climbLength} ${circumference - climbLength}`}
@@ -100,13 +100,13 @@ export default function PeakScoreTracker({
             className="transition-all duration-500"
           />
           
-          {/* Base Camp Segment (Emerald) */}
+          {/* Base Camp Segment (Medium Teal Peak) */}
           <circle
             cx={centerX}
             cy={centerY}
             r={radius}
             fill="none"
-            stroke="#10b981"
+            stroke="#5fb3aa"
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeDasharray={`${baseCampLength} ${circumference - baseCampLength}`}
@@ -132,15 +132,15 @@ export default function PeakScoreTracker({
       {/* Goal-aware legend with current/max scores */}
       <div className="flex items-center gap-3 mt-3 text-xs">
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-cyan-400" />
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#4dd4cc' }} />
           <span className="text-white/70">Trail Fuel ({Math.round((trailFuelScore/100) * weights.trailFuel)}/{weights.trailFuel})</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-purple-400" />
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#334155' }} />
           <span className="text-white/70">Climb ({Math.round((climbScore/100) * weights.climb)}/{weights.climb})</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-emerald-400" />
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#5fb3aa' }} />
           <span className="text-white/70">Base Camp ({Math.round((baseCampScore/100) * weights.baseCamp)}/{weights.baseCamp})</span>
         </div>
       </div>
