@@ -59,9 +59,10 @@ export default function PeakScoreTracker({
   const baseCampOffset = ((weights.trailFuel + weights.climb) / 100) * circumference;
 
   return (
-    <div className="flex flex-col items-center relative">
-      <div className="relative">
-        <svg width={size} height={size} className="transform -rotate-90">
+    <div className="flex items-center justify-center relative w-full">
+      <div className="flex flex-col items-center">
+        <div className="relative">
+          <svg width={size} height={size} className="transform -rotate-90">
           {/* Background circle */}
           <circle
             cx={centerX}
@@ -139,16 +140,6 @@ export default function PeakScoreTracker({
         </div>
       </div>
       
-      {/* Consistency Bonus Badge - Video Game Style */}
-      {consistencyBonus > 0 && (
-        <div className="absolute top-8 right-0 transform translate-x-full bg-gradient-to-r from-green-500 to-green-400 text-white text-xs font-bold px-3 py-2 rounded-full shadow-xl border-2 border-white z-10 ml-4">
-          <div className="flex items-center gap-1">
-            <span className="text-[10px] uppercase tracking-wide">BONUS:</span>
-            <span className="text-sm">+{consistencyBonus}</span>
-          </div>
-        </div>
-      )}
-
       {/* Goal-aware legend with current/max scores */}
       <div className="flex items-center gap-3 mt-3 text-xs">
         <div className="flex items-center gap-1">
@@ -163,6 +154,12 @@ export default function PeakScoreTracker({
           <div className="w-2 h-2 rounded-full" style={{ background: 'linear-gradient(90deg, #4ade80, #16a34a)' }} />
           <span className="text-white/70">Base Camp ({Math.round((baseCampScore/100) * weights.baseCamp)}/{weights.baseCamp})</span>
         </div>
+      </div>
+    </div>
+      
+      {/* Consistency Bonus Badge - Video Game Style */}
+      <div className="absolute top-0 left-full ml-4 bg-red-500 text-white text-lg font-bold px-4 py-3 rounded shadow-xl z-50">
+        BONUS: +{consistencyBonus}
       </div>
     </div>
   );
