@@ -65,7 +65,7 @@ export function TrekNavigationCard() {
     return (
       <div className="calm-card">
         <div className="flex items-center gap-2 mb-2">
-          <img src={altoImage} alt="Alto" className="w-5 h-5 rounded-full" />
+          <img src={altoImage} alt="Alto" className="w-8 h-8 rounded-full" />
           <h3 className="text-lg font-semibold text-white/60">Alto's Daily Tip</h3>
         </div>
         
@@ -83,7 +83,7 @@ export function TrekNavigationCard() {
   return (
     <div className="calm-card">
       <div className="flex items-center gap-2 mb-2">
-        <img src={altoImage} alt="Alto" className="w-5 h-5 rounded-full" />
+        <img src={altoImage} alt="Alto" className="w-8 h-8 rounded-full" />
         <h3 className="text-lg font-semibold text-white/60">Alto's Daily Tip</h3>
       </div>
       
