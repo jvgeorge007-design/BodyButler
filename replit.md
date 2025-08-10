@@ -7,7 +7,7 @@ Body Butler is a full-stack web application designed to provide personalized fit
 Preferred communication style: Simple, everyday language.
 Focus areas for improvement: UI polish and master prompt refinement for better user engagement ("stickiness").
 Navigation behavior: Navigation bar tabs should always navigate to respective pages, even when pop-ups or modals are open.
-Peak Score Implementation: Goal-weighted scoring system with exact formulas for trail fuel (nutrition), climb (workouts), and base camp (recovery). Uses authentic data integration - placeholders only where features are still being built.
+Peak Score Implementation: Single circular tracker with three weighted segments (Trail Fuel, Climb, Base Camp) that dynamically adjust based on user goals. Goal-specific weightings (e.g., Cut: 50/30/20, Lean Bulk: 35/45/20) with current/max point display format (e.g., "32/50") for clearer user understanding. Uses authentic data integration with exact formulas for all levers.
 
 ## System Architecture
 

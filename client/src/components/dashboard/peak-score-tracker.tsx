@@ -129,19 +129,19 @@ export default function PeakScoreTracker({
         </div>
       </div>
 
-      {/* Goal-aware legend with weights */}
+      {/* Goal-aware legend with current/max scores */}
       <div className="flex items-center gap-3 mt-3 text-xs">
         <div className="flex items-center gap-1">
           <div className="w-2 h-2 rounded-full bg-cyan-400" />
-          <span className="text-white/70">Trail Fuel ({weights.trailFuel}%)</span>
+          <span className="text-white/70">Trail Fuel ({Math.round((trailFuelScore/100) * weights.trailFuel)}/{weights.trailFuel})</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="w-2 h-2 rounded-full bg-purple-400" />
-          <span className="text-white/70">Climb ({weights.climb}%)</span>
+          <span className="text-white/70">Climb ({Math.round((climbScore/100) * weights.climb)}/{weights.climb})</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="w-2 h-2 rounded-full bg-emerald-400" />
-          <span className="text-white/70">Base Camp ({weights.baseCamp}%)</span>
+          <span className="text-white/70">Base Camp ({Math.round((baseCampScore/100) * weights.baseCamp)}/{weights.baseCamp})</span>
         </div>
       </div>
     </div>
