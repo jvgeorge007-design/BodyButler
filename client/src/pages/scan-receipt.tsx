@@ -68,6 +68,7 @@ export default function ScanReceiptPage() {
       const response = await fetch('/api/receipt/parse', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(data),
       });
       
@@ -123,6 +124,7 @@ export default function ScanReceiptPage() {
       const response = await fetch('/api/receipt/confirm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(data),
       });
       if (!response.ok) throw new Error('Failed to confirm receipt');

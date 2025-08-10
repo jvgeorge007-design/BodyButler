@@ -35,7 +35,8 @@ router.post("/parse", async (req, res) => {
     }
 
     // Check if user is authenticated
-    if (!req.user?.id) {
+    const user = req.user as any;
+    if (!req.isAuthenticated() || !user?.claims?.sub) {
       console.log('Authentication failed - no user found');
       return res.status(401).json({ error: "User not authenticated" });
     }
@@ -70,7 +71,7 @@ router.post("/parse", async (req, res) => {
       })
     );
 
-    const userId = req.user!.id;
+    const userId = user.claims.sub;
 
     // Store parsed receipt
     const receiptId = `receipt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -102,11 +103,13 @@ router.post("/confirm", async (req, res) => {
   try {
     const { receiptId, forMeOnly, selectedItems, mealType } = confirmReceiptSchema.parse(req.body);
     
-    if (!req.user?.id) {
+    // Check if user is authenticated
+    const user = req.user as any;
+    if (!req.isAuthenticated() || !user?.claims?.sub) {
       return res.status(401).json({ error: "User not authenticated" });
     }
     
-    const userId = req.user!.id;
+    const userId = user.claims.sub;
 
     // Get the stored receipt
     const storedReceipt = await storage.getParsedFoodLogById(receiptId);
@@ -257,10 +260,16 @@ router.post("/confirm", async (req, res) => {
 // Get user's food log entries for today
 router.get("/food-log", async (req, res) => {
   try {
+    // Check if user is authenticated
+    const user = req.user as any;
+    if (!req.isAuthenticated() || !user?.claims?.sub) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+    
     const today = new Date();
     const startOfDay = new Date(today.setHours(0, 0, 0, 0));
     const endOfDay = new Date(today.setHours(23, 59, 59, 999));
-    const userId = req.user!.id;
+    const userId = user.claims.sub;
 
     console.log(`Getting food log for user ${userId} for today`);
     console.log(`Date range: ${startOfDay.toISOString()} to ${endOfDay.toISOString()}`);
@@ -338,10 +347,16 @@ router.get("/food-log", async (req, res) => {
 // Get user's food log entries for a specific date
 router.get("/food-log/:date", async (req, res) => {
   try {
+    // Check if user is authenticated
+    const user = req.user as any;
+    if (!req.isAuthenticated() || !user?.claims?.sub) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+    
     const date = new Date(req.params.date);
     const startOfDay = new Date(date.setHours(0, 0, 0, 0));
     const endOfDay = new Date(date.setHours(23, 59, 59, 999));
-    const userId = req.user!.id;
+    const userId = user.claims.sub;
 
     console.log(`Getting food log for user ${userId} on ${req.params.date}`);
 
@@ -415,8 +430,14 @@ router.get("/food-log/:date", async (req, res) => {
 // Delete a specific food log entry
 router.delete("/food-log/:itemId", async (req, res) => {
   try {
+    // Check if user is authenticated
+    const user = req.user as any;
+    if (!req.isAuthenticated() || !user?.claims?.sub) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+    
     const itemId = req.params.itemId;
-    const userId = req.user!.id;
+    const userId = user.claims.sub;
 
     console.log(`Deleting food log entry ${itemId} for user ${userId}`);
 
