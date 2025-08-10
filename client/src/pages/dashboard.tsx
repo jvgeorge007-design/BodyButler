@@ -438,10 +438,9 @@ export default function Dashboard() {
             "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 215px)",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
         }}
       >
-        <div className="flex flex-col justify-between h-full gap-3">
+        <div className="flex flex-col h-full" style={{ justifyContent: 'space-evenly' }}>
           {/* Date, Streak, and Progress Card */}
           <div className="calm-card p-3 space-y-2">
             {/* Peak Score Header */}
@@ -470,7 +469,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-4 flex-1 justify-between">
+          <div className="flex flex-col flex-1" style={{ justifyContent: 'space-evenly' }}>
             {/* Stacked Calories/Water (Left) and Macros (Right) */}
             <div className="flex gap-2.5">
               {/* Left: Stacked Calories and Water Cards */}
