@@ -465,6 +465,7 @@ export default function Dashboard() {
                 baseCampScore={peakScoreData.baseCampScore}
                 consistencyBonus={peakScoreData.consistencyBonus}
                 goalType={peakScoreData.goalType}
+                activityStreak={activityStreakData?.streak || 0}
               />
             </div>
           </div>

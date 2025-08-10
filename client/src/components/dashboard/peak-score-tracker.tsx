@@ -6,6 +6,7 @@ interface PeakScoreTrackerProps {
   baseCampScore: number;
   consistencyBonus: number;
   goalType: 'cut' | 'lean_bulk' | 'recomp' | 'endurance' | 'wellness';
+  activityStreak: number;
 }
 
 export default function PeakScoreTracker({
@@ -13,7 +14,8 @@ export default function PeakScoreTracker({
   climbScore,
   baseCampScore,
   consistencyBonus,
-  goalType
+  goalType,
+  activityStreak
 }: PeakScoreTrackerProps) {
   const goalWeights = {
     cut: { trailFuel: 50, climb: 30, baseCamp: 20 },
@@ -157,10 +159,17 @@ export default function PeakScoreTracker({
       </div>
     </div>
       
-      {/* Consistency Bonus Badge - Video Game Style */}
-      <div className="absolute top-9 left-64 bg-gradient-to-r from-amber-500 to-yellow-500 text-white text-sm font-bold px-3 py-2 rounded-full shadow-xl border-2 border-amber-300 z-50">
-        BONUS: +{consistencyBonus}
+      {/* Activity Streak Badge - Left Side */}
+      <div className="absolute top-9 -left-20 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-bold px-3 py-2 rounded-full shadow-xl border-2 border-orange-300 z-50">
+        🔥 {activityStreak}
       </div>
+
+      {/* Consistency Bonus Badge - Video Game Style */}
+      {consistencyBonus > 0 && (
+        <div className="absolute top-9 left-64 bg-gradient-to-r from-amber-500 to-yellow-500 text-white text-sm font-bold px-3 py-2 rounded-full shadow-xl border-2 border-amber-300 z-50">
+          BONUS: +{consistencyBonus}
+        </div>
+      )}
     </div>
   );
 }
