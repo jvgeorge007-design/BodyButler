@@ -159,7 +159,10 @@ export default function PeakScoreTracker({
       </div>
     </div>
       
-
+      {/* Activity Trek Badge - Left Side */}
+      <div className="absolute top-10 left-5 bg-gradient-to-r from-slate-500 to-slate-600 text-white text-sm font-bold px-3 py-2 rounded-full shadow-xl border-2 border-slate-400 z-50">
+        🥾 {activityStreak}
+      </div>
 
       {/* Consistency Bonus Badge - Video Game Style */}
       {consistencyBonus > 0 && (
