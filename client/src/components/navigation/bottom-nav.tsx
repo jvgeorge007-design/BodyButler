@@ -1,4 +1,4 @@
-import { Home, TrendingUp, Settings, Plus, UtensilsCrossed, Dumbbell } from "lucide-react";
+import { Home, TrendingUp, Settings, Plus, UtensilsCrossed, Dumbbell, BookOpen } from "lucide-react";
 import { useLocation } from "wouter";
 import { useModal } from "@/contexts/modal-context";
 import { useState } from "react";
@@ -35,9 +35,9 @@ export default function BottomNav({ onPopupStateChange }: BottomNavProps = {}) {
       isMainAction: true
     },
     {
-      id: "food",
-      icon: UtensilsCrossed,
-      label: "Food",
+      id: "track",
+      icon: BookOpen,
+      label: "Track",
       path: "/add-food"
     },
     {
