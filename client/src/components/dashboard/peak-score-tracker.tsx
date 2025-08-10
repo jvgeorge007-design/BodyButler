@@ -159,15 +159,9 @@ export default function PeakScoreTracker({
       </div>
     </div>
       
-      {/* Activity Streak Badge - Left Side */}
-      <div className="absolute top-9 left-5 bg-gradient-to-r from-orange-600 to-red-600 text-white text-sm font-bold px-3 py-2 rounded-full shadow-xl border-2 border-orange-400 z-50">
-        <div className="flex items-center gap-1">
-          <div className="relative">
-            <span className="text-xs">⛰️</span>
-            <span className="absolute -top-0.5 -right-0.5 text-[8px]">🔥</span>
-          </div>
-          <span>{activityStreak}</span>
-        </div>
+      {/* Activity Trek Badge - Left Side */}
+      <div className="absolute top-9 left-5 bg-gradient-to-r from-amber-700 to-orange-700 text-white text-sm font-bold px-3 py-2 rounded-full shadow-xl border-2 border-amber-600 z-50">
+        🥾 {activityStreak}
       </div>
 
       {/* Consistency Bonus Badge - Video Game Style */}
