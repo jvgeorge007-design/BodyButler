@@ -39,135 +39,89 @@ export default function PeakScoreTracker({
   const strokeWidth = 8;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
-
-  // Calculate positions for three inner circles
   const centerX = size / 2;
   const centerY = size / 2;
-  const innerRadius = radius * 0.6;
-  
-  const trailFuelAngle = -90; // Top
-  const climbAngle = 30; // Bottom right
-  const baseCampAngle = 150; // Bottom left
-  
-  const getCirclePosition = (angle: number, distance: number) => ({
-    x: centerX + Math.cos((angle * Math.PI) / 180) * distance,
-    y: centerY + Math.sin((angle * Math.PI) / 180) * distance
-  });
 
-  const trailFuelPos = getCirclePosition(trailFuelAngle, innerRadius * 0.4);
-  const climbPos = getCirclePosition(climbAngle, innerRadius * 0.4);
-  const baseCampPos = getCirclePosition(baseCampAngle, innerRadius * 0.4);
-
-  const innerCircleRadius = 16;
-  const innerStrokeWidth = 3;
-  const innerCircumference = (innerCircleRadius - innerStrokeWidth) * 2 * Math.PI;
-
-  const getStrokeDasharray = (score: number, circumference: number) => {
-    const progress = (score / 100) * circumference;
-    return `${progress} ${circumference - progress}`;
+  // Calculate segment lengths based on weights and scores
+  const calculateSegmentLength = (weight: number, score: number) => {
+    const segmentProportion = weight / 100; // Weight as proportion of circle
+    const scoreProportion = score / 100; // How much of segment to fill
+    return segmentProportion * scoreProportion * circumference;
   };
 
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return '#10b981'; // green-500
-    if (score >= 60) return '#f59e0b'; // amber-500
-    return '#ef4444'; // red-500
-  };
+  const trailFuelLength = calculateSegmentLength(weights.trailFuel, trailFuelScore);
+  const climbLength = calculateSegmentLength(weights.climb, climbScore);  
+  const baseCampLength = calculateSegmentLength(weights.baseCamp, baseCampScore);
+
+  // Calculate offsets for each segment
+  const trailFuelOffset = 0;
+  const climbOffset = (weights.trailFuel / 100) * circumference;
+  const baseCampOffset = ((weights.trailFuel + weights.climb) / 100) * circumference;
 
   return (
     <div className="flex flex-col items-center">
       <div className="relative">
         <svg width={size} height={size} className="transform -rotate-90">
-          {/* Outer circle background */}
+          {/* Background circle */}
           <circle
             cx={centerX}
             cy={centerY}
             r={radius}
             fill="none"
-            stroke="rgba(255, 255, 255, 0.2)"
+            stroke="rgba(255, 255, 255, 0.1)"
             strokeWidth={strokeWidth}
           />
           
-          {/* Outer circle progress */}
+          {/* Trail Fuel Segment (Cyan) */}
           <circle
             cx={centerX}
             cy={centerY}
             r={radius}
             fill="none"
-            stroke={getScoreColor(weightedScore)}
+            stroke="#22d3ee"
             strokeWidth={strokeWidth}
             strokeLinecap="round"
-            strokeDasharray={getStrokeDasharray(weightedScore, circumference)}
+            strokeDasharray={`${trailFuelLength} ${circumference - trailFuelLength}`}
+            strokeDashoffset={-trailFuelOffset}
             className="transition-all duration-500"
           />
-
-          {/* Trail Fuel inner circle */}
+          
+          {/* Climb Segment (Purple) */}
           <circle
-            cx={trailFuelPos.x}
-            cy={trailFuelPos.y}
-            r={innerCircleRadius - innerStrokeWidth}
+            cx={centerX}
+            cy={centerY}
+            r={radius}
             fill="none"
-            stroke="rgba(255, 255, 255, 0.2)"
-            strokeWidth={innerStrokeWidth}
-          />
-          <circle
-            cx={trailFuelPos.x}
-            cy={trailFuelPos.y}
-            r={innerCircleRadius - innerStrokeWidth}
-            fill="none"
-            stroke="#3b82f6" // blue-500
-            strokeWidth={innerStrokeWidth}
+            stroke="#a855f7"
+            strokeWidth={strokeWidth}
             strokeLinecap="round"
-            strokeDasharray={getStrokeDasharray(trailFuelScore, innerCircumference)}
+            strokeDasharray={`${climbLength} ${circumference - climbLength}`}
+            strokeDashoffset={-climbOffset}
             className="transition-all duration-500"
           />
-
-          {/* Climb inner circle */}
+          
+          {/* Base Camp Segment (Emerald) */}
           <circle
-            cx={climbPos.x}
-            cy={climbPos.y}
-            r={innerCircleRadius - innerStrokeWidth}
+            cx={centerX}
+            cy={centerY}
+            r={radius}
             fill="none"
-            stroke="rgba(255, 255, 255, 0.2)"
-            strokeWidth={innerStrokeWidth}
-          />
-          <circle
-            cx={climbPos.x}
-            cy={climbPos.y}
-            r={innerCircleRadius - innerStrokeWidth}
-            fill="none"
-            stroke="#8b5cf6" // violet-500
-            strokeWidth={innerStrokeWidth}
+            stroke="#10b981"
+            strokeWidth={strokeWidth}
             strokeLinecap="round"
-            strokeDasharray={getStrokeDasharray(climbScore, innerCircumference)}
-            className="transition-all duration-500"
-          />
-
-          {/* Base Camp inner circle */}
-          <circle
-            cx={baseCampPos.x}
-            cy={baseCampPos.y}
-            r={innerCircleRadius - innerStrokeWidth}
-            fill="none"
-            stroke="rgba(255, 255, 255, 0.2)"
-            strokeWidth={innerStrokeWidth}
-          />
-          <circle
-            cx={baseCampPos.x}
-            cy={baseCampPos.y}
-            r={innerCircleRadius - innerStrokeWidth}
-            fill="none"
-            stroke="#f59e0b" // amber-500
-            strokeWidth={innerStrokeWidth}
-            strokeLinecap="round"
-            strokeDasharray={getStrokeDasharray(baseCampScore, innerCircumference)}
+            strokeDasharray={`${baseCampLength} ${circumference - baseCampLength}`}
+            strokeDashoffset={-baseCampOffset}
             className="transition-all duration-500"
           />
         </svg>
 
         {/* Center score display */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className={`text-xl font-bold ${weightedScore >= 80 ? 'text-green-400' : weightedScore >= 60 ? 'text-yellow-400' : 'text-orange-400'}`}>
+          <span className="text-2xl font-bold text-white">
             {Math.round(weightedScore)}
+          </span>
+          <span className="text-xs text-white/60 uppercase tracking-wide">
+            PEAK
           </span>
           {consistencyBonus > 0 && (
             <span className="text-xs text-green-400">+{consistencyBonus}</span>
@@ -175,19 +129,19 @@ export default function PeakScoreTracker({
         </div>
       </div>
 
-      {/* Legend */}
-      <div className="flex items-center gap-4 mt-2">
+      {/* Goal-aware legend with weights */}
+      <div className="flex items-center gap-3 mt-3 text-xs">
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-          <span className="text-xs text-white/80">Fuel</span>
+          <div className="w-2 h-2 rounded-full bg-cyan-400" />
+          <span className="text-white/70">Fuel ({weights.trailFuel}%)</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-violet-500"></div>
-          <span className="text-xs text-white/80">Climb</span>
+          <div className="w-2 h-2 rounded-full bg-purple-400" />
+          <span className="text-white/70">Climb ({weights.climb}%)</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-          <span className="text-xs text-white/80">Base</span>
+          <div className="w-2 h-2 rounded-full bg-emerald-400" />
+          <span className="text-white/70">Base ({weights.baseCamp}%)</span>
         </div>
       </div>
     </div>
