@@ -731,8 +731,18 @@ export function usePeakScore() {
 
     // Calculate Consistency Bonus
     const calculateConsistencyBonus = (): number => {
-      // Demo: showing +2 bonus to display the badge
-      return 2;
+      // Your exact formula
+      const historicalScores = (dailyRecap as any)?.peakScores?.last7Days || [];
+      const daysAboveThreshold = historicalScores.filter((dayScore: number) => dayScore > 70).length;
+      
+      let bonus = 0;
+      if (daysAboveThreshold >= 6) {
+        bonus = 5;
+      } else if (daysAboveThreshold >= 4) {
+        bonus = 2;
+      }
+      
+      return bonus;
     };
 
     // Determine goal type from profile
