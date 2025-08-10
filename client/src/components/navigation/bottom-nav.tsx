@@ -1,4 +1,4 @@
-import { Home, TrendingUp, Settings, Plus, UtensilsCrossed, Dumbbell, BookOpen } from "lucide-react";
+import { Home, TrendingUp, Settings, Plus, UtensilsCrossed, Dumbbell, BookOpen, Compass } from "lucide-react";
 import { useLocation } from "wouter";
 import { useModal } from "@/contexts/modal-context";
 import { useState } from "react";
@@ -43,7 +43,7 @@ export default function BottomNav({ onPopupStateChange }: BottomNavProps = {}) {
     },
     {
       id: "guide",
-      icon: GoatGuideIcon,
+      icon: Compass,
       label: "Guide",
       path: "/workout"
     }
