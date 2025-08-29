@@ -112,8 +112,11 @@ export default function Dashboard() {
     },
   });
 
+  // Temporarily bypass authentication for demo
+  const isDemoMode = true; // Set to true to show dashboard without authentication
+  
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!isDemoMode && !isLoading && !isAuthenticated) {
       toast({
         title: "Please sign in",
         description: "Redirecting to login...",
@@ -178,10 +181,42 @@ export default function Dashboard() {
     createProfileMutation,
   ]);
 
+  // Demo data when authentication is bypassed
+  const demoProfile = isDemoMode ? {
+    id: "demo-user",
+    userId: "demo-user", 
+    onboardingCompleted: true,
+    onboardingData: {
+      name: "Demo User",
+      goal: "recomp",
+      timeline: "3 months"
+    },
+    createdAt: new Date()
+  } : null;
+
+  const demoPlan = isDemoMode ? {
+    macroTargets: {
+      dailyCalories: 2000,
+      proteinG: 150,
+      carbsG: 200,
+      fatG: 70
+    },
+    workoutPlan: {
+      days: [{
+        type: "Push Day",
+        focus: "Chest & Triceps",
+        duration: 45,
+        exerciseCount: 6
+      }]
+    }
+  } : null;
+
   // Calculate state variables
-  const needsOnboarding = !profile || !profile.onboardingCompleted;
-  const needsPlanGeneration =
-    profile && profile.onboardingCompleted && !personalizedPlan;
+  const effectiveProfile = isDemoMode ? demoProfile : profile;
+  const effectivePlan = isDemoMode ? demoPlan : personalizedPlan;
+  
+  const needsOnboarding = !effectiveProfile || !effectiveProfile.onboardingCompleted;
+  const needsPlanGeneration = effectiveProfile && effectiveProfile.onboardingCompleted && !effectivePlan;
 
   // Auto-generate plan if user has completed onboarding but no plan
   useEffect(() => {
@@ -213,12 +248,12 @@ export default function Dashboard() {
 
   // Calculate Summit Progress based on goal timeline
   const calculateSummitProgress = () => {
-    if (!profile?.onboardingData?.timeline || !profile?.createdAt) {
+    if (!effectiveProfile?.onboardingData?.timeline || !effectiveProfile?.createdAt) {
       return 0; // No timeline data available
     }
 
-    const timeline = profile.onboardingData.timeline.toLowerCase();
-    const startDate = new Date(profile.createdAt);
+    const timeline = effectiveProfile.onboardingData.timeline.toLowerCase();
+    const startDate = new Date(effectiveProfile.createdAt);
     const currentDate = new Date();
     const daysSinceStart = Math.floor(
       (currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
@@ -243,8 +278,8 @@ export default function Dashboard() {
   const summitProgressPercentage = calculateSummitProgress();
 
   // Calculate data for dashboard components based on selected date
-  const todaysWorkout = personalizedPlan?.workoutPlan?.days?.[0];
-  const macroTargets = personalizedPlan?.macroTargets || {};
+  const todaysWorkout = effectivePlan?.workoutPlan?.days?.[0];
+  const macroTargets = effectivePlan?.macroTargets || {};
 
   // Mock data that varies by selected date (in real app, this would come from API)
   const today = new Date();
@@ -421,8 +456,8 @@ export default function Dashboard() {
           largeTitle={true}
           selectedDate={selectedDate}
           onProfileClick={() => setLocation("/settings")}
-          profile={profile}
-          activityStreak={activityStreakData?.streak || 0}
+          profile={effectiveProfile}
+          activityStreak={isDemoMode ? 3 : (activityStreakData?.streak || 0)}
         />
       </div>
 
