@@ -109,6 +109,7 @@ Through competitor teardowns (Cal.ai, Fitbod, Lifesum) and Jobs-to-be-Done analy
 
 | <img width="127" height="269" alt="image" src="https://github.com/user-attachments/assets/79a24dd8-dc0c-49b0-b615-53f33244eece" />
  | <img width="122" height="283" alt="image" src="https://github.com/user-attachments/assets/a69e8776-78b4-485d-9367-b7f64aee6a61" />
+ <img width="125" height="281" alt="image" src="https://github.com/user-attachments/assets/71b652b6-33e0-4a3e-ad28-19810c8f22b4" />
  | <img width="128" height="282" alt="image" src="https://github.com/user-attachments/assets/1e33913a-09cc-4285-ab91-8cc78e89b121" />
 
 
